@@ -196,6 +196,7 @@ static PRIMES: LazyLock<HashMap<u8, BigUint>> = LazyLock::new(|| {
 
 /// Generating random number, should use num_bigint::RandomBits if possible.
 fn rand() -> usize {
+	log::debug!(">>> Entering rand()");
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -228,6 +229,7 @@ impl DiffieHellman {
     // Both parties now have the same shared secret key s which can be used for encryption or authentication.
 
     pub fn new(group: Option<u8>) -> Self {
+		log::debug!(">>> Entering new(group={:?})", group);
         let _group = group.unwrap_or(14);
 
         if !PRIMES.contains_key(&_group) {
@@ -237,6 +239,7 @@ impl DiffieHellman {
         // generate private key
         let private_key: BigUint = BigUint::from(rand());
 
+		log::debug!("<<< Exiting new(group={:?})", group);
         Self {
             prime: PRIMES[&_group].clone(),
             private_key,
@@ -247,16 +250,20 @@ impl DiffieHellman {
 
     /// get private key as hexadecimal String
     pub fn get_private_key(&self) -> String {
+		log::debug!(">>> Entering get_private_key()");
         self.private_key.to_str_radix(16)
     }
 
     /// Generate public key A = g**a mod p
     pub fn generate_public_key(&mut self) -> String {
+		log::debug!(">>> Entering generate_public_key()");
         self.public_key = BigUint::from(self.generator).modpow(&self.private_key, &self.prime);
+		log::debug!("<<< Exiting generate_public_key()");
         self.public_key.to_str_radix(16)
     }
 
     pub fn is_valid_public_key(&self, key_str: &str) -> bool {
+		log::debug!(">>> Entering is_valid_public_key(key_str={})", key_str);
         // the unwrap_or_else will make sure it is false, because 2 <= 0 and therefor False is returned
         let key = BigUint::from_str_radix(key_str, 16)
             .unwrap_or_else(|_| BigUint::parse_bytes(b"0", 16).unwrap());
@@ -278,6 +285,7 @@ impl DiffieHellman {
 
     /// Generate the shared key
     pub fn generate_shared_key(self, other_key_str: &str) -> Option<String> {
+		log::debug!(">>> Entering generate_shared_key(other_key_str={})", other_key_str);
         let other_key = BigUint::from_str_radix(other_key_str, 16)
             .unwrap_or_else(|_| BigUint::parse_bytes(b"0", 16).unwrap());
         if !self.is_valid_public_key(&other_key.to_str_radix(16)) {
@@ -295,18 +303,23 @@ mod tests {
 
     #[test]
     fn verify_invalid_pub_key() {
+		log::debug!(">>> Entering verify_invalid_pub_key()");
         let diffie = DiffieHellman::new(Some(14));
+		log::debug!("<<< Exiting verify_invalid_pub_key()");
         assert!(!diffie.is_valid_public_key("0000"));
     }
 
     #[test]
     fn verify_valid_pub_key() {
+		log::debug!(">>> Entering verify_valid_pub_key()");
         let diffie = DiffieHellman::new(Some(14));
+		log::debug!("<<< Exiting verify_valid_pub_key()");
         assert!(diffie.is_valid_public_key("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245"));
     }
 
     #[test]
     fn verify_invalid_pub_key_same_as_prime() {
+		log::debug!(">>> Entering verify_invalid_pub_key_same_as_prime()");
         let diffie = DiffieHellman::new(Some(14));
         assert!(!diffie.is_valid_public_key(
             "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1\
@@ -320,25 +333,34 @@ mod tests {
         E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9\
         DE2BCBF6955817183995497CEA956AE515D2261898FA0510\
         15728E5A8AACAA68FFFFFFFFFFFFFFFF"
+		log::debug!("<<< Exiting verify_invalid_pub_key_same_as_prime()");
         ));
     }
 
     #[test]
     fn verify_key_exchange() {
+		log::debug!(">>> Entering verify_key_exchange()");
         let mut alice = DiffieHellman::new(Some(16));
         let mut bob = DiffieHellman::new(Some(16));
 
         // Private key not used, showed for illustrative purpose
         let _alice_private = alice.get_private_key();
+		log::debug!("verify_key_exchange(): _alice_private → {}", _alice_private);
         let alice_public = alice.generate_public_key();
+		log::debug!("verify_key_exchange(): alice_public → {}", alice_public);
 
         // Private key not used, showed for illustrative purpose
         let _bob_private = bob.get_private_key();
+		log::debug!("verify_key_exchange(): _bob_private → {}", _bob_private);
         let bob_public = bob.generate_public_key();
+		log::debug!("verify_key_exchange(): bob_public → {}", bob_public);
 
         // generating shared key using the struct implemenations
         let alice_shared = alice.generate_shared_key(bob_public.as_str()).unwrap();
+		log::debug!("verify_key_exchange(): alice_shared → {}", alice_shared);
         let bob_shared = bob.generate_shared_key(alice_public.as_str()).unwrap();
+		log::debug!("verify_key_exchange(): bob_shared → {}", bob_shared);
+		log::debug!("<<< Exiting verify_key_exchange()");
         assert_eq!(alice_shared, bob_shared);
     }
 }

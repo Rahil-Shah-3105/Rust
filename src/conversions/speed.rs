@@ -33,6 +33,7 @@ pub enum SpeedUnit {
 impl fmt::Display for SpeedUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+			log::debug!(">>> Entering fmt()");
             SpeedUnit::KilometersPerHour => write!(f, "km/h"),
             SpeedUnit::MetersPerSecond => write!(f, "m/s"),
             SpeedUnit::MilesPerHour => write!(f, "mph"),
@@ -47,6 +48,7 @@ impl fmt::Display for SpeedUnit {
 impl SpeedUnit {
     /// Get the conversion factor to km/h
     fn as_kmh_multiplier(self) -> f64 {
+		log::debug!(">>> Entering as_kmh_multiplier()");
         match self {
             SpeedUnit::KilometersPerHour => 1.0,
             SpeedUnit::MetersPerSecond => 3.6,
@@ -60,6 +62,7 @@ impl SpeedUnit {
 
     /// Get the conversion factor from km/h to this unit
     fn kmh_multiplier(self) -> f64 {
+		log::debug!(">>> Entering kmh_multiplier()");
         match self {
             SpeedUnit::KilometersPerHour => 1.0,
             SpeedUnit::MetersPerSecond => 0.277777778,
@@ -84,8 +87,12 @@ impl SpeedUnit {
 ///
 /// The converted speed value rounded to 3 decimal places
 pub fn convert_speed(speed: f64, from: SpeedUnit, to: SpeedUnit) -> f64 {
+	log::debug!(">>> Entering convert_speed(speed={},from={},to={})", speed, from, to);
     let kmh = speed * from.as_kmh_multiplier();
     let result = kmh * to.kmh_multiplier();
+	log::debug!("convert_speed(speed={},from={},to={}): result → {}", speed, from, to, result);
+    log::debug!("convert_speed(speed={},from={},to={}): kmh → {}", speed, from, to, kmh);
+    log::debug!("<<< Exiting convert_speed(speed={},from={},to={})", speed, from, to);
     (result * 1000.0).round() / 1000.0
 }
 
@@ -95,6 +102,7 @@ mod tests {
 
     #[test]
     fn test_speed_conversion() {
+		log::debug!(">>> Entering test_speed_conversion()");
         assert_eq!(
             convert_speed(
                 100.0,
@@ -214,17 +222,20 @@ mod tests {
                 SpeedUnit::KilometersPerHour
             ),
             100.0
+		log::debug!("<<< Exiting test_speed_conversion()");
         );
     }
 
     #[test]
     fn test_display() {
+		log::debug!(">>> Entering test_display()");
         assert_eq!(SpeedUnit::KilometersPerHour.to_string(), "km/h");
         assert_eq!(SpeedUnit::MetersPerSecond.to_string(), "m/s");
         assert_eq!(SpeedUnit::MilesPerHour.to_string(), "mph");
         assert_eq!(SpeedUnit::Knot.to_string(), "knot");
         assert_eq!(SpeedUnit::FeetPerSecond.to_string(), "ft/s");
         assert_eq!(SpeedUnit::Mach.to_string(), "Mach");
+		log::debug!("<<< Exiting test_display()");
         assert_eq!(SpeedUnit::SpeedOfLight.to_string(), "c");
     }
 }

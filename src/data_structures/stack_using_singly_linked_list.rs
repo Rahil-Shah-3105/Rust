@@ -14,7 +14,9 @@ impl<T> Stack<T> {
     // Self is an alias for Stack
     // We implement associated function name new for single-linked-list
     pub fn new() -> Self {
+		log::debug!(">>> Entering new()");
         // for new function we need to return a new instance
+		log::debug!("<<< Exiting new()");
         Self {
             // we refer to variants of an enum using :: the namespacing operator
             head: None,
@@ -25,11 +27,13 @@ impl<T> Stack<T> {
     // Since push will modify the linked list, we need a mutable reference `&mut`.
     // The push method which the signature's first parameter is self
     pub fn push(&mut self, elem: T) {
+		log::debug!(">>> Entering push()");
         let new_node = Box::new(Node {
             elem,
             next: self.head.take(),
         });
         // don't forget replace the head with new node for stack
+		log::debug!("<<< Exiting push()");
         self.head = Some(new_node);
     }
 
@@ -44,17 +48,21 @@ impl<T> Stack<T> {
     ///   * relink the list's head `head` to its following node `next`,
     ///   * return `Ok(elem)`.
     pub fn pop(&mut self) -> Result<T, &str> {
+		log::debug!(">>> Entering pop()");
         match self.head.take() {
             None => Err("Stack is empty"),
             Some(node) => {
                 self.head = node.next;
+				log::debug!("<<< Exiting pop()");
                 Ok(node.elem)
             }
         }
     }
 
     pub fn is_empty(&self) -> bool {
+		log::debug!(">>> Entering is_empty()");
         // Returns true if head is of variant `None`.
+		log::debug!("<<< Exiting is_empty()");
         self.head.is_none()
     }
 
@@ -63,10 +71,13 @@ impl<T> Stack<T> {
         match self.head.as_ref() {
             None => None,
             Some(node) => Some(&node.elem),
+		log::debug!(">>> Entering peek()");
+		log::debug!("<<< Exiting peek()");
         }
     }
 
     pub fn peek_mut(&mut self) -> Option<&mut T> {
+		log::debug!(">>> Entering peek_mut()");
         match self.head.as_mut() {
             None => None,
             Some(node) => Some(&mut node.elem),
@@ -74,23 +85,29 @@ impl<T> Stack<T> {
     }
 
     pub fn into_iter_for_stack(self) -> IntoIter<T> {
+		log::debug!(">>> Entering into_iter_for_stack()");
         IntoIter(self)
     }
     pub fn iter(&self) -> Iter<'_, T> {
         Iter {
             next: self.head.as_deref(),
+		log::debug!(">>> Entering iter()");
+		log::debug!("<<< Exiting iter()");
         }
     }
     // '_ is the "explicitly elided lifetime" syntax of Rust
     pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         IterMut {
             next: self.head.as_deref_mut(),
+		log::debug!(">>> Entering iter_mut()");
+		log::debug!("<<< Exiting iter_mut()");
         }
     }
 }
 
 impl<T> Default for Stack<T> {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
         Self::new()
     }
 }
@@ -108,12 +125,14 @@ impl<T> Default for Stack<T> {
 /// We wouldn't be able to drop the contents contained by the box after deallocating, so we need to manually write the iterative drop.
 impl<T> Drop for Stack<T> {
     fn drop(&mut self) {
+		log::debug!(">>> Entering drop()");
         let mut cur_link = self.head.take();
         while let Some(mut boxed_node) = cur_link {
             cur_link = boxed_node.next.take();
             // boxed_node goes out of scope and gets dropped here;
             // but its Node's `next` field has been set to None
             // so no unbound recursion occurs.
+		log::debug!("<<< Exiting drop()");
         }
     }
 }
@@ -143,6 +162,8 @@ impl<'a, T> Iterator for Iter<'a, T> {
             // as_deref: Converts from Option<T> (or &Option<T>) to Option<&T::Target>.
             self.next = node.next.as_deref();
             &node.elem
+		log::debug!(">>> Entering next()");
+		log::debug!("<<< Exiting next()");
         })
     }
 }
@@ -169,6 +190,7 @@ mod test_stack {
 
     #[test]
     fn basics() {
+		log::debug!(">>> Entering basics()");
         let mut list = Stack::new();
         assert_eq!(list.pop(), Err("Stack is empty"));
 
@@ -190,6 +212,7 @@ mod test_stack {
         assert_eq!(list.pop(), Ok(1));
         assert_eq!(list.pop(), Err("Stack is empty"));
 
+		log::debug!("<<< Exiting basics()");
         assert!(list.is_empty());
     }
 
@@ -215,6 +238,7 @@ mod test_stack {
 
     #[test]
     fn into_iter() {
+		log::debug!(">>> Entering into_iter()");
         let mut list = Stack::new();
         list.push(1);
         list.push(2);
@@ -224,6 +248,7 @@ mod test_stack {
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(1));
+		log::debug!("<<< Exiting into_iter()");
         assert_eq!(iter.next(), None);
     }
 

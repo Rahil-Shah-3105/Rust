@@ -19,6 +19,7 @@
  * @return The maximum subarray sum.
  */
 pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+	log::debug!(">>> Entering max_sub_array(nums={:?})", nums);
     if nums.is_empty() {
         return 0;
     }
@@ -44,7 +45,9 @@ mod tests {
      */
     #[test]
     fn test_kadanes_algorithm_positive() {
+		log::debug!(">>> Entering test_kadanes_algorithm_positive()");
         let arr = [1, 2, 3, 4, 5];
+		log::debug!("<<< Exiting test_kadanes_algorithm_positive()");
         assert_eq!(max_sub_array(arr.to_vec()), 15);
     }
 
@@ -53,7 +56,9 @@ mod tests {
      */
     #[test]
     fn test_kadanes_algorithm_negative() {
+		log::debug!(">>> Entering test_kadanes_algorithm_negative()");
         let arr = [-2, -3, -4, -1, -2];
+		log::debug!("<<< Exiting test_kadanes_algorithm_negative()");
         assert_eq!(max_sub_array(arr.to_vec()), -1);
     }
 
@@ -62,7 +67,9 @@ mod tests {
      */
     #[test]
     fn test_kadanes_algorithm_mixed() {
+		log::debug!(">>> Entering test_kadanes_algorithm_mixed()");
         let arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4];
+		log::debug!("<<< Exiting test_kadanes_algorithm_mixed()");
         assert_eq!(max_sub_array(arr.to_vec()), 6);
     }
 
@@ -71,7 +78,9 @@ mod tests {
      */
     #[test]
     fn test_kadanes_algorithm_empty() {
+		log::debug!(">>> Entering test_kadanes_algorithm_empty()");
         let arr: [i32; 0] = [];
+		log::debug!("<<< Exiting test_kadanes_algorithm_empty()");
         assert_eq!(max_sub_array(arr.to_vec()), 0);
     }
 
@@ -80,7 +89,9 @@ mod tests {
      */
     #[test]
     fn test_kadanes_algorithm_single_positive() {
+		log::debug!(">>> Entering test_kadanes_algorithm_single_positive()");
         let arr = [10];
+		log::debug!("<<< Exiting test_kadanes_algorithm_single_positive()");
         assert_eq!(max_sub_array(arr.to_vec()), 10);
     }
 }

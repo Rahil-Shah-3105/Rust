@@ -8,6 +8,7 @@ macro_rules! impl_kmeans {
             /// computes sum of squared deviation between two identically sized vectors
             /// `x`, and `y`.
             fn distance(x: &[$kind], y: &[$kind]) -> $kind {
+				log::debug!(">>> Entering distance()");
                 x.iter()
                     .zip(y.iter())
                     .fold(0.0, |dist, (&xi, &yi)| dist + (xi - yi).powi(2))
@@ -16,6 +17,7 @@ macro_rules! impl_kmeans {
             /// Returns a vector containing the indices z<sub>i</sub> in {0, ..., K-1} of
             /// the centroid nearest to each datum.
             fn nearest_centroids(xs: &[Vec<$kind>], centroids: &[Vec<$kind>]) -> Vec<usize> {
+				log::debug!(">>> Entering nearest_centroids()");
                 xs.iter()
                     .map(|xi| {
                         // Find the argmin by folding using a tuple containing the argmin
@@ -31,6 +33,7 @@ macro_rules! impl_kmeans {
                                 }
                             },
                         );
+						log::debug!("<<< Exiting nearest_centroids()");
                         argmin
                     })
                     .collect()
@@ -42,8 +45,10 @@ macro_rules! impl_kmeans {
                 clustering: &[usize],
                 k: usize,
             ) -> Vec<Vec<$kind>> {
+				log::debug!(">>> Entering recompute_centroids(clustering={:?},k={})", clustering, k);
                 let ndims = xs[0].len();
 
+				log::debug!("recompute_centroids(clustering={:?},k={}): ndims → {}", clustering, k, ndims);
                 // NOTE: Kind of inefficient because we sweep all the data from each of the
                 // k centroids.
                 (0..k)
@@ -58,6 +63,7 @@ macro_rules! impl_kmeans {
                                 });
                             }
                         });
+						log::debug!("<<< Exiting recompute_centroids(clustering={:?},k={})", clustering, k);
                         centroid.iter().map(|&c_j| c_j / n_cluster).collect()
                     })
                     .collect()
@@ -65,6 +71,7 @@ macro_rules! impl_kmeans {
 
             /// Assign the N D-dimensional data, `xs`, to `k` clusters using K-Means clustering
             pub fn kmeans(xs: Vec<Vec<$kind>>, k: usize) -> Vec<usize> {
+				log::debug!(">>> Entering kmeans(k={})", k);
                 assert!(xs.len() >= k);
 
                 // Rather than pulling in a dependency to radomly select the staring
@@ -75,10 +82,12 @@ macro_rules! impl_kmeans {
                     (0..k).map(|j| xs[j * n_per_cluster].clone()).collect();
 
                 let mut clustering = nearest_centroids(&xs, &centroids);
+				log::debug!("kmeans(k={}): clustering → {:?}", k, clustering);
 
                 loop {
                     let centroids = recompute_centroids(&xs, &clustering, k);
                     let new_clustering = nearest_centroids(&xs, &centroids);
+					log::debug!("kmeans(k={}): new_clustering → {:?}", k, new_clustering);
 
                     // loop until the clustering doesn't change after the new centroids are computed
                     if new_clustering
@@ -90,6 +99,7 @@ macro_rules! impl_kmeans {
                         return clustering;
                     }
                     clustering = new_clustering;
+                log::debug!("<<< Exiting kmeans(k={})", k);
                 }
             }
         }
@@ -106,6 +116,7 @@ mod test {
 
     #[test]
     fn easy_univariate_clustering() {
+		log::debug!(">>> Entering easy_univariate_clustering()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1],
             vec![-1.2],
@@ -117,11 +128,14 @@ mod test {
             vec![1.4],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_univariate_clustering(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_univariate_clustering()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1]);
     }
 
     #[test]
     fn easy_univariate_clustering_odd_number_of_data() {
+		log::debug!(">>> Entering easy_univariate_clustering_odd_number_of_data()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1],
             vec![-1.2],
@@ -134,11 +148,14 @@ mod test {
             vec![1.5],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_univariate_clustering_odd_number_of_data(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_univariate_clustering_odd_number_of_data()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1, 1]);
     }
 
     #[test]
     fn easy_bivariate_clustering() {
+		log::debug!(">>> Entering easy_bivariate_clustering()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1, 0.2],
             vec![-1.2, 0.3],
@@ -150,11 +167,14 @@ mod test {
             vec![1.4, -1.3],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_bivariate_clustering(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_bivariate_clustering()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1]);
     }
 
     #[test]
     fn high_dims() {
+		log::debug!(">>> Entering high_dims()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-2.7825343, -1.7604825, -5.5550113, -2.9752946, -2.7874138],
             vec![-2.9847919, -3.8209332, -2.1531757, -2.2710119, -2.3582877],
@@ -169,6 +189,8 @@ mod test {
         ];
 
         let clustering = kmeans(xs, 2);
+		log::debug!("high_dims(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting high_dims()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 0, 1, 1, 1, 1, 1]);
     }
 }

@@ -17,6 +17,7 @@ pub struct AhoCorasick {
 
 impl AhoCorasick {
     pub fn new(words: &[&str]) -> Self {
+		log::debug!(">>> Entering new(words={:?})", words);
         let root = Rc::new(RefCell::new(ACNode::default()));
         for word in words {
             let mut cur = Rc::clone(&root);
@@ -26,10 +27,12 @@ impl AhoCorasick {
             cur.borrow_mut().lengths.push(word.len());
         }
         Self::build_suffix(Rc::clone(&root));
+		log::debug!("<<< Exiting new(words={:?})", words);
         Self { root }
     }
 
     fn build_suffix(root: Rc<RefCell<ACNode>>) {
+		log::debug!(">>> Entering build_suffix()");
         let mut q = VecDeque::new();
         q.push_back(Rc::clone(&root));
         while let Some(parent) = q.pop_front() {
@@ -57,6 +60,7 @@ impl AhoCorasick {
                     }
                 }
             }
+		log::debug!("<<< Exiting build_suffix()");
         }
     }
 
@@ -65,6 +69,7 @@ impl AhoCorasick {
         let mut cur = Rc::clone(&self.root);
         let mut position: usize = 0;
         for c in s.chars() {
+			log::debug!(">>> Entering search(s={})", s);
             loop {
                 if let Some(child) = Rc::clone(&cur).borrow().trans.get(&c) {
                     cur = Rc::clone(child);
@@ -79,6 +84,7 @@ impl AhoCorasick {
             position += c.len_utf8();
             for &len in &cur.borrow().lengths {
                 ans.push(&s[position - len..position]);
+			log::debug!("<<< Exiting search(s={})", s);
             }
         }
         ans
@@ -91,14 +97,18 @@ mod tests {
 
     #[test]
     fn test_aho_corasick() {
+		log::debug!(">>> Entering test_aho_corasick()");
         let dict = ["abc", "abcd", "xyz", "acxy", "efg", "123", "678", "6543"];
         let ac = AhoCorasick::new(&dict);
         let res = ac.search("ababcxyzacxy12678acxy6543");
+		log::debug!("test_aho_corasick(): res → {:?}", res);
+		log::debug!("<<< Exiting test_aho_corasick()");
         assert_eq!(res, ["abc", "xyz", "acxy", "678", "acxy", "6543",]);
     }
 
     #[test]
     fn test_aho_corasick_with_utf8() {
+		log::debug!(">>> Entering test_aho_corasick_with_utf8()");
         let dict = [
             "abc",
             "中文",
@@ -114,6 +124,7 @@ mod tests {
         ];
         let ac = AhoCorasick::new(&dict);
         let res = ac.search("ababc中xyzacxy12678acxyハンバーガー6543中文");
+		log::debug!("test_aho_corasick_with_utf8(): res → {:?}", res);
         assert_eq!(
             res,
             [
@@ -127,6 +138,7 @@ mod tests {
                 "6543",
                 "中文"
             ]
+		log::debug!("<<< Exiting test_aho_corasick_with_utf8()");
         );
     }
 }

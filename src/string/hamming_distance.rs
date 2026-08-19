@@ -8,6 +8,7 @@ pub enum HammingDistanceError {
 ///
 /// The Hamming distance is defined as the number of positions at which the corresponding characters of the two strings are different.
 pub fn hamming_distance(string_a: &str, string_b: &str) -> Result<usize, HammingDistanceError> {
+	log::debug!(">>> Entering hamming_distance(string_a={},string_b={})", string_a, string_b);
     if string_a.len() != string_b.len() {
         return Err(HammingDistanceError::InputStringsHaveDifferentLength);
     }

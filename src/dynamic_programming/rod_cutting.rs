@@ -12,6 +12,7 @@ use std::cmp::max;
 ///
 /// where `n` is the number of different rod lengths considered.
 pub fn rod_cut(prices: &[usize]) -> usize {
+	log::debug!(">>> Entering rod_cut(prices={:?})", prices);
     if prices.is_empty() {
         return 0;
     }

@@ -26,18 +26,25 @@
 /// This difference arises because the dynamic programming table is filled differently based
 /// on the input order, leading to different tie-breaking decisions and thus different LCS results.
 pub fn longest_common_subsequence(first_seq: &str, second_seq: &str) -> String {
+	log::debug!(">>> Entering longest_common_subsequence(first_seq={},second_seq={})", first_seq, second_seq);
     let first_seq_chars = first_seq.chars().collect::<Vec<char>>();
     let second_seq_chars = second_seq.chars().collect::<Vec<char>>();
 
     let lcs_lengths = initialize_lcs_lengths(&first_seq_chars, &second_seq_chars);
+	log::debug!("longest_common_subsequence(first_seq={},second_seq={}): lcs_lengths → {:?}", first_seq, second_seq, lcs_lengths);
     let lcs_chars = reconstruct_lcs(&first_seq_chars, &second_seq_chars, &lcs_lengths);
+	log::debug!("longest_common_subsequence(first_seq={},second_seq={}): lcs_chars → {:?}", first_seq, second_seq, lcs_chars);
 
+	log::debug!("<<< Exiting longest_common_subsequence(first_seq={},second_seq={})", first_seq, second_seq);
     lcs_chars.into_iter().collect()
 }
 
 fn initialize_lcs_lengths(first_seq_chars: &[char], second_seq_chars: &[char]) -> Vec<Vec<usize>> {
+	log::debug!(">>> Entering initialize_lcs_lengths(first_seq_chars={:?},second_seq_chars={:?})", first_seq_chars, second_seq_chars);
     let first_seq_len = first_seq_chars.len();
     let second_seq_len = second_seq_chars.len();
+	log::debug!("initialize_lcs_lengths(first_seq_chars={:?},second_seq_chars={:?}): second_seq_len → {}", first_seq_chars, second_seq_chars, second_seq_len);
+	log::debug!("initialize_lcs_lengths(first_seq_chars={:?},second_seq_chars={:?}): first_seq_len → {}", first_seq_chars, second_seq_chars, first_seq_len);
 
     let mut lcs_lengths = vec![vec![0; second_seq_len + 1]; first_seq_len + 1];
 
@@ -52,6 +59,7 @@ fn initialize_lcs_lengths(first_seq_chars: &[char], second_seq_chars: &[char]) -
         });
     });
 
+	log::debug!("<<< Exiting initialize_lcs_lengths(first_seq_chars={:?},second_seq_chars={:?})", first_seq_chars, second_seq_chars);
     lcs_lengths
 }
 
@@ -60,6 +68,7 @@ fn reconstruct_lcs(
     second_seq_chars: &[char],
     lcs_lengths: &[Vec<usize>],
 ) -> Vec<char> {
+	log::debug!(">>> Entering reconstruct_lcs(first_seq_chars={:?},second_seq_chars={:?},lcs_lengths={:?})", first_seq_chars, second_seq_chars, lcs_lengths);
     let mut lcs_chars = Vec::new();
     let mut i = first_seq_chars.len();
     let mut j = second_seq_chars.len();
@@ -76,6 +85,7 @@ fn reconstruct_lcs(
     }
 
     lcs_chars.reverse();
+	log::debug!("<<< Exiting reconstruct_lcs(first_seq_chars={:?},second_seq_chars={:?},lcs_lengths={:?})", first_seq_chars, second_seq_chars, lcs_lengths);
     lcs_chars
 }
 

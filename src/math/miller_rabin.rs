@@ -3,6 +3,7 @@ use num_traits::{One, ToPrimitive, Zero};
 use std::cmp::Ordering;
 
 fn modulo_power(mut base: u64, mut power: u64, modulo: u64) -> u64 {
+	log::debug!(">>> Entering modulo_power(base={},power={},modulo={})", base, power, modulo);
     base %= modulo;
     if base == 0 {
         return 0; // return zero if base is divisible by modulo
@@ -13,17 +14,22 @@ fn modulo_power(mut base: u64, mut power: u64, modulo: u64) -> u64 {
         if (power % 2) == 1 {
             ans = (ans * bbase) % (modulo as u128);
         }
+		log::debug!("modulo_power(base={},power={},modulo={}): ans → {}", base, power, modulo, ans);
         bbase = (bbase * bbase) % (modulo as u128);
+		log::debug!("modulo_power(base={},power={},modulo={}): bbase → {}", base, power, modulo, bbase);
         power /= 2;
     }
+    log::debug!("<<< Exiting modulo_power(base={},power={},modulo={})", base, power, modulo);
     ans as u64
 }
 
 fn check_prime_base(number: u64, base: u64, two_power: u64, odd_power: u64) -> bool {
+	log::debug!(">>> Entering check_prime_base(number={},base={},two_power={},odd_power={})", number, base, two_power, odd_power);
     // returns false if base is a witness
     let mut x: u128 = modulo_power(base, odd_power, number) as u128;
     let bnumber: u128 = number as u128;
     if x == 1 || x == (bnumber - 1) {
+		log::debug!("check_prime_base(number={},base={},two_power={},odd_power={}): x → {}", number, base, two_power, odd_power, x);
         return true;
     }
     for _ in 1..two_power {
@@ -32,10 +38,12 @@ fn check_prime_base(number: u64, base: u64, two_power: u64, odd_power: u64) -> b
             return true;
         }
     }
+    log::debug!("<<< Exiting check_prime_base(number={},base={},two_power={},odd_power={})", number, base, two_power, odd_power);
     false
 }
 
 pub fn miller_rabin(number: u64, bases: &[u64]) -> u64 {
+	log::debug!(">>> Entering miller_rabin(number={},bases={:?})", number, bases);
     // returns zero on a probable prime, and a witness if number is not prime
     // A base set for deterministic performance on 64 bit numbers is:
     // [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
@@ -65,6 +73,7 @@ pub fn miller_rabin(number: u64, bases: &[u64]) -> u64 {
 }
 
 pub fn big_miller_rabin(number_ref: &BigUint, bases: &[u64]) -> u64 {
+	log::debug!(">>> Entering big_miller_rabin(bases={:?})", bases);
     let number = number_ref.clone();
 
     if BigUint::from(5u32).cmp(&number) == Ordering::Greater {
@@ -95,6 +104,7 @@ pub fn big_miller_rabin(number_ref: &BigUint, bases: &[u64]) -> u64 {
         }
 
         let mut not_a_witness = false;
+		log::debug!("big_miller_rabin(bases={:?}): not_a_witness → {}", bases, not_a_witness);
 
         for _ in 1..two_power {
             x = (&x * &x) % &number;
@@ -108,6 +118,7 @@ pub fn big_miller_rabin(number_ref: &BigUint, bases: &[u64]) -> u64 {
             continue;
         }
 
+    log::debug!("<<< Exiting big_miller_rabin(bases={:?})", bases);
         return *base;
     }
 
@@ -122,6 +133,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         // these bases make miller rabin deterministic for any number < 2 ^ 64
         // can use smaller number of bases for deterministic performance for numbers < 2 ^ 32
 
@@ -154,11 +166,13 @@ mod tests {
         // 1950202127 * 2058609037 = 4014703722618821699
         assert_ne!(miller_rabin(4014703722618821699, &DEFAULT_BASES), 0);
         // 1679076769 * 2076341633 = 3486337000477823777
+		log::debug!("<<< Exiting basic()");
         assert_ne!(miller_rabin(3486337000477823777, &DEFAULT_BASES), 0);
     }
 
     #[test]
     fn big_basic() {
+		log::debug!(">>> Entering big_basic()");
         assert_eq!(big_miller_rabin(&BigUint::from(3u32), &DEFAULT_BASES), 0);
         assert_eq!(big_miller_rabin(&BigUint::from(7u32), &DEFAULT_BASES), 0);
         assert_eq!(big_miller_rabin(&BigUint::from(11u32), &DEFAULT_BASES), 0);
@@ -206,12 +220,14 @@ mod tests {
         assert_ne!(
             big_miller_rabin(&BigUint::from(3486337000477823777u64), &DEFAULT_BASES),
             0
+		log::debug!("<<< Exiting big_basic()");
         );
     }
 
     #[test]
     #[ignore]
     fn big_primes() {
+		log::debug!(">>> Entering big_primes()");
         let p1 =
             BigUint::parse_bytes(b"4764862697132131451620315518348229845593592794669", 10).unwrap();
         assert_eq!(big_miller_rabin(&p1, &DEFAULT_BASES), 0);
@@ -232,6 +248,7 @@ mod tests {
 
         // RSA-2048
         let n2 = BigUint::parse_bytes(b"4l91lq4a2sgekpv8ukx1gxsk7mfeks46haggorlkazm0oufxwijid6q6v44u5me3kz3ne6yczp4fcvo62oej72oe7pjjtyxgid5b8xdz1e8daafspbzcy1hd8i4urjh9hm0tyylsgqsss3jn372d6fmykpw4bb9cr1ngxnncsbod3kg49o7owzqnsci5pwqt8bch0t60gq0st2gyx7ii3mzhb1pp1yvjyor35hwvok1sxj3ih46rpd27li8y5yli3mgdttcn65k3szfa6rbcnbgkojqjjq72gar6raslnh6sjd2fy7yj3bwo43obvbg3ws8y28kpol3okb5b3fld03sq1kgrj2fugiaxgplva6x5ssilqq4g0b21xy2kiou3sqsgonmqx55v", 36).unwrap();
+		log::debug!("<<< Exiting big_primes()");
         assert_ne!(big_miller_rabin(&n2, &DEFAULT_BASES), 0);
     }
 }

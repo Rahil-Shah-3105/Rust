@@ -4,6 +4,7 @@
 pub fn perceptron(
     data_points: Vec<(Vec<f64>, f64)>,
     max_iterations: usize,
+	log::debug!(">>> Entering perceptron(data_points={:?},max_iterations={},learning_rate={})", data_points, max_iterations, learning_rate);
     learning_rate: f64,
 ) -> Option<(Vec<f64>, f64)> {
     if data_points.is_empty() {
@@ -11,6 +12,7 @@ pub fn perceptron(
     }
 
     let num_features = data_points[0].0.len();
+	log::debug!("perceptron(data_points={:?},max_iterations={},learning_rate={}): num_features → {}", data_points, max_iterations, learning_rate, num_features);
     if num_features == 0 {
         return None;
     }
@@ -44,6 +46,7 @@ pub fn perceptron(
 
 /// Make a prediction using the given weights and bias.
 fn predict(weights: &[f64], bias: f64, features: &[f64]) -> f64 {
+	log::debug!(">>> Entering predict(weights={:?},bias={},features={:?})", weights, bias, features);
     let sum = weights
         .iter()
         .zip(features.iter())
@@ -54,12 +57,14 @@ fn predict(weights: &[f64], bias: f64, features: &[f64]) -> f64 {
     if sum >= 0.0 {
         1.0
     } else {
+		log::debug!("<<< Exiting predict(weights={:?},bias={},features={:?})", weights, bias, features);
         -1.0
     }
 }
 
 /// Classify a new data point using the learned weights and bias.
 pub fn classify(weights: &[f64], bias: f64, features: &[f64]) -> Option<f64> {
+	log::debug!(">>> Entering classify(weights={:?},bias={},features={:?})", weights, bias, features);
     if weights.is_empty() || features.is_empty() {
         return None;
     }
@@ -77,6 +82,7 @@ mod test {
 
     #[test]
     fn test_perceptron_linearly_separable() {
+		log::debug!(">>> Entering test_perceptron_linearly_separable()");
         let data = vec![
             (vec![1.0, 1.0], 1.0),
             (vec![2.0, 2.0], 1.0),
@@ -87,19 +93,24 @@ mod test {
         ];
 
         let result = perceptron(data, 100, 0.1);
+		log::debug!("test_perceptron_linearly_separable(): result → {:?}", result);
         assert!(result.is_some());
 
         let (weights, bias) = result.unwrap();
 
         let prediction1 = classify(&weights, bias, &[2.5, 2.5]);
+		log::debug!("test_perceptron_linearly_separable(): prediction1 → {:?}", prediction1);
         assert_eq!(prediction1, Some(1.0));
 
         let prediction2 = classify(&weights, bias, &[-2.5, -2.5]);
+		log::debug!("test_perceptron_linearly_separable(): prediction2 → {:?}", prediction2);
+		log::debug!("<<< Exiting test_perceptron_linearly_separable()");
         assert_eq!(prediction2, Some(-1.0));
     }
 
     #[test]
     fn test_perceptron_xor_like() {
+		log::debug!(">>> Entering test_perceptron_xor_like()");
         let data = vec![
             (vec![0.0, 0.0], -1.0),
             (vec![1.0, 1.0], 1.0),
@@ -108,14 +119,17 @@ mod test {
         ];
 
         let result = perceptron(data, 100, 0.1);
+		log::debug!("test_perceptron_xor_like(): result → {:?}", result);
         assert!(result.is_some());
 
         let (weights, _bias) = result.unwrap();
+		log::debug!("<<< Exiting test_perceptron_xor_like()");
         assert_eq!(weights.len(), 2);
     }
 
     #[test]
     fn test_perceptron_single_feature() {
+		log::debug!(">>> Entering test_perceptron_single_feature()");
         let data = vec![
             (vec![1.0], 1.0),
             (vec![2.0], 1.0),
@@ -126,63 +140,86 @@ mod test {
         ];
 
         let result = perceptron(data, 100, 0.1);
+		log::debug!("test_perceptron_single_feature(): result → {:?}", result);
         assert!(result.is_some());
 
         let (weights, bias) = result.unwrap();
         assert_eq!(weights.len(), 1);
 
         let prediction1 = classify(&weights, bias, &[5.0]);
+		log::debug!("test_perceptron_single_feature(): prediction1 → {:?}", prediction1);
         assert_eq!(prediction1, Some(1.0));
 
         let prediction2 = classify(&weights, bias, &[-5.0]);
+		log::debug!("test_perceptron_single_feature(): prediction2 → {:?}", prediction2);
+		log::debug!("<<< Exiting test_perceptron_single_feature()");
         assert_eq!(prediction2, Some(-1.0));
     }
 
     #[test]
     fn test_perceptron_empty_data() {
+		log::debug!(">>> Entering test_perceptron_empty_data()");
         let result = perceptron(vec![], 100, 0.1);
+		log::debug!("test_perceptron_empty_data(): result → {:?}", result);
+    log::debug!("<<< Exiting test_perceptron_empty_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_perceptron_empty_features() {
+		log::debug!(">>> Entering test_perceptron_empty_features()");
         let data = vec![(vec![], 1.0), (vec![], -1.0)];
         let result = perceptron(data, 100, 0.1);
+		log::debug!("test_perceptron_empty_features(): result → {:?}", result);
+		log::debug!("<<< Exiting test_perceptron_empty_features()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_perceptron_zero_iterations() {
+		log::debug!(">>> Entering test_perceptron_zero_iterations()");
         let data = vec![(vec![1.0, 1.0], 1.0), (vec![-1.0, -1.0], -1.0)];
 
         let result = perceptron(data, 0, 0.1);
+		log::debug!("test_perceptron_zero_iterations(): result → {:?}", result);
         assert!(result.is_some());
 
         let (weights, bias) = result.unwrap();
         assert_eq!(weights, vec![0.0, 0.0]);
+		log::debug!("<<< Exiting test_perceptron_zero_iterations()");
         assert_eq!(bias, 0.0);
     }
 
     #[test]
     fn test_classify_empty_weights() {
+		log::debug!(">>> Entering test_classify_empty_weights()");
         let result = classify(&[], 0.0, &[1.0, 2.0]);
+		log::debug!("test_classify_empty_weights(): result → {:?}", result);
+    log::debug!("<<< Exiting test_classify_empty_weights()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_classify_empty_features() {
+		log::debug!(">>> Entering test_classify_empty_features()");
         let result = classify(&[1.0, 2.0], 0.0, &[]);
+		log::debug!("test_classify_empty_features(): result → {:?}", result);
+    log::debug!("<<< Exiting test_classify_empty_features()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_classify_mismatched_dimensions() {
+		log::debug!(">>> Entering test_classify_mismatched_dimensions()");
         let result = classify(&[1.0, 2.0], 0.0, &[1.0]);
+		log::debug!("test_classify_mismatched_dimensions(): result → {:?}", result);
+    log::debug!("<<< Exiting test_classify_mismatched_dimensions()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_perceptron_different_learning_rates() {
+		log::debug!(">>> Entering test_perceptron_different_learning_rates()");
         let data = vec![
             (vec![1.0, 1.0], 1.0),
             (vec![2.0, 2.0], 1.0),
@@ -191,7 +228,9 @@ mod test {
         ];
 
         let result1 = perceptron(data.clone(), 100, 0.01);
+		log::debug!("test_perceptron_different_learning_rates(): result1 → {:?}", result1);
         let result2 = perceptron(data, 100, 1.0);
+		log::debug!("test_perceptron_different_learning_rates(): result2 → {:?}", result2);
 
         assert!(result1.is_some());
         assert!(result2.is_some());
@@ -200,14 +239,18 @@ mod test {
         let (weights2, bias2) = result2.unwrap();
 
         let prediction1 = classify(&weights1, bias1, &[3.0, 3.0]);
+		log::debug!("test_perceptron_different_learning_rates(): prediction1 → {:?}", prediction1);
         let prediction2 = classify(&weights2, bias2, &[3.0, 3.0]);
+		log::debug!("test_perceptron_different_learning_rates(): prediction2 → {:?}", prediction2);
 
         assert_eq!(prediction1, Some(1.0));
+		log::debug!("<<< Exiting test_perceptron_different_learning_rates()");
         assert_eq!(prediction2, Some(1.0));
     }
 
     #[test]
     fn test_perceptron_with_bias() {
+		log::debug!(">>> Entering test_perceptron_with_bias()");
         let data = vec![
             (vec![1.0], 1.0),
             (vec![2.0], 1.0),
@@ -218,14 +261,18 @@ mod test {
         ];
 
         let result = perceptron(data, 100, 0.1);
+		log::debug!("test_perceptron_with_bias(): result → {:?}", result);
         assert!(result.is_some());
 
         let (weights, bias) = result.unwrap();
 
         let prediction_positive = classify(&weights, bias, &[5.0]);
+		log::debug!("test_perceptron_with_bias(): prediction_positive → {:?}", prediction_positive);
         let prediction_negative = classify(&weights, bias, &[-5.0]);
+		log::debug!("test_perceptron_with_bias(): prediction_negative → {:?}", prediction_negative);
 
         assert_eq!(prediction_positive, Some(1.0));
+		log::debug!("<<< Exiting test_perceptron_with_bias()");
         assert_eq!(prediction_negative, Some(-1.0));
     }
 }

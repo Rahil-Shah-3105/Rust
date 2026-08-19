@@ -30,6 +30,7 @@ pub enum MatrixError {
 /// * Space complexity: `O(n)`, as only a single row of cumulative costs
 ///   is stored at any time.
 pub fn minimum_cost_path(matrix: Vec<Vec<usize>>) -> Result<usize, MatrixError> {
+	log::debug!(">>> Entering minimum_cost_path(matrix={:?})", matrix);
     // Check if the matrix is rectangular
     if !matrix.iter().all(|row| row.len() == matrix[0].len()) {
         return Err(MatrixError::NonRectangularMatrix);

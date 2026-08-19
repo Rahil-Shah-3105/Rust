@@ -6,6 +6,7 @@
 /// If a number is positive, i.e. it is greater than zero, then sgn(x) = 1
 
 pub fn signum(number: f64) -> i8 {
+	log::debug!(">>> Entering signum(number={})", number);
     if number == 0.0 {
         return 0;
     } else if number > 0.0 {
@@ -21,16 +22,22 @@ mod tests {
 
     #[test]
     fn positive_integer() {
+		log::debug!(">>> Entering positive_integer()");
+		log::debug!("<<< Exiting positive_integer()");
         assert_eq!(signum(15.0), 1);
     }
 
     #[test]
     fn negative_integer() {
+		log::debug!(">>> Entering negative_integer()");
+		log::debug!("<<< Exiting negative_integer()");
         assert_eq!(signum(-30.0), -1);
     }
 
     #[test]
     fn zero() {
+		log::debug!(">>> Entering zero()");
+		log::debug!("<<< Exiting zero()");
         assert_eq!(signum(0.0), 0);
     }
 }

@@ -15,6 +15,7 @@ where
     T: Ord + Copy,
 {
     if input.len() < k {
+		log::debug!(">>> Entering kth_smallest_heap(k={})", k);
         return None;
     }
 
@@ -57,22 +58,27 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let zero: [u8; 0] = [];
         let first = kth_smallest_heap(&zero, 1);
 
+		log::debug!("<<< Exiting empty()");
         assert_eq!(None, first);
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let one = [1];
         let first = kth_smallest_heap(&one, 1);
 
+		log::debug!("<<< Exiting one_element()");
         assert_eq!(1, first.unwrap());
     }
 
     #[test]
     fn many_elements() {
+		log::debug!(">>> Entering many_elements()");
         // 0 1 3 4 5 7 8 9 9 10 12 13 16 17
         let many = [9, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0];
 
@@ -84,6 +90,7 @@ mod tests {
         assert_eq!(0, first.unwrap());
         assert_eq!(3, third.unwrap());
         assert_eq!(7, sixth.unwrap());
+		log::debug!("<<< Exiting many_elements()");
         assert_eq!(17, fourteenth.unwrap());
     }
 }

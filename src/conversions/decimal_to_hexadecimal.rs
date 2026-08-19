@@ -1,4 +1,5 @@
 pub fn decimal_to_hexadecimal(base_num: u64) -> String {
+	log::debug!(">>> Entering decimal_to_hexadecimal(base_num={})", base_num);
     let mut num = base_num;
     let mut hexadecimal_num = String::new();
 
@@ -17,6 +18,7 @@ pub fn decimal_to_hexadecimal(base_num: u64) -> String {
         }
     }
 
+	log::debug!("<<< Exiting decimal_to_hexadecimal(base_num={})", base_num);
     hexadecimal_num
 }
 
@@ -26,31 +28,43 @@ mod tests {
 
     #[test]
     fn test_zero() {
+		log::debug!(">>> Entering test_zero()");
+		log::debug!("<<< Exiting test_zero()");
         assert_eq!(decimal_to_hexadecimal(0), "0");
     }
 
     #[test]
     fn test_single_digit_decimal() {
+		log::debug!(">>> Entering test_single_digit_decimal()");
+		log::debug!("<<< Exiting test_single_digit_decimal()");
         assert_eq!(decimal_to_hexadecimal(9), "9");
     }
 
     #[test]
     fn test_single_digit_hexadecimal() {
+		log::debug!(">>> Entering test_single_digit_hexadecimal()");
+		log::debug!("<<< Exiting test_single_digit_hexadecimal()");
         assert_eq!(decimal_to_hexadecimal(12), "C");
     }
 
     #[test]
     fn test_multiple_digit_hexadecimal() {
+		log::debug!(">>> Entering test_multiple_digit_hexadecimal()");
+		log::debug!("<<< Exiting test_multiple_digit_hexadecimal()");
         assert_eq!(decimal_to_hexadecimal(255), "FF");
     }
 
     #[test]
     fn test_big() {
+		log::debug!(">>> Entering test_big()");
+		log::debug!("<<< Exiting test_big()");
         assert_eq!(decimal_to_hexadecimal(u64::MAX), "FFFFFFFFFFFFFFFF");
     }
 
     #[test]
     fn test_random() {
+		log::debug!(">>> Entering test_random()");
+		log::debug!("<<< Exiting test_random()");
         assert_eq!(decimal_to_hexadecimal(123456), "1E240");
     }
 }

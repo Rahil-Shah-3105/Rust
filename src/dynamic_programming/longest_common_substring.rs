@@ -18,8 +18,10 @@
 ///
 /// Returns the length of the longest common substring between `s1` and `s2`.
 pub fn longest_common_substring(s1: &str, s2: &str) -> usize {
+	log::debug!(">>> Entering longest_common_substring(s1={},s2={})", s1, s2);
     let mut substr_len = vec![vec![0; s2.len() + 1]; s1.len() + 1];
     let mut max_len = 0;
+	log::debug!("longest_common_substring(s1={},s2={}): max_len → {}", s1, s2, max_len);
 
     s1.as_bytes().iter().enumerate().for_each(|(i, &c1)| {
         s2.as_bytes().iter().enumerate().for_each(|(j, &c2)| {
@@ -30,6 +32,7 @@ pub fn longest_common_substring(s1: &str, s2: &str) -> usize {
         });
     });
 
+	log::debug!("<<< Exiting longest_common_substring(s1={},s2={})", s1, s2);
     max_len
 }
 

@@ -14,12 +14,15 @@ const RADIX: usize = 256;
 /// # Returns
 /// A vector of starting indices where the pattern is found.
 pub fn rabin_karp(text: &str, pattern: &str) -> Vec<usize> {
+	log::debug!(">>> Entering rabin_karp(text={},pattern={})", text, pattern);
     if text.is_empty() || pattern.is_empty() || pattern.len() > text.len() {
         return vec![];
     }
 
     let pat_hash = compute_hash(pattern);
+	log::debug!("rabin_karp(text={},pattern={}): pat_hash → {}", text, pattern, pat_hash);
     let mut radix_pow = 1;
+	log::debug!("rabin_karp(text={},pattern={}): radix_pow → {}", text, pattern, radix_pow);
 
     // Compute RADIX^(n-1) % MOD
     for _ in 0..pattern.len() - 1 {
@@ -38,6 +41,7 @@ pub fn rabin_karp(text: &str, pattern: &str) -> Vec<usize> {
             result.push(i);
         }
     }
+    log::debug!("<<< Exiting rabin_karp(text={},pattern={})", text, pattern);
     result
 }
 
@@ -49,10 +53,13 @@ pub fn rabin_karp(text: &str, pattern: &str) -> Vec<usize> {
 /// # Returns
 /// The hash value of the string modulo `MOD`.
 fn compute_hash(s: &str) -> usize {
+	log::debug!(">>> Entering compute_hash(s={})", s);
     let mut hash_val = 0;
     for &byte in s.as_bytes().iter() {
+		log::debug!("compute_hash(s={}): hash_val → {}", s, hash_val);
         hash_val = (hash_val * RADIX + byte as usize) % MOD;
     }
+	log::debug!("<<< Exiting compute_hash(s={})", s);
     hash_val
 }
 
@@ -74,11 +81,13 @@ fn update_hash(
     old_hash: usize,
     radix_pow: usize,
 ) -> usize {
+	log::debug!(">>> Entering update_hash(s={},old_idx={},new_idx={},old_hash=<redacted>,radix_pow={})", s, old_idx, new_idx, radix_pow);
     let mut new_hash = old_hash;
     let old_char = s.as_bytes()[old_idx] as usize;
     let new_char = s.as_bytes()[new_idx] as usize;
     new_hash = (new_hash + MOD - (old_char * radix_pow % MOD)) % MOD;
     new_hash = (new_hash * RADIX + new_char) % MOD;
+	log::debug!("<<< Exiting update_hash(s={},old_idx={},new_idx={},old_hash=<redacted>,radix_pow={})", s, old_idx, new_idx, radix_pow);
     new_hash
 }
 

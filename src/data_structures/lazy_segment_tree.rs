@@ -11,7 +11,9 @@ pub struct LazySegmentTree<T: Debug + Default + Ord + Copy + Display + AddAssign
 
 impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> LazySegmentTree<T> {
     pub fn from_vec(arr: &[T], merge: fn(T, T) -> T) -> Self {
+		log::debug!(">>> Entering from_vec()");
         let len = arr.len();
+		log::debug!("from_vec(): len → {}", len);
         let mut sgtr = LazySegmentTree {
             len,
             tree: vec![T::default(); 4 * len],
@@ -21,6 +23,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         if len != 0 {
             sgtr.build_recursive(arr, 1, 0..len, merge);
         }
+		log::debug!("<<< Exiting from_vec()");
         sgtr
     }
 
@@ -31,17 +34,20 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         range: Range<usize>,
         merge: fn(T, T) -> T,
     ) {
+		log::debug!(">>> Entering build_recursive(idx={})", idx);
         if range.end - range.start == 1 {
             self.tree[idx] = arr[range.start];
         } else {
             let mid = range.start + (range.end - range.start) / 2;
             self.build_recursive(arr, 2 * idx, range.start..mid, merge);
             self.build_recursive(arr, 2 * idx + 1, mid..range.end, merge);
+			log::debug!("<<< Exiting build_recursive(idx={})", idx);
             self.tree[idx] = merge(self.tree[2 * idx], self.tree[2 * idx + 1]);
         }
     }
 
     pub fn query(&mut self, range: Range<usize>) -> Option<T> {
+		log::debug!(">>> Entering query()");
         self.query_recursive(1, 0..self.len, &range)
     }
 
@@ -51,6 +57,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         element_range: Range<usize>,
         query_range: &Range<usize>,
     ) -> Option<T> {
+		log::debug!(">>> Entering query_recursive(idx={})", idx);
         if element_range.start >= query_range.end || element_range.end <= query_range.start {
             return None;
         }
@@ -62,6 +69,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         }
         let mid = element_range.start + (element_range.end - element_range.start) / 2;
         let left = self.query_recursive(idx * 2, element_range.start..mid, query_range);
+		log::debug!("<<< Exiting query_recursive(idx={})", idx);
         let right = self.query_recursive(idx * 2 + 1, mid..element_range.end, query_range);
         match (left, right) {
             (None, None) => None,
@@ -72,6 +80,8 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
     }
 
     pub fn update(&mut self, target_range: Range<usize>, val: T) {
+		log::debug!(">>> Entering update()");
+		log::debug!("<<< Exiting update()");
         self.update_recursive(1, 0..self.len, &target_range, val);
     }
 
@@ -82,6 +92,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         target_range: &Range<usize>,
         val: T,
     ) {
+		log::debug!(">>> Entering update_recursive(idx={})", idx);
         if element_range.start >= target_range.end || element_range.end <= target_range.start {
             return;
         }
@@ -103,10 +114,12 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         self.update_recursive(idx * 2, element_range.start..mid, target_range, val);
         self.update_recursive(idx * 2 + 1, mid..element_range.end, target_range, val);
         self.tree[idx] = (self.merge)(self.tree[idx * 2], self.tree[idx * 2 + 1]);
+		log::debug!("<<< Exiting update_recursive(idx={})", idx);
         self.lazy[idx] = Some(T::default());
     }
 
     fn propagation(&mut self, idx: usize, element_range: &Range<usize>, parent_lazy: T) {
+		log::debug!(">>> Entering propagation(idx={})", idx);
         if element_range.end - element_range.start == 1 {
             self.tree[idx] += parent_lazy;
             return;
@@ -118,6 +131,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
         let mid = element_range.start + (element_range.end - element_range.start) / 2;
         self.propagation(idx * 2, &(element_range.start..mid), parent_lazy + lazy);
         self.propagation(idx * 2 + 1, &(mid..element_range.end), parent_lazy + lazy);
+		log::debug!("<<< Exiting propagation(idx={})", idx);
         self.tree[idx] = (self.merge)(self.tree[idx * 2], self.tree[idx * 2 + 1]);
     }
 }
@@ -131,6 +145,7 @@ mod tests {
 
     #[test]
     fn test_min_segments() {
+		log::debug!(">>> Entering test_min_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut min_seg_tree = LazySegmentTree::from_vec(&vec, min);
         // [-30, 2, -4, 7, (3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
@@ -142,11 +157,13 @@ mod tests {
         // [-30, (2, -4), 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8]
         assert_eq!(Some(-4), min_seg_tree.query(1..3));
         // [-30, (2, -4, 7, 3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
+		log::debug!("<<< Exiting test_min_segments()");
         assert_eq!(Some(-5), min_seg_tree.query(1..7));
     }
 
     #[test]
     fn test_max_segments() {
+		log::debug!(">>> Entering test_max_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut max_seg_tree = LazySegmentTree::from_vec(&vec, max);
         // [-30, 2, -4, 7, (3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
@@ -158,11 +175,13 @@ mod tests {
         // [-30, (2, -4), 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8]
         assert_eq!(Some(2), max_seg_tree.query(1..3));
         // [-30, (2, -4, 7, 3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
+		log::debug!("<<< Exiting test_max_segments()");
         assert_eq!(Some(7), max_seg_tree.query(1..7));
     }
 
     #[test]
     fn test_sum_segments() {
+		log::debug!(">>> Entering test_sum_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut max_seg_tree = LazySegmentTree::from_vec(&vec, |x, y| x + y);
         // [-30, 2, -4, 7, (3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
@@ -174,11 +193,13 @@ mod tests {
         // [-30, (2, -4), 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8]
         assert_eq!(Some(-2), max_seg_tree.query(1..3));
         // [-30, (2, -4, 7, 3, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
+		log::debug!("<<< Exiting test_sum_segments()");
         assert_eq!(Some(9), max_seg_tree.query(1..7));
     }
 
     #[test]
     fn test_update_segments_tiny() {
+		log::debug!(">>> Entering test_update_segments_tiny()");
         let vec = vec![0, 0, 0, 0, 0];
         let mut update_seg_tree = LazySegmentTree::from_vec(&vec, |x, y| x + y);
         update_seg_tree.update(0..3, 3);
@@ -187,11 +208,13 @@ mod tests {
         assert_eq!(Some(3), update_seg_tree.query(1..2));
         assert_eq!(Some(6), update_seg_tree.query(2..3));
         assert_eq!(Some(3), update_seg_tree.query(3..4));
+		log::debug!("<<< Exiting test_update_segments_tiny()");
         assert_eq!(Some(3), update_seg_tree.query(4..5));
     }
 
     #[test]
     fn test_update_segments() {
+		log::debug!(">>> Entering test_update_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut update_seg_tree = LazySegmentTree::from_vec(&vec, |x, y| x + y);
         // -> [-30, (5, -1, 10, 6), -5, 6, 11, -20, 9, 14, 15, 5, 2, -8]
@@ -206,6 +229,7 @@ mod tests {
         // [-30, (5, -1), 10, 6, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8]
         assert_eq!(Some(4), update_seg_tree.query(1..3));
         // [-30, (5, -1, 10, 6, -5, 6), 11, -20, 9, 14, 15, 5, 2, -8]
+		log::debug!("<<< Exiting test_update_segments()");
         assert_eq!(Some(21), update_seg_tree.query(1..7));
     }
 
@@ -215,24 +239,31 @@ mod tests {
 
     #[quickcheck]
     fn check_overall_interval_min(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_overall_interval_min(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, min);
+		log::debug!("<<< Exiting check_overall_interval_min(array={:?})", array);
         TestResult::from_bool(array.iter().min().copied() == seg_tree.query(0..array.len()))
     }
 
     #[quickcheck]
     fn check_overall_interval_max(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_overall_interval_max(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, max);
+		log::debug!("<<< Exiting check_overall_interval_max(array={:?})", array);
         TestResult::from_bool(array.iter().max().copied() == seg_tree.query(0..array.len()))
     }
 
     #[quickcheck]
     fn check_overall_interval_sum(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_overall_interval_sum(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, max);
+		log::debug!("<<< Exiting check_overall_interval_sum(array={:?})", array);
         TestResult::from_bool(array.iter().max().copied() == seg_tree.query(0..array.len()))
     }
 
     #[quickcheck]
     fn check_single_interval_min(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_single_interval_min(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, min);
         for (i, value) in array.into_iter().enumerate() {
             let res = seg_tree.query(Range {
@@ -248,6 +279,7 @@ mod tests {
 
     #[quickcheck]
     fn check_single_interval_max(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_single_interval_max(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, max);
         for (i, value) in array.into_iter().enumerate() {
             let res = seg_tree.query(Range {
@@ -263,6 +295,7 @@ mod tests {
 
     #[quickcheck]
     fn check_single_interval_sum(array: Vec<i32>) -> TestResult {
+		log::debug!(">>> Entering check_single_interval_sum(array={:?})", array);
         let mut seg_tree = LazySegmentTree::from_vec(&array, max);
         for (i, value) in array.into_iter().enumerate() {
             let res = seg_tree.query(Range {

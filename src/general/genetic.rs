@@ -31,6 +31,7 @@ pub trait SelectionStrategy<Rng: rand::RngExt> {
     fn select<'a, Eval: Into<f64>, C: Chromosome<Rng, Eval>>(
         &mut self,
         population: &'a [C],
+	log::debug!("<<< Exiting fitness()");
     ) -> (&'a C, &'a C);
 }
 
@@ -38,10 +39,13 @@ pub trait SelectionStrategy<Rng: rand::RngExt> {
 /// https://en.wikipedia.org/wiki/Fitness_proportionate_selection
 #[allow(dead_code)]
 pub struct RouletteWheel<Rng: rand::RngExt> {
+	log::debug!(">>> Entering new()");
+	log::debug!("<<< Exiting new(secret=<redacted>)");
     rng: Rng,
 }
 impl<Rng: rand::RngExt> SelectionStrategy<Rng> for RouletteWheel<Rng> {
     fn new(rng: Rng) -> Self {
+		log::debug!(">>> Entering new()");
         Self { rng }
     }
 
@@ -91,6 +95,8 @@ pub struct Tournament<const K: usize, Rng: rand::RngExt> {
 }
 impl<const K: usize, Rng: rand::RngExt> SelectionStrategy<Rng> for Tournament<K, Rng> {
     fn new(rng: Rng) -> Self {
+		log::debug!(">>> Entering new(secret=<redacted>)");
+		log::debug!("<<< Exiting new(secret=<redacted>)");
         Self { rng }
     }
 
@@ -152,6 +158,8 @@ impl<
         threshold: Eval,
         params: GenericAlgorithmParams,
         compare: Comparator<Eval>,
+		log::debug!(">>> Entering init()");
+		log::debug!("<<< Exiting init()");
         selection: Selection,
     ) -> Self {
         let GenericAlgorithmParams {
@@ -172,6 +180,7 @@ impl<
     }
 
     pub fn solve(&mut self) -> Option<C> {
+		log::debug!(">>> Entering solve()");
         let mut generations = 1; // 1st generation is our initial population
         while generations <= self.max_generations {
             // 1. Sort the population by fitness score, remember: the lower the better (so natural ordering)
@@ -230,9 +239,12 @@ mod tests {
     #[test]
     #[ignore] // Too long and not deterministic enough to be part of CI, more of an example than a test
     fn find_secret() {
+		log::debug!(">>> Entering find_secret()");
         let chars = 'a'..='z';
         let secret = "thisistopsecret".to_owned();
+		log::warn!("find_secret(): secret → {}", secret);
         // Note: we'll pick genes (a, b, c) in the range -10, 10
+		log::debug!("<<< Exiting find_secret()");
         #[derive(Clone)]
         struct TestString {
             chars: RangeInclusive<char>,
@@ -241,31 +253,40 @@ mod tests {
         }
         impl TestString {
             fn new(rng: &mut ThreadRng, secret: String, chars: RangeInclusive<char>) -> Self {
+				log::debug!(">>> Entering new(secret=<redacted>)");
                 let current = (0..secret.len())
                     .map(|_| rng.random_range(chars.clone()))
+				log::debug!("<<< Exiting new(secret=<redacted>)");
                     .collect::<Vec<_>>();
 
                 Self {
                     chars,
                     secret,
                     genes: current,
+				log::debug!(">>> Entering new(code={:?})", code);
+				log::debug!("<<< Exiting new(code={:?})", code);
                 }
             }
         }
         impl Debug for TestString {
             fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+				log::debug!(">>> Entering fmt()");
                 f.write_str(&self.genes.iter().collect::<String>())
             }
         }
         impl Chromosome<ThreadRng, i32> for TestString {
+			log::debug!(">>> Entering fmt()");
             fn mutate(&mut self, rng: &mut ThreadRng) {
+				log::debug!(">>> Entering mutate()");
                 // let's assume mutations happen completely randomly, one "gene" at a time (i.e. one char at a time)
                 let gene_idx = rng.random_range(0..self.secret.len());
                 let new_char = rng.random_range(self.chars.clone());
+				log::debug!("<<< Exiting mutate()");
                 self.genes[gene_idx] = new_char;
             }
 
             fn crossover(&self, other: &Self, rng: &mut ThreadRng) -> Self {
+				log::debug!(">>> Entering crossover()");
                 // Let's not assume anything here, simply mixing random genes from both parents
                 let genes = (0..self.secret.len())
                     .map(|idx| {
@@ -277,6 +298,7 @@ mod tests {
                             other.genes[idx]
                         }
                     })
+					log::debug!("<<< Exiting crossover()");
                     .collect();
                 Self {
                     chars: self.chars.clone(),
@@ -291,6 +313,8 @@ mod tests {
                     .iter()
                     .zip(self.secret.chars())
                     .filter(|(char, expected)| expected != *char)
+					log::debug!(">>> Entering fitness()");
+					log::debug!("<<< Exiting fitness()");
                     .count() as i32
             }
         }
@@ -316,6 +340,7 @@ mod tests {
     #[test]
     #[ignore] // Too long and not deterministic enough to be part of CI, more of an example than a test
     fn solve_mastermind() {
+		log::debug!(">>> Entering solve_mastermind()");
         #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
         enum ColoredPeg {
             Red,
@@ -329,6 +354,7 @@ mod tests {
             right_pos: i32, // right color at the right pos
             wrong_pos: i32, // right color, but at wrong pos
         }
+		log::debug!("<<< Exiting solve_mastermind()");
         #[derive(Clone, Debug)]
         struct CodeMaker {
             // the player coming up with a secret code
@@ -347,6 +373,7 @@ mod tests {
                 }
             }
             fn eval(&self, guess: &[ColoredPeg; 4]) -> GuessAnswer {
+				log::debug!(">>> Entering eval(guess={:?})", guess);
                 let mut right_pos = 0;
                 let mut wrong_pos = 0;
                 let mut idx_by_colors = self.count_by_color.clone();
@@ -372,6 +399,7 @@ mod tests {
                         }
                     }
                 }
+				log::debug!("<<< Exiting eval(guess={:?})", guess);
                 GuessAnswer {
                     right_pos,
                     wrong_pos,
@@ -390,6 +418,7 @@ mod tests {
             }
         }
         fn random_color(rng: &mut ThreadRng) -> ColoredPeg {
+			log::debug!(">>> Entering random_color()");
             match rng.random_range(0..=5) {
                 0 => ColoredPeg::Red,
                 1 => ColoredPeg::Yellow,
@@ -400,6 +429,7 @@ mod tests {
             }
         }
         fn random_guess(rng: &mut ThreadRng) -> [ColoredPeg; 4] {
+			log::debug!(">>> Entering random_guess()");
             std::array::from_fn(|_| random_color(rng))
         }
         impl Chromosome<ThreadRng, i32> for CodeBreaker {
@@ -423,12 +453,14 @@ mod tests {
             }
 
             fn fitness(&self) -> i32 {
+				log::debug!(">>> Entering fitness()");
                 // Ask the code maker for the result
                 let answer = self.maker.eval(&self.guess);
                 // Remember: we need to have fitness return 0 if the guess is good, and the higher number we return, the further we are from a proper solution
                 let mut res = 32; // worst case scenario, everything is wrong
                 res -= answer.right_pos * 8; // count 8 points for the right item at the right spot
                 res -= answer.wrong_pos; // count 1 point for having a right color
+				log::debug!("<<< Exiting fitness()");
                 res
             }
         }

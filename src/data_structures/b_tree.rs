@@ -25,6 +25,7 @@ where
     T: Ord,
 {
     fn new(degree: usize, _keys: Option<Vec<T>>, _children: Option<Vec<Node<T>>>) -> Self {
+		log::debug!(">>> Entering new(degree={})", degree);
         Node {
             keys: match _keys {
                 Some(_keys) => _keys,
@@ -34,10 +35,12 @@ where
                 Some(_children) => _children,
                 None => Vec::with_capacity(degree),
             },
+		log::debug!("<<< Exiting new(branch_factor={})", branch_factor);
         }
     }
 
     fn is_leaf(&self) -> bool {
+		log::debug!(">>> Entering is_leaf()");
         self.children.is_empty()
     }
 }
@@ -48,10 +51,12 @@ impl BTreeProps {
             degree,
             max_keys: degree - 1,
             mid_key_index: (degree - 1) / 2,
+		log::debug!(">>> Entering new(branch_factor={})", branch_factor);
         }
     }
 
     fn is_maxed_out<T: Ord + Copy>(&self, node: &Node<T>) -> bool {
+		log::debug!(">>> Entering is_maxed_out()");
         node.keys.len() == self.max_keys
     }
 
@@ -59,6 +64,7 @@ impl BTreeProps {
     /// Move the middle_key to parent node and split the child_node's
     /// keys/chilren_nodes into half
     fn split_child<T: Ord + Copy + Default>(&self, parent: &mut Node<T>, child_index: usize) {
+		log::debug!(">>> Entering split_child(child_index={})", child_index);
         let child = &mut parent.children[child_index];
         let middle_key = child.keys[self.mid_key_index];
         let right_keys = match child.keys.split_off(self.mid_key_index).split_first() {
@@ -76,10 +82,12 @@ impl BTreeProps {
         let new_child_node: Node<T> = Node::new(self.degree, Some(right_keys), right_children);
 
         parent.keys.insert(child_index, middle_key);
+		log::debug!("<<< Exiting split_child(child_index={})", child_index);
         parent.children.insert(child_index + 1, new_child_node);
     }
 
     fn insert_non_full<T: Ord + Copy + Default>(&mut self, node: &mut Node<T>, key: T) {
+		log::debug!(">>> Entering insert_non_full()");
         let mut index: isize = isize::try_from(node.keys.len()).ok().unwrap() - 1;
         while index >= 0 && node.keys[index as usize] >= key {
             index -= 1;
@@ -98,9 +106,11 @@ impl BTreeProps {
             }
 
             self.insert_non_full(&mut node.children[u_index], key);
+		log::debug!("<<< Exiting insert_non_full()");
         }
     }
     fn traverse_node<T: Ord + Debug>(node: &Node<T>, depth: usize) {
+		log::debug!(">>> Entering traverse_node(depth={})", depth);
         if node.is_leaf() {
             print!(" {0:{<1$}{2:?}{0:}<1$} ", "", depth, node.keys);
         } else {
@@ -112,6 +122,7 @@ impl BTreeProps {
                 print!("{0:{<1$}{2:?}{0:}<1$}", "", depth, key);
             }
             Self::traverse_node(node.children.last().unwrap(), _depth);
+		log::debug!("<<< Exiting traverse_node(depth={})", depth);
         }
     }
 }
@@ -129,6 +140,7 @@ where
     }
 
     pub fn insert(&mut self, key: T) {
+		log::debug!(">>> Entering insert()");
         if self.props.is_maxed_out(&self.root) {
             // Create an empty root and split the old root...
             let mut new_root = Node::new(self.props.degree, None, None);
@@ -136,15 +148,19 @@ where
             self.root.children.insert(0, new_root);
             self.props.split_child(&mut self.root, 0);
         }
+		log::debug!("<<< Exiting insert()");
         self.props.insert_non_full(&mut self.root, key);
     }
 
     pub fn traverse(&self) {
+		log::debug!(">>> Entering traverse()");
         BTreeProps::traverse_node(&self.root, 0);
+		log::debug!("<<< Exiting traverse()");
         println!();
     }
 
     pub fn search(&self, key: T) -> bool {
+		log::debug!(">>> Entering search()");
         let mut current_node = &self.root;
         loop {
             match current_node.keys.binary_search(&key) {
@@ -155,6 +171,8 @@ where
                     }
                     current_node = &current_node.children[index];
                 }
+			log::error!("Exception in search(): (unprintable)");
+        log::debug!("<<< Exiting search()");
             }
         }
     }

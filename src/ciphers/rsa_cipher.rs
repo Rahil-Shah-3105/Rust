@@ -45,11 +45,13 @@ pub struct PrivateKey {
 ///
 /// The GCD of `a` and `b`
 fn gcd(mut a: u64, mut b: u64) -> u64 {
+	log::debug!(">>> Entering gcd(a={},b={})", a, b);
     while b != 0 {
         let temp = b;
         b = a % b;
         a = temp;
     }
+	log::debug!("<<< Exiting gcd(a={},b={})", a, b);
     a
 }
 
@@ -66,6 +68,7 @@ fn gcd(mut a: u64, mut b: u64) -> u64 {
 ///
 /// The modular multiplicative inverse of `a` modulo `m`, or `None` if it doesn't exist
 fn mod_inverse(a: i64, m: i64) -> Option<u64> {
+	log::debug!(">>> Entering mod_inverse(a={},m={})", a, m);
     let (mut old_r, mut r) = (a, m);
     let (mut old_s, mut s) = (1_i64, 0_i64);
 
@@ -83,6 +86,7 @@ fn mod_inverse(a: i64, m: i64) -> Option<u64> {
         Some((old_s + m) as u64)
     } else {
         Some(old_s as u64)
+	log::debug!("<<< Exiting mod_inverse(a={},m={})", a, m);
     }
 }
 
@@ -100,11 +104,13 @@ fn mod_inverse(a: i64, m: i64) -> Option<u64> {
 ///
 /// The result of (base^exp) % modulus
 fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
+	log::debug!(">>> Entering mod_pow(base={},exp={},modulus={})", base, exp, modulus);
     if modulus == 1 {
         return 0;
     }
 
     let mut result = 1;
+	log::debug!("mod_pow(base={},exp={},modulus={}): result → {}", base, exp, modulus, result);
     base %= modulus;
 
     while exp > 0 {
@@ -115,6 +121,8 @@ fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
         base = ((base as u128 * base as u128) % modulus as u128) as u64;
     }
 
+	log::debug!("mod_pow(base={},exp={},modulus={}): base → {}", base, exp, modulus, base);
+    log::debug!("<<< Exiting mod_pow(base={},exp={},modulus={})", base, exp, modulus);
     result
 }
 
@@ -146,6 +154,7 @@ fn mod_pow(mut base: u64, mut exp: u64, modulus: u64) -> u64 {
 ///
 /// Panics if the modular inverse cannot be computed
 pub fn generate_keypair(p: u64, q: u64) -> (PublicKey, PrivateKey) {
+	log::debug!(">>> Entering generate_keypair(p={},q={})", p, q);
     let n = p * q;
     let phi = (p - 1) * (q - 1);
 
@@ -160,10 +169,12 @@ pub fn generate_keypair(p: u64, q: u64) -> (PublicKey, PrivateKey) {
 
     // Compute d, the modular multiplicative inverse of e mod phi
     let d = mod_inverse(e as i64, phi as i64).expect("Failed to compute modular inverse");
+	log::debug!("generate_keypair(p={},q={}): d → {}", p, q, d);
 
     let public_key = PublicKey { n, e };
     let private_key = PrivateKey { n, d };
 
+	log::debug!("<<< Exiting generate_keypair(p={},q={})", p, q);
     (public_key, private_key)
 }
 
@@ -190,6 +201,7 @@ pub fn generate_keypair(p: u64, q: u64) -> (PublicKey, PrivateKey) {
 /// assert_eq!(decrypted, message);
 /// ```
 pub fn encrypt(message: u64, public_key: &PublicKey) -> u64 {
+	log::debug!(">>> Entering encrypt(message={},public_key={:?})", message, public_key);
     mod_pow(message, public_key.e, public_key.n)
 }
 
@@ -216,6 +228,7 @@ pub fn encrypt(message: u64, public_key: &PublicKey) -> u64 {
 /// assert_eq!(plaintext, message);
 /// ```
 pub fn decrypt(ciphertext: u64, private_key: &PrivateKey) -> u64 {
+	log::debug!(">>> Entering decrypt(ciphertext={},private_key=<redacted>)", ciphertext);
     mod_pow(ciphertext, private_key.d, private_key.n)
 }
 
@@ -241,6 +254,7 @@ pub fn decrypt(ciphertext: u64, private_key: &PrivateKey) -> u64 {
 /// assert_eq!(decrypted, "HI");
 /// ```
 pub fn encrypt_text(message: &str, public_key: &PublicKey) -> Vec<u64> {
+	log::debug!(">>> Entering encrypt_text(message={},public_key={:?})", message, public_key);
     message
         .chars()
         .map(|c| encrypt(c as u64, public_key))
@@ -269,10 +283,13 @@ pub fn encrypt_text(message: &str, public_key: &PublicKey) -> Vec<u64> {
 /// assert_eq!(decrypted, "HELLO");
 /// ```
 pub fn decrypt_text(ciphertext: &[u64], private_key: &PrivateKey) -> String {
+	log::debug!(">>> Entering decrypt_text(ciphertext={:?},private_key=<redacted>)", ciphertext);
     ciphertext
         .iter()
         .map(|&c| {
             let decrypted = decrypt(c, private_key);
+			log::debug!("decrypt_text(ciphertext={:?},private_key=<redacted>): decrypted → {}", ciphertext, decrypted);
+            log::debug!("<<< Exiting decrypt_text(ciphertext={:?},private_key=<redacted>)", ciphertext);
             char::from_u32(decrypted as u32).unwrap_or('?')
         })
         .collect()
@@ -284,28 +301,35 @@ mod tests {
 
     #[test]
     fn test_gcd() {
+		log::debug!(">>> Entering test_gcd()");
         assert_eq!(gcd(48, 18), 6);
         assert_eq!(gcd(17, 13), 1);
         assert_eq!(gcd(100, 50), 50);
+		log::debug!("<<< Exiting test_gcd()");
         assert_eq!(gcd(7, 7), 7);
     }
 
     #[test]
     fn test_mod_inverse() {
+		log::debug!(">>> Entering test_mod_inverse()");
         assert_eq!(mod_inverse(17, 3120), Some(2753));
         assert_eq!(mod_inverse(7, 40), Some(23));
+		log::debug!("<<< Exiting test_mod_inverse()");
         assert!(mod_inverse(4, 8).is_none()); // No inverse exists
     }
 
     #[test]
     fn test_mod_pow() {
+		log::debug!(">>> Entering test_mod_pow()");
         assert_eq!(mod_pow(4, 13, 497), 445);
         assert_eq!(mod_pow(2, 10, 1000), 24);
+		log::debug!("<<< Exiting test_mod_pow()");
         assert_eq!(mod_pow(3, 5, 7), 5);
     }
 
     #[test]
     fn test_generate_keypair() {
+		log::debug!(">>> Entering test_generate_keypair()");
         let (public, private) = generate_keypair(61, 53);
 
         // n should be p * q
@@ -317,79 +341,108 @@ mod tests {
         assert_eq!(gcd(public.e, phi), 1);
 
         // Verify that (e * d) % phi == 1
+		log::debug!("<<< Exiting test_generate_keypair()");
         assert_eq!((public.e * private.d) % phi, 1);
     }
 
     #[test]
     fn test_encrypt_decrypt_number() {
+		log::debug!(">>> Entering test_encrypt_decrypt_number()");
         let (public, private) = generate_keypair(61, 53);
         let message = 65;
 
         let encrypted = encrypt(message, &public);
+		log::debug!("test_encrypt_decrypt_number(): encrypted → {}", encrypted);
         // Encrypted value will vary based on e, so we just check it's different
         assert_ne!(encrypted, message);
 
         let decrypted = decrypt(encrypted, &private);
+		log::debug!("test_encrypt_decrypt_number(): decrypted → {}", decrypted);
+		log::debug!("<<< Exiting test_encrypt_decrypt_number()");
         assert_eq!(decrypted, message);
     }
 
     #[test]
     fn test_encrypt_decrypt_various_numbers() {
+		log::debug!(">>> Entering test_encrypt_decrypt_various_numbers()");
         let (public, private) = generate_keypair(61, 53);
 
         for message in [1, 42, 100, 255, 1000, 3000] {
             let encrypted = encrypt(message, &public);
+			log::debug!("test_encrypt_decrypt_various_numbers(): encrypted → {}", encrypted);
             let decrypted = decrypt(encrypted, &private);
+			log::debug!("test_encrypt_decrypt_various_numbers(): decrypted → {}", decrypted);
             assert_eq!(decrypted, message, "Failed for message: {message}");
+		log::debug!("<<< Exiting test_encrypt_decrypt_various_numbers()");
         }
     }
 
     #[test]
     fn test_encrypt_decrypt_text() {
+		log::debug!(">>> Entering test_encrypt_decrypt_text()");
         let (public, private) = generate_keypair(61, 53);
 
         let message = "HI";
+		log::debug!("test_encrypt_decrypt_text(): message → {}", message);
         let encrypted = encrypt_text(message, &public);
+		log::debug!("test_encrypt_decrypt_text(): encrypted → {:?}", encrypted);
         let decrypted = decrypt_text(&encrypted, &private);
+		log::debug!("test_encrypt_decrypt_text(): decrypted → {}", decrypted);
 
+		log::debug!("<<< Exiting test_encrypt_decrypt_text()");
         assert_eq!(decrypted, message);
     }
 
     #[test]
     fn test_encrypt_decrypt_longer_text() {
+		log::debug!(">>> Entering test_encrypt_decrypt_longer_text()");
         let (public, private) = generate_keypair(61, 53);
 
         let message = "HELLO";
+		log::debug!("test_encrypt_decrypt_longer_text(): message → {}", message);
         let encrypted = encrypt_text(message, &public);
+		log::debug!("test_encrypt_decrypt_longer_text(): encrypted → {:?}", encrypted);
         let decrypted = decrypt_text(&encrypted, &private);
+		log::debug!("test_encrypt_decrypt_longer_text(): decrypted → {}", decrypted);
 
+		log::debug!("<<< Exiting test_encrypt_decrypt_longer_text()");
         assert_eq!(decrypted, message);
     }
 
     #[test]
     fn test_different_primes() {
+		log::debug!(">>> Entering test_different_primes()");
         let (public, private) = generate_keypair(17, 19);
 
         let message = 42;
         let encrypted = encrypt(message, &public);
+		log::debug!("test_different_primes(): encrypted → {}", encrypted);
         let decrypted = decrypt(encrypted, &private);
+		log::debug!("test_different_primes(): decrypted → {}", decrypted);
 
+		log::debug!("<<< Exiting test_different_primes()");
         assert_eq!(decrypted, message);
     }
 
     #[test]
     fn test_encrypt_decrypt_alphabet() {
+		log::debug!(">>> Entering test_encrypt_decrypt_alphabet()");
         let (public, private) = generate_keypair(61, 53);
 
         let message = "ABC";
+		log::debug!("test_encrypt_decrypt_alphabet(): message → {}", message);
         let encrypted = encrypt_text(message, &public);
+		log::debug!("test_encrypt_decrypt_alphabet(): encrypted → {:?}", encrypted);
         let decrypted = decrypt_text(&encrypted, &private);
+		log::debug!("test_encrypt_decrypt_alphabet(): decrypted → {}", decrypted);
 
+		log::debug!("<<< Exiting test_encrypt_decrypt_alphabet()");
         assert_eq!(decrypted, message);
     }
 
     #[test]
     fn test_key_properties() {
+		log::debug!(">>> Entering test_key_properties()");
         let (public, private) = generate_keypair(61, 53);
 
         // Both keys should have the same n
@@ -400,6 +453,7 @@ mod tests {
 
         // Verify that (e * d) % phi == 1
         let phi = (61 - 1) * (53 - 1);
+		log::debug!("<<< Exiting test_key_properties()");
         assert_eq!((public.e * private.d) % phi, 1);
     }
 }

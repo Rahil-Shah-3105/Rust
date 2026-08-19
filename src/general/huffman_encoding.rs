@@ -22,12 +22,14 @@ pub struct HuffmanNode<T> {
 
 impl<T> PartialEq for HuffmanNode<T> {
     fn eq(&self, other: &Self) -> bool {
+		log::debug!(">>> Entering eq()");
         self.frequency == other.frequency
     }
 }
 
 impl<T> PartialOrd for HuffmanNode<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		log::debug!(">>> Entering partial_cmp()");
         Some(self.cmp(other))
     }
 }
@@ -36,6 +38,7 @@ impl<T> Eq for HuffmanNode<T> {}
 
 impl<T> Ord for HuffmanNode<T> {
     fn cmp(&self, other: &Self) -> Ordering {
+		log::debug!(">>> Entering cmp()");
         self.frequency.cmp(&other.frequency).reverse()
     }
 }
@@ -48,6 +51,7 @@ impl<T: Clone + Copy + Ord> HuffmanNode<T> {
         node: &HuffmanNode<T>,
         map: &mut BTreeMap<T, HuffmanValue>,
     ) {
+		log::debug!(">>> Entering get_alphabet(height={},path={})", height, path);
         match node.symbol {
             Some(s) => {
                 map.insert(
@@ -67,6 +71,7 @@ impl<T: Clone + Copy + Ord> HuffmanNode<T> {
                     map,
                 );
             }
+		log::debug!("<<< Exiting get_alphabet(height={},path={})", height, path);
         }
     }
 }

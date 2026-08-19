@@ -15,6 +15,7 @@ use Colors::{Blue, Red, White};
 
 // Algorithm implementation
 pub fn dutch_national_flag_sort(mut sequence: Vec<Colors>) -> Vec<Colors> {
+	log::debug!(">>> Entering dutch_national_flag_sort()");
     // We take ownership of `sequence` because the original `sequence` will be modified and then returned
     let length = sequence.len();
     if length <= 1 {
@@ -39,6 +40,8 @@ pub fn dutch_national_flag_sort(mut sequence: Vec<Colors>) -> Vec<Colors> {
             }
         }
     }
+	log::debug!("dutch_national_flag_sort(): length → {}", length);
+    log::debug!("<<< Exiting dutch_national_flag_sort()");
     sequence
 }
 
@@ -49,19 +52,23 @@ mod tests {
 
     #[test]
     fn random_array() {
+		log::debug!(">>> Entering random_array()");
         let arr = vec![
             Red, Blue, White, White, Blue, Blue, Red, Red, White, Blue, White, Red, White, Blue,
         ];
         let arr = dutch_national_flag_sort(arr);
+		log::debug!("<<< Exiting random_array()");
         assert!(is_sorted(&arr))
     }
 
     #[test]
     fn sorted_array() {
+		log::debug!(">>> Entering sorted_array()");
         let arr = vec![
             Red, Red, Red, Red, Red, White, White, White, White, White, Blue, Blue, Blue, Blue,
         ];
         let arr = dutch_national_flag_sort(arr);
+		log::debug!("<<< Exiting sorted_array()");
         assert!(is_sorted(&arr))
     }
 }

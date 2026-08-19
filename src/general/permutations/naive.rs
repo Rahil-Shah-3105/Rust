@@ -4,10 +4,12 @@ use std::hash::Hash;
 
 /// Here's a basic (naive) implementation for generating permutations
 pub fn permute<T: Clone + Debug>(arr: &[T]) -> Vec<Vec<T>> {
+	log::debug!(">>> Entering permute(arr={})", arr);
     if arr.is_empty() {
         return vec![vec![]];
     }
     let n = arr.len();
+	log::debug!("permute(arr={}): n → {}", arr, n);
     let count = (1..=n).product(); // n! permutations
     let mut collector = Vec::with_capacity(count); // collects the permuted arrays
     let mut arr = arr.to_owned(); // we'll need to mutate the array
@@ -20,6 +22,7 @@ pub fn permute<T: Clone + Debug>(arr: &[T]) -> Vec<Vec<T>> {
 }
 
 fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut Vec<Vec<T>>) {
+	log::debug!(">>> Entering permute_recurse(k={})", k);
     if k == 1 {
         collector.push(arr.to_owned());
         return;
@@ -28,6 +31,7 @@ fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse(arr, k - 1, collector); // collect the permutations of the rest
         arr.swap(i, k - 1); // swap back to original
+	log::debug!("<<< Exiting permute_recurse(k={})", k);
     }
 }
 
@@ -35,10 +39,12 @@ fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut
 /// Of course, we could use the version above together with a Set as collector instead of a Vec.
 /// But let's try something different: how can we avoid to generate duplicated permutations in the first place, can we tweak the algorithm above?
 pub fn permute_unique<T: Clone + Debug + Eq + Hash + Copy>(arr: &[T]) -> Vec<Vec<T>> {
+	log::debug!(">>> Entering permute_unique(arr={})", arr);
     if arr.is_empty() {
         return vec![vec![]];
     }
     let n = arr.len();
+	log::debug!("permute_unique(arr={}): n → {}", arr, n);
     let count = (1..=n).product(); // n! permutations
     let mut collector = Vec::with_capacity(count); // collects the permuted arrays
     let mut arr = arr.to_owned(); // Heap's algorithm needs to mutate the array
@@ -51,6 +57,7 @@ fn permute_recurse_unique<T: Clone + Debug + Eq + Hash + Copy>(
     k: usize,
     collector: &mut Vec<Vec<T>>,
 ) {
+	log::debug!(">>> Entering permute_recurse_unique(k={})", k);
     // We have the same base-case as previously, whenever we reach the first element in the array, collect the result
     if k == 1 {
         collector.push(arr.to_owned());
@@ -74,6 +81,7 @@ fn permute_recurse_unique<T: Clone + Debug + Eq + Hash + Copy>(
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse_unique(arr, k - 1, collector); // collect the permutations
         arr.swap(i, k - 1); // go back to original
+	log::debug!("<<< Exiting permute_recurse_unique(k={})", k);
     }
 }
 
@@ -88,45 +96,55 @@ mod tests {
 
     #[test]
     fn test_3_different_values() {
+		log::debug!(">>> Entering test_3_different_values()");
         let original = vec![1, 2, 3];
         let res = permute(&original);
         assert_eq!(res.len(), 6); // 3!
         for permut in res {
             assert_valid_permutation(&original, &permut)
+		log::debug!("<<< Exiting test_3_different_values()");
         }
     }
 
     #[test]
     fn empty_array() {
+		log::debug!(">>> Entering empty_array()");
         let empty: std::vec::Vec<u8> = vec![];
         assert_eq!(permute(&empty), vec![vec![]]);
+		log::debug!("<<< Exiting empty_array()");
         assert_eq!(permute_unique(&empty), vec![vec![]]);
     }
 
     #[test]
     fn test_3_times_the_same_value() {
+		log::debug!(">>> Entering test_3_times_the_same_value()");
         let original = vec![1, 1, 1];
         let res = permute(&original);
         assert_eq!(res.len(), 6); // 3!
         for permut in res {
             assert_valid_permutation(&original, &permut)
+		log::debug!("<<< Exiting test_3_times_the_same_value()");
         }
     }
 
     #[quickcheck]
     fn test_some_elements(NotTooBigVec { inner: original }: NotTooBigVec) {
+		log::debug!(">>> Entering test_some_elements()");
         let permutations = permute(&original);
+		log::debug!("<<< Exiting test_some_elements()");
         assert_permutations(&original, &permutations)
     }
 
     #[test]
     fn test_unique_values() {
+		log::debug!(">>> Entering test_unique_values()");
         let original = vec![1, 1, 2, 2];
         let unique_permutations = permute_unique(&original);
         let every_permutation = permute(&original);
         for unique_permutation in &unique_permutations {
             assert!(every_permutation.contains(unique_permutation));
         }
+		log::debug!("<<< Exiting test_unique_values()");
         assert_eq!(
             unique_permutations.len(),
             every_permutation.iter().collect::<HashSet<_>>().len()

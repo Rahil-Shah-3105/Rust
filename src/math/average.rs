@@ -15,6 +15,7 @@ use std::collections::HashSet;
 use num_traits::Num;
 
 fn sum<T: Num + Copy>(sequence: Vec<T>) -> T {
+	log::debug!(">>> Entering sum()");
     sequence.iter().fold(T::zero(), |acc, x| acc + *x)
 }
 
@@ -23,14 +24,19 @@ fn sum<T: Num + Copy>(sequence: Vec<T>) -> T {
 /// * `sequence` - A vector of numbers.
 /// Returns mean of `sequence`.
 pub fn mean<T: Num + Copy + num_traits::FromPrimitive>(sequence: Vec<T>) -> Option<T> {
+	log::debug!(">>> Entering mean()");
     let len = sequence.len();
     if len == 0 {
+	log::debug!("mean(): len → {}", len);
+    log::debug!("mean(): len → {}", len);
+    log::debug!("<<< Exiting mean()");
         return None;
     }
     Some(sum(sequence) / (T::from_usize(len).unwrap()))
 }
 
 fn mean_of_two<T: Num + Copy>(a: T, b: T) -> T {
+	log::debug!(">>> Entering mean_of_two()");
     (a + b) / (T::one() + T::one())
 }
 
@@ -40,6 +46,7 @@ fn mean_of_two<T: Num + Copy>(a: T, b: T) -> T {
 /// Returns median of `sequence`.
 
 pub fn median<T: Num + Copy + PartialOrd>(mut sequence: Vec<T>) -> Option<T> {
+	log::debug!(">>> Entering median()");
     if sequence.is_empty() {
         return None;
     }
@@ -49,11 +56,13 @@ pub fn median<T: Num + Copy + PartialOrd>(mut sequence: Vec<T>) -> Option<T> {
         Some(sequence[k - 1])
     } else {
         let j = (sequence.len()) / 2;
+		log::debug!("<<< Exiting median()");
         Some(mean_of_two(sequence[j - 1], sequence[j]))
     }
 }
 
 fn histogram<T: Eq + std::hash::Hash>(sequence: Vec<T>) -> HashMap<T, usize> {
+	log::debug!(">>> Entering histogram()");
     sequence.into_iter().fold(HashMap::new(), |mut res, val| {
         *res.entry(val).or_insert(0) += 1;
         res
@@ -65,6 +74,7 @@ fn histogram<T: Eq + std::hash::Hash>(sequence: Vec<T>) -> HashMap<T, usize> {
 /// * `sequence` - The input vector.
 /// Returns mode of `sequence`.
 pub fn mode<T: Eq + std::hash::Hash>(sequence: Vec<T>) -> Option<HashSet<T>> {
+	log::debug!(">>> Entering mode()");
     if sequence.is_empty() {
         return None;
     }
@@ -83,16 +93,19 @@ mod test {
     use super::*;
     #[test]
     fn median_test() {
+		log::debug!(">>> Entering median_test()");
         assert_eq!(median(vec![4, 53, 2, 1, 9, 0, 2, 3, 6]).unwrap(), 3);
         assert_eq!(median(vec![-9, -8, 0, 1, 2, 2, 3, 4, 6, 9, 53]).unwrap(), 2);
         assert_eq!(median(vec![2, 3]).unwrap(), 2);
         assert_eq!(median(vec![3.0, 2.0]).unwrap(), 2.5);
         assert_eq!(median(vec![1.0, 700.0, 5.0]).unwrap(), 5.0);
         assert!(median(Vec::<i32>::new()).is_none());
+		log::debug!("<<< Exiting median_test()");
         assert!(median(Vec::<f64>::new()).is_none());
     }
     #[test]
     fn mode_test() {
+		log::debug!(">>> Entering mode_test()");
         assert_eq!(
             mode(vec![4, 53, 2, 1, 9, 0, 2, 3, 6]).unwrap(),
             HashSet::from([2])
@@ -105,10 +118,12 @@ mod test {
         assert_eq!(mode(vec![1, 2, 2, 1]).unwrap(), HashSet::from([1, 2]));
         assert_eq!(mode(vec![1, 2, 2, 1, 3]).unwrap(), HashSet::from([1, 2]));
         assert_eq!(mode(vec![1]).unwrap(), HashSet::from([1]));
+		log::debug!("<<< Exiting mode_test()");
         assert!(mode(Vec::<i32>::new()).is_none());
     }
     #[test]
     fn mean_test() {
+		log::debug!(">>> Entering mean_test()");
         assert_eq!(mean(vec![2023.1112]).unwrap(), 2023.1112);
         assert_eq!(mean(vec![0.0, 1.0, 2.0, 3.0, 4.0]).unwrap(), 2.0);
         assert_eq!(
@@ -117,6 +132,7 @@ mod test {
         );
         assert_eq!(mean(vec![1, 2]).unwrap(), 1);
         assert!(mean(Vec::<f64>::new()).is_none());
+		log::debug!("<<< Exiting mean_test()");
         assert!(mean(Vec::<i32>::new()).is_none());
     }
 }

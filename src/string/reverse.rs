@@ -8,6 +8,7 @@
 ///
 /// * A new `String` that is the reverse of the input string.
 pub fn reverse(text: &str) -> String {
+	log::debug!(">>> Entering reverse(text={})", text);
     text.chars().rev().collect()
 }
 

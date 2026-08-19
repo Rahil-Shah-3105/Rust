@@ -22,6 +22,7 @@ pub fn neg_log_likelihood(
     y_true: &[f64],
     y_pred: &[f64],
 ) -> Result<f64, NegativeLogLikelihoodLossError> {
+	log::debug!(">>> Entering neg_log_likelihood(y_true={:?},y_pred={:?})", y_true, y_pred);
     // Checks if the inputs are empty
     if y_true.len() != y_pred.len() {
         return Err(NegativeLogLikelihoodLossError::InputsHaveDifferentLength);
@@ -51,6 +52,7 @@ pub enum NegativeLogLikelihoodLossError {
 }
 
 fn are_all_values_in_range(values: &[f64]) -> bool {
+	log::debug!(">>> Entering are_all_values_in_range(values={:?})", values);
     values.iter().all(|&x| (0.0..=1.0).contains(&x))
 }
 

@@ -10,6 +10,7 @@
 ///
 /// The average Huber loss for all pairs of true and predicted values.
 pub fn huber_loss(y_true: &[f64], y_pred: &[f64], delta: f64) -> Option<f64> {
+	log::debug!(">>> Entering huber_loss(y_true={:?},y_pred={:?},delta={})", y_true, y_pred, delta);
     if y_true.len() != y_pred.len() || y_pred.is_empty() {
         return None;
     }

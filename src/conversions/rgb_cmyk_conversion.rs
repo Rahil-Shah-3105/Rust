@@ -13,6 +13,7 @@
 /// ### Returns
 /// (C, M, Y, K)
 pub fn rgb_to_cmyk(rgb: (u8, u8, u8)) -> (u8, u8, u8, u8) {
+	log::debug!(">>> Entering rgb_to_cmyk(rgb={:?})", rgb);
     // Safety: no need to check if input is positive and less than 255 because it's u8
 
     // change scale from [0,255] to [0,1]
@@ -22,6 +23,7 @@ pub fn rgb_to_cmyk(rgb: (u8, u8, u8)) -> (u8, u8, u8, u8) {
         rgb.2 as f64 / 255f64,
     );
 
+	log::debug!("<<< Exiting rgb_to_cmyk(rgb={:?})", rgb);
     match 1f64 - r.max(g).max(b) {
         1f64 => (0, 0, 0, 100), // pure black
         k => (

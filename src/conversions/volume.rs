@@ -62,6 +62,7 @@ pub enum VolumeUnit {
 impl VolumeUnit {
     /// Convert from this unit to cubic meters
     fn to_cubic_meters(self, value: f64) -> f64 {
+		log::debug!(">>> Entering to_cubic_meters(value={})", value);
         let factor = match self {
             // Metric units - merge identical values
             VolumeUnit::CubicMeter | VolumeUnit::Kiloliter => 1.0,
@@ -111,11 +112,13 @@ impl VolumeUnit {
             VolumeUnit::TeaspoonCanadian => 4.73550833e-6,
         };
 
+		log::debug!("<<< Exiting to_cubic_meters(value={})", value);
         value * factor
     }
 
     /// Convert from cubic meters to this unit
     fn cubic_meters_to_unit(self, cubic_meters: f64) -> f64 {
+		log::debug!(">>> Entering cubic_meters_to_unit(cubic_meters={})", cubic_meters);
         let factor = match self {
             // Metric units - merge identical values
             VolumeUnit::CubicMeter | VolumeUnit::Kiloliter => 1.0,
@@ -165,6 +168,7 @@ impl VolumeUnit {
             VolumeUnit::TeaspoonCanadian => 4.73550833e-6,
         };
 
+		log::debug!("<<< Exiting cubic_meters_to_unit(cubic_meters={})", cubic_meters);
         cubic_meters / factor
     }
 }
@@ -183,7 +187,10 @@ impl VolumeUnit {
 /// assert!((gallons - 0.264172).abs() < 0.0001);
 /// ```
 pub fn convert_volume(value: f64, from: VolumeUnit, to: VolumeUnit) -> f64 {
+	log::debug!(">>> Entering convert_volume(value={},from={:?},to={:?})", value, from, to);
     let cubic_meters = from.to_cubic_meters(value);
+	log::debug!("convert_volume(value={},from={:?},to={:?}): cubic_meters → {}", value, from, to, cubic_meters);
+    log::debug!("<<< Exiting convert_volume(value={},from={:?},to={:?})", value, from, to);
     to.cubic_meters_to_unit(cubic_meters)
 }
 
@@ -194,11 +201,13 @@ mod tests {
     const EPSILON: f64 = 1e-9;
 
     fn approx_eq(a: f64, b: f64, tolerance: f64) -> bool {
+		log::debug!(">>> Entering approx_eq(a={},b={},tolerance={})", a, b, tolerance);
         (a - b).abs() < tolerance
     }
 
     #[test]
     fn test_volume_conversions() {
+		log::debug!(">>> Entering test_volume_conversions()");
         // Metric conversions
         assert_eq!(
             convert_volume(4.0, VolumeUnit::CubicMeter, VolumeUnit::Liter),
@@ -458,11 +467,13 @@ mod tests {
             convert_volume(0.001, VolumeUnit::Milliliter, VolumeUnit::CubicMeter),
             1e-9,
             1e-12
+		log::debug!("<<< Exiting test_volume_conversions()");
         ));
     }
 
     #[test]
     fn test_round_trip_conversions() {
+		log::debug!(">>> Entering test_round_trip_conversions()");
         let volume = 5.0;
         let units = [
             VolumeUnit::CubicMeter,
@@ -478,17 +489,21 @@ mod tests {
         for from_unit in units.iter() {
             for to_unit in units.iter() {
                 let converted = convert_volume(volume, *from_unit, *to_unit);
+				log::debug!("test_round_trip_conversions(): converted → {}", converted);
                 let back = convert_volume(converted, *to_unit, *from_unit);
+				log::debug!("test_round_trip_conversions(): back → {}", back);
                 assert!(
                     approx_eq(back, volume, EPSILON * volume.abs().max(1.0)),
                     "Round trip failed: {from_unit:?} -> {to_unit:?} -> {from_unit:?}: {back} != {volume}"
                 );
             }
+		log::debug!("<<< Exiting test_round_trip_conversions()");
         }
     }
 
     #[test]
     fn test_same_unit_conversion() {
+		log::debug!(">>> Entering test_same_unit_conversion()");
         let volume = 42.0;
         for unit in [
             VolumeUnit::CubicMeter,
@@ -503,6 +518,7 @@ mod tests {
                 volume,
                 EPSILON
             ));
+		log::debug!("<<< Exiting test_same_unit_conversion()");
         }
     }
 }

@@ -33,6 +33,7 @@ enum Side {
 impl<T: Ord> AVLTree<T> {
     /// Creates an empty `AVLTree`.
     pub fn new() -> AVLTree<T> {
+		log::debug!(">>> Entering new()");
         AVLTree {
             root: None,
             length: 0,
@@ -41,6 +42,7 @@ impl<T: Ord> AVLTree<T> {
 
     /// Returns `true` if the tree contains a value.
     pub fn contains(&self, value: &T) -> bool {
+		log::debug!(">>> Entering contains()");
         let mut current = &self.root;
         while let Some(node) = current {
             current = match value.cmp(&node.value) {
@@ -49,6 +51,7 @@ impl<T: Ord> AVLTree<T> {
                 Ordering::Greater => &node.right,
             }
         }
+		log::debug!("<<< Exiting contains()");
         false
     }
 
@@ -56,10 +59,12 @@ impl<T: Ord> AVLTree<T> {
     ///
     /// Returns `true` if the tree did not yet contain the value.
     pub fn insert(&mut self, value: T) -> bool {
+		log::debug!(">>> Entering insert()");
         let inserted = insert(&mut self.root, value);
         if inserted {
             self.length += 1;
         }
+		log::debug!("<<< Exiting insert()");
         inserted
     }
 
@@ -67,20 +72,25 @@ impl<T: Ord> AVLTree<T> {
     ///
     /// Returns `true` if the tree contained the value.
     pub fn remove(&mut self, value: &T) -> bool {
+		log::debug!(">>> Entering remove()");
         let removed = remove(&mut self.root, value);
         if removed {
             self.length -= 1;
         }
+		log::debug!("<<< Exiting remove()");
         removed
     }
 
     /// Returns the number of values in the tree.
     pub fn len(&self) -> usize {
+		log::debug!(">>> Entering len()");
+		log::debug!("<<< Exiting len()");
         self.length
     }
 
     /// Returns `true` if the tree contains no values.
     pub fn is_empty(&self) -> bool {
+		log::debug!(">>> Entering is_empty()");
         self.length == 0
     }
 
@@ -88,6 +98,8 @@ impl<T: Ord> AVLTree<T> {
     fn node_iter(&self) -> NodeIter<'_, T> {
         let cap = self.root.as_ref().map_or(0, |n| n.height);
         let mut node_iter = NodeIter {
+			log::debug!(">>> Entering node_iter()");
+			log::debug!("<<< Exiting node_iter()");
             stack: Vec::with_capacity(cap),
         };
         // Initialize stack with path to leftmost child
@@ -102,6 +114,7 @@ impl<T: Ord> AVLTree<T> {
     /// Returns an iterator that visits the values in the tree in ascending order.
     pub fn iter(&self) -> Iter<'_, T> {
         Iter {
+			log::debug!(">>> Entering iter()");
             node_iter: self.node_iter(),
         }
     }
@@ -156,17 +169,20 @@ fn remove<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>, value: &T) -> bool {
 
 /// Merges two trees and returns the root of the merged tree.
 fn merge<T: Ord>(left: Box<AVLNode<T>>, right: Box<AVLNode<T>>) -> Box<AVLNode<T>> {
+	log::debug!(">>> Entering merge()");
     let mut op_right = Some(right);
     // Guaranteed not to panic since right has at least one node
     let mut root = take_min(&mut op_right).unwrap();
     root.left = Some(left);
     root.right = op_right;
     root.rebalance();
+	log::debug!("<<< Exiting merge()");
     root
 }
 
 /// Removes the smallest node from the tree, if one exists.
 fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>>> {
+	log::debug!(">>> Entering take_min()");
     if let Some(mut node) = tree.take() {
         // Recurse along the left side
         if let Some(small) = take_min(&mut node.left) {
@@ -180,6 +196,7 @@ fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>
             Some(node)
         }
     } else {
+		log::debug!("<<< Exiting take_min()");
         None
     }
 }
@@ -187,6 +204,7 @@ fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>
 impl<T: Ord> AVLNode<T> {
     /// Returns a reference to the left or right child.
     fn child(&self, side: Side) -> &Option<Box<AVLNode<T>>> {
+		log::debug!(">>> Entering child()");
         match side {
             Side::Left => &self.left,
             Side::Right => &self.right,
@@ -195,6 +213,7 @@ impl<T: Ord> AVLNode<T> {
 
     /// Returns a mutable reference to the left or right child.
     fn child_mut(&mut self, side: Side) -> &mut Option<Box<AVLNode<T>>> {
+		log::debug!(">>> Entering child_mut()");
         match side {
             Side::Left => &mut self.left,
             Side::Right => &mut self.right,
@@ -203,26 +222,32 @@ impl<T: Ord> AVLNode<T> {
 
     /// Returns the height of the left or right subtree.
     fn height(&self, side: Side) -> usize {
+		log::debug!(">>> Entering height()");
         self.child(side).as_ref().map_or(0, |n| n.height)
     }
 
     /// Returns the height difference between the left and right subtrees.
     fn balance_factor(&self) -> i8 {
+		log::debug!(">>> Entering balance_factor()");
         let (left, right) = (self.height(Side::Left), self.height(Side::Right));
         if left < right {
             (right - left) as i8
         } else {
             -((left - right) as i8)
+			log::debug!("<<< Exiting balance_factor()");
         }
     }
 
     /// Recomputes the `height` field.
     fn update_height(&mut self) {
+		log::debug!(">>> Entering update_height()");
+		log::debug!("<<< Exiting update_height()");
         self.height = 1 + max(self.height(Side::Left), self.height(Side::Right));
     }
 
     /// Performs a left or right rotation.
     fn rotate(&mut self, side: Side) {
+		log::debug!(">>> Entering rotate()");
         let mut subtree = self.child_mut(!side).take().unwrap();
         *self.child_mut(!side) = subtree.child_mut(side).take();
         self.update_height();
@@ -230,11 +255,13 @@ impl<T: Ord> AVLNode<T> {
         mem::swap(self, subtree.as_mut());
         // Set old root (subtree) as child of new root (self)
         *self.child_mut(side) = Some(subtree);
+		log::debug!("<<< Exiting rotate()");
         self.update_height();
     }
 
     /// Performs left or right tree rotations to balance this node.
     fn rebalance(&mut self) {
+		log::debug!(">>> Entering rebalance()");
         self.update_height();
         let side = match self.balance_factor() {
             -2 => Side::Left,
@@ -247,12 +274,14 @@ impl<T: Ord> AVLNode<T> {
             subtree.rotate(side);
         }
         // Rotate in opposite direction of heavy side
+		log::debug!("<<< Exiting rebalance()");
         self.rotate(!side);
     }
 }
 
 impl<T: Ord> Default for AVLTree<T> {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
         Self::new()
     }
 }
@@ -261,6 +290,7 @@ impl Not for Side {
     type Output = Side;
 
     fn not(self) -> Self::Output {
+		log::debug!(">>> Entering not()");
         match self {
             Side::Left => Side::Right,
             Side::Right => Side::Left,
@@ -289,6 +319,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
     type Item = &'a AVLNode<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
+		log::debug!(">>> Entering next()");
         if let Some(node) = self.stack.pop() {
             // Push left path of right subtree to stack
             let mut child = &node.right;
@@ -298,6 +329,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
             }
             Some(node)
         } else {
+			log::debug!("<<< Exiting next()");
             None
         }
     }
@@ -327,6 +359,7 @@ mod tests {
 
     /// Returns `true` if all nodes in the tree are balanced.
     fn is_balanced<T: Ord>(tree: &AVLTree<T>) -> bool {
+		log::debug!(">>> Entering is_balanced()");
         tree.node_iter()
             .all(|n| (-1..=1).contains(&n.balance_factor()))
     }
@@ -364,17 +397,21 @@ mod tests {
 
     #[test]
     fn sorted() {
+		log::debug!(">>> Entering sorted()");
         let tree: AVLTree<_> = (1..8).rev().collect();
+		log::debug!("<<< Exiting sorted()");
         assert!((1..8).eq(tree.iter().copied()));
     }
 
     #[test]
     fn balanced() {
+		log::debug!(">>> Entering balanced()");
         let mut tree: AVLTree<_> = (1..8).collect();
         assert!(is_balanced(&tree));
         for x in 1..8 {
             tree.remove(&x);
             assert!(is_balanced(&tree));
+		log::debug!("<<< Exiting balanced()");
         }
     }
 }

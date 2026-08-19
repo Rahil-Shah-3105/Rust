@@ -1,15 +1,18 @@
 use crate::geometry::Point;
 
 pub fn ramer_douglas_peucker(points: &[Point], epsilon: f64) -> Vec<Point> {
+	log::debug!(">>> Entering ramer_douglas_peucker(epsilon={})", epsilon);
     if points.len() < 3 {
         return points.to_vec();
     }
     let mut dmax = 0.0;
+	log::debug!("ramer_douglas_peucker(epsilon={}): dmax → {}", epsilon, dmax);
     let mut index = 0;
     let end = points.len() - 1;
 
     for i in 1..end {
         let d = perpendicular_distance(&points[i], &points[0], &points[end]);
+		log::debug!("ramer_douglas_peucker(epsilon={}): d → {}", epsilon, d);
         if d > dmax {
             index = i;
             dmax = d;
@@ -23,12 +26,15 @@ pub fn ramer_douglas_peucker(points: &[Point], epsilon: f64) -> Vec<Point> {
         results
     } else {
         vec![points[0].clone(), points[end].clone()]
+	log::debug!("<<< Exiting ramer_douglas_peucker(epsilon={})", epsilon);
     }
 }
 
 fn perpendicular_distance(p: &Point, a: &Point, b: &Point) -> f64 {
+	log::debug!(">>> Entering perpendicular_distance()");
     let num = (b.y - a.y) * p.x - (b.x - a.x) * p.y + b.x * a.y - b.y * a.x;
     let den = a.euclidean_distance(b);
+	log::debug!("<<< Exiting perpendicular_distance()");
     num.abs() / den
 }
 
@@ -57,6 +63,7 @@ mod tests {
 
     #[test]
     fn test_ramer_douglas_peucker_polygon() {
+		log::debug!(">>> Entering test_ramer_douglas_peucker_polygon()");
         let a = Point::new(0.0, 0.0);
         let b = Point::new(1.0, 0.0);
         let c = Point::new(2.0, 0.0);
@@ -77,11 +84,13 @@ mod tests {
         ];
         let epsilon = 0.7;
         let result = ramer_douglas_peucker(&polygon, epsilon);
+		log::debug!("<<< Exiting test_ramer_douglas_peucker_polygon()");
         assert_eq!(result, vec![a, c, e, g, h]);
     }
 
     #[test]
     fn test_ramer_douglas_peucker_polygonal_chain() {
+		log::debug!(">>> Entering test_ramer_douglas_peucker_polygonal_chain()");
         let a = Point::new(0., 0.);
         let b = Point::new(2., 0.5);
         let c = Point::new(3., 3.);
@@ -92,11 +101,13 @@ mod tests {
 
         let epsilon = 3.; // The epsilon is quite large, so the result will be a single line
         let result = ramer_douglas_peucker(&points, epsilon);
+		log::debug!("<<< Exiting test_ramer_douglas_peucker_polygonal_chain()");
         assert_eq!(result, vec![a, e]);
     }
 
     #[test]
     fn test_less_than_three_points() {
+		log::debug!(">>> Entering test_less_than_three_points()");
         let a = Point::new(0., 0.);
         let b = Point::new(1., 1.);
 
@@ -110,6 +121,7 @@ mod tests {
         assert_eq!(
             ramer_douglas_peucker(&[a.clone(), b.clone()], epsilon),
             vec![a, b]
+		log::debug!("<<< Exiting test_less_than_three_points()");
         );
     }
 }

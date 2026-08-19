@@ -36,7 +36,9 @@ impl Job {
     /// Panics if `deadline` is zero, because every job must be completable
     /// in at least the first time-slot.
     pub fn new(name: impl Into<String>, deadline: usize, profit: u64) -> Self {
+		log::debug!(">>> Entering new(deadline={},profit={})", deadline, profit);
         assert!(deadline >= 1, "deadline must be at least 1");
+		log::debug!("<<< Exiting new(deadline={},profit={})", deadline, profit);
         Self {
             name: name.into(),
             deadline,
@@ -77,6 +79,7 @@ pub struct ScheduleResult {
 /// assert_eq!(result.job_sequence, vec!["C", "A", "E"]);
 /// ```
 pub fn schedule_jobs(mut jobs: Vec<Job>) -> ScheduleResult {
+	log::debug!(">>> Entering schedule_jobs(jobs={:?})", jobs);
     if jobs.is_empty() {
         return ScheduleResult {
             job_sequence: vec![],
@@ -130,6 +133,7 @@ mod tests {
     // -----------------------------------------------------------------------
 
     fn make_result(jobs: &[&str], profit: u64) -> ScheduleResult {
+		log::debug!(">>> Entering make_result(jobs={:?},profit={})", jobs, profit);
         ScheduleResult {
             job_sequence: jobs.iter().map(|&s| s.to_string()).collect(),
             total_profit: profit,
@@ -143,6 +147,7 @@ mod tests {
     /// Classic textbook example from Cormen et al. §16.5.
     #[test]
     fn test_classic_example() {
+		log::debug!(">>> Entering test_classic_example()");
         let jobs = vec![
             Job::new("A", 2, 100),
             Job::new("B", 1, 19),
@@ -153,25 +158,31 @@ mod tests {
         // Optimal: A in slot 2, C in slot 1 (or same profit arrangement),
         // and E in slot 3 → total = 100 + 27 + 15 = 142.
         let result = schedule_jobs(jobs);
+		log::debug!("test_classic_example(): result → {:?}", result);
         assert_eq!(result.total_profit, 142);
+		log::debug!("<<< Exiting test_classic_example()");
         assert_eq!(result.job_sequence, vec!["C", "A", "E"]);
     }
 
     /// All jobs have the same deadline (1) — only the most profitable fits.
     #[test]
     fn test_all_same_deadline() {
+		log::debug!(">>> Entering test_all_same_deadline()");
         let jobs = vec![
             Job::new("X", 1, 50),
             Job::new("Y", 1, 80),
             Job::new("Z", 1, 30),
         ];
         let result = schedule_jobs(jobs);
+		log::debug!("test_all_same_deadline(): result → {:?}", result);
+		log::debug!("<<< Exiting test_all_same_deadline()");
         assert_eq!(result, make_result(&["Y"], 80));
     }
 
     /// Every job can be scheduled (all deadlines are distinct and large enough).
     #[test]
     fn test_all_jobs_scheduled() {
+		log::debug!(">>> Entering test_all_jobs_scheduled()");
         let jobs = vec![
             Job::new("P", 3, 10),
             Job::new("Q", 2, 20),
@@ -179,6 +190,8 @@ mod tests {
         ];
         // R (profit 30) → slot 1, Q (profit 20) → slot 2, P (profit 10) → slot 3.
         let result = schedule_jobs(jobs);
+		log::debug!("test_all_jobs_scheduled(): result → {:?}", result);
+		log::debug!("<<< Exiting test_all_jobs_scheduled()");
         assert_eq!(result, make_result(&["R", "Q", "P"], 60));
     }
 
@@ -188,13 +201,19 @@ mod tests {
 
     #[test]
     fn test_empty_input() {
+		log::debug!(">>> Entering test_empty_input()");
         let result = schedule_jobs(vec![]);
+		log::debug!("test_empty_input(): result → {:?}", result);
+    log::debug!("<<< Exiting test_empty_input()");
         assert_eq!(result, make_result(&[], 0));
     }
 
     #[test]
     fn test_single_job() {
+		log::debug!(">>> Entering test_single_job()");
         let result = schedule_jobs(vec![Job::new("Solo", 1, 42)]);
+		log::debug!("test_single_job(): result → {:?}", result);
+    log::debug!("<<< Exiting test_single_job()");
         assert_eq!(result, make_result(&["Solo"], 42));
     }
 
@@ -202,14 +221,17 @@ mod tests {
     /// (though not necessarily unique) schedule with the correct total profit.
     #[test]
     fn test_equal_profits() {
+		log::debug!(">>> Entering test_equal_profits()");
         let jobs = vec![
             Job::new("A", 1, 10),
             Job::new("B", 2, 10),
             Job::new("C", 3, 10),
         ];
         let result = schedule_jobs(jobs);
+		log::debug!("test_equal_profits(): result → {:?}", result);
         // All three should be scheduled since their deadlines are distinct.
         assert_eq!(result.total_profit, 30);
+		log::debug!("<<< Exiting test_equal_profits()");
         assert_eq!(result.job_sequence.len(), 3);
     }
 
@@ -217,12 +239,15 @@ mod tests {
     /// jobs.len() and no unnecessary allocation occurs.
     #[test]
     fn test_large_deadline() {
+		log::debug!(">>> Entering test_large_deadline()");
         let jobs = vec![Job::new("Big", 100, 500), Job::new("Small", 1, 1)];
         let result = schedule_jobs(jobs);
+		log::debug!("test_large_deadline(): result → {:?}", result);
         // Both jobs should be scheduled.
         assert_eq!(result.total_profit, 501);
         assert_eq!(result.job_sequence.len(), 2);
         // "Small" is in slot 1, "Big" in slot 2 (capped to num_slots = 2).
+		log::debug!("<<< Exiting test_large_deadline()");
         assert_eq!(result.job_sequence[0], "Small");
     }
 
@@ -230,23 +255,29 @@ mod tests {
     /// because the greedy criterion is profit and zero is a valid profit.
     #[test]
     fn test_zero_profit_job() {
+		log::debug!(">>> Entering test_zero_profit_job()");
         let jobs = vec![Job::new("Free", 2, 0), Job::new("Paid", 1, 5)];
         let result = schedule_jobs(jobs);
+		log::debug!("test_zero_profit_job(): result → {:?}", result);
         assert_eq!(result.total_profit, 5);
         // "Free" should still occupy slot 2 (no conflict).
+		log::debug!("<<< Exiting test_zero_profit_job()");
         assert_eq!(result.job_sequence.len(), 2);
     }
 
     /// Verify that the returned sequence is in ascending slot order.
     #[test]
     fn test_output_in_slot_order() {
+		log::debug!(">>> Entering test_output_in_slot_order()");
         let jobs = vec![
             Job::new("Late", 3, 5),
             Job::new("Mid", 2, 10),
             Job::new("Early", 1, 15),
         ];
         let result = schedule_jobs(jobs);
+		log::debug!("test_output_in_slot_order(): result → {:?}", result);
         assert_eq!(result.job_sequence, vec!["Early", "Mid", "Late"]);
+		log::debug!("<<< Exiting test_output_in_slot_order()");
         assert_eq!(result.total_profit, 30);
     }
 
@@ -254,6 +285,7 @@ mod tests {
     /// time-slots can be scheduled.
     #[test]
     fn test_more_jobs_than_slots() {
+		log::debug!(">>> Entering test_more_jobs_than_slots()");
         // 5 jobs, max deadline 2 → at most 2 can be scheduled.
         let jobs = vec![
             Job::new("A", 1, 40),
@@ -263,7 +295,9 @@ mod tests {
             Job::new("E", 1, 10),
         ];
         let result = schedule_jobs(jobs);
+		log::debug!("test_more_jobs_than_slots(): result → {:?}", result);
         assert_eq!(result.total_profit, 70); // A (40) + B (30)
+		log::debug!("<<< Exiting test_more_jobs_than_slots()");
         assert_eq!(result.job_sequence.len(), 2);
     }
 }

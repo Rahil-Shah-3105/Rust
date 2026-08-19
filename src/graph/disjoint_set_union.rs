@@ -30,6 +30,7 @@ impl DisjointSetUnion {
     ///
     /// A new instance of `DisjointSetUnion` with `n + 1` independent sets.
     pub fn new(num_elements: usize) -> DisjointSetUnion {
+		log::debug!(">>> Entering new(num_elements={})", num_elements);
         let mut nodes = Vec::with_capacity(num_elements + 1);
         for idx in 0..=num_elements {
             nodes.push(DSUNode {
@@ -38,6 +39,7 @@ impl DisjointSetUnion {
             });
         }
 
+		log::debug!("<<< Exiting new(num_elements={})", num_elements);
         Self { nodes }
     }
 
@@ -54,9 +56,11 @@ impl DisjointSetUnion {
     ///
     /// The root representative of the set containing `element`.
     pub fn find_set(&mut self, element: usize) -> usize {
+		log::debug!(">>> Entering find_set(element={})", element);
         if element != self.nodes[element].parent {
             self.nodes[element].parent = self.find_set(self.nodes[element].parent);
         }
+		log::debug!("<<< Exiting find_set(element={})", element);
         self.nodes[element].parent
     }
 
@@ -73,6 +77,7 @@ impl DisjointSetUnion {
     ///
     /// The root of the merged set, or `usize::MAX` if both elements are already in the same set.
     pub fn merge(&mut self, first_elem: usize, sec_elem: usize) -> usize {
+		log::debug!(">>> Entering merge(first_elem={},sec_elem={})", first_elem, sec_elem);
         let mut first_root = self.find_set(first_elem);
         let mut sec_root = self.find_set(sec_elem);
 
@@ -99,8 +104,11 @@ mod tests {
 
     #[test]
     fn test_disjoint_set_union() {
+		log::debug!(">>> Entering test_disjoint_set_union()");
         let mut dsu = DisjointSetUnion::new(10);
 
+		let __log_start = std::time::Instant::now();
+		log::info!("test_disjoint_set_union(): update query executed in {} ms", __log_start.elapsed().as_millis());
         dsu.merge(1, 2);
         dsu.merge(2, 3);
         dsu.merge(1, 9);
@@ -143,6 +151,7 @@ mod tests {
         assert_eq!(dsu.find_set(10), dsu.find_set(6));
         assert_eq!(dsu.find_set(10), dsu.find_set(7));
         assert_eq!(dsu.find_set(10), dsu.find_set(8));
+		log::debug!("<<< Exiting test_disjoint_set_union()");
         assert_eq!(dsu.find_set(10), dsu.find_set(9));
     }
 }

@@ -15,6 +15,7 @@ pub enum PangramStatus {
 }
 
 fn compute_letter_counts(pangram_str: &str) -> std::collections::HashMap<char, usize> {
+	log::debug!(">>> Entering compute_letter_counts(pangram_str={})", pangram_str);
     let mut letter_counts = std::collections::HashMap::new();
 
     for ch in pangram_str
@@ -25,6 +26,7 @@ fn compute_letter_counts(pangram_str: &str) -> std::collections::HashMap<char, u
         *letter_counts.entry(ch).or_insert(0) += 1;
     }
 
+	log::debug!("<<< Exiting compute_letter_counts(pangram_str={})", pangram_str);
     letter_counts
 }
 
@@ -38,8 +40,10 @@ fn compute_letter_counts(pangram_str: &str) -> std::collections::HashMap<char, u
 ///
 /// A `PangramStatus` enum indicating whether the string is a pangram, and if so, whether it is a perfect pangram.
 pub fn is_pangram(pangram_str: &str) -> PangramStatus {
+	log::debug!(">>> Entering is_pangram(pangram_str={})", pangram_str);
     let letter_counts = compute_letter_counts(pangram_str);
 
+	log::debug!("is_pangram(pangram_str={}): letter_counts → {:?}", pangram_str, letter_counts);
     let alphabet: HashSet<char> = ('a'..='z').collect();
     let used_letters: HashSet<_> = letter_counts.keys().cloned().collect();
 
@@ -51,6 +55,7 @@ pub fn is_pangram(pangram_str: &str) -> PangramStatus {
         PangramStatus::PerfectPangram
     } else {
         PangramStatus::Pangram
+	log::debug!("<<< Exiting is_pangram(pangram_str={})", pangram_str);
     }
 }
 

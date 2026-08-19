@@ -60,11 +60,13 @@ pub enum SVCError {
 
 impl std::fmt::Display for SVCError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		log::debug!(">>> Entering fmt()");
         match self {
             SVCError::InvalidGamma => write!(f, "gamma must be > 0"),
             SVCError::InvalidRegularization => write!(f, "regularization must be > 0"),
             SVCError::EmptyData => write!(f, "observations and classes cannot be empty"),
             SVCError::MismatchedDimensions => {
+				log::debug!("<<< Exiting fmt()");
                 write!(f, "number of observations must match number of classes")
             }
         }
@@ -91,6 +93,7 @@ impl SVC {
     /// let svc_rbf = SVC::new(Kernel::Rbf { gamma: 0.5 }, 1.0).unwrap();
     /// ```
     pub fn new(kernel: Kernel, regularization: f64) -> Result<Self, SVCError> {
+		log::debug!(">>> Entering new(kernel={:?},regularization={})", kernel, regularization);
         if regularization <= 0.0 {
             return Err(SVCError::InvalidRegularization);
         }
@@ -113,11 +116,13 @@ impl SVC {
 
     /// Computes the kernel function between two vectors
     fn kernel_function(&self, v1: &Array1<f64>, v2: &Array1<f64>) -> f64 {
+		log::debug!(">>> Entering kernel_function()");
         match &self.kernel {
             Kernel::Linear => v1.dot(v2),
             Kernel::Rbf { gamma } => {
                 let diff = v1 - v2;
                 let norm_sq = diff.dot(&diff);
+				log::debug!("<<< Exiting kernel_function()");
                 (-gamma * norm_sq).exp()
             }
         }
@@ -147,6 +152,7 @@ impl SVC {
         observations: &[Array1<f64>],
         classes: &Array1<f64>,
     ) -> Result<(), SVCError> {
+		log::debug!(">>> Entering fit()");
         if observations.is_empty() || classes.is_empty() {
             return Err(SVCError::EmptyData);
         }
@@ -169,6 +175,8 @@ impl SVC {
         // Calculate offset (bias term)
         self.offset = self.calculate_offset(n);
 
+		log::debug!("fit(): n → {}", n);
+        log::debug!("<<< Exiting fit()");
         Ok(())
     }
 
@@ -177,6 +185,7 @@ impl SVC {
     /// This is a simplified solver for educational purposes.
     /// In production, use a proper QP solver like OSQP or similar.
     fn solve_dual(&self, n: usize) -> Array1<f64> {
+		log::debug!(">>> Entering solve_dual(n={})", n);
         let mut lambda = Array1::from_elem(n, 0.5);
         let learning_rate = 0.1;
         let iterations = 5000;
@@ -217,6 +226,7 @@ impl SVC {
 
             // Enforce sum(lambda * y) = 0 constraint using projection
             let mut sum_ly = 0.0;
+			log::debug!("solve_dual(n={}): sum_ly → {}", n, sum_ly);
             for i in 0..n {
                 sum_ly += lambda[i] * self.classes[i];
             }
@@ -249,11 +259,13 @@ impl SVC {
             }
         }
 
+		log::debug!("<<< Exiting solve_dual(n={})", n);
         lambda
     }
 
     /// Calculates the offset (bias) term
     fn calculate_offset(&self, n: usize) -> f64 {
+		log::debug!(">>> Entering calculate_offset(n={})", n);
         let mut sum = 0.0;
         let mut count = 0;
 
@@ -285,6 +297,7 @@ impl SVC {
             }
             sum / n as f64
         } else {
+			log::debug!("<<< Exiting calculate_offset(n={})", n);
             sum / count as f64
         }
     }
@@ -311,6 +324,7 @@ impl SVC {
     /// assert!(prediction == 1.0 || prediction == -1.0);
     /// ```
     pub fn predict(&self, observation: &Array1<f64>) -> f64 {
+		log::debug!(">>> Entering predict()");
         let mut sum = 0.0;
         for i in 0..self.classes.len() {
             sum += self.optimum[i]
@@ -321,6 +335,7 @@ impl SVC {
         if sum + self.offset >= 0.0 {
             1.0
         } else {
+			log::debug!("<<< Exiting predict()");
             -1.0
         }
     }
@@ -329,6 +344,7 @@ impl SVC {
     ///
     /// Support vectors are observations with non-zero lambda values
     pub fn n_support_vectors(&self) -> usize {
+		log::debug!(">>> Entering n_support_vectors()");
         self.optimum.iter().filter(|&&l| l > 1e-5).count()
     }
 }
@@ -340,6 +356,7 @@ mod tests {
 
     #[test]
     fn test_linear_kernel_simple() {
+		log::debug!(">>> Entering test_linear_kernel_simple()");
         let observations = vec![
             array![0.0, 1.0],
             array![0.0, 2.0],
@@ -353,11 +370,13 @@ mod tests {
 
         assert_eq!(svc.predict(&array![0.0, 1.0]), 1.0);
         assert_eq!(svc.predict(&array![1.0, 1.0]), -1.0);
+		log::debug!("<<< Exiting test_linear_kernel_simple()");
         assert_eq!(svc.predict(&array![2.0, 2.0]), -1.0);
     }
 
     #[test]
     fn test_rbf_kernel() {
+		log::debug!(">>> Entering test_rbf_kernel()");
         let observations = vec![
             array![0.0, 0.0],
             array![1.0, 1.0],
@@ -371,45 +390,57 @@ mod tests {
 
         // The RBF kernel should handle this XOR-like pattern better than linear
         assert_eq!(svc.predict(&array![0.0, 0.0]), 1.0);
+		log::debug!("<<< Exiting test_rbf_kernel()");
         assert_eq!(svc.predict(&array![1.0, 1.0]), 1.0);
     }
 
     #[test]
     fn test_invalid_gamma() {
+		log::debug!(">>> Entering test_invalid_gamma()");
         let result = SVC::new(Kernel::Rbf { gamma: -1.0 }, 1.0);
         assert!(matches!(result, Err(SVCError::InvalidGamma)));
 
         let result = SVC::new(Kernel::Rbf { gamma: 0.0 }, 1.0);
+		log::debug!("<<< Exiting test_invalid_gamma()");
         assert!(matches!(result, Err(SVCError::InvalidGamma)));
     }
 
     #[test]
     fn test_invalid_regularization() {
+		log::debug!(">>> Entering test_invalid_regularization()");
         let result = SVC::new(Kernel::Linear, 0.0);
         assert!(matches!(result, Err(SVCError::InvalidRegularization)));
 
         let result = SVC::new(Kernel::Linear, -1.0);
+		log::debug!("<<< Exiting test_invalid_regularization()");
         assert!(matches!(result, Err(SVCError::InvalidRegularization)));
     }
 
     #[test]
     fn test_empty_data() {
+		log::debug!(">>> Entering test_empty_data()");
         let mut svc = SVC::new(Kernel::Linear, 1.0).unwrap();
         let result = svc.fit(&[], &Array1::zeros(0));
+		log::debug!("test_empty_data(): result → {:?}", result);
+		log::debug!("<<< Exiting test_empty_data()");
         assert!(matches!(result, Err(SVCError::EmptyData)));
     }
 
     #[test]
     fn test_mismatched_dimensions() {
+		log::debug!(">>> Entering test_mismatched_dimensions()");
         let mut svc = SVC::new(Kernel::Linear, 1.0).unwrap();
         let observations = vec![array![1.0, 2.0]];
         let classes = array![1.0, -1.0]; // Too many classes
         let result = svc.fit(&observations, &classes);
+		log::debug!("test_mismatched_dimensions(): result → {:?}", result);
+		log::debug!("<<< Exiting test_mismatched_dimensions()");
         assert!(matches!(result, Err(SVCError::MismatchedDimensions)));
     }
 
     #[test]
     fn test_support_vectors_count() {
+		log::debug!(">>> Entering test_support_vectors_count()");
         let observations = vec![
             array![0.0, 1.0],
             array![0.0, 2.0],
@@ -423,6 +454,7 @@ mod tests {
 
         // Should have at least some support vectors
         assert!(svc.n_support_vectors() > 0);
+		log::debug!("<<< Exiting test_support_vectors_count()");
         assert!(svc.n_support_vectors() <= observations.len());
     }
 }

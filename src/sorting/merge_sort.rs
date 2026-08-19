@@ -1,4 +1,5 @@
 fn merge<T: Ord + Copy>(arr: &mut [T], mid: usize) {
+	log::debug!(">>> Entering merge(mid={})", mid);
     // Create temporary vectors to support the merge.
     let left_half = arr[..mid].to_vec();
     let right_half = arr[mid..].to_vec();
@@ -16,10 +17,12 @@ fn merge<T: Ord + Copy>(arr: &mut [T], mid: usize) {
             *v = right_half[r];
             r += 1;
         }
+	log::debug!("<<< Exiting merge(mid={})", mid);
     }
 }
 
 pub fn top_down_merge_sort<T: Ord + Copy>(arr: &mut [T]) {
+	log::debug!(">>> Entering top_down_merge_sort()");
     if arr.len() > 1 {
         let mid = arr.len() / 2;
         // Sort the left half recursively.
@@ -28,10 +31,12 @@ pub fn top_down_merge_sort<T: Ord + Copy>(arr: &mut [T]) {
         top_down_merge_sort(&mut arr[mid..]);
         // Combine the two halves.
         merge(arr, mid);
+	log::debug!("<<< Exiting top_down_merge_sort()");
     }
 }
 
 pub fn bottom_up_merge_sort<T: Copy + Ord>(a: &mut [T]) {
+	log::debug!(">>> Entering bottom_up_merge_sort()");
     if a.len() > 1 {
         let len: usize = a.len();
         let mut sub_array_size: usize = 1;
@@ -48,10 +53,12 @@ pub fn bottom_up_merge_sort<T: Copy + Ord>(a: &mut [T]) {
                 // NOTE: mid is a relative index number starting from `start_index`
                 merge(&mut a[start_index..end_idx], sub_array_size);
                 // update `start_index` to merge the next sub-arrays
+				log::debug!("bottom_up_merge_sort(): start_index → {}", start_index);
                 start_index = end_idx;
             }
             sub_array_size *= 2;
         }
+	log::debug!("<<< Exiting bottom_up_merge_sort()");
     }
 }
 
@@ -68,6 +75,8 @@ mod tests {
             let mut res = vec![10, 8, 4, 3, 1, 9, 2, 7, 5, 6];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering basic()");
+			log::debug!("<<< Exiting basic()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -76,6 +85,8 @@ mod tests {
             let mut res = vec!["a", "bb", "d", "cc"];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering basic_string()");
+			log::debug!("<<< Exiting basic_string()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -84,6 +95,8 @@ mod tests {
             let mut res = Vec::<u8>::new();
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering empty()");
+			log::debug!("<<< Exiting empty()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -92,6 +105,8 @@ mod tests {
             let mut res = vec![1];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering one_element()");
+			log::debug!("<<< Exiting one_element()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -100,6 +115,8 @@ mod tests {
             let mut res = vec![1, 2, 3, 4];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering pre_sorted()");
+			log::debug!("<<< Exiting pre_sorted()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -108,6 +125,8 @@ mod tests {
             let mut res = vec![4, 3, 2, 1];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering reverse_sorted()");
+			log::debug!("<<< Exiting reverse_sorted()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
     }

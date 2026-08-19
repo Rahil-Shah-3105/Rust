@@ -1,6 +1,7 @@
 /// squre_root returns the square root
 /// of a f64 number using Newton's method
 pub fn square_root(num: f64) -> f64 {
+	log::debug!(">>> Entering square_root(num={})", num);
     if num < 0.0_f64 {
         return f64::NAN;
     }
@@ -18,6 +19,7 @@ pub fn square_root(num: f64) -> f64 {
 // This algorithm was first used in Quake and has been reimplemented in a few other languages
 // This crate implements it more thoroughly: https://docs.rs/quake-inverse-sqrt/latest/quake_inverse_sqrt/
 pub fn fast_inv_sqrt(num: f32) -> f32 {
+	log::debug!(">>> Entering fast_inv_sqrt(num={})", num);
     // If you are confident in your input this can be removed for speed
     if num < 0.0f32 {
         return f32::NAN;
@@ -39,6 +41,7 @@ mod tests {
 
     #[test]
     fn test_fast_inv_sqrt() {
+		log::debug!(">>> Entering test_fast_inv_sqrt()");
         // Negatives don't have square roots:
         assert!(fast_inv_sqrt(-1.0f32).is_nan());
 
@@ -46,12 +49,15 @@ mod tests {
         let test_pairs = [(4.0, 0.5), (16.0, 0.25), (25.0, 0.2)];
         for pair in test_pairs {
             assert!((fast_inv_sqrt(pair.0) - pair.1).abs() <= (0.01 * pair.0));
+		log::debug!("<<< Exiting test_fast_inv_sqrt()");
         }
     }
 
     #[test]
     fn test_sqare_root() {
+		log::debug!(">>> Entering test_sqare_root()");
         assert!((square_root(4.0_f64) - 2.0_f64).abs() <= 1e-10_f64);
+		log::debug!("<<< Exiting test_sqare_root()");
         assert!(square_root(-4.0_f64).is_nan());
     }
 }

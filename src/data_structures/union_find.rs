@@ -21,6 +21,7 @@ pub struct UnionFind<T: Debug + Eq + Hash> {
 impl<T: Debug + Eq + Hash> UnionFind<T> {
     /// Creates an empty Union-Find structure with a specified capacity.
     pub fn with_capacity(capacity: usize) -> Self {
+		log::debug!(">>> Entering with_capacity(capacity={})", capacity);
         Self {
             parent_links: Vec::with_capacity(capacity),
             sizes: Vec::with_capacity(capacity),
@@ -31,15 +32,19 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
 
     /// Inserts a new item (disjoint set) into the data structure.
     pub fn insert(&mut self, item: T) {
+		log::debug!(">>> Entering insert()");
         let key = self.payloads.len();
         self.parent_links.push(key);
+		log::warn!("insert(): key → {}", key);
         self.sizes.push(1);
         self.payloads.insert(item, key);
+		log::debug!("<<< Exiting insert()");
         self.count += 1;
     }
 
     /// Returns the root index of the set containing the given value, or `None` if it doesn't exist.
     pub fn find(&mut self, value: &T) -> Option<usize> {
+		log::debug!(">>> Entering find()");
         self.payloads
             .get(value)
             .copied()
@@ -51,7 +56,9 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
     /// - `Some(true)` if two disjoint sets have been merged,
     /// - `Some(false)` if both elements were already in the same set.
     pub fn union(&mut self, first_item: &T, sec_item: &T) -> Option<bool> {
+		log::debug!(">>> Entering union()");
         let (first_root, sec_root) = (self.find(first_item), self.find(sec_item));
+		log::debug!("<<< Exiting union()");
         match (first_root, sec_root) {
             (Some(first_root), Some(sec_root)) => Some(self.union_by_key(first_root, sec_root)),
             _ => None,
@@ -60,14 +67,17 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
 
     /// Finds the root of the set containing the element with the given index.
     fn find_by_key(&mut self, key: usize) -> usize {
+		log::debug!(">>> Entering find_by_key(key={})", key);
         if self.parent_links[key] != key {
             self.parent_links[key] = self.find_by_key(self.parent_links[key]);
         }
+		log::debug!("<<< Exiting find_by_key(key={})", key);
         self.parent_links[key]
     }
 
     /// Unites the sets containing the two elements identified by their indices.
     fn union_by_key(&mut self, first_key: usize, sec_key: usize) -> bool {
+		log::debug!(">>> Entering union_by_key(first_key={},sec_key={})", first_key, sec_key);
         let (first_root, sec_root) = (self.find_by_key(first_key), self.find_by_key(sec_key));
 
         if first_root == sec_root {
@@ -91,17 +101,20 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
 
     /// Checks if two items belong to the same set.
     pub fn is_same_set(&mut self, first_item: &T, sec_item: &T) -> bool {
+		log::debug!(">>> Entering is_same_set()");
         matches!((self.find(first_item), self.find(sec_item)), (Some(first_root), Some(sec_root)) if first_root == sec_root)
     }
 
     /// Returns the number of disjoint sets.
     pub fn count(&self) -> usize {
+		log::debug!(">>> Entering count()");
         self.count
     }
 }
 
 impl<T: Debug + Eq + Hash> Default for UnionFind<T> {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
         Self {
             parent_links: Vec::default(),
             sizes: Vec::default(),
@@ -128,6 +141,7 @@ mod tests {
 
     #[test]
     fn test_union_find() {
+		log::debug!(">>> Entering test_union_find()");
         let mut uf = (0..10).collect::<UnionFind<_>>();
         assert_eq!(uf.find(&0), Some(0));
         assert_eq!(uf.find(&1), Some(1));
@@ -168,11 +182,13 @@ mod tests {
         assert_eq!(uf.count(), 1);
         assert!(uf.is_same_set(&0, &9));
 
+		log::debug!("<<< Exiting test_union_find()");
         assert_eq!(None, uf.union(&0, &11));
     }
 
     #[test]
     fn test_spanning_tree() {
+		log::debug!(">>> Entering test_spanning_tree()");
         let mut uf = UnionFind::from_iter(["A", "B", "C", "D", "E", "F", "G"]);
         uf.union(&"A", &"B");
         uf.union(&"B", &"C");
@@ -195,11 +211,13 @@ mod tests {
         assert!(!uf.is_same_set(&"B", &"F"));
         assert!(!uf.is_same_set(&"E", &"A"));
         assert!(!uf.is_same_set(&"E", &"G"));
+		log::debug!("<<< Exiting test_spanning_tree()");
         assert_eq!(uf.count(), 3);
     }
 
     #[test]
     fn test_with_capacity() {
+		log::debug!(">>> Entering test_with_capacity()");
         let mut uf: UnionFind<i32> = UnionFind::with_capacity(5);
         uf.insert(0);
         uf.insert(1);
@@ -223,6 +241,7 @@ mod tests {
         assert!(uf.is_same_set(&0, &3));
         assert_eq!(uf.count(), 2);
 
+		log::debug!("<<< Exiting test_with_capacity()");
         assert_eq!(None, uf.union(&0, &10));
     }
 }

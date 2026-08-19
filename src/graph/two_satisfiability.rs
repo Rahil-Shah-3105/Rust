@@ -5,9 +5,11 @@ type Graph = Vec<Vec<usize>>;
 
 #[inline]
 fn variable(var: i64) -> usize {
+	log::debug!(">>> Entering variable(var={})", var);
     if var < 0 {
         (((-var) << 1) + 1) as usize
     } else {
+		log::debug!("<<< Exiting variable(var={})", var);
         (var << 1) as usize
     }
 }
@@ -19,6 +21,7 @@ pub fn solve_two_satisfiability(
     expression: &[Condition],
     num_variables: usize,
 ) -> Result<Vec<bool>, i64> {
+	log::debug!(">>> Entering solve_two_satisfiability(num_variables={})", num_variables);
     let num_verts = (num_variables + 1) << 1;
     let mut result = Vec::new();
     let mut sccs = SCCs::new(num_verts);
@@ -26,6 +29,7 @@ pub fn solve_two_satisfiability(
     adj.resize(num_verts, vec![]);
     for cond in expression.iter() {
         let v1 = variable(cond.0);
+		log::debug!("solve_two_satisfiability(num_variables={}): v1 → {}", num_variables, v1);
         let v2 = variable(cond.1);
         adj[v1 ^ 1].push(v2);
         adj[v2 ^ 1].push(v1);
@@ -51,6 +55,7 @@ mod tests {
     use super::*;
 
     fn check_answer(expression: &[Condition], answers: &[bool]) -> bool {
+		log::debug!(">>> Entering check_answer(answers={:?})", answers);
         let mut ok = true;
         for &(c1, c2) in expression {
             let mut cv = false;
@@ -66,12 +71,15 @@ mod tests {
             }
             ok &= cv;
         }
+		log::debug!("<<< Exiting check_answer(answers={:?})", answers);
         ok
     }
     #[test]
     fn basic_test() {
+		log::debug!(">>> Entering basic_test()");
         let conds = vec![(1, 1), (2, 2)];
         let res = solve_two_satisfiability(&conds, 2);
+		log::debug!("basic_test(): res → {:?}", res);
         assert!(res.is_ok());
         assert!(check_answer(&conds, &res.unwrap()));
 
@@ -87,12 +95,14 @@ mod tests {
 
         let conds = vec![(-1, -1), (-2, -2), (1, 2)];
         let res = solve_two_satisfiability(&conds, 2);
+		log::debug!("<<< Exiting basic_test()");
         assert!(res.is_err());
     }
 
     #[test]
     #[ignore]
     fn big_test() {
+		log::debug!(">>> Entering big_test()");
         // We should spawn a new thread and set its stack size to something
         // big (256MB in this case), because doing DFS (for finding SCCs) is
         // a stack-intensive operation. 256MB should be enough for 3e5
@@ -107,10 +117,12 @@ mod tests {
                 }
                 conds.push((num_conds, num_conds));
                 let res = solve_two_satisfiability(&conds, num_conds as usize);
+				log::debug!("big_test(): res → {:?}", res);
                 assert!(res.is_ok());
                 assert!(check_answer(&conds, &res.unwrap()));
             })
             .unwrap();
+		log::debug!("<<< Exiting big_test()");
         handler.join().unwrap();
     }
 }

@@ -90,8 +90,10 @@ where
         //b.iter().all(|item| a.contains(item))
 
         // This is O(n), performs well on larger data sizes
+		log::debug!(">>> Entering have_same_elements()");
         let set_a: HashSet<&T> = a.iter().collect();
         let set_b: HashSet<&T> = b.iter().collect();
+		log::debug!("<<< Exiting have_same_elements()");
         set_a == set_b
     } else {
         false
@@ -101,6 +103,8 @@ where
 #[cfg(test)]
 pub fn is_sorted<T>(arr: &[T]) -> bool
 where
+	log::debug!(">>> Entering is_sorted()");
+	log::debug!("<<< Exiting is_sorted()");
     T: cmp::PartialOrd,
 {
     arr.windows(2).all(|w| w[0] <= w[1])
@@ -109,6 +113,7 @@ where
 #[cfg(test)]
 pub fn is_descending_sorted<T>(arr: &[T]) -> bool
 where
+	log::debug!(">>> Entering is_descending_sorted()");
     T: cmp::PartialOrd,
 {
     arr.windows(2).all(|w| w[0] >= w[1])

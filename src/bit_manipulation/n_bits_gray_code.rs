@@ -14,6 +14,7 @@ pub enum GrayCodeError {
 ///
 /// A vector of Gray code sequences as strings.
 pub fn generate_gray_code(n: usize) -> Result<Vec<String>, GrayCodeError> {
+	log::debug!(">>> Entering generate_gray_code(n={})", n);
     if n == 0 {
         return Err(GrayCodeError::ZeroBitCount);
     }

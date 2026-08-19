@@ -62,8 +62,10 @@ enum HuffmanNode {
 impl HuffmanNode {
     /// Returns the frequency of this node
     fn frequency(&self) -> usize {
+		log::debug!(">>> Entering frequency()");
         match self {
             HuffmanNode::Leaf { frequency, .. } | HuffmanNode::Internal { frequency, .. } => {
+				log::debug!("<<< Exiting frequency()");
                 *frequency
             }
         }
@@ -71,6 +73,7 @@ impl HuffmanNode {
 
     /// Creates a new leaf node
     fn new_leaf(character: char, frequency: usize) -> Self {
+		log::debug!(">>> Entering new_leaf(character={},frequency={})", character, frequency);
         HuffmanNode::Leaf {
             character,
             frequency,
@@ -79,7 +82,10 @@ impl HuffmanNode {
 
     /// Creates a new internal node from two children
     fn new_internal(left: HuffmanNode, right: HuffmanNode) -> Self {
+		log::debug!(">>> Entering new_internal(left={:?},right={:?})", left, right);
         let frequency = left.frequency() + right.frequency();
+		log::debug!("new_internal(left={:?},right={:?}): frequency → {}", left, right, frequency);
+        log::debug!("<<< Exiting new_internal(left={:?},right={:?})", left, right);
         HuffmanNode::Internal {
             frequency,
             left: Box::new(left),
@@ -94,13 +100,16 @@ struct HeapNode(HuffmanNode);
 
 impl Ord for HeapNode {
     fn cmp(&self, other: &Self) -> Ordering {
+		log::debug!(">>> Entering cmp()");
         // Reverse ordering for min-heap
+		log::debug!("<<< Exiting cmp()");
         other.0.frequency().cmp(&self.0.frequency())
     }
 }
 
 impl PartialOrd for HeapNode {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		log::debug!(">>> Entering partial_cmp()");
         Some(self.cmp(other))
     }
 }
@@ -115,10 +124,12 @@ impl PartialOrd for HeapNode {
 ///
 /// A HashMap mapping each character to its frequency count
 fn build_frequency_map(text: &str) -> HashMap<char, usize> {
+	log::debug!(">>> Entering build_frequency_map(text={})", text);
     let mut frequencies = HashMap::new();
     for ch in text.chars() {
         *frequencies.entry(ch).or_insert(0) += 1;
     }
+	log::debug!("<<< Exiting build_frequency_map(text={})", text);
     frequencies
 }
 
@@ -132,6 +143,7 @@ fn build_frequency_map(text: &str) -> HashMap<char, usize> {
 ///
 /// The root node of the Huffman tree, or None if input is empty
 fn build_huffman_tree(frequencies: HashMap<char, usize>) -> Option<HuffmanNode> {
+	log::debug!(">>> Entering build_huffman_tree(frequencies={:?})", frequencies);
     if frequencies.is_empty() {
         return None;
     }
@@ -165,6 +177,7 @@ fn build_huffman_tree(frequencies: HashMap<char, usize>) -> Option<HuffmanNode> 
 /// * `code` - The current binary code string
 /// * `codes` - HashMap to store the generated codes
 fn generate_codes(node: &HuffmanNode, code: String, codes: &mut HashMap<char, String>) {
+	log::debug!(">>> Entering generate_codes(node={:?},code={},codes={:?})", node, code, codes);
     match node {
         HuffmanNode::Leaf { character, .. } => {
             // Use "0" for single character case
@@ -181,6 +194,7 @@ fn generate_codes(node: &HuffmanNode, code: String, codes: &mut HashMap<char, St
             generate_codes(left, format!("{code}0"), codes);
             generate_codes(right, format!("{code}1"), codes);
         }
+	log::debug!("<<< Exiting generate_codes(node={:?},code={},codes={:?})", node, code, codes);
     }
 }
 
@@ -206,6 +220,7 @@ fn generate_codes(node: &HuffmanNode, code: String, codes: &mut HashMap<char, St
 /// assert!(codes.contains_key(&'h'));
 /// ```
 pub fn huffman_encode(text: &str) -> (String, HashMap<char, String>) {
+	log::debug!(">>> Entering huffman_encode(text={})", text);
     if text.is_empty() {
         return (String::new(), HashMap::new());
     }
@@ -243,6 +258,7 @@ pub fn huffman_encode(text: &str) -> (String, HashMap<char, String>) {
 /// assert_eq!(text, decoded);
 /// ```
 pub fn huffman_decode(encoded: &str, codes: &HashMap<char, String>) -> String {
+	log::debug!(">>> Entering huffman_decode(encoded={},codes={:?})", encoded, codes);
     if encoded.is_empty() {
         return String::new();
     }
@@ -254,6 +270,7 @@ pub fn huffman_decode(encoded: &str, codes: &HashMap<char, String>) -> String {
         .collect();
 
     let mut decoded = String::new();
+	log::debug!("huffman_decode(encoded={},codes={:?}): decoded → {}", encoded, codes, decoded);
     let mut current_code = String::new();
 
     for bit in encoded.chars() {
@@ -301,6 +318,7 @@ pub fn huffman_decode(encoded: &str, codes: &HashMap<char, String>) -> String {
 /// ```
 #[allow(dead_code)]
 pub fn demonstrate_huffman_from_file(file_path: &str) -> std::io::Result<()> {
+	log::debug!(">>> Entering demonstrate_huffman_from_file(file_path={})", file_path);
     // Read the file contents
     let text = fs::read_to_string(file_path)?;
 
@@ -336,6 +354,7 @@ pub fn demonstrate_huffman_from_file(file_path: &str) -> std::io::Result<()> {
     // Show encoding statistics
     let original_bits = text.len() * 8; // Assuming 8-bit characters
     let compressed_bits = encoded.len();
+	log::debug!("demonstrate_huffman_from_file(file_path={}): compressed_bits → {}", file_path, compressed_bits);
     let compression_ratio = if original_bits > 0 {
         (1.0 - (compressed_bits as f64 / original_bits as f64)) * 100.0
     } else {
@@ -381,12 +400,14 @@ pub fn demonstrate_huffman_from_file(file_path: &str) -> std::io::Result<()> {
 
     // Verify decoding
     let decoded = huffman_decode(&encoded, &codes);
+	log::debug!("demonstrate_huffman_from_file(file_path={}): decoded → {}", file_path, decoded);
     if decoded == text {
         println!("✓ Decoding verification: SUCCESS");
     } else {
         println!("✗ Decoding verification: FAILED");
     }
 
+    log::debug!("<<< Exiting demonstrate_huffman_from_file(file_path={})", file_path);
     Ok(())
 }
 
@@ -396,22 +417,28 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
         let (encoded, codes) = huffman_encode("");
         assert_eq!(encoded, "");
+		log::debug!("<<< Exiting test_empty_string()");
         assert!(codes.is_empty());
     }
 
     #[test]
     fn test_single_character() {
+		log::debug!(">>> Entering test_single_character()");
         let (encoded, codes) = huffman_encode("aaaa");
         assert_eq!(encoded, "0000");
+		log::debug!("<<< Exiting test_single_character()");
         assert_eq!(codes.get(&'a'), Some(&"0".to_string()));
     }
 
     #[test]
     fn test_simple_string() {
+		log::debug!(">>> Entering test_simple_string()");
         let text = "hello";
         let (encoded, codes) = huffman_encode(text);
+		log::debug!("test_simple_string(): text → {}", text);
 
         // Verify all characters have codes
         for ch in text.chars() {
@@ -420,11 +447,14 @@ mod tests {
 
         // Verify decoding returns original text
         let decoded = huffman_decode(&encoded, &codes);
+		log::debug!("test_simple_string(): decoded → {}", decoded);
+		log::debug!("<<< Exiting test_simple_string()");
         assert_eq!(decoded, text);
     }
 
     #[test]
     fn test_encode_decode_roundtrip() {
+		log::debug!(">>> Entering test_encode_decode_roundtrip()");
         let test_cases = vec![
             "a",
             "ab",
@@ -436,72 +466,96 @@ mod tests {
         for text in test_cases {
             let (encoded, codes) = huffman_encode(text);
             let decoded = huffman_decode(&encoded, &codes);
+			log::debug!("test_encode_decode_roundtrip(): decoded → {}", decoded);
             assert_eq!(decoded, text, "Failed roundtrip for: '{text}'");
+		log::debug!("<<< Exiting test_encode_decode_roundtrip()");
         }
     }
 
     #[test]
     fn test_frequency_based_encoding() {
+		log::debug!(">>> Entering test_frequency_based_encoding()");
         // In "aaabbc", 'a' should have shorter code than 'b' or 'c'
         let (_, codes) = huffman_encode("aaabbc");
         let a_len = codes[&'a'].len();
+		log::debug!("test_frequency_based_encoding(): a_len → {}", a_len);
         let b_len = codes[&'b'].len();
+		log::debug!("test_frequency_based_encoding(): b_len → {}", b_len);
         let c_len = codes[&'c'].len();
+		log::debug!("test_frequency_based_encoding(): c_len → {}", c_len);
 
         // 'a' appears most frequently, so should have shortest or equal code
         assert!(a_len <= b_len);
+		log::debug!("<<< Exiting test_frequency_based_encoding()");
         assert!(a_len <= c_len);
     }
 
     #[test]
     fn test_compression_ratio() {
+		log::debug!(">>> Entering test_compression_ratio()");
         let text = "aaaaaaaaaa"; // 10 'a's
         let (encoded, _) = huffman_encode(text);
+		log::debug!("test_compression_ratio(): text → {}", text);
 
         // Original: 10 chars * 8 bits = 80 bits (in UTF-8)
         // Huffman: 10 * 1 bit = 10 bits (single character gets code "0")
         assert_eq!(encoded.len(), 10);
+		log::debug!("<<< Exiting test_compression_ratio()");
         assert!(encoded.chars().all(|c| c == '0'));
     }
 
     #[test]
     fn test_all_unique_characters() {
+		log::debug!(">>> Entering test_all_unique_characters()");
         let text = "abcdefg";
         let (encoded, codes) = huffman_encode(text);
+		log::debug!("test_all_unique_characters(): text → {}", text);
 
         // All characters should have codes
         assert_eq!(codes.len(), 7);
 
         // Verify roundtrip
         let decoded = huffman_decode(&encoded, &codes);
+		log::debug!("test_all_unique_characters(): decoded → {}", decoded);
+		log::debug!("<<< Exiting test_all_unique_characters()");
         assert_eq!(decoded, text);
     }
 
     #[test]
     fn test_build_frequency_map() {
+		log::debug!(">>> Entering test_build_frequency_map()");
         let frequencies = build_frequency_map("hello");
         assert_eq!(frequencies.get(&'h'), Some(&1));
+		log::debug!("test_build_frequency_map(): frequencies → {:?}", frequencies);
         assert_eq!(frequencies.get(&'e'), Some(&1));
         assert_eq!(frequencies.get(&'l'), Some(&2));
+		log::debug!("<<< Exiting test_build_frequency_map()");
         assert_eq!(frequencies.get(&'o'), Some(&1));
     }
 
     #[test]
     fn test_unicode_characters() {
+		log::debug!(">>> Entering test_unicode_characters()");
         let text = "Hello, 世界! 🌍";
         let (encoded, codes) = huffman_encode(text);
+		log::debug!("test_unicode_characters(): text → {}", text);
         let decoded = huffman_decode(&encoded, &codes);
+		log::debug!("test_unicode_characters(): decoded → {}", decoded);
+		log::debug!("<<< Exiting test_unicode_characters()");
         assert_eq!(decoded, text);
     }
 
     #[test]
     fn test_demonstrate_huffman_from_file() {
+		log::debug!(">>> Entering test_demonstrate_huffman_from_file()");
         use std::fs::File;
         use std::io::Write;
 
         // Create a temporary test file
         let test_file = "/tmp/huffman_test.txt";
+		log::debug!("test_demonstrate_huffman_from_file(): test_file → {}", test_file);
         let test_content = "The quick brown fox jumps over the lazy dog";
+		log::debug!("test_demonstrate_huffman_from_file(): test_content → {}", test_content);
 
         {
             let mut file = File::create(test_file).unwrap();
@@ -510,19 +564,25 @@ mod tests {
 
         // Test the demonstrate function
         let result = demonstrate_huffman_from_file(test_file);
+		log::debug!("test_demonstrate_huffman_from_file(): result → {:?}", result);
+		log::debug!("<<< Exiting test_demonstrate_huffman_from_file()");
         assert!(result.is_ok());
     }
 
     #[test]
     fn test_demonstrate_empty_file() {
+		log::debug!(">>> Entering test_demonstrate_empty_file()");
         use std::fs::File;
 
         // Create an empty test file
         let test_file = "/tmp/huffman_empty.txt";
+		log::debug!("test_demonstrate_empty_file(): test_file → {}", test_file);
         File::create(test_file).unwrap();
 
         // Test with empty file
         let result = demonstrate_huffman_from_file(test_file);
+		log::debug!("test_demonstrate_empty_file(): result → {:?}", result);
+		log::debug!("<<< Exiting test_demonstrate_empty_file()");
         assert!(result.is_ok());
     }
 }
@@ -537,6 +597,7 @@ mod tests {
 #[cfg(not(test))]
 #[allow(dead_code)]
 fn main() {
+	log::debug!(">>> Entering main()");
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
@@ -556,6 +617,7 @@ fn main() {
     }
 
     let file_path = &args[1];
+	log::debug!("<<< Exiting main()");
 
     match demonstrate_huffman_from_file(file_path) {
         Ok(()) => {}

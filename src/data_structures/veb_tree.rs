@@ -14,6 +14,7 @@ impl VebTree {
     /// Create a new, empty VEB tree. The tree will contain number of elements equal to size
     /// rounded up to the nearest power of two.
     pub fn new(size: u32) -> VebTree {
+		log::debug!(">>> Entering new(size={})", size);
         let rounded_size = size.next_power_of_two();
         let child_size = (size as f64).sqrt().ceil() as u32;
 
@@ -24,6 +25,7 @@ impl VebTree {
             }
         }
 
+		log::debug!("<<< Exiting new(size={})", size);
         VebTree {
             size: rounded_size,
             child_size,
@@ -35,40 +37,50 @@ impl VebTree {
             } else {
                 Some(Box::new(VebTree::new(child_size)))
             },
+		log::debug!(">>> Entering new()");
+		log::debug!("<<< Exiting new()");
         }
     }
 
     fn high(&self, value: u32) -> u32 {
+		log::debug!(">>> Entering high(value={})", value);
         value / self.child_size
     }
 
     fn low(&self, value: u32) -> u32 {
+		log::debug!(">>> Entering low(value={})", value);
         value % self.child_size
     }
 
     fn index(&self, cluster: u32, offset: u32) -> u32 {
+		log::debug!(">>> Entering index(cluster={},offset={})", cluster, offset);
         cluster * self.child_size + offset
     }
 
     pub fn min(&self) -> u32 {
+		log::debug!(">>> Entering min()");
         self.min
     }
 
     pub fn max(&self) -> u32 {
+		log::debug!(">>> Entering max()");
         self.max
     }
 
     pub fn iter(&self) -> VebTreeIter<'_> {
+		log::debug!(">>> Entering iter()");
         VebTreeIter::new(self)
     }
 
     // A VEB tree is empty if the min is greater than the max.
     pub fn empty(&self) -> bool {
+		log::debug!(">>> Entering empty()");
         self.min > self.max
     }
 
     // Returns true if value is in the tree, false otherwise.
     pub fn search(&self, value: u32) -> bool {
+		log::debug!(">>> Entering search(value={})", value);
         if self.empty() {
             return false;
         } else if value == self.min || value == self.max {
@@ -80,13 +92,16 @@ impl VebTree {
     }
 
     fn insert_empty(&mut self, value: u32) {
+		log::debug!(">>> Entering insert_empty(value={})", value);
         assert!(self.empty(), "tree should be empty");
         self.min = value;
+		log::debug!("<<< Exiting insert_empty(value={})", value);
         self.max = value;
     }
 
     // Inserts value into the tree.
     pub fn insert(&mut self, mut value: u32) {
+		log::debug!(">>> Entering insert(value={})", value);
         assert!(value < self.size);
 
         if self.empty() {
@@ -103,7 +118,9 @@ impl VebTree {
         if self.size > 2 {
             // Non base case. The checks for min/max will handle trees of size 2.
             let high = self.high(value);
+			log::debug!("insert(value={}): high → {}", value, high);
             let low = self.low(value);
+			log::debug!("insert(value={}): low → {}", value, low);
             if self.cluster[high as usize].empty() {
                 // If the cluster tree for the value is empty, we set the min/max of the tree to
                 // value and record that the cluster tree has an elements in the summary.
@@ -126,6 +143,7 @@ impl VebTree {
     // Returns the next greatest value(successor) in the tree after pred. Returns
     // `None` if there is no successor.
     pub fn succ(&self, pred: u32) -> Option<u32> {
+		log::debug!(">>> Entering succ(pred={})", pred);
         if self.empty() {
             return None;
         }
@@ -146,7 +164,9 @@ impl VebTree {
         }
 
         let low = self.low(pred);
+		log::debug!("succ(pred={}): low → {}", pred, low);
         let high = self.high(pred);
+		log::debug!("succ(pred={}): high → {}", pred, high);
 
         if !self.cluster[high as usize].empty() && low < self.cluster[high as usize].max {
             // The successor is within the same cluster as the predecessor
@@ -158,6 +178,7 @@ impl VebTree {
         // cluster, return None.
         let succ_cluster = self.summary.as_ref().unwrap().succ(high);
         succ_cluster
+			log::debug!("<<< Exiting succ(pred={})", pred);
             .map(|succ_cluster| self.index(succ_cluster, self.cluster[succ_cluster as usize].min))
     }
 
@@ -165,6 +186,7 @@ impl VebTree {
     // `None` if there is no predecessor. pred() is almost a mirror of succ().
     // Differences are noted in comments.
     pub fn pred(&self, succ: u32) -> Option<u32> {
+		log::debug!(">>> Entering pred(succ={})", succ);
         if self.empty() {
             return None;
         }
@@ -183,7 +205,9 @@ impl VebTree {
         }
 
         let low = self.low(succ);
+		log::debug!("pred(succ={}): low → {}", succ, low);
         let high = self.high(succ);
+		log::debug!("pred(succ={}): high → {}", succ, high);
 
         if !self.cluster[high as usize].empty() && low > self.cluster[high as usize].min {
             return Some(self.index(high, self.cluster[high as usize].pred(low).unwrap()));
@@ -203,6 +227,7 @@ impl VebTree {
                     Some(self.min)
                 } else {
                     None
+				log::debug!("<<< Exiting pred(succ={})", succ);
                 }
             }
         }
@@ -225,9 +250,11 @@ impl Iterator for VebTreeIter<'_> {
     type Item = u32;
 
     fn next(&mut self) -> Option<u32> {
+		log::debug!(">>> Entering next()");
         let curr = self.curr;
         curr?;
         self.curr = self.tree.succ(curr.unwrap());
+		log::debug!("<<< Exiting next()");
         curr
     }
 }
@@ -238,6 +265,7 @@ mod test {
     use rand::{rngs::StdRng, RngExt, SeedableRng};
 
     fn test_veb_tree(size: u32, mut elements: Vec<u32>, exclude: Vec<u32>) {
+		log::debug!(">>> Entering test_veb_tree(size={},elements={:?},exclude={:?})", size, elements, exclude);
         // Insert elements
         let mut tree = VebTree::new(size);
         for element in elements.iter() {
@@ -261,30 +289,38 @@ mod test {
         for i in 1..elements.len() {
             assert_eq!(tree.succ(elements[i - 1]), Some(elements[i]));
             assert_eq!(tree.pred(elements[i]), Some(elements[i - 1]));
+		log::debug!("<<< Exiting test_veb_tree(size={},elements={:?},exclude={:?})", size, elements, exclude);
         }
     }
 
     #[test]
     fn test_empty() {
+		log::debug!(">>> Entering test_empty()");
+		log::debug!("<<< Exiting test_empty()");
         test_veb_tree(16, Vec::new(), (0..16).collect());
     }
 
     #[test]
     fn test_single() {
+		log::debug!(">>> Entering test_single()");
+		log::debug!("<<< Exiting test_single()");
         test_veb_tree(16, Vec::from([5]), (0..16).filter(|x| *x != 5).collect());
     }
 
     #[test]
     fn test_two() {
+		log::debug!(">>> Entering test_two()");
         test_veb_tree(
             16,
             Vec::from([4, 9]),
             (0..16).filter(|x| *x != 4 && *x != 9).collect(),
+		log::debug!("<<< Exiting test_two()");
         );
     }
 
     #[test]
     fn test_repeat_insert() {
+		log::debug!(">>> Entering test_repeat_insert()");
         let mut tree = VebTree::new(16);
         for _ in 0..5 {
             tree.insert(10);
@@ -293,50 +329,65 @@ mod test {
         let elements: Vec<u32> = (0..16).filter(|x| *x != 10).collect();
         for element in elements {
             assert!(!tree.search(element));
+		log::debug!("<<< Exiting test_repeat_insert()");
         }
     }
 
     #[test]
     fn test_linear() {
+		log::debug!(">>> Entering test_linear()");
+		log::debug!("<<< Exiting test_linear()");
         test_veb_tree(16, (0..10).collect(), (10..16).collect());
     }
 
     fn test_full(size: u32) {
+		log::debug!(">>> Entering test_full(size={})", size);
+		log::debug!("<<< Exiting test_full(size={})", size);
         test_veb_tree(size, (0..size).collect(), Vec::new());
     }
 
     #[test]
     fn test_full_small() {
+		log::debug!(">>> Entering test_full_small()");
         test_full(8);
         test_full(10);
         test_full(16);
         test_full(20);
+		log::debug!("<<< Exiting test_full_small()");
         test_full(32);
     }
 
     #[test]
     fn test_full_256() {
+		log::debug!(">>> Entering test_full_256()");
+		log::debug!("<<< Exiting test_full_256()");
         test_full(256);
     }
 
     #[test]
     fn test_10_256() {
+		log::debug!(">>> Entering test_10_256()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..10).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_10_256()");
         test_veb_tree(256, elements, Vec::new());
     }
 
     #[test]
     fn test_100_256() {
+		log::debug!(">>> Entering test_100_256()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..100).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_100_256()");
         test_veb_tree(256, elements, Vec::new());
     }
 
     #[test]
     fn test_100_300() {
+		log::debug!(">>> Entering test_100_300()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..100).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_100_300()");
         test_veb_tree(300, elements, Vec::new());
     }
 }

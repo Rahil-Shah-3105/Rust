@@ -16,8 +16,10 @@ use std::collections::HashMap;
 /// # Returns
 /// * The total number of valid task assignments
 pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usize) -> i64 {
+	log::debug!(">>> Entering count_task_assignments(task_performed={:?},total_tasks={})", task_performed, total_tasks);
     let num_people = task_performed.len();
     let dp_size = 1 << num_people;
+	log::debug!("count_task_assignments(task_performed={:?},total_tasks={}): num_people → {}", task_performed, total_tasks, num_people);
 
     // Initialize DP table with -1 (uncomputed)
     let mut dp = vec![vec![-1; total_tasks + 2]; dp_size];
@@ -32,6 +34,7 @@ pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usiz
         }
     }
 
+	log::debug!("<<< Exiting count_task_assignments(task_performed={:?},total_tasks={})", task_performed, total_tasks);
     // Recursive DP function
     fn count_ways_until(
         dp: &mut Vec<Vec<i64>>,
@@ -39,6 +42,7 @@ pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usiz
         final_mask: usize,
         total_tasks: usize,
         mask: usize,
+		log::debug!(">>> Entering count_ways_until(dp={:?},task_map={:?},final_mask={},total_tasks={},mask={},task_no={})", dp, task_map, final_mask, total_tasks, mask, task_no);
         task_no: usize,
     ) -> i64 {
         // Base case: all people have been assigned tasks

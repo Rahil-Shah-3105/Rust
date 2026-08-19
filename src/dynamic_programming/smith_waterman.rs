@@ -69,6 +69,7 @@ pub fn score_function(
         match_score
     } else {
         mismatch_score
+	log::debug!("<<< Exiting score_function(source_char={},target_char={},match_score={},mismatch_score={},gap_score={})", source_char, target_char, match_score, mismatch_score, gap_score);
     }
 }
 
@@ -105,11 +106,14 @@ pub fn smith_waterman(
     mismatch_score: i32,
     gap_score: i32,
 ) -> Vec<Vec<i32>> {
+	log::debug!(">>> Entering smith_waterman(query={},subject={},match_score={},mismatch_score={},gap_score={})", subject, match_score, mismatch_score, gap_score);
     let query_upper: Vec<char> = query.to_uppercase().chars().collect();
     let subject_upper: Vec<char> = subject.to_uppercase().chars().collect();
 
     let m = query_upper.len();
+	log::debug!("smith_waterman(query={},subject={},match_score={},mismatch_score={},gap_score={}): m → {}", subject, match_score, mismatch_score, gap_score, m);
     let n = subject_upper.len();
+	log::debug!("smith_waterman(query={},subject={},match_score={},mismatch_score={},gap_score={}): n → {}", subject, match_score, mismatch_score, gap_score, n);
 
     // Initialize scoring matrix with zeros
     let mut score = vec![vec![0; n + 1]; m + 1];
@@ -138,6 +142,7 @@ pub fn smith_waterman(
         }
     }
 
+	log::debug!("<<< Exiting smith_waterman(query={},subject={},match_score={},mismatch_score={},gap_score={})", subject, match_score, mismatch_score, gap_score);
     score
 }
 
@@ -176,6 +181,8 @@ pub fn traceback(
     subject: &str,
     match_score: i32,
     mismatch_score: i32,
+	log::debug!(">>> Entering traceback(score={:?},query={},subject={},match_score={},mismatch_score={},gap_score={})", score, subject, match_score, mismatch_score, gap_score);
+	log::debug!("<<< Exiting traceback(score={:?},query={},subject={},match_score={},mismatch_score={},gap_score={})", score, subject, match_score, mismatch_score, gap_score);
     gap_score: i32,
 ) -> String {
     let query_upper: Vec<char> = query.to_uppercase().chars().collect();
@@ -183,6 +190,7 @@ pub fn traceback(
 
     // Find the cell with maximum score
     let mut max_value = 0;
+	log::debug!("traceback(score={:?},query={},subject={},match_score={},mismatch_score={},gap_score={}): max_value → {}", score, subject, match_score, mismatch_score, gap_score, max_value);
     let (mut i_max, mut j_max) = (0, 0);
 
     for (i, row) in score.iter().enumerate() {
@@ -357,43 +365,58 @@ mod tests {
 
     #[test]
     fn test_score_function_match() {
+		log::debug!(">>> Entering test_score_function_match()");
         assert_eq!(score_function('A', 'A', 1, -1, -2), 1);
+		log::debug!("<<< Exiting test_score_function_match()");
         assert_eq!(score_function('G', 'G', 2, -1, -1), 2);
     }
 
     #[test]
     fn test_score_function_mismatch() {
+		log::debug!(">>> Entering test_score_function_mismatch()");
         assert_eq!(score_function('A', 'C', 1, -1, -2), -1);
+		log::debug!("<<< Exiting test_score_function_mismatch()");
         assert_eq!(score_function('G', 'T', 1, -2, -1), -2);
     }
 
     #[test]
     fn test_score_function_gap() {
+		log::debug!(">>> Entering test_score_function_gap()");
         assert_eq!(score_function('-', 'A', 1, -1, -2), -2);
+		log::debug!("<<< Exiting test_score_function_gap()");
         assert_eq!(score_function('A', '-', 1, -1, -2), -2);
     }
 
     #[test]
     fn test_case_insensitive() {
+		log::debug!(">>> Entering test_case_insensitive()");
         let result1 = smith_waterman("acac", "CA", 1, -1, -2);
         let result2 = smith_waterman("ACAC", "ca", 1, -1, -2);
+		log::debug!("test_case_insensitive(): result2 → {:?}", result2);
         let result3 = smith_waterman("AcAc", "Ca", 1, -1, -2);
+		log::debug!("test_case_insensitive(): result3 → {:?}", result3);
+		log::debug!("test_case_insensitive(): result1 → {:?}", result1);
 
         assert_eq!(result1, result2);
+		log::debug!("<<< Exiting test_case_insensitive()");
         assert_eq!(result2, result3);
     }
 
     #[test]
     fn test_custom_scoring_end_to_end() {
+		log::debug!(">>> Entering test_custom_scoring_end_to_end()");
         // Test with custom scoring parameters (match=2, mismatch=-2, gap=-3)
         let query = "ACGT";
+		log::debug!("test_custom_scoring_end_to_end(): query → {}", query);
         let subject = "ACGT";
+		log::debug!("test_custom_scoring_end_to_end(): subject → {}", subject);
         let match_score = 2;
         let mismatch_score = -2;
         let gap_score = -3;
 
         // Generate score matrix with custom parameters
         let score_matrix = smith_waterman(query, subject, match_score, mismatch_score, gap_score);
+		log::debug!("test_custom_scoring_end_to_end(): score_matrix → {:?}", score_matrix);
 
         // Traceback using the same custom parameters
         let alignment = traceback(
@@ -409,19 +432,26 @@ mod tests {
         assert_eq!(alignment, "ACGT\nACGT");
 
         // Verify the score is correct (4 matches × 2 = 8)
+		log::debug!("<<< Exiting test_custom_scoring_end_to_end()");
         assert_eq!(score_matrix[4][4], 8);
     }
 
     #[test]
     fn test_alignment_at_boundary() {
+		log::debug!(">>> Entering test_alignment_at_boundary()");
         // Test case where optimal alignment might be at row/column 0
         let query = "A";
+		log::debug!("test_alignment_at_boundary(): query → {}", query);
         let subject = "A";
+		log::debug!("test_alignment_at_boundary(): subject → {}", subject);
         let score_matrix = smith_waterman(query, subject, 1, -1, -2);
+		log::debug!("test_alignment_at_boundary(): score_matrix → {:?}", score_matrix);
         let alignment = traceback(&score_matrix, query, subject, 1, -1, -2);
+		log::debug!("test_alignment_at_boundary(): alignment → {}", alignment);
 
         // Should find the alignment even though it's near the boundary
         assert_eq!(alignment, "A\nA");
+		log::debug!("<<< Exiting test_alignment_at_boundary()");
         assert_eq!(score_matrix[1][1], 1);
     }
 }

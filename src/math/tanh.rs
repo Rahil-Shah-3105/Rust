@@ -11,11 +11,13 @@
 use std::f32::consts::E;
 
 pub fn tanh(array: &mut Vec<f32>) -> &mut Vec<f32> {
+	log::debug!(">>> Entering tanh(array={:?})", array);
     //note that these calculations are assuming the Vector values consists of real numbers in radians
     for value in &mut *array {
         *value = (2. / (1. + E.powf(-2. * *value))) - 1.;
     }
 
+	log::debug!("<<< Exiting tanh(array={:?})", array);
     array
 }
 
@@ -25,10 +27,12 @@ mod tests {
 
     #[test]
     fn test_tanh() {
+		log::debug!(">>> Entering test_tanh()");
         let mut test = Vec::from([1.0, 0.5, -1.0, 0.0, 0.3]);
         assert_eq!(
             tanh(&mut test),
             &mut Vec::<f32>::from([0.76159406, 0.4621172, -0.7615941, 0.0, 0.29131258,])
+		log::debug!("<<< Exiting test_tanh()");
         );
     }
 }

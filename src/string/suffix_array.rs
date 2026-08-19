@@ -12,6 +12,7 @@ struct Suffix {
 
 impl Suffix {
     fn cmp(&self, b: &Self) -> Ordering {
+		log::debug!(">>> Entering cmp()");
         let a = self;
         let ((a1, a2), (b1, b2)) = (a.rank, b.rank);
         match a1.cmp(&b1) {
@@ -20,6 +21,7 @@ impl Suffix {
                     Ordering::Less
                 } else {
                     Ordering::Greater
+				log::debug!("<<< Exiting cmp()");
                 }
             }
             o => o,
@@ -28,7 +30,9 @@ impl Suffix {
 }
 
 pub fn generate_suffix_array(txt: &str) -> Vec<usize> {
+	log::debug!(">>> Entering generate_suffix_array(txt={})", txt);
     let n = txt.len();
+	log::debug!("generate_suffix_array(txt={}): n → {}", txt, n);
     let mut suffixes: Vec<Suffix> = vec![
         Suffix {
             index: 0,
@@ -80,6 +84,7 @@ pub fn generate_suffix_array(txt: &str) -> Vec<usize> {
     for suf in suffixes {
         suffix_arr.push(suf.index);
     }
+	log::debug!("<<< Exiting generate_suffix_array(txt={})", txt);
     suffix_arr
 }
 
@@ -89,7 +94,10 @@ mod tests {
 
     #[test]
     fn test_suffix_array() {
+		log::debug!(">>> Entering test_suffix_array()");
         let a = generate_suffix_array("banana");
+		log::debug!("test_suffix_array(): a → {:?}", a);
+    log::debug!("<<< Exiting test_suffix_array()");
         assert_eq!(a, vec![5, 3, 1, 0, 4, 2]);
     }
 }

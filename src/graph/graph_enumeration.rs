@@ -11,6 +11,7 @@ We expect that all vertices, even the isolated ones, to have an entry in `adj`
 (possibly an empty vector)
 */
 pub fn enumerate_graph<V: Ord + Clone>(adj: &Graph<V>) -> Vec<Vec<usize>> {
+	log::debug!(">>> Entering enumerate_graph()");
     let mut result = vec![vec![]; adj.len() + 1];
     let ordering: Vec<V> = adj.keys().cloned().collect();
     for (zero_idx, edges) in adj.values().enumerate() {
@@ -20,6 +21,7 @@ pub fn enumerate_graph<V: Ord + Clone>(adj: &Graph<V>) -> Vec<Vec<usize>> {
             .map(|x| ordering.binary_search(x).unwrap() + 1)
             .collect();
     }
+	log::debug!("<<< Exiting enumerate_graph()");
     result
 }
 
@@ -27,12 +29,15 @@ pub fn enumerate_graph<V: Ord + Clone>(adj: &Graph<V>) -> Vec<Vec<usize>> {
 mod tests {
     use super::*;
     fn add_edge<V: Ord + Clone>(graph: &mut Graph<V>, a: V, b: V) {
+		log::debug!(">>> Entering add_edge()");
         graph.entry(a.clone()).or_default().push(b.clone());
+		log::debug!("<<< Exiting add_edge()");
         graph.entry(b).or_default().push(a);
     }
 
     #[test]
     fn string_vertices() {
+		log::debug!(">>> Entering string_vertices()");
         let mut graph = Graph::new();
         add_edge(&mut graph, "a", "b");
         add_edge(&mut graph, "b", "c");
@@ -44,11 +49,13 @@ mod tests {
         for v in result.iter_mut() {
             v.sort_unstable();
         }
+		log::debug!("<<< Exiting string_vertices()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn integer_vertices() {
+		log::debug!(">>> Entering integer_vertices()");
         let mut graph = Graph::new();
         add_edge(&mut graph, 1001, 1002);
         add_edge(&mut graph, 1002, 1003);
@@ -60,6 +67,7 @@ mod tests {
         for v in result.iter_mut() {
             v.sort_unstable();
         }
+		log::debug!("<<< Exiting integer_vertices()");
         assert_eq!(result, expected);
     }
 }

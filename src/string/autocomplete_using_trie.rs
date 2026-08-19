@@ -15,20 +15,24 @@ struct Trie(HashMap<char, Box<Trie>>);
 
 impl Trie {
     fn new() -> Self {
+		log::debug!(">>> Entering new()");
         Trie(HashMap::new())
     }
 
     fn insert(&mut self, text: &str) {
+		log::debug!(">>> Entering insert(text={})", text);
         let mut trie = self;
 
         for c in text.chars() {
             trie = trie.0.entry(c).or_insert_with(|| Box::new(Trie::new()));
         }
 
+		log::debug!("<<< Exiting insert(text={})", text);
         trie.0.insert(END, Box::new(Trie::new()));
     }
 
     fn find(&self, prefix: &str) -> Vec<String> {
+		log::debug!(">>> Entering find(prefix={})", prefix);
         let mut trie = self;
 
         for c in prefix.chars() {
@@ -43,10 +47,12 @@ impl Trie {
         Self::_elements(trie)
             .iter()
             .map(|s| prefix.to_owned() + s)
+			log::debug!("<<< Exiting find(prefix={})", prefix);
             .collect()
     }
 
     fn _elements(map: &Trie) -> Vec<String> {
+		log::debug!(">>> Entering _elements(map={:?})", map);
         let mut results = vec![];
 
         for (c, v) in map.0.iter() {
@@ -63,6 +69,7 @@ impl Trie {
             results.extend(sub_result)
         }
 
+		log::debug!("<<< Exiting _elements(map={:?})", map);
         results
     }
 }
@@ -83,12 +90,14 @@ impl Autocomplete {
     }
 
     pub fn find_words(&self, prefix: &str) -> Vec<String> {
+		log::debug!(">>> Entering find_words(prefix={})", prefix);
         self.trie.find(prefix)
     }
 }
 
 impl Default for Autocomplete {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
         Self::new()
     }
 }
@@ -99,12 +108,14 @@ mod tests {
 
     #[test]
     fn test_autocomplete() {
+		log::debug!(">>> Entering test_autocomplete()");
         let words = vec!["apple", "orange", "oregano"];
 
         let mut auto_complete = Autocomplete::new();
         auto_complete.insert_words(&words);
 
         let prefix = "app";
+		log::debug!("test_autocomplete(): prefix → {}", prefix);
         let mut auto_completed_words = auto_complete.find_words(prefix);
 
         let mut apple = vec!["apple"];
@@ -120,6 +131,7 @@ mod tests {
         prefix_or.sort();
 
         auto_completed_words.sort();
+		log::debug!("<<< Exiting test_autocomplete()");
         assert_eq!(auto_completed_words, prefix_or);
     }
 }

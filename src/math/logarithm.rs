@@ -48,30 +48,40 @@ mod test {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert_eq!(log(E, E, 0.0), 1.0);
         assert_eq!(log(E, E.powi(100), 0.0), 100.0);
         assert_eq!(log(10, 10000.0, 0.0), 4.0);
+		log::debug!("<<< Exiting basic()");
         assert_eq!(log(234501.0, 1.0, 1.0), 0.0);
     }
 
     #[test]
     fn test_log_positive_base() {
+		log::debug!(">>> Entering test_log_positive_base()");
         assert_eq!(log(10.0, 100.0, 0.00001), 2.0);
+		log::debug!("<<< Exiting test_log_positive_base()");
         assert_eq!(log(2.0, 8.0, 0.00001), 3.0);
     }
 
     #[test]
     fn test_log_zero_base() {
+		log::debug!(">>> Entering test_log_zero_base()");
+		log::debug!("<<< Exiting test_log_zero_base()");
         assert!(log(0.0, 100.0, 0.00001).is_nan());
     }
 
     #[test]
     fn test_log_negative_base() {
+		log::debug!(">>> Entering test_log_negative_base()");
+		log::debug!("<<< Exiting test_log_negative_base()");
         assert!(log(-1.0, 100.0, 0.00001).is_nan());
     }
 
     #[test]
     fn test_log_tolerance() {
+		log::debug!(">>> Entering test_log_tolerance()");
+		log::debug!("<<< Exiting test_log_tolerance()");
         assert_eq!(log(10.0, 100.0, 1e-10), 2.0);
     }
 }

@@ -1,8 +1,10 @@
 // https://en.wikipedia.org/wiki/Run-length_encoding
 
 pub fn run_length_encode(text: &str) -> Vec<(char, i32)> {
+	log::debug!(">>> Entering run_length_encode(text={})", text);
     let mut count = 1;
     let mut encoded: Vec<(char, i32)> = vec![];
+	log::debug!("run_length_encode(text={}): count → {}", text, count);
 
     for (i, c) in text.chars().enumerate() {
         if i + 1 < text.len() && c == text.chars().nth(i + 1).unwrap() {
@@ -13,13 +15,16 @@ pub fn run_length_encode(text: &str) -> Vec<(char, i32)> {
         }
     }
 
+	log::debug!("<<< Exiting run_length_encode(text={})", text);
     encoded
 }
 
 pub fn run_length_decode(encoded: &[(char, i32)]) -> String {
+	log::debug!(">>> Entering run_length_decode(encoded={:?})", encoded);
     let res = encoded
         .iter()
         .map(|x| (x.0).to_string().repeat(x.1 as usize))
+	log::debug!("<<< Exiting run_length_decode(encoded={:?})", encoded);
         .collect::<String>();
 
     res
@@ -31,18 +36,23 @@ mod test {
 
     #[test]
     fn test_run_length_decode() {
+		log::debug!(">>> Entering test_run_length_decode()");
         let res = run_length_decode(&[('A', 0)]);
         assert_eq!(res, "");
+		log::debug!("test_run_length_decode(): res → {}", res);
         let res = run_length_decode(&[('B', 1)]);
         assert_eq!(res, "B");
         let res = run_length_decode(&[('A', 5), ('z', 3), ('B', 1)]);
+		log::debug!("<<< Exiting test_run_length_decode()");
         assert_eq!(res, "AAAAAzzzB");
     }
 
     #[test]
     fn test_run_length_encode() {
+		log::debug!(">>> Entering test_run_length_encode()");
         let res = run_length_encode("");
         assert_eq!(res, []);
+		log::debug!("test_run_length_encode(): res → {:?}", res);
 
         let res = run_length_encode("A");
         assert_eq!(res, [('A', 1)]);
@@ -69,6 +79,7 @@ mod test {
                 ('d', 1),
                 ('s', 1)
             ]
+		log::debug!("<<< Exiting test_run_length_encode()");
         );
     }
 }

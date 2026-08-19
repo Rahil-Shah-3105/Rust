@@ -23,10 +23,12 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Ord + Neg
     FlowEdge<T>
 {
     pub fn new(sink: usize, capacity: T) -> Self {
+		log::debug!(">>> Entering new(sink={})", sink);
         FlowEdge {
             sink,
             capacity,
             flow: T::default(),
+		log::debug!(">>> Entering new(source={},sink={},num_vertices={})", source, sink, num_vertices);
         }
     }
 }
@@ -72,16 +74,19 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Neg + Ord
     }
     #[inline]
     pub fn add_edge(&mut self, source: usize, sink: usize, capacity: T) {
+		log::debug!(">>> Entering add_edge(source={},sink={})", source, sink);
         self.edges.push(FlowEdge::new(sink, capacity));
         // Add the reverse edge with zero capacity
         self.edges.push(FlowEdge::new(source, T::default()));
         // We inserted the m'th edge from source to sink
         self.adj[source].push(self.num_edges);
         self.adj[sink].push(self.num_edges + 1);
+		log::debug!("<<< Exiting add_edge(source={},sink={})", source, sink);
         self.num_edges += 2;
     }
 
     fn bfs(&mut self) -> bool {
+		log::debug!(">>> Entering bfs()");
         let mut q: VecDeque<usize> = VecDeque::new();
         q.push_back(self.source);
 
@@ -100,10 +105,12 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Neg + Ord
             }
         }
 
+		log::debug!("<<< Exiting bfs()");
         self.level[self.sink] != 0
     }
 
     fn dfs(&mut self, v: usize, pushed: T) -> T {
+		log::debug!(">>> Entering dfs(v={})", v);
         // We have pushed nothing, or we are at the sink
         if v == self.sink {
             return pushed;
@@ -132,6 +139,7 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Neg + Ord
     }
 
     pub fn find_maxflow(&mut self, infinite_flow: T) -> T {
+		log::debug!(">>> Entering find_maxflow()");
         self.network_solved = true;
         let mut total_flow: T = T::default();
         loop {
@@ -149,10 +157,12 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Neg + Ord
                 next_flow = self.dfs(self.source, infinite_flow);
             }
         }
+		log::debug!("<<< Exiting find_maxflow()");
         total_flow
     }
 
     pub fn get_flow_edges(&mut self, infinite_flow: T) -> Vec<FlowResultEdge<T>> {
+		log::debug!(">>> Entering get_flow_edges()");
         if !self.network_solved {
             self.find_maxflow(infinite_flow);
         }
@@ -171,6 +181,7 @@ impl<T: Clone + Copy + Add + AddAssign + Sub<Output = T> + SubAssign + Neg + Ord
                 }
             }
         }
+		log::debug!("<<< Exiting get_flow_edges()");
         result
     }
 }
@@ -180,6 +191,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_graph() {
+		log::debug!(">>> Entering small_graph()");
         let mut flow: DinicMaxFlow<i32> = DinicMaxFlow::new(1, 6, 6);
         flow.add_edge(1, 2, 16);
         flow.add_edge(1, 4, 13);
@@ -208,6 +220,7 @@ mod tests {
         assert_eq!(sm_in[1], 0);
         assert_eq!(sm_out[1], max_flow);
         assert_eq!(sm_in[6], max_flow);
+		log::debug!("<<< Exiting small_graph()");
         assert_eq!(sm_out[6], 0);
     }
 }

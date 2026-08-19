@@ -16,6 +16,7 @@
 ///
 /// Returns `true` if `sub` is a subsequence of `main`, otherwise returns `false`.
 pub fn is_subsequence(sub: &str, main: &str) -> bool {
+	log::debug!(">>> Entering is_subsequence(sub={},main={})", sub, main);
     let mut sub_iter = sub.chars().peekable();
     let mut main_iter = main.chars();
 
@@ -29,6 +30,7 @@ pub fn is_subsequence(sub: &str, main: &str) -> bool {
         }
     }
 
+	log::debug!("<<< Exiting is_subsequence(sub={},main={})", sub, main);
     true
 }
 

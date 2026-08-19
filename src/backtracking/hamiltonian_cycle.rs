@@ -31,6 +31,7 @@ impl Graph {
     ///
     /// A `Result` containing the graph if successful, or an `FindHamiltonianCycleError` if there is an issue with the matrix.
     fn new(adjacency_matrix: Vec<Vec<bool>>) -> Result<Self, FindHamiltonianCycleError> {
+		log::debug!(">>> Entering new(adjacency_matrix={:?})", adjacency_matrix);
         // Check if the adjacency matrix is empty.
         if adjacency_matrix.is_empty() {
             return Err(FindHamiltonianCycleError::EmptyAdjacencyMatrix);
@@ -49,6 +50,7 @@ impl Graph {
 
     /// Returns the number of vertices in the graph.
     fn num_vertices(&self) -> usize {
+		log::debug!(">>> Entering num_vertices()");
         self.adjacency_matrix.len()
     }
 
@@ -65,6 +67,7 @@ impl Graph {
     ///
     /// `true` if it is safe to include `v` in the path, `false` otherwise.
     fn is_safe(&self, v: usize, visited: &[bool], path: &[Option<usize>], pos: usize) -> bool {
+		log::debug!(">>> Entering is_safe(v={},visited={:?},path={:?},pos={})", v, visited, path, pos);
         // Check if the current vertex and the last vertex in the path are adjacent.
         if !self.adjacency_matrix[path[pos - 1].unwrap()][v] {
             return false;
@@ -93,6 +96,7 @@ impl Graph {
         visited: &mut [bool],
         pos: usize,
     ) -> bool {
+		log::debug!(">>> Entering hamiltonian_cycle_util(path={:?},visited={:?},pos={})", path, visited, pos);
         if pos == self.num_vertices() {
             // Check if there is an edge from the last included vertex to the first vertex.
             return self.adjacency_matrix[path[pos - 1].unwrap()][path[0].unwrap()];
@@ -132,6 +136,7 @@ impl Graph {
         &self,
         start_vertex: usize,
     ) -> Result<Option<Vec<usize>>, FindHamiltonianCycleError> {
+		log::debug!(">>> Entering find_hamiltonian_cycle(start_vertex={})", start_vertex);
         // Validate the start vertex.
         if start_vertex >= self.num_vertices() {
             return Err(FindHamiltonianCycleError::StartOutOfBound);
@@ -151,7 +156,9 @@ impl Graph {
             path.push(Some(start_vertex));
             Ok(Some(path.into_iter().map(Option::unwrap).collect()))
         } else {
+			log::debug!("<<< Exiting find_hamiltonian_cycle(start_vertex={})", start_vertex);
             Ok(None)
+		log::debug!(">>> Entering find_hamiltonian_cycle(adjacency_matrix={:?},start_vertex={})", adjacency_matrix, start_vertex);
         }
     }
 }

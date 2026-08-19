@@ -4,6 +4,7 @@
 /// u32 is chosen arbitrarly, a counting sort probably should'nt be used on data that requires bigger types.
 
 pub fn counting_sort(arr: &mut [u32], maxval: usize) {
+	log::debug!(">>> Entering counting_sort(arr={:?},maxval={})", arr, maxval);
     let mut occurences: Vec<usize> = vec![0; maxval + 1];
 
     for &data in arr.iter() {
@@ -16,6 +17,7 @@ pub fn counting_sort(arr: &mut [u32], maxval: usize) {
             arr[i] = data as u32;
             i += 1;
         }
+	log::debug!("<<< Exiting counting_sort(arr={:?},maxval={})", arr, maxval);
     }
 }
 
@@ -57,37 +59,45 @@ mod test {
 
     #[test]
     fn counting_sort_descending() {
+		log::debug!(">>> Entering counting_sort_descending()");
         let mut ve1 = vec![6, 5, 4, 3, 2, 1];
         let cloned = ve1.clone();
         counting_sort(&mut ve1, 6);
 
+		log::debug!("<<< Exiting counting_sort_descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn counting_sort_pre_sorted() {
+		log::debug!(">>> Entering counting_sort_pre_sorted()");
         let mut ve2 = vec![1, 2, 3, 4, 5, 6];
         let cloned = ve2.clone();
         counting_sort(&mut ve2, 6);
 
+		log::debug!("<<< Exiting counting_sort_pre_sorted()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
 
     #[test]
     fn generic_counting_sort() {
+		log::debug!(">>> Entering generic_counting_sort()");
         let mut ve1: Vec<u8> = vec![100, 30, 60, 10, 20, 120, 1];
         let cloned = ve1.clone();
         super::generic_counting_sort(&mut ve1, 120);
 
+		log::debug!("<<< Exiting generic_counting_sort()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn presorted_u64_counting_sort() {
+		log::debug!(">>> Entering presorted_u64_counting_sort()");
         let mut ve2: Vec<u64> = vec![1, 2, 3, 4, 5, 6];
         let cloned = ve2.clone();
         super::generic_counting_sort(&mut ve2, 6);
 
+		log::debug!("<<< Exiting presorted_u64_counting_sort()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
 }

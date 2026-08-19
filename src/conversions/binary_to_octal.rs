@@ -8,6 +8,9 @@ pub fn binary_to_octal(binary_str: &str) -> Result<String, &'static str> {
     // Validate input
     let binary_str = binary_str.trim();
     if binary_str.is_empty() {
+		log::debug!(">>> Entering binary_to_octal(binary_str={})", binary_str);
+		log::debug!("binary_to_octal(binary_str={}): binary_str → {}", binary_str, binary_str);
+		log::debug!("<<< Exiting binary_to_octal(binary_str={})", binary_str);
         return Err("Empty string");
     }
 
@@ -36,16 +39,20 @@ mod tests {
 
     #[test]
     fn test_binary_to_octal() {
+		log::debug!(">>> Entering test_binary_to_octal()");
         assert_eq!(binary_to_octal("1010"), Ok("12".to_string()));
         assert_eq!(binary_to_octal("1111"), Ok("17".to_string()));
         assert_eq!(binary_to_octal("11111111"), Ok("377".to_string()));
+		log::debug!("<<< Exiting test_binary_to_octal()");
         assert_eq!(binary_to_octal("1100100"), Ok("144".to_string()));
     }
 
     #[test]
     fn test_invalid_input() {
+		log::debug!(">>> Entering test_invalid_input()");
         assert_eq!(binary_to_octal(""), Err("Empty string"));
         assert_eq!(binary_to_octal("12"), Err("Invalid binary string"));
+		log::debug!("<<< Exiting test_invalid_input()");
         assert_eq!(binary_to_octal("abc"), Err("Invalid binary string"));
     }
 }

@@ -26,6 +26,8 @@ pub fn gradient_descent(
     derivative_fn: impl Fn(&[f64]) -> Vec<f64>,
     x: &mut Vec<f64>,
     learning_rate: f64,
+	log::debug!(">>> Entering gradient_descent()");
+	log::debug!("<<< Exiting gradient_descent()");
     num_iterations: i32,
 ) -> &mut Vec<f64> {
     for _ in 0..num_iterations {
@@ -45,6 +47,7 @@ mod test {
     #[test]
     fn test_gradient_descent_optimized() {
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			log::debug!(">>> Entering derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2. * x).collect()
         }
 

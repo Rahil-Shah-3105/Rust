@@ -10,6 +10,7 @@ pub fn sum_of_harmonic_progression(
     common_difference: f64,
     number_of_terms: i32,
 ) -> f64 {
+	log::debug!(">>> Entering sum_of_harmonic_progression(first_term={},common_difference={},number_of_terms={})", first_term, common_difference, number_of_terms);
     let mut arithmetic_progression = vec![1.0 / first_term];
     let mut current_term = 1.0 / first_term;
 
@@ -21,6 +22,7 @@ pub fn sum_of_harmonic_progression(
     let harmonic_series: Vec<f64> = arithmetic_progression
         .into_iter()
         .map(|step| 1.0 / step)
+		log::debug!("<<< Exiting sum_of_harmonic_progression(first_term={},common_difference={},number_of_terms={})", first_term, common_difference, number_of_terms);
         .collect();
     harmonic_series.iter().sum()
 }
@@ -31,10 +33,12 @@ mod tests {
 
     #[test]
     fn test_sum_of_harmonic_progression() {
+		log::debug!(">>> Entering test_sum_of_harmonic_progression()");
         assert_eq!(sum_of_harmonic_progression(1.0 / 2.0, 2.0, 2), 0.75);
         assert_eq!(
             sum_of_harmonic_progression(1.0 / 5.0, 5.0, 5),
             0.45666666666666667
+		log::debug!("<<< Exiting test_sum_of_harmonic_progression()");
         );
     }
 }

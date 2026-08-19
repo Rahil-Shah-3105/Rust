@@ -1,6 +1,7 @@
 use std::vec;
 
 pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
+	log::debug!(">>> Entering patience_sort()");
     if arr.is_empty() {
         return;
     }
@@ -9,7 +10,9 @@ pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
     let mut piles: Vec<Vec<T>> = Vec::new();
     for &card in arr.iter() {
         let mut left = 0usize;
+		log::debug!("patience_sort(): left → {}", left);
         let mut right = piles.len();
+		log::debug!("patience_sort(): right → {}", right);
 
         while left < right {
             let mid = left + (right - left) / 2;
@@ -41,6 +44,7 @@ pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
         if piles[min_id].is_empty() {
             _ = piles.remove(min_id);
         }
+	log::debug!("<<< Exiting patience_sort()");
     }
 }
 
@@ -52,35 +56,43 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let mut array = vec![
             -2, 7, 15, -14, 0, 15, 0, 10_033, 7, -7, -4, -13, 5, 8, -14, 12,
         ];
         let cloned = array.clone();
         patience_sort(&mut array);
+		log::debug!("<<< Exiting basic()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut array = Vec::<i32>::new();
         let cloned = array.clone();
         patience_sort(&mut array);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let mut array = vec![3];
         let cloned = array.clone();
         patience_sort(&mut array);
+		log::debug!("<<< Exiting one_element()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn pre_sorted() {
+		log::debug!(">>> Entering pre_sorted()");
         let mut array = vec![-123_456, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         let cloned = array.clone();
         patience_sort(&mut array);
+		log::debug!("<<< Exiting pre_sorted()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 }

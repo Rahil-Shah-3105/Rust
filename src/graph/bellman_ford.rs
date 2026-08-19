@@ -90,23 +90,28 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn add_edge<V: Ord + Copy, E: Ord>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		log::debug!(">>> Entering add_edge()");
         graph.entry(v1).or_default().insert(v2, c);
+		log::debug!("<<< Exiting add_edge()");
         graph.entry(v2).or_default();
     }
 
     #[test]
     fn single_vertex() {
+		log::debug!(">>> Entering single_vertex()");
         let mut graph: Graph<isize, isize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         let mut dists = BTreeMap::new();
         dists.insert(0, None);
 
+		log::debug!("<<< Exiting single_vertex()");
         assert_eq!(bellman_ford(&graph, &0), Some(dists));
     }
 
     #[test]
     fn single_edge() {
+		log::debug!(">>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 2);
 
@@ -119,11 +124,13 @@ mod tests {
         let mut dists_1 = BTreeMap::new();
         dists_1.insert(1, None);
 
+		log::debug!("<<< Exiting single_edge()");
         assert_eq!(bellman_ford(&graph, &1), Some(dists_1));
     }
 
     #[test]
     fn tree_1() {
+		log::debug!(">>> Entering tree_1()");
         let mut graph = BTreeMap::new();
         let mut dists = BTreeMap::new();
         dists.insert(1, None);
@@ -143,11 +150,13 @@ mod tests {
             }
         }
 
+		log::debug!("<<< Exiting tree_1()");
         assert_eq!(bellman_ford(&graph, &1), Some(dists));
     }
 
     #[test]
     fn graph_1() {
+		log::debug!(">>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
         add_edge(&mut graph, 'a', 'd', 60);
@@ -187,11 +196,13 @@ mod tests {
         dists_e.insert('c', Some(('a', 19)));
         dists_e.insert('d', Some(('c', 51)));
         dists_e.insert('b', Some(('c', 39)));
+		log::debug!("<<< Exiting graph_1()");
         assert_eq!(bellman_ford(&graph, &'e'), Some(dists_e));
     }
 
     #[test]
     fn graph_2() {
+		log::debug!(">>> Entering graph_2()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 6);
         add_edge(&mut graph, 0, 3, 7);
@@ -242,11 +253,13 @@ mod tests {
         dists_4.insert(2, Some((4, 7)));
         dists_4.insert(3, Some((0, 10)));
         dists_4.insert(4, None);
+		log::debug!("<<< Exiting graph_2()");
         assert_eq!(bellman_ford(&graph, &4), Some(dists_4));
     }
 
     #[test]
     fn graph_with_negative_loop() {
+		log::debug!(">>> Entering graph_with_negative_loop()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 6);
         add_edge(&mut graph, 0, 3, 7);
@@ -263,6 +276,7 @@ mod tests {
         assert_eq!(bellman_ford(&graph, &1), None);
         assert_eq!(bellman_ford(&graph, &2), None);
         assert_eq!(bellman_ford(&graph, &3), None);
+		log::debug!("<<< Exiting graph_with_negative_loop()");
         assert_eq!(bellman_ford(&graph, &4), None);
     }
 }

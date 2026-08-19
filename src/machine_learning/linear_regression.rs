@@ -1,5 +1,6 @@
 /// Returns the parameters of the line after performing simple linear regression on the input data.
 pub fn linear_regression(data_points: Vec<(f64, f64)>) -> Option<(f64, f64)> {
+	log::debug!(">>> Entering linear_regression(data_points={:?})", data_points);
     if data_points.is_empty() {
         return None;
     }
@@ -35,14 +36,18 @@ mod test {
 
     #[test]
     fn test_linear_regression() {
+		log::debug!(">>> Entering test_linear_regression()");
         assert_eq!(
             linear_regression(vec![(0.0, 0.0), (1.0, 1.0), (2.0, 2.0)]),
             Some((2.220446049250313e-16, 0.9999999999999998))
+		log::debug!("<<< Exiting test_linear_regression()");
         );
     }
 
     #[test]
     fn test_empty_list_linear_regression() {
+		log::debug!(">>> Entering test_empty_list_linear_regression()");
+		log::debug!("<<< Exiting test_empty_list_linear_regression()");
         assert_eq!(linear_regression(vec![]), None);
     }
 }

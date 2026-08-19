@@ -3,6 +3,7 @@
 /// a data point based on the majority class of its k nearest neighbors.
 
 fn euclidean_distance(p1: &[f64], p2: &[f64]) -> f64 {
+	log::debug!(">>> Entering euclidean_distance(p1={:?},p2={:?})", p1, p2);
     if p1.len() != p2.len() {
         return f64::INFINITY;
     }
@@ -11,6 +12,7 @@ fn euclidean_distance(p1: &[f64], p2: &[f64]) -> f64 {
         .zip(p2.iter())
         .map(|(a, b)| (a - b).powi(2))
         .sum::<f64>()
+		log::debug!("<<< Exiting euclidean_distance(p1={:?},p2={:?})", p1, p2);
         .sqrt()
 }
 
@@ -19,6 +21,7 @@ pub fn k_nearest_neighbors(
     test_point: Vec<f64>,
     k: usize,
 ) -> Option<f64> {
+	log::debug!(">>> Entering k_nearest_neighbors(training_data={:?},test_point={:?},k={})", training_data, test_point, k);
     if training_data.is_empty() || k == 0 || k > training_data.len() {
         return None;
     }
@@ -44,6 +47,7 @@ pub fn k_nearest_neighbors(
         }
     }
 
+	log::debug!("<<< Exiting k_nearest_neighbors(training_data={:?},test_point={:?},k={})", training_data, test_point, k);
     label_counts
         .iter()
         .max_by_key(|(_, count)| *count)
@@ -56,6 +60,7 @@ mod tests {
 
     #[test]
     fn test_standard_knn() {
+		log::debug!(">>> Entering test_standard_knn()");
         let training_data = vec![
             (vec![0.0, 0.0], 0.0),
             (vec![1.0, 0.0], 0.0),
@@ -67,15 +72,18 @@ mod tests {
 
         let test_point = vec![0.5, 0.5];
         let result = k_nearest_neighbors(training_data.clone(), test_point, 3);
+		log::debug!("test_standard_knn(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let test_point = vec![5.5, 5.5];
         let result = k_nearest_neighbors(training_data, test_point, 3);
+		log::debug!("<<< Exiting test_standard_knn()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_one_dimensional_knn() {
+		log::debug!(">>> Entering test_one_dimensional_knn()");
         let training_data = vec![
             (vec![1.0], 0.0),
             (vec![2.0], 0.0),
@@ -87,33 +95,42 @@ mod tests {
 
         let test_point = vec![2.5];
         let result = k_nearest_neighbors(training_data, test_point, 3);
+		log::debug!("test_one_dimensional_knn(): result → {:?}", result);
+		log::debug!("<<< Exiting test_one_dimensional_knn()");
         assert_eq!(result, Some(0.0));
     }
 
     #[test]
     fn test_knn_empty_data() {
+		log::debug!(">>> Entering test_knn_empty_data()");
         let training_data = vec![];
         let test_point = vec![1.0, 2.0];
         let result = k_nearest_neighbors(training_data, test_point, 3);
+		log::debug!("test_knn_empty_data(): result → {:?}", result);
+		log::debug!("<<< Exiting test_knn_empty_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_knn_invalid_k() {
+		log::debug!(">>> Entering test_knn_invalid_k()");
         let training_data = vec![(vec![1.0], 0.0), (vec![2.0], 1.0)];
         let test_point = vec![1.5];
 
         // k = 0 should return None
         let result = k_nearest_neighbors(training_data.clone(), test_point.clone(), 0);
+		log::debug!("test_knn_invalid_k(): result → {:?}", result);
         assert_eq!(result, None);
 
         // k > training_data.len() should return None
         let result = k_nearest_neighbors(training_data, test_point, 10);
+		log::debug!("<<< Exiting test_knn_invalid_k()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_euclidean_distance_different_dimensions() {
+		log::debug!(">>> Entering test_euclidean_distance_different_dimensions()");
         let training_data = vec![
             (vec![1.0, 2.0], 0.0),
             (vec![2.0, 3.0], 0.0),
@@ -121,6 +138,8 @@ mod tests {
         ];
         let test_point = vec![1.5, 2.5];
         let result = k_nearest_neighbors(training_data, test_point, 2);
+		log::debug!("test_euclidean_distance_different_dimensions(): result → {:?}", result);
+		log::debug!("<<< Exiting test_euclidean_distance_different_dimensions()");
         assert_eq!(result, Some(0.0));
     }
 }

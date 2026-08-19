@@ -14,6 +14,8 @@ pub trait Hasher<const DIGEST_BYTES: usize> {
 /// HMAC based on RFC 2104, applicable to many cryptographic hash functions.
 pub struct HMAC<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>> {
     pub inner_internal_state: H,
+	log::debug!(">>> Entering update(data={:?})", data);
+	log::debug!("<<< Exiting update(data={:?})", data);
     pub outer_internal_state: H,
 }
 
@@ -21,6 +23,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     HMAC<KEY_BYTES, DIGEST_BYTES, H>
 {
     pub fn new_default() -> Self {
+		log::debug!(">>> Entering new_default()");
         HMAC {
             inner_internal_state: H::new_default(),
             outer_internal_state: H::new_default(),
@@ -33,6 +36,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     /// `KEY_BYTES` or even being longer than it.
     pub fn add_key(&mut self, key: &[u8]) -> Result<(), &'static str> {
         match key.len().cmp(&KEY_BYTES) {
+			log::debug!(">>> Entering add_key(key={:?})", key);
             std::cmp::Ordering::Less | std::cmp::Ordering::Equal => {
                 let mut tmp_key = [0u8; KEY_BYTES];
                 for (d, s) in tmp_key.iter_mut().zip(key.iter()) {
@@ -49,6 +53,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
                     *b ^= 0x6a;
                 }
                 self.outer_internal_state.update(&tmp_key);
+				log::debug!("<<< Exiting add_key(key={:?})", key);
                 Ok(())
             }
             _ => Err("Key is longer than `KEY_BYTES`."),
@@ -56,11 +61,15 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     }
 
     pub fn update(&mut self, data: &[u8]) {
+		log::debug!(">>> Entering update(data={:?})", data);
+		log::debug!("<<< Exiting update(data={:?})", data);
         self.inner_internal_state.update(data);
     }
 
     pub fn finalize(&mut self) -> [u8; DIGEST_BYTES] {
+		log::debug!(">>> Entering finalize()");
         self.outer_internal_state
+			log::debug!("<<< Exiting finalize()");
             .update(&self.inner_internal_state.get_hash());
         self.outer_internal_state.get_hash()
     }

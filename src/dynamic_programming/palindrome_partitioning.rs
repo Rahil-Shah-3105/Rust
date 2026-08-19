@@ -36,8 +36,10 @@
 ///
 /// Reference: <https://www.youtube.com/watch?v=_H8V5hJUGd0>
 pub fn minimum_palindrome_partitions(s: &str) -> usize {
+	log::debug!(">>> Entering minimum_palindrome_partitions(s={})", s);
     let chars: Vec<char> = s.chars().collect();
     let length = chars.len();
+	log::debug!("minimum_palindrome_partitions(s={}): length → {}", s, length);
 
     if length == 0 {
         return 0;
@@ -74,6 +76,7 @@ pub fn minimum_palindrome_partitions(s: &str) -> usize {
         cut[i] = mincut;
     }
 
+    log::debug!("<<< Exiting minimum_palindrome_partitions(s={})", s);
     cut[length - 1]
 }
 
@@ -83,6 +86,7 @@ mod tests {
 
     #[test]
     fn test_basic_cases() {
+		log::debug!(">>> Entering test_basic_cases()");
         // "aab" -> "aa" | "b" = 1 cut
         assert_eq!(minimum_palindrome_partitions("aab"), 1);
 
@@ -90,11 +94,13 @@ mod tests {
         assert_eq!(minimum_palindrome_partitions("aaa"), 0);
 
         // Complex case
+		log::debug!("<<< Exiting test_basic_cases()");
         assert_eq!(minimum_palindrome_partitions("ababbbabbababa"), 3);
     }
 
     #[test]
     fn test_edge_cases() {
+		log::debug!(">>> Entering test_edge_cases()");
         // Empty string
         assert_eq!(minimum_palindrome_partitions(""), 0);
 
@@ -102,29 +108,36 @@ mod tests {
         assert_eq!(minimum_palindrome_partitions("a"), 0);
 
         // Two different characters need 1 cut
+		log::debug!("<<< Exiting test_edge_cases()");
         assert_eq!(minimum_palindrome_partitions("ab"), 1);
     }
 
     #[test]
     fn test_palindromes() {
+		log::debug!(">>> Entering test_palindromes()");
         // Already a palindrome
         assert_eq!(minimum_palindrome_partitions("racecar"), 0);
         assert_eq!(minimum_palindrome_partitions("noon"), 0);
+		log::debug!("<<< Exiting test_palindromes()");
         assert_eq!(minimum_palindrome_partitions("abba"), 0);
     }
 
     #[test]
     fn test_non_palindromes() {
+		log::debug!(">>> Entering test_non_palindromes()");
         // All different characters need n-1 cuts
         assert_eq!(minimum_palindrome_partitions("abcde"), 4);
 
         // Two pairs need 1 cut
+		log::debug!("<<< Exiting test_non_palindromes()");
         assert_eq!(minimum_palindrome_partitions("aabb"), 1);
     }
 
     #[test]
     fn test_longer_strings() {
+		log::debug!(">>> Entering test_longer_strings()");
         assert_eq!(minimum_palindrome_partitions("aaabaa"), 1);
+		log::debug!("<<< Exiting test_longer_strings()");
         assert_eq!(minimum_palindrome_partitions("abcbm"), 2);
     }
 }

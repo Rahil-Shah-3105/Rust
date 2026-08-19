@@ -24,6 +24,7 @@ const TRIGRAM_VALUES: [&str; 27] = [
 /// * `alphabet` - The characters to be used for the cipher (must be 27 characters)
 /// * `period` - The number of characters in a group whilst encrypting
 pub fn trifid_encrypt(message: &str, alphabet: &str, period: usize) -> Result<String, String> {
+	log::debug!(">>> Entering trifid_encrypt(message={},alphabet={},period={})", message, alphabet, period);
     let (message, _alphabet, char_to_num, num_to_char) = prepare(message, alphabet)?;
 
     let mut encrypted_numeric = String::new();
@@ -35,6 +36,7 @@ pub fn trifid_encrypt(message: &str, alphabet: &str, period: usize) -> Result<St
     }
 
     let mut encrypted = String::new();
+	log::debug!("trifid_encrypt(message={},alphabet={},period={}): encrypted → {}", message, alphabet, period, encrypted);
     let numeric_chars: Vec<char> = encrypted_numeric.chars().collect();
 
     for chunk in numeric_chars.chunks(3) {
@@ -44,6 +46,7 @@ pub fn trifid_encrypt(message: &str, alphabet: &str, period: usize) -> Result<St
         }
     }
 
+	log::debug!("<<< Exiting trifid_encrypt(message={},alphabet={},period={})", message, alphabet, period);
     Ok(encrypted)
 }
 
@@ -55,6 +58,7 @@ pub fn trifid_encrypt(message: &str, alphabet: &str, period: usize) -> Result<St
 /// * `alphabet` - The characters used for the cipher (must be 27 characters)
 /// * `period` - The number of characters used in grouping when it was encrypted
 pub fn trifid_decrypt(message: &str, alphabet: &str, period: usize) -> Result<String, String> {
+	log::debug!(">>> Entering trifid_decrypt(message={},alphabet={},period={})", message, alphabet, period);
     let (message, _alphabet, char_to_num, num_to_char) = prepare(message, alphabet)?;
 
     let mut decrypted_numeric = Vec::new();
@@ -76,18 +80,21 @@ pub fn trifid_decrypt(message: &str, alphabet: &str, period: usize) -> Result<St
     }
 
     let mut decrypted = String::new();
+	log::debug!("trifid_decrypt(message={},alphabet={},period={}): decrypted → {}", message, alphabet, period, decrypted);
     for trigram in decrypted_numeric {
         if let Some(ch) = num_to_char.get(&trigram) {
             decrypted.push(*ch);
         }
     }
 
+	log::debug!("<<< Exiting trifid_decrypt(message={},alphabet={},period={})", message, alphabet, period);
     Ok(decrypted)
 }
 
 /// Arranges the trigram value of each letter of message_part vertically and joins
 /// them horizontally.
 fn encrypt_part(message_part: &str, char_to_num: &CharToNum) -> String {
+	log::debug!(">>> Entering encrypt_part(message_part={})", message_part);
     let mut one = String::new();
     let mut two = String::new();
     let mut three = String::new();
@@ -101,12 +108,14 @@ fn encrypt_part(message_part: &str, char_to_num: &CharToNum) -> String {
         }
     }
 
+	log::debug!("<<< Exiting encrypt_part(message_part={})", message_part);
     format!("{one}{two}{three}")
 }
 
 /// Converts each letter of the input string into their respective trigram values,
 /// joins them and splits them into three equal groups of strings which are returned.
 fn decrypt_part(message_part: &str, char_to_num: &CharToNum) -> (String, String, String) {
+	log::debug!(">>> Entering decrypt_part(message_part={})", message_part);
     let mut this_part = String::new();
 
     for ch in message_part.chars() {
@@ -116,8 +125,10 @@ fn decrypt_part(message_part: &str, char_to_num: &CharToNum) -> (String, String,
     }
 
     let part_len = message_part.len();
+	log::debug!("decrypt_part(message_part={}): part_len → {}", message_part, part_len);
 
     if part_len == 0 {
+    log::debug!("<<< Exiting decrypt_part(message_part={})", message_part);
         return (String::new(), String::new(), String::new());
     }
 
@@ -139,11 +150,14 @@ fn decrypt_part(message_part: &str, char_to_num: &CharToNum) -> (String, String,
 /// Prepares the message and alphabet for encryption/decryption.
 /// Validates inputs and creates the character-to-number and number-to-character mappings.
 fn prepare(message: &str, alphabet: &str) -> PrepareResult {
+	log::debug!(">>> Entering prepare(message={},alphabet={})", message, alphabet);
     // Remove spaces and convert to uppercase
     let alphabet: String = alphabet.chars().filter(|c| !c.is_whitespace()).collect();
     let alphabet = alphabet.to_uppercase();
+	log::debug!("prepare(message={},alphabet={}): alphabet → {}", message, alphabet, alphabet);
     let message: String = message.chars().filter(|c| !c.is_whitespace()).collect();
     let message = message.to_uppercase();
+	log::debug!("prepare(message={},alphabet={}): message → {}", message, alphabet, message);
 
     // Validate alphabet length
     if alphabet.len() != 27 {
@@ -178,77 +192,107 @@ mod tests {
 
     #[test]
     fn test_encrypt_basic() {
+		log::debug!(">>> Entering test_encrypt_basic()");
         let result = trifid_encrypt("I am a boy", DEFAULT_ALPHABET, 5);
+		log::debug!("test_encrypt_basic(): result → {:?}", result);
+    log::debug!("<<< Exiting test_encrypt_basic()");
         assert_eq!(result, Ok("BCDGBQY".to_string()));
     }
 
     #[test]
     fn test_encrypt_empty() {
+		log::debug!(">>> Entering test_encrypt_empty()");
         let result = trifid_encrypt(" ", DEFAULT_ALPHABET, 5);
+		log::debug!("test_encrypt_empty(): result → {:?}", result);
+    log::debug!("<<< Exiting test_encrypt_empty()");
         assert_eq!(result, Ok("".to_string()));
     }
 
     #[test]
     fn test_encrypt_custom_alphabet() {
+		log::debug!(">>> Entering test_encrypt_custom_alphabet()");
         let result = trifid_encrypt(
             "aide toi le c iel ta id era",
             "FELIXMARDSTBCGHJKNOPQUVWYZ+",
             5,
         );
+		log::debug!("<<< Exiting test_encrypt_custom_alphabet()");
         assert_eq!(result, Ok("FMJFVOISSUFTFPUFEQQC".to_string()));
     }
 
     #[test]
     fn test_decrypt_basic() {
+		log::debug!(">>> Entering test_decrypt_basic()");
         let result = trifid_decrypt("BCDGBQY", DEFAULT_ALPHABET, 5);
+		log::debug!("test_decrypt_basic(): result → {:?}", result);
+    log::debug!("<<< Exiting test_decrypt_basic()");
         assert_eq!(result, Ok("IAMABOY".to_string()));
     }
 
     #[test]
     fn test_decrypt_custom_alphabet() {
+		log::debug!(">>> Entering test_decrypt_custom_alphabet()");
         let result = trifid_decrypt("FMJFVOISSUFTFPUFEQQC", "FELIXMARDSTBCGHJKNOPQUVWYZ+", 5);
+		log::debug!("test_decrypt_custom_alphabet(): result → {:?}", result);
+    log::debug!("<<< Exiting test_decrypt_custom_alphabet()");
         assert_eq!(result, Ok("AIDETOILECIELTAIDERA".to_string()));
     }
 
     #[test]
     fn test_encrypt_decrypt_roundtrip() {
+		log::debug!(">>> Entering test_encrypt_decrypt_roundtrip()");
         let msg = "DEFEND THE EAST WALL OF THE CASTLE.";
         let alphabet = "EPSDUCVWYM.ZLKXNBTFGORIJHAQ";
+		log::debug!("test_encrypt_decrypt_roundtrip(): alphabet → {}", alphabet);
         let encrypted = trifid_encrypt(msg, alphabet, 5).unwrap();
+		log::debug!("test_encrypt_decrypt_roundtrip(): encrypted → {}", encrypted);
         let decrypted = trifid_decrypt(&encrypted, alphabet, 5).unwrap();
+		log::debug!("test_encrypt_decrypt_roundtrip(): decrypted → {}", decrypted);
+		log::debug!("test_encrypt_decrypt_roundtrip(): msg → {}", msg);
+    log::debug!("<<< Exiting test_encrypt_decrypt_roundtrip()");
         assert_eq!(decrypted, msg.replace(' ', ""));
     }
 
     #[test]
     fn test_invalid_alphabet_length() {
+		log::debug!(">>> Entering test_invalid_alphabet_length()");
         let result = trifid_encrypt("test", "ABCDEFGHIJKLMNOPQRSTUVW", 5);
         assert!(result.is_err());
+		log::debug!("test_invalid_alphabet_length(): result → {:?}", result);
+		log::debug!("<<< Exiting test_invalid_alphabet_length()");
         assert_eq!(result.unwrap_err(), "Length of alphabet has to be 27.");
     }
 
     #[test]
     fn test_invalid_character_in_message() {
+		log::debug!(">>> Entering test_invalid_character_in_message()");
         let result = trifid_encrypt("am i a boy?", "ABCDEFGHIJKLMNOPQRSTUVWXYZ+", 5);
         assert!(result.is_err());
+		log::debug!("test_invalid_character_in_message(): result → {:?}", result);
         assert_eq!(
             result.unwrap_err(),
             "Each message character has to be included in alphabet!"
+		log::debug!("<<< Exiting test_invalid_character_in_message()");
         );
     }
 
     #[test]
     fn test_encrypt_part() {
+		log::debug!(">>> Entering test_encrypt_part()");
         let mut char_to_num = HashMap::new();
         char_to_num.insert('A', "111".to_string());
         char_to_num.insert('S', "311".to_string());
         char_to_num.insert('K', "212".to_string());
 
         let result = encrypt_part("ASK", &char_to_num);
+		log::debug!("test_encrypt_part(): result → {}", result);
+		log::debug!("<<< Exiting test_encrypt_part()");
         assert_eq!(result, "132111112");
     }
 
     #[test]
     fn test_decrypt_part() {
+		log::debug!(">>> Entering test_decrypt_part()");
         let mut char_to_num = HashMap::new();
         for (i, ch) in DEFAULT_ALPHABET.chars().enumerate() {
             char_to_num.insert(ch, TRIGRAM_VALUES[i].to_string());
@@ -257,31 +301,37 @@ mod tests {
         let (a, b, c) = decrypt_part("ABCDE", &char_to_num);
         assert_eq!(a, "11111");
         assert_eq!(b, "21131");
+		log::debug!("<<< Exiting test_decrypt_part()");
         assert_eq!(c, "21122");
     }
 
     #[test]
     fn test_decrypt_part_single_char() {
+		log::debug!(">>> Entering test_decrypt_part_single_char()");
         let mut char_to_num = HashMap::new();
         char_to_num.insert('A', "111".to_string());
 
         let (a, b, c) = decrypt_part("A", &char_to_num);
         assert_eq!(a, "1");
         assert_eq!(b, "1");
+		log::debug!("<<< Exiting test_decrypt_part_single_char()");
         assert_eq!(c, "1");
     }
 
     #[test]
     fn test_decrypt_part_empty() {
+		log::debug!(">>> Entering test_decrypt_part_empty()");
         let char_to_num = HashMap::new();
         let (a, b, c) = decrypt_part("", &char_to_num);
         assert_eq!(a, "");
         assert_eq!(b, "");
+		log::debug!("<<< Exiting test_decrypt_part_empty()");
         assert_eq!(c, "");
     }
 
     #[test]
     fn test_decrypt_part_with_unmapped_chars() {
+		log::debug!(">>> Entering test_decrypt_part_with_unmapped_chars()");
         let mut char_to_num = HashMap::new();
         char_to_num.insert('A', "111".to_string());
         // 'B' and 'C' are not in the mapping, so this_part will only contain A's trigram
@@ -290,6 +340,7 @@ mod tests {
         let (a, b, c) = decrypt_part("ABC", &char_to_num);
         assert_eq!(a, "111");
         assert_eq!(b, "");
+		log::debug!("<<< Exiting test_decrypt_part_with_unmapped_chars()");
         assert_eq!(c, "");
     }
 }

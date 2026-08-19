@@ -8,11 +8,14 @@
 
 /// Vigenère cipher to rotate plain_text text by key and return an owned String.
 pub fn vigenere(plain_text: &str, key: &str) -> String {
+	log::debug!(">>> Entering vigenere(plain_text={},key={})", plain_text, key);
     // Remove all unicode and non-ascii characters from key
     let key: String = key.chars().filter(|&c| c.is_ascii_alphabetic()).collect();
     let key = key.to_ascii_lowercase();
+	log::warn!("vigenere(plain_text={},key={}): key → {}", plain_text, key, key);
 
     let key_len = key.len();
+	log::debug!("vigenere(plain_text={},key={}): key_len → {}", plain_text, key, key_len);
     if key_len == 0 {
         return String::from(plain_text);
     }
@@ -32,6 +35,7 @@ pub fn vigenere(plain_text: &str, key: &str) -> String {
                 c
             }
         })
+		log::debug!("<<< Exiting vigenere(plain_text={},key={})", plain_text, key);
         .collect()
 }
 
@@ -41,46 +45,58 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
+		log::debug!("<<< Exiting empty()");
         assert_eq!(vigenere("", "test"), "");
     }
 
     #[test]
     fn vigenere_base() {
+		log::debug!(">>> Entering vigenere_base()");
         assert_eq!(
             vigenere("LoremIpsumDolorSitAmet", "base"),
             "MojinIhwvmVsmojWjtSqft"
+		log::debug!("<<< Exiting vigenere_base()");
         );
     }
 
     #[test]
     fn vigenere_with_spaces() {
+		log::debug!(">>> Entering vigenere_with_spaces()");
         assert_eq!(
             vigenere(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "spaces"
             ),
             "Ddrgq ahhuo hgddr uml sbev, ggfheexwljr chahxsemfy tlkx."
+		log::debug!("<<< Exiting vigenere_with_spaces()");
         );
     }
 
     #[test]
     fn vigenere_unicode_and_numbers() {
+		log::debug!(">>> Entering vigenere_unicode_and_numbers()");
         assert_eq!(
             vigenere("1 Lorem ⏳ ipsum dolor sit amet Ѡ", "unicode"),
             "1 Fbzga ⏳ ltmhu fcosl fqv opin Ѡ"
+		log::debug!("<<< Exiting vigenere_unicode_and_numbers()");
         );
     }
 
     #[test]
     fn vigenere_unicode_key() {
+		log::debug!(">>> Entering vigenere_unicode_key()");
         assert_eq!(
             vigenere("Lorem ipsum dolor sit amet", "😉 key!"),
             "Vspoq gzwsw hmvsp cmr kqcd"
+		log::debug!("<<< Exiting vigenere_unicode_key()");
         );
     }
 
     #[test]
     fn vigenere_empty_key() {
+		log::debug!(">>> Entering vigenere_empty_key()");
+		log::debug!("<<< Exiting vigenere_empty_key()");
         assert_eq!(vigenere("Lorem ipsum", ""), "Lorem ipsum");
     }
 }

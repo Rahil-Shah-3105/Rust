@@ -23,14 +23,17 @@ use std::cmp::Ordering;
 /// - `Some(index)` if the item is found at the given index.
 /// - `None` if the item is not found in the array.
 pub fn ternary_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+	log::debug!(">>> Entering ternary_search()");
     if arr.is_empty() {
         return None;
     }
 
     let is_asc = is_asc_arr(arr);
+	log::debug!("ternary_search(): is_asc → {}", is_asc);
     let mut left = 0;
     let mut right = arr.len() - 1;
 
+	log::debug!("<<< Exiting ternary_search()");
     while left <= right {
         if match_compare(item, arr, &mut left, &mut right, is_asc) {
             return Some(left);
@@ -65,6 +68,8 @@ fn match_compare<T: Ord>(
     arr: &[T],
     left: &mut usize,
     right: &mut usize,
+	log::debug!(">>> Entering match_compare(left={},right={},is_asc={})", left, right, is_asc);
+	log::debug!("<<< Exiting match_compare(left={},right={},is_asc={})", left, right, is_asc);
     is_asc: bool,
 ) -> bool {
     let first_mid = *left + (*right - *left) / 3;
@@ -126,6 +131,7 @@ fn match_compare<T: Ord>(
 ///
 /// A `bool` indicating whether the array is sorted in ascending order.
 fn is_asc_arr<T: Ord>(arr: &[T]) -> bool {
+	log::debug!(">>> Entering is_asc_arr()");
     arr.len() > 1 && arr[0] < arr[arr.len() - 1]
 }
 

@@ -1,6 +1,7 @@
 pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
     // shell sort works by swiping the value at a given gap and decreasing the gap to 1
     fn insertion<T: Ord + Copy>(values: &mut [T], start: usize, gap: usize) {
+		log::debug!(">>> Entering insertion(start={},gap={})", start, gap);
         for i in ((start + gap)..values.len()).step_by(gap) {
             let val_current = values[i];
             let mut pos = i;
@@ -10,6 +11,7 @@ pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
                 pos -= gap;
             }
             values[pos] = val_current;
+		log::debug!("<<< Exiting insertion(start={},gap={})", start, gap);
         }
     }
 
@@ -30,33 +32,41 @@ mod test {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let mut vec = vec![3, 5, 6, 3, 1, 4];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		log::debug!("<<< Exiting basic()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut vec: Vec<i32> = vec![];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn reverse() {
+		log::debug!(">>> Entering reverse()");
         let mut vec = vec![6, 5, 4, 3, 2, 1];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		log::debug!("<<< Exiting reverse()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn already_sorted() {
+		log::debug!(">>> Entering already_sorted()");
         let mut vec = vec![1, 2, 3, 4, 5, 6];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		log::debug!("<<< Exiting already_sorted()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 }

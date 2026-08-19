@@ -13,8 +13,10 @@
 /// assert_eq!(12, sum_digits_iterative(-246));
 /// ```
 pub fn sum_digits_iterative(num: i32) -> u32 {
+	log::debug!(">>> Entering sum_digits_iterative(num={})", num);
     // convert to unsigned integer
     let mut num = num.unsigned_abs();
+	log::debug!("sum_digits_iterative(num={}): num → {}", num, num);
     // initialize sum
     let mut result: u32 = 0;
 
@@ -24,6 +26,7 @@ pub fn sum_digits_iterative(num: i32) -> u32 {
         result += num % 10;
         num /= 10; // chop off last digit
     }
+	log::debug!("<<< Exiting sum_digits_iterative(num={})", num);
     result
 }
 
@@ -42,10 +45,13 @@ pub fn sum_digits_iterative(num: i32) -> u32 {
 /// assert_eq!(12, sum_digits_recursive(-246));
 /// ```
 pub fn sum_digits_recursive(num: i32) -> u32 {
+	log::debug!(">>> Entering sum_digits_recursive(num={})", num);
     // convert to unsigned integer
     let num = num.unsigned_abs();
     // base case
     if num < 10 {
+	log::debug!("sum_digits_recursive(num={}): num → {}", num, num);
+    log::debug!("<<< Exiting sum_digits_recursive(num={})", num);
         return num;
     }
     // recursive case: add last digit to sum of remaining digits
@@ -60,26 +66,34 @@ mod tests {
 
         #[test]
         fn zero() {
+			log::debug!(">>> Entering zero()");
+			log::debug!("<<< Exiting zero()");
             assert_eq!(0, sum_digits(0));
         }
         #[test]
         fn positive_number() {
+			log::debug!(">>> Entering positive_number()");
             assert_eq!(1, sum_digits(1));
             assert_eq!(10, sum_digits(1234));
             assert_eq!(14, sum_digits(42161));
+			log::debug!("<<< Exiting positive_number()");
             assert_eq!(6, sum_digits(500010));
         }
         #[test]
         fn negative_number() {
+			log::debug!(">>> Entering negative_number()");
             assert_eq!(1, sum_digits(-1));
             assert_eq!(12, sum_digits(-246));
             assert_eq!(2, sum_digits(-11));
             assert_eq!(14, sum_digits(-42161));
+			log::debug!("<<< Exiting negative_number()");
             assert_eq!(6, sum_digits(-500010));
         }
         #[test]
         fn trailing_zeros() {
+			log::debug!(">>> Entering trailing_zeros()");
             assert_eq!(1, sum_digits(1000000000));
+			log::debug!("<<< Exiting trailing_zeros()");
             assert_eq!(3, sum_digits(300));
         }
     }

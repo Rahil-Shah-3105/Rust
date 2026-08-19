@@ -14,6 +14,7 @@ where
     let mut tree_size = 1;
 
     while tree_size < n {
+		log::debug!(">>> Entering tournament_sort()");
         tree_size <<= 1;
     }
 
@@ -37,6 +38,7 @@ where
         let min_ref = &arr[i];
 
         let mut pos = 1;
+		log::debug!("tournament_sort(): pos → {}", pos);
         while pos < tree_size {
             if tree[2 * pos].as_ref() == Some(min_ref) {
                 pos *= 2;
@@ -74,43 +76,55 @@ mod test {
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         let arr = vec![6, 5, 4, 3, 2, 1];
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let arr = Vec::<i32>::new();
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn negative_numbers() {
+		log::debug!(">>> Entering negative_numbers()");
         let arr = vec![-32, -54, -65, -12, -7];
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting negative_numbers()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let arr = vec![1];
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn pre_sorted() {
+		log::debug!(">>> Entering pre_sorted()");
         let arr = vec![5, 12, 23, 54, 57, 60];
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting pre_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn repeated_elements() {
+		log::debug!(">>> Entering repeated_elements()");
         let arr = vec![42, 42, 42, 42];
         let res = tournament_sort(&arr);
+		log::debug!("<<< Exiting repeated_elements()");
         assert_eq!(&res, &arr);
     }
 }

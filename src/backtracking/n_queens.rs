@@ -20,7 +20,9 @@
 ///
 /// A vector containing all solutions to the N-Queens problem.
 pub fn n_queens_solver(n: usize) -> Vec<Vec<String>> {
+	log::debug!(">>> Entering n_queens_solver(n={})", n);
     let mut solver = NQueensSolver::new(n);
+	log::debug!("<<< Exiting n_queens_solver(n={})", n);
     solver.solve()
 }
 
@@ -45,6 +47,7 @@ impl NQueensSolver {
     ///
     /// A new `NQueensSolver` instance.
     fn new(size: usize) -> Self {
+		log::debug!(">>> Entering new(size={})", size);
         NQueensSolver {
             size,
             board: vec![vec!['.'; size]; size],
@@ -58,7 +61,9 @@ impl NQueensSolver {
     ///
     /// A vector containing all solutions to the N-Queens problem.
     fn solve(&mut self) -> Vec<Vec<String>> {
+		log::debug!(">>> Entering solve()");
         self.solve_helper(0);
+		log::debug!("<<< Exiting solve()");
         std::mem::take(&mut self.solutions)
     }
 
@@ -73,6 +78,7 @@ impl NQueensSolver {
     ///
     /// `true` if it's safe to place a queen at the specified position, `false` otherwise.
     fn is_safe(&self, row: usize, col: usize) -> bool {
+		log::debug!(">>> Entering is_safe(row={},col={})", row, col);
         // Check column and diagonals
         for i in 0..row {
             if self.board[i][col] == 'Q'
@@ -91,6 +97,7 @@ impl NQueensSolver {
     ///
     /// * `row` - The current row being processed.
     fn solve_helper(&mut self, row: usize) {
+		log::debug!(">>> Entering solve_helper(row={})", row);
         if row == self.size {
             self.solutions
                 .push(self.board.iter().map(|row| row.iter().collect()).collect());
@@ -103,6 +110,7 @@ impl NQueensSolver {
                 self.solve_helper(row + 1);
                 self.board[row][col] = '.';
             }
+		log::debug!("<<< Exiting solve_helper(row={})", row);
         }
     }
 }

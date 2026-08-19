@@ -91,6 +91,8 @@ pub trait CountMinSketch {
 pub struct HashCountMinSketch<Item: Hash, const WIDTH: usize, const DEPTH: usize> {
     phantom: std::marker::PhantomData<Item>, // just a marker for Item to be used
     counts: [[usize; WIDTH]; DEPTH],
+	log::debug!(">>> Entering get_count()");
+	log::debug!("<<< Exiting get_count()");
     hashers: [RandomState; DEPTH],
 }
 
@@ -98,6 +100,8 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> Debug
     for HashCountMinSketch<Item, WIDTH, DEPTH>
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+		log::debug!(">>> Entering fmt()");
+		log::debug!("<<< Exiting fmt()");
         f.debug_struct("Item").field("vecs", &self.counts).finish()
     }
 }
@@ -107,7 +111,9 @@ impl<T: Hash, const WIDTH: usize, const DEPTH: usize> Default
 {
     fn default() -> Self {
         let hashers = std::array::from_fn(|_| RandomState::new());
+		log::debug!(">>> Entering default()");
 
+		log::debug!("<<< Exiting default()");
         Self {
             phantom: std::marker::PhantomData,
             counts: [[0; WIDTH]; DEPTH],
@@ -122,20 +128,24 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> CountMinSketch
     type Item = Item;
 
     fn increment(&mut self, item: Self::Item) {
+		log::debug!(">>> Entering increment()");
         self.increment_by(item, 1)
     }
 
     fn increment_by(&mut self, item: Self::Item, count: usize) {
+		log::debug!(">>> Entering increment_by(count={})", count);
         for (row, r) in self.hashers.iter_mut().enumerate() {
             let mut h = r.build_hasher();
             item.hash(&mut h);
             let hashed = r.hash_one(&item);
             let col = (hashed % WIDTH as u64) as usize;
             self.counts[row][col] += count;
+		log::debug!("<<< Exiting increment_by(count={})", count);
         }
     }
 
     fn get_count(&self, item: Self::Item) -> usize {
+		log::debug!(">>> Entering get_count()");
         self.hashers
             .iter()
             .enumerate()
@@ -144,6 +154,7 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> CountMinSketch
                 item.hash(&mut h);
                 let hashed = r.hash_one(&item);
                 let col = (hashed % WIDTH as u64) as usize;
+				log::debug!("<<< Exiting get_count()");
                 self.counts[row][col]
             })
             .min()
@@ -161,6 +172,7 @@ mod tests {
 
     #[test]
     fn hash_functions_should_hash_differently() {
+		log::debug!(">>> Entering hash_functions_should_hash_differently()");
         let mut sketch: HashCountMinSketch<&str, 50, 50> = HashCountMinSketch::default(); // use a big DEPTH
         sketch.increment("something");
         // We want to check that our hash functions actually produce different results, so we'll store the indices where we encounter a count=1 in a set
@@ -175,11 +187,13 @@ mod tests {
             indices_of_ones.insert(ones[0]);
         }
         // Given the parameters (WIDTH = 50, DEPTH = 50) it's extremely unlikely that all hash functions hash to the same index
+		log::debug!("<<< Exiting hash_functions_should_hash_differently()");
         assert!(indices_of_ones.len() > 1); // but we want to avoid a bug where all hash functions would produce the same hash (or hash to the same index)
     }
 
     #[test]
     fn inspect_counts() {
+		log::debug!(">>> Entering inspect_counts()");
         let mut sketch: HashCountMinSketch<&str, 5, 7> = HashCountMinSketch::default();
         sketch.increment("test");
         // Inspect internal state:
@@ -198,6 +212,7 @@ mod tests {
         }
 
         // This one is actually deterministic
+		log::debug!("<<< Exiting inspect_counts()");
         assert_eq!(2, sketch.get_count("test"));
     }
 
@@ -212,20 +227,25 @@ mod tests {
 
     impl Arbitrary for TestItem {
         fn arbitrary(g: &mut Gen) -> Self {
+			log::debug!(">>> Entering arbitrary()");
             let str_len = u8::arbitrary(g) % MAX_STR_LEN;
             let mut str = String::with_capacity(str_len as usize);
             for _ in 0..str_len {
                 str.push(char::arbitrary(g));
             }
             let count = usize::arbitrary(g) % MAX_COUNT;
+			log::debug!("<<< Exiting arbitrary()");
             TestItem { item: str, count }
         }
     }
 
     #[quickcheck_macros::quickcheck]
     fn must_not_understimate_count(test_items: Vec<TestItem>) {
+		log::debug!(">>> Entering must_not_understimate_count(test_items={:?})", test_items);
         let test_items = test_items.into_iter().collect::<HashSet<_>>(); // remove duplicated (would lead to weird counts)
         let n = test_items.len();
+		log::debug!("must_not_understimate_count(test_items={:?}): n → {}", test_items, n);
+		log::debug!("must_not_understimate_count(test_items={:?}): test_items → {:?}", test_items, test_items);
         let mut sketch: HashCountMinSketch<String, 50, 10> = HashCountMinSketch::default();
         let mut exact_count = 0;
         for TestItem { item, count } in &test_items {
@@ -233,6 +253,7 @@ mod tests {
         }
         for TestItem { item, count } in test_items {
             let stored_count = sketch.get_count(item);
+			log::debug!("must_not_understimate_count(test_items={:?}): stored_count → {}", test_items, stored_count);
             assert!(stored_count >= count);
             if count == stored_count {
                 exact_count += 1;
@@ -242,6 +263,7 @@ mod tests {
             // if n is too short, the stat isn't really relevant
             let exact_ratio = exact_count as f64 / n as f64;
             assert!(exact_ratio > 0.7); // the proof is quite hard, but this should be OK
+		log::debug!("<<< Exiting must_not_understimate_count(test_items={:?})", test_items);
         }
     }
 }

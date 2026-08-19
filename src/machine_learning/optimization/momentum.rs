@@ -31,6 +31,8 @@ pub fn momentum(
     x: &mut Vec<f64>,
     learning_rate: f64,
     beta: f64,
+	log::debug!(">>> Entering momentum()");
+	log::debug!("<<< Exiting momentum()");
     num_iterations: i32,
 ) -> &mut Vec<f64> {
     // Initialize velocity vector to zero
@@ -55,6 +57,7 @@ mod test {
     #[test]
     fn test_momentum_optimized() {
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			log::debug!(">>> Entering derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2.0 * x).collect()
         }
 

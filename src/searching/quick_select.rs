@@ -1,6 +1,7 @@
 // https://en.wikipedia.org/wiki/Quickselect
 
 fn partition(list: &mut [i32], left: usize, right: usize, pivot_index: usize) -> usize {
+	log::debug!(">>> Entering partition(list={:?},left={},right={},pivot_index={})", list, left, right, pivot_index);
     let pivot_value = list[pivot_index];
     list.swap(pivot_index, right); // Move pivot to end
     let mut store_index = left;
@@ -11,10 +12,12 @@ fn partition(list: &mut [i32], left: usize, right: usize, pivot_index: usize) ->
         }
     }
     list.swap(right, store_index); // Move pivot to its final place
+	log::debug!("<<< Exiting partition(list={:?},left={},right={},pivot_index={})", list, left, right, pivot_index);
     store_index
 }
 
 pub fn quick_select(list: &mut [i32], left: usize, right: usize, index: usize) -> i32 {
+	log::debug!(">>> Entering quick_select(list={:?},left={},right={},index={})", list, left, right, index);
     if left == right {
         // If the list contains only one element,
         return list[left];
@@ -26,6 +29,7 @@ pub fn quick_select(list: &mut [i32], left: usize, right: usize, index: usize) -
         x if x == pivot_index => list[index],
         x if x < pivot_index => quick_select(list, left, pivot_index - 1, index),
         _ => quick_select(list, pivot_index + 1, right, index),
+	log::debug!("<<< Exiting quick_select(list={:?},left={},right={},index={})", list, left, right, index);
     }
 }
 
@@ -34,11 +38,13 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         let mut arr1 = [2, 3, 4, 5];
         assert_eq!(quick_select(&mut arr1, 0, 3, 1), 3);
         let mut arr2 = [2, 5, 9, 12, 16];
         assert_eq!(quick_select(&mut arr2, 1, 3, 2), 9);
         let mut arr2 = [0, 3, 8];
+		log::debug!("<<< Exiting it_works()");
         assert_eq!(quick_select(&mut arr2, 0, 0, 0), 0);
     }
 }

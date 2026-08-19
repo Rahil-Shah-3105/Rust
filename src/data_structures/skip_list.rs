@@ -9,21 +9,27 @@ struct Node<K: Ord, V> {
 
 impl<K: Ord, V> Node<K, V> {
     pub fn new() -> Self {
+		log::debug!(">>> Entering new()");
         let mut forward = Vec::with_capacity(4);
         forward.resize(4, null_mut());
+		log::debug!("<<< Exiting new()");
         Node {
             key: None,
             value: None,
             forward,
+		log::debug!(">>> Entering new(max_level={})", max_level);
+		log::debug!("<<< Exiting new(max_level={})", max_level);
         }
     }
 
     pub fn make_node(capacity: usize, key: K, value: V) -> Self {
+		log::debug!(">>> Entering make_node(capacity={})", capacity);
         let mut new_node = Self::new();
         new_node.key = Some(key);
         new_node.value = Some(value);
         new_node.forward = Vec::<*mut Node<K, V>>::with_capacity(capacity);
         new_node.forward.resize(capacity, null_mut());
+		log::debug!("<<< Exiting make_node(capacity={})", capacity);
         new_node
     }
 }
@@ -54,6 +60,7 @@ impl<K: Ord, V> SkipList<K, V> {
     }
 
     pub fn search(&self, searched_key: K) -> Option<&V> {
+		log::debug!(">>> Entering search()");
         let mut x = self.header;
 
         unsafe {
@@ -89,10 +96,12 @@ impl<K: Ord, V> SkipList<K, V> {
                     return None;
                 }
             }
+		log::debug!("<<< Exiting search()");
         }
     }
 
     pub fn insert(&mut self, searched_key: K, new_value: V) -> bool {
+		log::debug!(">>> Entering insert()");
         let mut update = Vec::<*mut Node<K, V>>::with_capacity(self.max_level);
         update.resize(self.max_level, null_mut());
 
@@ -124,6 +133,7 @@ impl<K: Ord, V> SkipList<K, V> {
             x = x_forward_i;
             if x.is_null() || (*x).key.as_ref().cmp(&Some(&searched_key)) != Ordering::Equal {
                 let v = random_value(self.max_level);
+				log::debug!("insert(): v → {}", v);
                 if v > self.level {
                     for update_i in update.iter_mut().take(v).skip(self.level) {
                         *update_i = self.header;
@@ -147,11 +157,13 @@ impl<K: Ord, V> SkipList<K, V> {
                 return true;
             }
             (*x).value.replace(new_value);
+			log::debug!("<<< Exiting insert()");
             return true;
         }
     }
 
     pub fn delete(&mut self, searched_key: K) -> bool {
+		log::debug!(">>> Entering delete()");
         let mut update = Vec::<*mut Node<K, V>>::with_capacity(self.max_level);
         update.resize(self.max_level, null_mut());
 
@@ -226,12 +238,14 @@ impl<K: Ord, V> SkipList<K, V> {
     }
 
     pub fn iter(&self) -> Iter<'_, K, V> {
+		log::debug!(">>> Entering iter()");
         Iter::new(self)
     }
 }
 
 impl<K: Ord, V> Drop for SkipList<K, V> {
     fn drop(&mut self) {
+		log::debug!(">>> Entering drop()");
         let mut node = unsafe { Box::from_raw(self.header) };
         loop {
             let node_forward_0 = node.forward.first().unwrap();
@@ -239,11 +253,13 @@ impl<K: Ord, V> Drop for SkipList<K, V> {
                 break;
             }
             node = unsafe { Box::from_raw(*node_forward_0) };
+		log::debug!("<<< Exiting drop()");
         }
     }
 }
 
 fn random_value(max: usize) -> usize {
+	log::debug!(">>> Entering random_value(max={})", max);
     let mut v = 1usize;
     loop {
         if random_range(1usize..10usize) > 5 && v < max {
@@ -252,6 +268,7 @@ fn random_value(max: usize) -> usize {
             break;
         }
     }
+	log::debug!("<<< Exiting random_value(max={})", max);
     v
 }
 
@@ -273,6 +290,7 @@ impl<'a, K: Ord, V> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
+		log::debug!(">>> Entering next()");
         unsafe {
             let forward_0 = (&*self.current_node).forward.first();
             forward_0?;
@@ -293,6 +311,7 @@ impl<'a, K: Ord, V> Iterator for Iter<'a, K, V> {
 mod test {
     #[test]
     fn insert_and_delete() {
+		log::debug!(">>> Entering insert_and_delete()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
         skip_list.insert("b", 12);
@@ -309,22 +328,26 @@ mod test {
             assert!(result.is_none());
         }
 
+		log::debug!("<<< Exiting insert_and_delete()");
         skip_list.delete("a");
     }
 
     #[test]
     fn iterator() {
+		log::debug!(">>> Entering iterator()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("h", 22);
         skip_list.insert("a", 12);
         skip_list.insert("c", 11);
 
         let result: Vec<(&&'static str, &i32)> = skip_list.iter().collect();
+		log::debug!("<<< Exiting iterator()");
         assert_eq!(result, vec![(&"a", &12), (&"c", &11), (&"h", &22)]);
     }
 
     #[test]
     fn cannot_search() {
+		log::debug!(">>> Entering cannot_search()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
@@ -337,15 +360,18 @@ mod test {
         {
             let result = skip_list.search("a");
             assert!(result.is_none());
+		log::debug!("<<< Exiting cannot_search()");
         }
     }
 
     #[test]
     fn delete_unsuccessfully() {
+		log::debug!(">>> Entering delete_unsuccessfully()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
             let result = skip_list.delete("a");
+			log::debug!("delete_unsuccessfully(): result → {}", result);
             assert!(!result);
         }
 
@@ -354,11 +380,13 @@ mod test {
         {
             let result = skip_list.delete("b");
             assert!(!result);
+		log::debug!("<<< Exiting delete_unsuccessfully()");
         }
     }
 
     #[test]
     fn update_value_with_insert_operation() {
+		log::debug!(">>> Entering update_value_with_insert_operation()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
 
@@ -372,6 +400,7 @@ mod test {
         {
             let result = skip_list.search("a");
             assert_eq!(result, Some(&100));
+		log::debug!("<<< Exiting update_value_with_insert_operation()");
         }
     }
 }

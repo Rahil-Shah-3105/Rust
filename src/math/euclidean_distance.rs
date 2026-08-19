@@ -3,11 +3,13 @@
 // Wikipedia : https://en.wikipedia.org/wiki/Euclidean_distance
 
 pub fn euclidean_distance(vector_1: &Vector, vector_2: &Vector) -> f64 {
+	log::debug!(">>> Entering euclidean_distance()");
     // Calculate the Euclidean distance using the provided vectors.
     let squared_sum: f64 = vector_1
         .iter()
         .zip(vector_2.iter())
         .map(|(&a, &b)| (a - b).powi(2))
+	log::debug!("<<< Exiting euclidean_distance()");
         .sum();
 
     squared_sum.sqrt()
@@ -22,12 +24,14 @@ mod tests {
     // Define a test function for the euclidean_distance function.
     #[test]
     fn test_euclidean_distance() {
+		log::debug!(">>> Entering test_euclidean_distance()");
         // First test case: 2D vectors
         let vec1_2d = vec![1.0, 2.0];
         let vec2_2d = vec![4.0, 6.0];
 
         // Calculate the Euclidean distance
         let result_2d = euclidean_distance(&vec1_2d, &vec2_2d);
+		log::debug!("test_euclidean_distance(): result_2d → {}", result_2d);
         assert_eq!(result_2d, 5.0);
 
         // Second test case: 4D vectors
@@ -36,6 +40,8 @@ mod tests {
 
         // Calculate the Euclidean distance
         let result_4d = euclidean_distance(&vec1_4d, &vec2_4d);
+		log::debug!("test_euclidean_distance(): result_4d → {}", result_4d);
+		log::debug!("<<< Exiting test_euclidean_distance()");
         assert_eq!(result_4d, 8.0);
     }
 }

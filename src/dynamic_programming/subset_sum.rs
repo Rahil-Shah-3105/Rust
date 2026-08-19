@@ -13,8 +13,10 @@
 /// # Returns
 /// * `bool` - A boolean indicating whether a subset exists that sums to the target.
 pub fn is_sum_subset(arr: &[i32], required_sum: i32) -> bool {
+	log::debug!(">>> Entering is_sum_subset(arr={:?},required_sum={})", arr, required_sum);
     let n = arr.len();
 
+	log::debug!("is_sum_subset(arr={:?},required_sum={}): n → {}", arr, required_sum, n);
     // Handle edge case where required sum is 0 (empty subset always sums to 0)
     if required_sum == 0 {
         return true;
@@ -46,6 +48,7 @@ pub fn is_sum_subset(arr: &[i32], required_sum: i32) -> bool {
             }
         }
     }
+    log::debug!("<<< Exiting is_sum_subset(arr={:?},required_sum={})", arr, required_sum);
     dp[n][required_sum as usize]
 }
 #[cfg(test)]

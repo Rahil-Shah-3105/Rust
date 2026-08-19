@@ -1,5 +1,6 @@
 // Check if a number is a perfect cube using binary search.
 pub fn perfect_cube_binary_search(n: i64) -> bool {
+	log::debug!(">>> Entering perfect_cube_binary_search(n={})", n);
     if n < 0 {
         return perfect_cube_binary_search(-n);
     }

@@ -10,13 +10,17 @@
 ///
 /// The total volume of trapped rainwater.
 pub fn trapped_rainwater(elevation_map: &[u32]) -> u32 {
+	log::debug!(">>> Entering trapped_rainwater(elevation_map={:?})", elevation_map);
     let left_max = calculate_max_values(elevation_map, false);
     let right_max = calculate_max_values(elevation_map, true);
+	log::debug!("trapped_rainwater(elevation_map={:?}): right_max → {:?}", elevation_map, right_max);
+	log::debug!("trapped_rainwater(elevation_map={:?}): left_max → {:?}", elevation_map, left_max);
     let mut water_trapped = 0;
     // Calculate trapped water
     for i in 0..elevation_map.len() {
         water_trapped += left_max[i].min(right_max[i]) - elevation_map[i];
     }
+	log::debug!("<<< Exiting trapped_rainwater(elevation_map={:?})", elevation_map);
     water_trapped
 }
 
@@ -33,12 +37,15 @@ pub fn trapped_rainwater(elevation_map: &[u32]) -> u32 {
 ///
 /// A vector containing the maximum heights encountered up to each position.
 fn calculate_max_values(elevation_map: &[u32], reverse: bool) -> Vec<u32> {
+	log::debug!(">>> Entering calculate_max_values(elevation_map={:?},reverse={})", elevation_map, reverse);
     let mut max_values = vec![0; elevation_map.len()];
     let mut current_max = 0;
+	log::debug!("calculate_max_values(elevation_map={:?},reverse={}): current_max → {}", elevation_map, reverse, current_max);
     for i in create_iter(elevation_map.len(), reverse) {
         current_max = current_max.max(elevation_map[i]);
         max_values[i] = current_max;
     }
+	log::debug!("<<< Exiting calculate_max_values(elevation_map={:?},reverse={})", elevation_map, reverse);
     max_values
 }
 
@@ -55,10 +62,12 @@ fn calculate_max_values(elevation_map: &[u32], reverse: bool) -> Vec<u32> {
 ///
 /// A boxed iterator that iterates over the range of indices.
 fn create_iter(len: usize, reverse: bool) -> Box<dyn Iterator<Item = usize>> {
+	log::debug!(">>> Entering create_iter(len={},reverse={})", len, reverse);
     if reverse {
         Box::new((0..len).rev())
     } else {
         Box::new(0..len)
+	log::debug!("<<< Exiting create_iter(len={},reverse={})", len, reverse);
     }
 }
 

@@ -15,14 +15,18 @@ use std::cmp::Ordering;
 /// A subslice of the input, representing the longest continuous increasing subsequence.
 /// If there are multiple subsequences of the same length, the function returns the first one found.
 pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
+	log::debug!(">>> Entering longest_continuous_increasing_subsequence(arr=(unprintable))");
     if arr.len() <= 1 {
         return arr;
     }
 
     let mut start = 0;
     let mut max_start = 0;
+	log::debug!("longest_continuous_increasing_subsequence(arr=(unprintable)): max_start → {}", max_start);
     let mut max_len = 1;
+	log::debug!("longest_continuous_increasing_subsequence(arr=(unprintable)): max_len → {}", max_len);
     let mut curr_len = 1;
+	log::debug!("longest_continuous_increasing_subsequence(arr=(unprintable)): curr_len → {}", curr_len);
 
     for i in 1..arr.len() {
         match arr[i - 1].cmp(&arr[i]) {
@@ -51,6 +55,7 @@ pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
         max_start = start;
     }
 
+    log::debug!("<<< Exiting longest_continuous_increasing_subsequence(arr=(unprintable))");
     &arr[max_start..max_start + max_len]
 }
 

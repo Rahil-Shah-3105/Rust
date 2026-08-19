@@ -3,18 +3,30 @@ pub fn ternary_search_max(
     f: fn(f32) -> f32,
     mut start: f32,
     mut end: f32,
+	log::debug!(">>> Entering ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable))");
+	log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid1 → (unprintable)");
+	log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid2 → (unprintable)");
+	log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r1 → (unprintable)");
+	log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r2 → (unprintable)");
+	log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): end → (unprintable)");
+	log::debug!("<<< Exiting ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable))");
     absolute_precision: f32,
 ) -> f32 {
     while (start - end).abs() >= absolute_precision {
         let mid1 = start + (end - start) / 3.0;
+		log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid1 → (unprintable)");
+		log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid2 → (unprintable)");
         let mid2 = end - (end - start) / 3.0;
 
         let r1 = f(mid1);
+		log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r1 → (unprintable)");
+		log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r2 → (unprintable)");
         let r2 = f(mid2);
 
         if r1 < r2 {
             start = mid1;
         } else if r1 > r2 {
+			log::debug!("ternary_search_max(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): end → (unprintable)");
             end = mid2;
         } else {
             start = mid1;
@@ -31,14 +43,20 @@ pub fn ternary_search_min(
     mut end: f32,
     absolute_precision: f32,
 ) -> f32 {
+	log::debug!(">>> Entering ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable))");
     while (start - end).abs() >= absolute_precision {
         let mid1 = start + (end - start) / 3.0;
+		log::debug!("ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid1 → (unprintable)");
+		log::debug!("ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): mid2 → (unprintable)");
         let mid2 = end - (end - start) / 3.0;
 
         let r1 = f(mid1);
+		log::debug!("ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r1 → (unprintable)");
+		log::debug!("ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): r2 → (unprintable)");
         let r2 = f(mid2);
 
         if r1 < r2 {
+			log::debug!("ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable)): end → (unprintable)");
             end = mid2;
         } else if r1 > r2 {
             start = mid1;
@@ -47,6 +65,7 @@ pub fn ternary_search_min(
             end = mid2;
         }
     }
+	log::debug!("<<< Exiting ternary_search_min(f=(unprintable),start=(unprintable),end=(unprintable),absolute_precision=(unprintable))");
     f(start)
 }
 
@@ -56,6 +75,7 @@ mod tests {
 
     #[test]
     fn finds_max_value() {
+		log::debug!(">>> Entering finds_max_value()");
         let expected = 4.0;
         let f = |x: f32| -x * x - 2.0 * x + 3.0;
 
@@ -64,12 +84,15 @@ mod tests {
         let absolute_precision = 0.0000001;
 
         let result = ternary_search_max(f, start, end, absolute_precision);
+		log::debug!("finds_max_value(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_max_value()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_min_value() {
+		log::debug!(">>> Entering finds_min_value()");
         let expected = 2.0;
         let f = |x: f32| x * x - 2.0 * x + 3.0;
 
@@ -78,35 +101,45 @@ mod tests {
         let absolute_precision = 0.0000001;
 
         let result = ternary_search_min(f, start, end, absolute_precision);
+		log::debug!("finds_min_value(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_min_value()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_max_value_2() {
+		log::debug!(">>> Entering finds_max_value_2()");
         let expected = 7.25;
         let f = |x: f32| -x.powi(2) + 3.0 * x + 5.0;
+		log::debug!("finds_max_value_2(): f → (unprintable)");
 
         let start: f32 = -10000000000.0;
         let end: f32 = 10000000000.0;
         let absolute_precision = 0.000001;
 
         let result = ternary_search_max(f, start, end, absolute_precision);
+		log::debug!("finds_max_value_2(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_max_value_2()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_min_value_2() {
+		log::debug!(">>> Entering finds_min_value_2()");
         let expected = 2.75;
         let f = |x: f32| x.powi(2) + 3.0 * x + 5.0;
+		log::debug!("finds_min_value_2(): f → (unprintable)");
 
         let start: f32 = -10000000000.0;
         let end: f32 = 10000000000.0;
         let absolute_precision = 0.000001;
 
         let result = ternary_search_min(f, start, end, absolute_precision);
+		log::debug!("finds_min_value_2(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_min_value_2()");
         assert_eq!(result, expected);
     }
 }

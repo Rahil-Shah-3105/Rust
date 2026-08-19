@@ -232,6 +232,7 @@ enum AesMode {
 }
 
 pub fn aes_encrypt(plain_text: &[Byte], key: AesKey) -> Vec<Byte> {
+	log::debug!(">>> Entering aes_encrypt(plain_text=(unprintable),key=(unprintable))");
     let (key, num_rounds) = match key {
         AesKey::AesKey128(key) => (Vec::from(key), 10),
         AesKey::AesKey192(key) => (Vec::from(key), 12),
@@ -239,9 +240,12 @@ pub fn aes_encrypt(plain_text: &[Byte], key: AesKey) -> Vec<Byte> {
     };
 
     let round_keys = key_expansion(&key, num_rounds);
+	log::debug!("aes_encrypt(plain_text=(unprintable),key=(unprintable)): round_keys → (unprintable)");
+	log::debug!("aes_encrypt(plain_text=(unprintable),key=(unprintable)): data → (unprintable)");
     let mut data = padding::<Byte>(plain_text, AES_BLOCK_SIZE);
 
     let round_key = &round_keys[0..AES_BLOCK_SIZE];
+	log::debug!("aes_encrypt(plain_text=(unprintable),key=(unprintable)): round_key → (unprintable)");
     add_round_key(&mut data, round_key);
 
     for round in 1..num_rounds {
@@ -257,10 +261,12 @@ pub fn aes_encrypt(plain_text: &[Byte], key: AesKey) -> Vec<Byte> {
     let round_key = &round_keys[num_rounds * AES_BLOCK_SIZE..(num_rounds + 1) * AES_BLOCK_SIZE];
     add_round_key(&mut data, round_key);
 
+	log::debug!("<<< Exiting aes_encrypt(plain_text=(unprintable),key=(unprintable))");
     data
 }
 
 pub fn aes_decrypt(cipher_text: &[Byte], key: AesKey) -> Vec<Byte> {
+	log::debug!(">>> Entering aes_decrypt(cipher_text=(unprintable),key=(unprintable))");
     let (key, num_rounds) = match key {
         AesKey::AesKey128(key) => (Vec::from(key), 10),
         AesKey::AesKey192(key) => (Vec::from(key), 12),
@@ -268,6 +274,8 @@ pub fn aes_decrypt(cipher_text: &[Byte], key: AesKey) -> Vec<Byte> {
     };
 
     let round_keys = key_expansion(&key, num_rounds);
+	log::debug!("aes_decrypt(cipher_text=(unprintable),key=(unprintable)): round_keys → (unprintable)");
+	log::debug!("aes_decrypt(cipher_text=(unprintable),key=(unprintable)): data → (unprintable)");
     let mut data = padding::<Byte>(cipher_text, AES_BLOCK_SIZE);
 
     let round_key = &round_keys[num_rounds * AES_BLOCK_SIZE..(num_rounds + 1) * AES_BLOCK_SIZE];
@@ -286,10 +294,12 @@ pub fn aes_decrypt(cipher_text: &[Byte], key: AesKey) -> Vec<Byte> {
     let round_key = &round_keys[0..AES_BLOCK_SIZE];
     add_round_key(&mut data, round_key);
 
+	log::debug!("<<< Exiting aes_decrypt(cipher_text=(unprintable),key=(unprintable))");
     data
 }
 
 fn key_expansion(init_key: &[Byte], num_rounds: usize) -> Vec<Byte> {
+	log::debug!(">>> Entering key_expansion(init_key=(unprintable),num_rounds={})", num_rounds);
     let nr = num_rounds;
     // number of words in initial key
     let nk = init_key.len() / AES_WORD_SIZE;
@@ -311,6 +321,7 @@ fn key_expansion(init_key: &[Byte], num_rounds: usize) -> Vec<Byte> {
         key[i] = key[i - nk] ^ temp_word;
     }
 
+	log::debug!("<<< Exiting key_expansion(init_key=(unprintable),num_rounds={})", num_rounds);
     key.iter()
         .map(|&w| word_to_bytes(w))
         .collect::<Vec<AesWord>>()
@@ -318,66 +329,85 @@ fn key_expansion(init_key: &[Byte], num_rounds: usize) -> Vec<Byte> {
 }
 
 fn add_round_key(data: &mut [Byte], round_key: &[Byte]) {
+	log::debug!(">>> Entering add_round_key(data=(unprintable),round_key=(unprintable))");
     assert!(data.len().is_multiple_of(AES_BLOCK_SIZE) && round_key.len() == AES_BLOCK_SIZE);
     let num_blocks = data.len() / AES_BLOCK_SIZE;
+	log::debug!("add_round_key(data=(unprintable),round_key=(unprintable)): num_blocks → (unprintable)");
     data.iter_mut()
         .zip(round_key.repeat(num_blocks))
+		log::debug!("<<< Exiting add_round_key(data=(unprintable),round_key=(unprintable))");
         .for_each(|(s, k)| *s ^= k);
 }
 
 fn sub_bytes_blocks(data: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering sub_bytes_blocks(data=(unprintable),mode=(unprintable))");
     for block in data.chunks_mut(AES_BLOCK_SIZE) {
         sub_bytes(block, mode);
+	log::debug!("<<< Exiting sub_bytes_blocks(data=(unprintable),mode=(unprintable))");
     }
 }
 
 fn shift_rows_blocks(blocks: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering shift_rows_blocks(blocks=(unprintable),mode=(unprintable))");
     for block in blocks.chunks_mut(AES_BLOCK_SIZE) {
         transpose_block(block);
         shift_rows(block, mode);
         transpose_block(block);
+	log::debug!("<<< Exiting shift_rows_blocks(blocks=(unprintable),mode=(unprintable))");
     }
 }
 
 fn mix_column_blocks(data: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering mix_column_blocks(data=(unprintable),mode=(unprintable))");
     for block in data.chunks_mut(AES_BLOCK_SIZE) {
         transpose_block(block);
         mix_column(block, mode);
         transpose_block(block);
+	log::debug!("<<< Exiting mix_column_blocks(data=(unprintable),mode=(unprintable))");
     }
 }
 
 fn padding<T: Clone + Default>(data: &[T], block_size: usize) -> Vec<T> {
+	log::debug!(">>> Entering padding(data=(unprintable),block_size={})", block_size);
     if data.len().is_multiple_of(block_size) {
         Vec::from(data)
     } else {
         let num_blocks = data.len() / block_size + 1;
+		log::debug!("padding(data=(unprintable),block_size={}): num_blocks → (unprintable)", block_size);
+		log::debug!("padding(data=(unprintable),block_size={}): padded → (unprintable)", block_size);
         let mut padded = Vec::from(data);
         padded.append(&mut vec![
             T::default();
             num_blocks * block_size - data.len()
         ]);
+		log::debug!("<<< Exiting padding(data=(unprintable),block_size={})", block_size);
         padded
     }
 }
 
 fn sub_word(word: Word, mode: AesMode) -> Word {
+	log::debug!(">>> Entering sub_word(word=(unprintable),mode=(unprintable))");
     let mut bytes = word_to_bytes(word);
     sub_bytes(&mut bytes, mode);
+	log::debug!("sub_word(word=(unprintable),mode=(unprintable)): bytes → (unprintable)");
+    log::debug!("<<< Exiting sub_word(word=(unprintable),mode=(unprintable))");
     bytes_to_word(&bytes)
 }
 
 fn sub_bytes(data: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering sub_bytes(data=(unprintable),mode=(unprintable))");
     let sbox = match mode {
         AesMode::Encryption => &SBOX,
         AesMode::Decryption => &INV_SBOX,
     };
     for data_byte in data {
         *data_byte = sbox[*data_byte as usize];
+	log::debug!("<<< Exiting sub_bytes(data=(unprintable),mode=(unprintable))");
     }
 }
 
 fn shift_rows(block: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering shift_rows(block=(unprintable),mode=(unprintable))");
     // skip the first row, index begin from 1
     for row in 1..4 {
         let mut row_word: AesWord = [0u8; 4];
@@ -388,10 +418,12 @@ fn shift_rows(block: &mut [Byte], mode: AesMode) {
                 AesMode::Decryption => row_word[(col + 4 - row) % 4],
             }
         }
+	log::debug!("<<< Exiting shift_rows(block=(unprintable),mode=(unprintable))");
     }
 }
 
 fn mix_column(block: &mut [Byte], mode: AesMode) {
+	log::debug!(">>> Entering mix_column(block=(unprintable),mode=(unprintable))");
     let mix_col_mat = match mode {
         AesMode::Encryption => [
             [0x02, 0x03, 0x01, 0x01],
@@ -420,44 +452,54 @@ fn mix_column(block: &mut [Byte], mode: AesMode) {
             }
             block[row * 4 + col] = word as Byte;
         }
+	log::debug!("<<< Exiting mix_column(block=(unprintable),mode=(unprintable))");
     }
 }
 
 fn transpose_block(block: &mut [u8]) {
+	log::debug!(">>> Entering transpose_block(block={:?})", block);
     let mut src_block = [0u8; AES_BLOCK_SIZE];
     src_block.copy_from_slice(block);
     for row in 0..4 {
         for col in 0..4 {
             block[row * 4 + col] = src_block[col * 4 + row];
         }
+	log::debug!("<<< Exiting transpose_block(block={:?})", block);
     }
 }
 
 fn bytes_to_word(bytes: &[Byte]) -> Word {
+	log::debug!(">>> Entering bytes_to_word(bytes=(unprintable))");
     assert_eq!(bytes.len(), AES_WORD_SIZE);
     let mut word = 0;
     for (i, &byte) in bytes.iter().enumerate() {
         word |= (byte as Word) << (8 * i);
     }
+	log::debug!("<<< Exiting bytes_to_word(bytes=(unprintable))");
     word
 }
 
 fn word_to_bytes(word: Word) -> AesWord {
+	log::debug!(">>> Entering word_to_bytes(word=(unprintable))");
     let mut bytes = [0; AES_WORD_SIZE];
     for (i, byte) in bytes.iter_mut().enumerate() {
         let bits_shift = 8 * i;
         *byte = ((word & (0xff << bits_shift)) >> bits_shift) as Byte;
     }
+	log::debug!("<<< Exiting word_to_bytes(word=(unprintable))");
     bytes
 }
 
 fn rot_word(word: Word) -> Word {
+	log::debug!(">>> Entering rot_word(word=(unprintable))");
     let mut bytes = word_to_bytes(word);
     let init = bytes[0];
+	log::debug!("rot_word(word=(unprintable)): bytes → (unprintable)");
     bytes[0] = bytes[1];
     bytes[1] = bytes[2];
     bytes[2] = bytes[3];
     bytes[3] = init;
+	log::debug!("<<< Exiting rot_word(word=(unprintable))");
     bytes_to_word(&bytes)
 }
 
@@ -467,6 +509,7 @@ mod tests {
 
     #[test]
     fn test_aes_128() {
+		log::debug!(">>> Entering test_aes_128()");
         let plain: [u8; 16] = [
             0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37,
             0x07, 0x34,
@@ -480,13 +523,17 @@ mod tests {
             0x0b, 0x32,
         ];
         let encrypted = aes_encrypt(&plain, AesKey::AesKey128(key));
+		log::debug!("test_aes_128(): encrypted → (unprintable)");
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey128(key));
+		log::debug!("test_aes_128(): decrypted → (unprintable)");
+		log::debug!("<<< Exiting test_aes_128()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_aes_192() {
+		log::debug!(">>> Entering test_aes_192()");
         let plain: [u8; 16] = [
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
             0xee, 0xff,
@@ -500,13 +547,17 @@ mod tests {
             0x71, 0x91,
         ];
         let encrypted = aes_encrypt(&plain, AesKey::AesKey192(key));
+		log::debug!("test_aes_192(): encrypted → (unprintable)");
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey192(key));
+		log::debug!("test_aes_192(): decrypted → (unprintable)");
+		log::debug!("<<< Exiting test_aes_192()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_aes_256() {
+		log::debug!(">>> Entering test_aes_256()");
         let plain: [u8; 16] = [
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
             0xee, 0xff,
@@ -521,24 +572,33 @@ mod tests {
             0x60, 0x89,
         ];
         let encrypted = aes_encrypt(&plain, AesKey::AesKey256(key));
+		log::debug!("test_aes_256(): encrypted → (unprintable)");
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey256(key));
+		log::debug!("test_aes_256(): decrypted → (unprintable)");
+		log::debug!("<<< Exiting test_aes_256()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_str() {
+		log::debug!(">>> Entering test_str()");
         let str = "Hello, cipher world!";
         let plain = str.as_bytes();
+		log::debug!("test_str(): plain → (unprintable)");
+        log::debug!("test_str(): str → {}", str);
         let key = [
             0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf,
             0x4f, 0x3c,
         ];
         let encrypted = aes_encrypt(plain, AesKey::AesKey128(key));
+		log::debug!("test_str(): encrypted → (unprintable)");
+		log::debug!("test_str(): decrypted → (unprintable)");
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey128(key));
         assert_eq!(
             str,
             String::from_utf8(decrypted).unwrap().trim_end_matches('\0')
+		log::debug!("<<< Exiting test_str()");
         );
     }
 }

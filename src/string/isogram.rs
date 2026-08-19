@@ -29,6 +29,7 @@ pub enum IsogramError {
 /// This function treats uppercase and lowercase letters as equivalent (case-insensitive).
 /// Spaces are ignored and do not affect the character count.
 fn count_letters(s: &str) -> Result<HashMap<char, usize>, IsogramError> {
+	log::debug!(">>> Entering count_letters(s={})", s);
     let mut letter_counts = HashMap::new();
 
     for ch in s.to_ascii_lowercase().chars() {
@@ -58,7 +59,10 @@ fn count_letters(s: &str) -> Result<HashMap<char, usize>, IsogramError> {
 /// - `Ok(true)` if all characters appear only once, or `Ok(false)` if any character appears more than once.
 /// - `Err(IsogramError::NonAlphabeticCharacter)` if the input contains any non-alphabetic characters.
 pub fn is_isogram(s: &str) -> Result<bool, IsogramError> {
+	log::debug!(">>> Entering is_isogram(s={})", s);
     let letter_counts = count_letters(s)?;
+	log::debug!("is_isogram(s={}): letter_counts → {:?}", s, letter_counts);
+    log::debug!("<<< Exiting is_isogram(s={})", s);
     Ok(letter_counts.values().all(|&count| count == 1))
 }
 

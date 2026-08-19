@@ -4,12 +4,14 @@ use crate::geometry::Segment;
 // Returns a Vec of Points that make up the convex hull of `points`. Returns an empty Vec if there
 // is no convex hull.
 pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
+	log::debug!(">>> Entering jarvis_march(points=(unprintable))");
     if points.len() <= 2 {
         return vec![];
     }
 
     let mut convex_hull = vec![];
     let mut left_point = 0;
+	log::debug!("jarvis_march(points=(unprintable)): left_point → {}", left_point);
     for i in 1..points.len() {
         // Find the initial point, which is the leftmost point. In the case of a tie, we take the
         // bottom-most point. This helps prevent adding colinear points on the last segment to the hull.
@@ -22,11 +24,14 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
     convex_hull.push(points[left_point].clone());
 
     let mut p = left_point;
+	log::debug!("jarvis_march(points=(unprintable)): p → (unprintable)");
     loop {
         // Find the next counter-clockwise point.
         let mut next_p = (p + 1) % points.len();
+		log::debug!("jarvis_march(points=(unprintable)): next_p → {}", next_p);
         for i in 0..points.len() {
             let orientation = points[p].consecutive_orientation(&points[i], &points[next_p]);
+			log::debug!("jarvis_march(points=(unprintable)): orientation → (unprintable)");
             if orientation > 0.0 {
                 next_p = i;
             }
@@ -39,6 +44,7 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
         p = next_p;
 
         let last = convex_hull.len() - 1;
+		log::debug!("jarvis_march(points=(unprintable)): last → (unprintable)");
         if convex_hull.len() > 1
             && Segment::from_points(points[p].clone(), convex_hull[last - 1].clone())
                 .on_segment(&convex_hull[last])
@@ -65,6 +71,7 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
             return vec![];
         }
     }
+    log::debug!("<<< Exiting jarvis_march(points=(unprintable))");
     convex_hull
 }
 
@@ -74,63 +81,98 @@ mod tests {
     use super::Point;
 
     fn test_jarvis(convex_hull: Vec<Point>, others: Vec<Point>) {
+		log::debug!(">>> Entering test_jarvis(convex_hull=(unprintable),others=(unprintable))");
         let mut points = others.clone();
         points.append(&mut convex_hull.clone());
+		log::debug!("test_jarvis(convex_hull=(unprintable),others=(unprintable)): points → (unprintable)");
+		log::debug!("test_jarvis(convex_hull=(unprintable),others=(unprintable)): jarvis → (unprintable)");
         let jarvis = jarvis_march(points);
         for point in convex_hull {
             assert!(jarvis.contains(&point));
         }
         for point in others {
             assert!(!jarvis.contains(&point));
+		log::debug!("<<< Exiting test_jarvis(convex_hull=(unprintable),others=(unprintable))");
         }
     }
 
     #[test]
     fn too_few_points() {
+		log::debug!(">>> Entering too_few_points()");
         test_jarvis(vec![], vec![]);
+		log::debug!("<<< Exiting too_few_points()");
         test_jarvis(vec![], vec![Point::new(0.0, 0.0)]);
     }
 
     #[test]
     fn duplicate_point() {
+		log::debug!(">>> Entering duplicate_point()");
         let p = Point::new(0.0, 0.0);
+		log::debug!("duplicate_point(): p → (unprintable)");
+    log::debug!("<<< Exiting duplicate_point()");
         test_jarvis(vec![], vec![p.clone(), p.clone(), p.clone(), p.clone(), p]);
     }
 
     #[test]
     fn points_same_line() {
+		log::debug!(">>> Entering points_same_line()");
         let p1 = Point::new(1.0, 0.0);
         let p2 = Point::new(2.0, 0.0);
+		log::debug!("points_same_line(): p2 → (unprintable)");
+		log::debug!("points_same_line(): p3 → (unprintable)");
+		log::debug!("points_same_line(): p4 → (unprintable)");
+		log::debug!("points_same_line(): p5 → (unprintable)");
+		log::debug!("points_same_line(): p1 → (unprintable)");
         let p3 = Point::new(3.0, 0.0);
         let p4 = Point::new(4.0, 0.0);
         let p5 = Point::new(5.0, 0.0);
         // let p6 = Point::new(1.0, 1.0);
+		log::debug!("<<< Exiting points_same_line()");
         test_jarvis(vec![], vec![p1, p2, p3, p4, p5]);
     }
 
     #[test]
     fn triangle() {
+		log::debug!(">>> Entering triangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("triangle(): p2 → (unprintable)");
+		log::debug!("triangle(): p3 → (unprintable)");
+		log::debug!("triangle(): p1 → (unprintable)");
         let p3 = Point::new(1.5, 2.0);
         let points = vec![p1, p2, p3];
+		log::debug!("<<< Exiting triangle()");
         test_jarvis(points, vec![]);
     }
 
     #[test]
     fn rectangle() {
+		log::debug!(">>> Entering rectangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle(): p2 → (unprintable)");
+		log::debug!("rectangle(): p3 → (unprintable)");
+		log::debug!("rectangle(): p4 → (unprintable)");
+		log::debug!("rectangle(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let points = vec![p1, p2, p3, p4];
+		log::debug!("<<< Exiting rectangle()");
         test_jarvis(points, vec![]);
     }
 
     #[test]
     fn triangle_with_points_in_middle() {
+		log::debug!(">>> Entering triangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("triangle_with_points_in_middle(): p2 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p3 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p4 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p5 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p6 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p7 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p1 → (unprintable)");
         let p3 = Point::new(1.5, 2.0);
         let p4 = Point::new(1.5, 1.5);
         let p5 = Point::new(1.2, 1.3);
@@ -138,13 +180,24 @@ mod tests {
         let p7 = Point::new(1.5, 1.9);
         let hull = vec![p1, p2, p3];
         let others = vec![p4, p5, p6, p7];
+		log::debug!("<<< Exiting triangle_with_points_in_middle()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_in_middle() {
+		log::debug!(">>> Entering rectangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle_with_points_in_middle(): p2 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p3 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p4 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p5 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p6 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p7 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p8 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p9 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let p5 = Point::new(1.5, 1.5);
@@ -154,14 +207,26 @@ mod tests {
         let p9 = Point::new(1.4, 1.9);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8, p9];
+		log::debug!("<<< Exiting rectangle_with_points_in_middle()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn star() {
+		log::debug!(">>> Entering star()");
         // A single stroke star shape (kind of). Only the tips(p1-5) are part of the convex hull. The
         // other points would create angles >180 degrees if they were part of the polygon.
         let p1 = Point::new(-5.0, 6.0);
+		log::debug!("star(): p1 → (unprintable)");
+		log::debug!("star(): p2 → (unprintable)");
+		log::debug!("star(): p3 → (unprintable)");
+		log::debug!("star(): p4 → (unprintable)");
+		log::debug!("star(): p5 → (unprintable)");
+		log::debug!("star(): p6 → (unprintable)");
+		log::debug!("star(): p7 → (unprintable)");
+		log::debug!("star(): p8 → (unprintable)");
+		log::debug!("star(): p9 → (unprintable)");
+		log::debug!("star(): p10 → (unprintable)");
         let p2 = Point::new(-11.0, 0.0);
         let p3 = Point::new(-9.0, -8.0);
         let p4 = Point::new(4.0, 4.0);
@@ -173,13 +238,23 @@ mod tests {
         let p10 = Point::new(-6.0, 1.0);
         let hull = vec![p1, p2, p3, p4, p5];
         let others = vec![p6, p7, p8, p9, p10];
+		log::debug!("<<< Exiting star()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_on_same_line() {
+		log::debug!(">>> Entering rectangle_with_points_on_same_line()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle_with_points_on_same_line(): p2 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p3 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p4 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p5 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p6 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p7 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p8 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let p5 = Point::new(1.5, 1.0);
@@ -188,6 +263,7 @@ mod tests {
         let p8 = Point::new(1.5, 2.0);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8];
+		log::debug!("<<< Exiting rectangle_with_points_on_same_line()");
         test_jarvis(hull, others);
     }
 }

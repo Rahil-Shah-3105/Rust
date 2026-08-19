@@ -11,10 +11,13 @@
 ///
 /// Returns the solved Sudoku board if a solution exists, or `None` if no solution is found.
 pub fn sudoku_solver(board: &[[u8; 9]; 9]) -> Option<[[u8; 9]; 9]> {
+	log::debug!(">>> Entering sudoku_solver(board=(unprintable))");
     let mut solver = SudokuSolver::new(*board);
     if solver.solve() {
+		log::debug!("sudoku_solver(board=(unprintable)): solver → (unprintable)");
         Some(solver.board)
     } else {
+		log::debug!("<<< Exiting sudoku_solver(board=(unprintable))");
         None
     }
 }
@@ -28,6 +31,8 @@ struct SudokuSolver {
 impl SudokuSolver {
     /// Creates a new Sudoku puzzle solver with the given board.
     fn new(board: [[u8; 9]; 9]) -> SudokuSolver {
+		log::debug!(">>> Entering new(board=(unprintable))");
+        log::debug!("<<< Exiting new(board=(unprintable))");
         SudokuSolver { board }
     }
 
@@ -35,6 +40,7 @@ impl SudokuSolver {
     ///
     /// Returns the coordinates of an empty cell `(row, column)` if found, or `None` if all cells are filled.
     fn find_empty_cell(&self) -> Option<(usize, usize)> {
+		log::debug!(">>> Entering find_empty_cell()");
         // Find an empty cell in the board (returns None if all cells are filled)
         for row in 0..9 {
             for column in 0..9 {
@@ -51,6 +57,7 @@ impl SudokuSolver {
     ///
     /// Returns `true` if the value can be placed in the cell, otherwise `false`.
     fn is_value_valid(&self, coordinates: (usize, usize), value: u8) -> bool {
+		log::debug!(">>> Entering is_value_valid(coordinates={:?},value={})", coordinates, value);
         let (row, column) = coordinates;
 
         // Checks if the value to be added in the board is an acceptable value for the cell
@@ -87,6 +94,7 @@ impl SudokuSolver {
     ///
     /// Returns `true` if a solution is found, otherwise `false`.
     fn solve(&mut self) -> bool {
+		log::debug!(">>> Entering solve()");
         let empty_cell = self.find_empty_cell();
 
         if let Some((row, column)) = empty_cell {

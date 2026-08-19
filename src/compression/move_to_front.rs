@@ -1,10 +1,13 @@
 // https://en.wikipedia.org/wiki/Move-to-front_transform
 
 fn blank_char_table() -> Vec<char> {
+	log::debug!(">>> Entering blank_char_table()");
+    log::debug!("<<< Exiting blank_char_table()");
     (0..=255).map(|ch| ch as u8 as char).collect()
 }
 
 pub fn move_to_front_encode(text: &str) -> Vec<u8> {
+	log::debug!(">>> Entering move_to_front_encode(text={})", text);
     let mut char_table = blank_char_table();
     let mut result = Vec::new();
 
@@ -16,10 +19,12 @@ pub fn move_to_front_encode(text: &str) -> Vec<u8> {
         }
     }
 
+	log::debug!("<<< Exiting move_to_front_encode(text={})", text);
     result
 }
 
 pub fn move_to_front_decode(encoded: &[u8]) -> String {
+	log::debug!(">>> Entering move_to_front_decode(encoded={:?})", encoded);
     let mut char_table = blank_char_table();
     let mut result = String::new();
 
@@ -30,6 +35,7 @@ pub fn move_to_front_decode(encoded: &[u8]) -> String {
         char_table.insert(0, ch);
     }
 
+	log::debug!("<<< Exiting move_to_front_decode(encoded={:?})", encoded);
     result
 }
 

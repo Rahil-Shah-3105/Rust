@@ -15,12 +15,15 @@ use std::collections::LinkedList;
 ///
 /// An `Option<Vec<usize>>` containing the Eulerian path if it exists; otherwise, `None`.
 pub fn find_eulerian_path(node_count: usize, edge_list: Vec<(usize, usize)>) -> Option<Vec<usize>> {
+	log::debug!(">>> Entering find_eulerian_path(node_count={},edge_list={:?})", node_count, edge_list);
     let mut adjacency_list = vec![Vec::new(); node_count];
     for (start, end) in edge_list {
         adjacency_list[start].push(end);
     }
 
     let mut eulerian_solver = EulerianPathSolver::new(adjacency_list);
+	log::debug!("find_eulerian_path(node_count={},edge_list={:?}): eulerian_solver → (unprintable)", node_count, edge_list);
+    log::debug!("<<< Exiting find_eulerian_path(node_count={},edge_list={:?})", node_count, edge_list);
     eulerian_solver.find_path()
 }
 
@@ -45,6 +48,8 @@ impl EulerianPathSolver {
     ///
     /// A new instance of `EulerianPathSolver`.
     pub fn new(adjacency_list: Vec<Vec<usize>>) -> Self {
+		log::debug!(">>> Entering new(adjacency_list={:?})", adjacency_list);
+        log::debug!("<<< Exiting new(adjacency_list={:?})", adjacency_list);
         Self {
             node_count: adjacency_list.len(),
             edge_count: 0,
@@ -63,6 +68,7 @@ impl EulerianPathSolver {
     ///
     /// If multiple Eulerian paths exist, the one found will be returned, but it may not be unique.
     fn find_path(&mut self) -> Option<Vec<usize>> {
+		log::debug!(">>> Entering find_path()");
         self.initialize_degrees();
 
         if !self.has_eulerian_path() {
@@ -70,6 +76,7 @@ impl EulerianPathSolver {
         }
 
         let start_node = self.get_start_node();
+		log::debug!("find_path(): start_node → {}", start_node);
         self.depth_first_search(start_node);
 
         if self.eulerian_path.len() != self.edge_count + 1 {
@@ -81,17 +88,21 @@ impl EulerianPathSolver {
             path.push(node);
         }
 
+		log::debug!("find_path(): path → (unprintable)");
+        log::debug!("<<< Exiting find_path()");
         Some(path)
     }
 
     /// Initializes in-degrees and out-degrees for each node and counts total edges.
     fn initialize_degrees(&mut self) {
+		log::debug!(">>> Entering initialize_degrees()");
         for (start_node, neighbors) in self.adjacency_list.iter().enumerate() {
             for &end_node in neighbors {
                 self.in_degrees[end_node] += 1;
                 self.out_degrees[start_node] += 1;
                 self.edge_count += 1;
             }
+		log::debug!("<<< Exiting initialize_degrees()");
         }
     }
 
@@ -101,6 +112,7 @@ impl EulerianPathSolver {
     ///
     /// `true` if an Eulerian path exists; otherwise, `false`.
     fn has_eulerian_path(&self) -> bool {
+		log::debug!(">>> Entering has_eulerian_path()");
         if self.edge_count == 0 {
             return false;
         }
@@ -126,6 +138,7 @@ impl EulerianPathSolver {
     ///
     /// The index of the starting node.
     fn get_start_node(&self) -> usize {
+		log::debug!(">>> Entering get_start_node()");
         for i in 0..self.node_count {
             if self.out_degrees[i] > self.in_degrees[i] {
                 return i;
@@ -133,6 +146,7 @@ impl EulerianPathSolver {
         }
         (0..self.node_count)
             .find(|&i| self.out_degrees[i] > 0)
+			log::debug!("<<< Exiting get_start_node()");
             .unwrap_or(0)
     }
 
@@ -142,11 +156,13 @@ impl EulerianPathSolver {
     ///
     /// * `curr_node` - The current node being visited in the DFS traversal.
     fn depth_first_search(&mut self, curr_node: usize) {
+		log::debug!(">>> Entering depth_first_search(curr_node={})", curr_node);
         while self.out_degrees[curr_node] > 0 {
             let next_node = self.adjacency_list[curr_node][self.out_degrees[curr_node] - 1];
             self.out_degrees[curr_node] -= 1;
             self.depth_first_search(next_node);
         }
+		log::debug!("<<< Exiting depth_first_search(curr_node={})", curr_node);
         self.eulerian_path.push_front(curr_node);
     }
 }

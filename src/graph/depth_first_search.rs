@@ -6,6 +6,7 @@ use std::collections::VecDeque;
 // Return a Optional with a vector with history of vertex visiteds
 // or a None if the element not exists on the graph
 pub fn depth_first_search(graph: &Graph, root: Vertex, objective: Vertex) -> Option<Vec<u32>> {
+	log::debug!(">>> Entering depth_first_search(graph=(unprintable),root=(unprintable),objective=(unprintable))");
     let mut visited: HashSet<Vertex> = HashSet::new();
     let mut history: Vec<u32> = Vec::new();
     let mut queue = VecDeque::new();
@@ -35,6 +36,8 @@ pub fn depth_first_search(graph: &Graph, root: Vertex, objective: Vertex) -> Opt
 
     // If all vertex is visited and the objective is not found
     // return a Optional with None value
+	log::debug!("depth_first_search(graph=(unprintable),root=(unprintable),objective=(unprintable)): queue → (unprintable)");
+    log::debug!("<<< Exiting depth_first_search(graph=(unprintable),root=(unprintable),objective=(unprintable))");
     None
 }
 
@@ -53,22 +56,30 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(vertices: Vec<Vertex>, edges: Vec<Edge>) -> Self {
+		log::debug!(">>> Entering new(vertices=(unprintable),edges=(unprintable))");
+        log::debug!("<<< Exiting new(vertices=(unprintable),edges=(unprintable))");
         Graph { vertices, edges }
     }
 }
 
 impl From<u32> for Vertex {
     fn from(item: u32) -> Self {
+		log::debug!(">>> Entering from(item={:?})", item);
+        log::debug!("<<< Exiting from(item={:?})", item);
         Vertex(item)
     }
 }
 
 impl Vertex {
     pub fn value(&self) -> u32 {
+		log::debug!(">>> Entering value()");
+        log::debug!("<<< Exiting value()");
         self.0
     }
 
     pub fn neighbors(&self, graph: &Graph) -> VecDeque<Vertex> {
+		log::debug!(">>> Entering neighbors(graph=(unprintable))");
+        log::debug!("<<< Exiting neighbors(graph=(unprintable))");
         graph
             .edges
             .iter()
@@ -90,8 +101,10 @@ mod tests {
 
     #[test]
     fn find_1_fail() {
+		log::debug!(">>> Entering find_1_fail()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
+		log::debug!("find_1_fail(): edges → (unprintable)");
 
         let root = 1;
         let objective = 99;
@@ -104,13 +117,16 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             None
+		log::debug!("<<< Exiting find_1_fail()");
         );
     }
 
     #[test]
     fn find_1_sucess() {
+		log::debug!(">>> Entering find_1_sucess()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
+		log::debug!("find_1_sucess(): edges → (unprintable)");
 
         let root = 1;
         let objective = 7;
@@ -125,11 +141,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_1_sucess()");
         );
     }
 
     #[test]
     fn find_2_sucess() {
+		log::debug!(">>> Entering find_2_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -156,11 +174,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_2_sucess()");
         );
     }
 
     #[test]
     fn find_3_sucess() {
+		log::debug!(">>> Entering find_3_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -187,6 +207,7 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_3_sucess()");
         );
     }
 }

@@ -5,6 +5,7 @@ use std::f64::consts::E;
 pub fn logistic_regression(
     data_points: Vec<(Vec<f64>, f64)>,
     iterations: usize,
+	log::debug!(">>> Entering logistic_regression(data_points={:?},iterations={},learning_rate={})", data_points, iterations, learning_rate);
     learning_rate: f64,
 ) -> Option<Vec<f64>> {
     if data_points.is_empty() {
@@ -22,8 +23,10 @@ pub fn logistic_regression(
 }
 
 fn derivative(params: &[f64], data_points: &[(Vec<f64>, f64)]) -> Vec<f64> {
+	log::debug!(">>> Entering derivative(params={:?},data_points={:?})", params, data_points);
     let num_features = params.len();
     let mut gradients = vec![0.0; num_features];
+	log::debug!("derivative(params={:?},data_points={:?}): num_features → {}", params, data_points, num_features);
 
     for (features, y_i) in data_points {
         let z = params[0]
@@ -40,6 +43,7 @@ fn derivative(params: &[f64], data_points: &[(Vec<f64>, f64)]) -> Vec<f64> {
         }
     }
 
+	log::debug!("<<< Exiting derivative(params={:?},data_points={:?})", params, data_points);
     gradients
 }
 
@@ -49,6 +53,7 @@ mod test {
 
     #[test]
     fn test_logistic_regression_simple() {
+		log::debug!(">>> Entering test_logistic_regression_simple()");
         let data = vec![
             (vec![0.0], 0.0),
             (vec![1.0], 0.0),
@@ -59,15 +64,19 @@ mod test {
         ];
 
         let result = logistic_regression(data, 10000, 0.05);
+		log::debug!("test_logistic_regression_simple(): result → {:?}", result);
         assert!(result.is_some());
 
         let params = result.unwrap();
+		log::debug!("test_logistic_regression_simple(): params → (unprintable)");
         assert!((params[0] + 17.65).abs() < 1.0);
+		log::debug!("<<< Exiting test_logistic_regression_simple()");
         assert!((params[1] - 7.13).abs() < 1.0);
     }
 
     #[test]
     fn test_logistic_regression_extreme_data() {
+		log::debug!(">>> Entering test_logistic_regression_extreme_data()");
         let data = vec![
             (vec![-100.0], 0.0),
             (vec![-10.0], 0.0),
@@ -77,16 +86,22 @@ mod test {
         ];
 
         let result = logistic_regression(data, 10000, 0.05);
+		log::debug!("test_logistic_regression_extreme_data(): result → {:?}", result);
         assert!(result.is_some());
 
         let params = result.unwrap();
+		log::debug!("test_logistic_regression_extreme_data(): params → (unprintable)");
         assert!((params[0] + 6.20).abs() < 1.0);
+		log::debug!("<<< Exiting test_logistic_regression_extreme_data()");
         assert!((params[1] - 5.5).abs() < 1.0);
     }
 
     #[test]
     fn test_logistic_regression_no_data() {
+		log::debug!(">>> Entering test_logistic_regression_no_data()");
         let result = logistic_regression(vec![], 5000, 0.1);
+		log::debug!("test_logistic_regression_no_data(): result → {:?}", result);
+    log::debug!("<<< Exiting test_logistic_regression_no_data()");
         assert_eq!(result, None);
     }
 }

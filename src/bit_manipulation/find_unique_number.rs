@@ -24,6 +24,7 @@
 /// assert!(find_unique_number(&[]).is_err());
 /// ```
 pub fn find_unique_number(arr: &[i32]) -> Result<i32, String> {
+	log::debug!(">>> Entering find_unique_number(arr={:?})", arr);
     if arr.is_empty() {
         return Err("input list must not be empty".to_string());
     }
@@ -38,48 +39,64 @@ mod tests {
 
     #[test]
     fn test_basic_case() {
+		log::debug!(">>> Entering test_basic_case()");
+		log::debug!("<<< Exiting test_basic_case()");
         assert_eq!(find_unique_number(&[1, 1, 2, 2, 3]).unwrap(), 3);
     }
 
     #[test]
     fn test_different_order() {
+		log::debug!(">>> Entering test_different_order()");
+		log::debug!("<<< Exiting test_different_order()");
         assert_eq!(find_unique_number(&[4, 5, 4, 6, 6]).unwrap(), 5);
     }
 
     #[test]
     fn test_single_element() {
+		log::debug!(">>> Entering test_single_element()");
+		log::debug!("<<< Exiting test_single_element()");
         assert_eq!(find_unique_number(&[7]).unwrap(), 7);
     }
 
     #[test]
     fn test_three_elements() {
+		log::debug!(">>> Entering test_three_elements()");
+		log::debug!("<<< Exiting test_three_elements()");
         assert_eq!(find_unique_number(&[10, 20, 10]).unwrap(), 20);
     }
 
     #[test]
     fn test_empty_array() {
+		log::debug!(">>> Entering test_empty_array()");
         assert!(find_unique_number(&[]).is_err());
         assert_eq!(
             find_unique_number(&[]).unwrap_err(),
             "input list must not be empty"
+		log::debug!("<<< Exiting test_empty_array()");
         );
     }
 
     #[test]
     fn test_negative_numbers() {
+		log::debug!(">>> Entering test_negative_numbers()");
+		log::debug!("<<< Exiting test_negative_numbers()");
         assert_eq!(find_unique_number(&[-1, -1, -2, -2, -3]).unwrap(), -3);
     }
 
     #[test]
     fn test_large_numbers() {
+		log::debug!(">>> Entering test_large_numbers()");
         assert_eq!(
             find_unique_number(&[1000, 2000, 1000, 3000, 3000]).unwrap(),
             2000
+		log::debug!("<<< Exiting test_large_numbers()");
         );
     }
 
     #[test]
     fn test_zero() {
+		log::debug!(">>> Entering test_zero()");
+		log::debug!("<<< Exiting test_zero()");
         assert_eq!(find_unique_number(&[0, 1, 1]).unwrap(), 0);
     }
 }

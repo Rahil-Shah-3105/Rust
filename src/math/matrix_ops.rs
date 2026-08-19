@@ -32,6 +32,10 @@ macro_rules! matrix_element_type_def {
             type Output = Matrix<$T>;
 
             fn mul(self, rhs: &Matrix<$T>) -> Self::Output {
+				log::debug!(">>> Entering mul(rhs=(unprintable))");
+				log::debug!("mul(rhs=(unprintable)): result → (unprintable)");
+				log::debug!("mul(rhs=(unprintable)): sum → (unprintable)");
+				log::debug!("<<< Exiting mul(rhs=(unprintable))");
                 rhs * self
             }
         }
@@ -55,15 +59,19 @@ pub struct Matrix<T: MatrixElement> {
 
 impl<T: MatrixElement> Matrix<T> {
     pub fn new(data: Vec<T>, rows: usize, cols: usize) -> Self {
+		log::debug!(">>> Entering new(data=(unprintable),rows={},cols={})", rows, cols);
         // Build a matrix from the internal vector representation
         if data.len() != rows * cols {
             panic!("Inconsistent data and dimensions combination for matrix")
         }
+		log::debug!("<<< Exiting new(data=(unprintable),rows={},cols={})", rows, cols);
         Matrix { data, rows, cols }
     }
 
     pub fn zero(rows: usize, cols: usize) -> Self {
+		log::debug!(">>> Entering zero(rows={},cols={})", rows, cols);
         // Build a matrix of zeros
+		log::debug!("<<< Exiting zero(rows={},cols={})", rows, cols);
         Matrix {
             data: vec![0.into(); rows * cols],
             rows,
@@ -72,23 +80,28 @@ impl<T: MatrixElement> Matrix<T> {
     }
 
     pub fn identity(len: usize) -> Self {
+		log::debug!(">>> Entering identity(len={})", len);
         // Build an identity matrix
         let mut identity = Matrix::zero(len, len);
         // Diagonal of ones
         for i in 0..len {
             identity[[i, i]] = 1.into();
         }
+		log::debug!("<<< Exiting identity(len={})", len);
         identity
     }
 
     pub fn transpose(&self) -> Self {
+		log::debug!(">>> Entering transpose()");
         // Transpose a matrix of any size
         let mut result = Matrix::zero(self.cols, self.rows);
+		log::debug!("transpose(): result → (unprintable)");
         for i in 0..self.rows {
             for j in 0..self.cols {
                 result[[i, j]] = self[[j, i]];
             }
         }
+		log::debug!("<<< Exiting transpose()");
         result
     }
 }
@@ -97,22 +110,26 @@ impl<T: MatrixElement> Index<[usize; 2]> for Matrix<T> {
     type Output = T;
 
     fn index(&self, index: [usize; 2]) -> &Self::Output {
+		log::debug!(">>> Entering index(index={:?})", index);
         let [i, j] = index;
         if i >= self.rows || j >= self.cols {
             panic!("Matrix index out of bounds");
         }
 
+		log::debug!("<<< Exiting index(index={:?})", index);
         &self.data[(self.cols * i) + j]
     }
 }
 
 impl<T: MatrixElement> IndexMut<[usize; 2]> for Matrix<T> {
     fn index_mut(&mut self, index: [usize; 2]) -> &mut Self::Output {
+		log::debug!(">>> Entering index_mut(index={:?})", index);
         let [i, j] = index;
         if i >= self.rows || j >= self.cols {
             panic!("Matrix index out of bounds");
         }
 
+		log::debug!("<<< Exiting index_mut(index={:?})", index);
         &mut self.data[(self.cols * i) + j]
     }
 }
@@ -121,17 +138,20 @@ impl<T: MatrixElement> Add<&Matrix<T>> for &Matrix<T> {
     type Output = Matrix<T>;
 
     fn add(self, rhs: &Matrix<T>) -> Self::Output {
+		log::debug!(">>> Entering add(rhs=(unprintable))");
         // Add two matrices. They need to have identical dimensions.
         if self.rows != rhs.rows || self.cols != rhs.cols {
             panic!("Matrix dimensions do not match");
         }
 
         let mut result = Matrix::zero(self.rows, self.cols);
+		log::debug!("add(rhs=(unprintable)): result → (unprintable)");
         for i in 0..self.rows {
             for j in 0..self.cols {
                 result[[i, j]] = self[[i, j]] + rhs[[i, j]];
             }
         }
+		log::debug!("<<< Exiting add(rhs=(unprintable))");
         result
     }
 }
@@ -140,17 +160,20 @@ impl<T: MatrixElement> Sub for &Matrix<T> {
     type Output = Matrix<T>;
 
     fn sub(self, rhs: Self) -> Self::Output {
+		log::debug!(">>> Entering sub(rhs=(unprintable))");
         // Subtract one matrix from another. They need to have identical dimensions.
         if self.rows != rhs.rows || self.cols != rhs.cols {
             panic!("Matrix dimensions do not match");
         }
 
         let mut result = Matrix::zero(self.rows, self.cols);
+		log::debug!("sub(rhs=(unprintable)): result → (unprintable)");
         for i in 0..self.rows {
             for j in 0..self.cols {
                 result[[i, j]] = self[[i, j]] - rhs[[i, j]];
             }
         }
+		log::debug!("<<< Exiting sub(rhs=(unprintable))");
         result
     }
 }
@@ -159,6 +182,7 @@ impl<T: MatrixElement> Mul for &Matrix<T> {
     type Output = Matrix<T>;
 
     fn mul(self, rhs: Self) -> Self::Output {
+		log::debug!(">>> Entering mul(rhs=(unprintable))");
         // Multiply two matrices. The multiplier needs to have the same amount
         // of columns as the multiplicand has rows.
         if self.cols != rhs.rows {
@@ -177,6 +201,7 @@ impl<T: MatrixElement> Mul for &Matrix<T> {
                 };
             }
         }
+		log::debug!("<<< Exiting mul(rhs=(unprintable))");
         result
     }
 }
@@ -198,8 +223,11 @@ impl<T: MatrixElement> Mul<T> for &Matrix<T> {
 
 impl<T: MatrixElement> From<Vec<Vec<T>>> for Matrix<T> {
     fn from(v: Vec<Vec<T>>) -> Self {
+		log::debug!(">>> Entering from(v=(unprintable))");
         let rows = v.len();
         let cols = v.first().map_or(0, |row| row.len());
+		log::debug!("from(v=(unprintable)): cols → (unprintable)");
+		log::debug!("from(v=(unprintable)): rows → {}", rows);
 
         // Ensure consistent dimensions
         for row in v.iter().skip(1) {
@@ -212,6 +240,8 @@ impl<T: MatrixElement> From<Vec<Vec<T>>> for Matrix<T> {
         }
 
         let data = v.into_iter().flat_map(|row| row.into_iter()).collect();
+		log::debug!("from(v=(unprintable)): data → (unprintable)");
+        log::debug!("<<< Exiting from(v=(unprintable))");
         Self::new(data, rows, cols)
     }
 }
@@ -241,24 +271,30 @@ mod tests {
 
     #[test]
     fn test_invalid_matrix() {
+		log::debug!(">>> Entering test_invalid_matrix()");
         let result = panic::catch_unwind(|| matrix![
             [1, 0, 0, 4],
             [0, 1, 0],
             [0, 0, 1],
         ]);
+		log::debug!("<<< Exiting test_invalid_matrix()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_empty_matrix() {
+		log::debug!(">>> Entering test_empty_matrix()");
         let a: Matrix<i32> = matrix![];
 
         let result = panic::catch_unwind(|| a[[0, 0]]);
+		log::debug!("test_empty_matrix(): result → (unprintable)");
+		log::debug!("<<< Exiting test_empty_matrix()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_zero_matrix() {
+		log::debug!(">>> Entering test_zero_matrix()");
         let a: Matrix<f64> = Matrix::zero(3, 5);
 
         let z = matrix![
@@ -267,11 +303,13 @@ mod tests {
             [0.0, 0.0, 0.0, 0.0, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_zero_matrix()");
         assert_f64_eq!(a, z);
     }
 
     #[test]
     fn test_identity_matrix() {
+		log::debug!(">>> Entering test_identity_matrix()");
         let a: Matrix<f64> = Matrix::identity(5);
 
         let id = matrix![
@@ -282,11 +320,13 @@ mod tests {
             [0.0, 0.0, 0.0, 0.0, 1.0],
         ];
 
+		log::debug!("<<< Exiting test_identity_matrix()");
         assert_f64_eq!(a, id);
     }
 
     #[test]
     fn test_invalid_add() {
+		log::debug!(">>> Entering test_invalid_add()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -299,11 +339,14 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a + &err);
+		log::debug!("test_invalid_add(): result → (unprintable)");
+		log::debug!("<<< Exiting test_invalid_add()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_add_i32() {
+		log::debug!(">>> Entering test_add_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -322,11 +365,13 @@ mod tests {
             [5, 0, 2],
         ];
 
+		log::debug!("<<< Exiting test_add_i32()");
         assert_eq!(&a + &b, add);
     }
 
     #[test]
     fn test_add_f64() {
+		log::debug!(">>> Entering test_add_f64()");
         let a = matrix![
             [1.0, 2.0, 1.0],
             [3.0, 2.0, 0.0],
@@ -345,11 +390,13 @@ mod tests {
             [5.0, 0.0, 2.0],
         ];
 
+		log::debug!("<<< Exiting test_add_f64()");
         assert_f64_eq!(&a + &b, add);
     }
 
     #[test]
     fn test_invalid_sub() {
+		log::debug!(">>> Entering test_invalid_sub()");
         let a = matrix![
             [2, 3],
             [10, 2],
@@ -362,11 +409,14 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a - &err);
+		log::debug!("test_invalid_sub(): result → (unprintable)");
+		log::debug!("<<< Exiting test_invalid_sub()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_subtract_i32() {
+		log::debug!(">>> Entering test_subtract_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -385,11 +435,13 @@ mod tests {
             [5, 0, 0],
         ];
 
+		log::debug!("<<< Exiting test_subtract_i32()");
         assert_eq!(&a - &b, sub);
     }
 
     #[test]
     fn test_subtract_f64() {
+		log::debug!(">>> Entering test_subtract_f64()");
         let a = matrix![
             [7.0, 2.0, 1.0],
             [0.0, 3.0, 2.0],
@@ -408,11 +460,13 @@ mod tests {
             [5.3, 6.6, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_subtract_f64()");
         assert_f64_eq!(&a - &b, sub);
     }
 
     #[test]
     fn test_invalid_mul() {
+		log::debug!(">>> Entering test_invalid_mul()");
         let a = matrix![
             [1, 2, 3],
             [4, 2, 6],
@@ -428,11 +482,14 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a * &err);
+		log::debug!("test_invalid_mul(): result → (unprintable)");
+		log::debug!("<<< Exiting test_invalid_mul()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_mul_i32() {
+		log::debug!(">>> Entering test_mul_i32()");
         let a = matrix![
             [1, 2, 3],
             [4, 2, 6],
@@ -453,11 +510,13 @@ mod tests {
             [54, 62, 30, 16],
         ];
 
+		log::debug!("<<< Exiting test_mul_i32()");
         assert_eq!(&a * &b, mul);
     }
 
     #[test]
     fn test_mul_f64() {
+		log::debug!(">>> Entering test_mul_f64()");
         let a = matrix![
             [5.5, 2.9, 1.13, 9.0],
             [0.0, 3.0, 11.0, 17.2],
@@ -477,11 +536,13 @@ mod tests {
             [-22.236, 21.79, 67.78],
         ];
 
+		log::debug!("<<< Exiting test_mul_f64()");
         assert_f64_eq!(&a * &b, mul);
     }
 
     #[test]
     fn test_transpose_i32() {
+		log::debug!(">>> Entering test_transpose_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -494,11 +555,13 @@ mod tests {
             [1, 0, 1],
         ];
 
+		log::debug!("<<< Exiting test_transpose_i32()");
         assert_eq!(a.transpose(), t);
     }
 
     #[test]
     fn test_transpose_f64() {
+		log::debug!(">>> Entering test_transpose_f64()");
         let a = matrix![
             [3.0, 4.0, 2.0],
             [0.0, 1.0, 3.0],
@@ -511,11 +574,13 @@ mod tests {
             [2.0, 3.0, 1.0],
         ];
 
+		log::debug!("<<< Exiting test_transpose_f64()");
         assert_eq!(a.transpose(), t);
     }
 
     #[test]
     fn test_matrix_scalar_zero_mul() {
+		log::debug!(">>> Entering test_matrix_scalar_zero_mul()");
         let a = matrix![
             [3, 2, 2],
             [0, 2, 0],
@@ -525,12 +590,15 @@ mod tests {
         let scalar = 0;
 
         let scalar_mul = Matrix::zero(3, 3);
+		log::debug!("test_matrix_scalar_zero_mul(): scalar_mul → (unprintable)");
 
+		log::debug!("<<< Exiting test_matrix_scalar_zero_mul()");
         assert_eq!(scalar * &a, scalar_mul);
     }
 
     #[test]
     fn test_matrix_scalar_mul_i32() {
+		log::debug!(">>> Entering test_matrix_scalar_mul_i32()");
         let a = matrix![
             [3, 2, 2],
             [0, 2, 0],
@@ -545,11 +613,13 @@ mod tests {
             [15, 12, 3],
         ];
 
+		log::debug!("<<< Exiting test_matrix_scalar_mul_i32()");
         assert_eq!(scalar * &a, scalar_mul);
     }
 
     #[test]
     fn test_matrix_scalar_mul_f64() {
+		log::debug!(">>> Entering test_matrix_scalar_mul_f64()");
         let a = matrix![
             [3.2, 5.5, 9.2],
             [1.1, 0.0, 2.3],
@@ -564,6 +634,7 @@ mod tests {
             [0.45, 6.3, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_matrix_scalar_mul_f64()");
         assert_f64_eq!(scalar * &a, scalar_mul);
     }
 }

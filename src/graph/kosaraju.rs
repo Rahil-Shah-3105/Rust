@@ -7,6 +7,8 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(vertices: usize) -> Self {
+		log::debug!(">>> Entering new(vertices={})", vertices);
+        log::debug!("<<< Exiting new(vertices={})", vertices);
         Graph {
             vertices,
             adj_list: vec![vec![]; vertices],
@@ -15,34 +17,43 @@ impl Graph {
     }
 
     pub fn add_edge(&mut self, u: usize, v: usize) {
+		log::debug!(">>> Entering add_edge(u={},v={})", u, v);
         self.adj_list[u].push(v);
+		log::debug!("<<< Exiting add_edge(u={},v={})", u, v);
         self.transpose_adj_list[v].push(u);
     }
 
     pub fn dfs(&self, node: usize, visited: &mut Vec<bool>, stack: &mut Vec<usize>) {
+		log::debug!(">>> Entering dfs(node={},visited={:?},stack={:?})", node, visited, stack);
         visited[node] = true;
         for &neighbor in &self.adj_list[node] {
             if !visited[neighbor] {
                 self.dfs(neighbor, visited, stack);
             }
         }
+		log::debug!("<<< Exiting dfs(node={},visited={:?},stack={:?})", node, visited, stack);
         stack.push(node);
     }
 
     pub fn dfs_scc(&self, node: usize, visited: &mut Vec<bool>, scc: &mut Vec<usize>) {
+		log::debug!(">>> Entering dfs_scc(node={},visited={:?},scc={:?})", node, visited, scc);
         visited[node] = true;
         scc.push(node);
         for &neighbor in &self.transpose_adj_list[node] {
             if !visited[neighbor] {
                 self.dfs_scc(neighbor, visited, scc);
             }
+		log::debug!("<<< Exiting dfs_scc(node={},visited={:?},scc={:?})", node, visited, scc);
         }
     }
 }
 
 pub fn kosaraju(graph: &Graph) -> Vec<Vec<usize>> {
+	log::debug!(">>> Entering kosaraju(graph=(unprintable))");
     let mut visited = vec![false; graph.vertices];
     let mut stack = Vec::new();
+	log::debug!("kosaraju(graph=(unprintable)): stack → (unprintable)");
+	log::debug!("kosaraju(graph=(unprintable)): visited → (unprintable)");
 
     for i in 0..graph.vertices {
         if !visited[i] {
@@ -51,16 +62,19 @@ pub fn kosaraju(graph: &Graph) -> Vec<Vec<usize>> {
     }
 
     let mut sccs = Vec::new();
+	log::debug!("kosaraju(graph=(unprintable)): sccs → (unprintable)");
     visited = vec![false; graph.vertices];
 
     while let Some(node) = stack.pop() {
         if !visited[node] {
             let mut scc = Vec::new();
+			log::debug!("kosaraju(graph=(unprintable)): scc → (unprintable)");
             graph.dfs_scc(node, &mut visited, &mut scc);
             sccs.push(scc);
         }
     }
 
+	log::debug!("<<< Exiting kosaraju(graph=(unprintable))");
     sccs
 }
 #[cfg(test)]
@@ -69,8 +83,10 @@ mod tests {
 
     #[test]
     fn test_kosaraju_single_sccs() {
+		log::debug!(">>> Entering test_kosaraju_single_sccs()");
         let vertices = 5;
         let mut graph = Graph::new(vertices);
+		log::debug!("test_kosaraju_single_sccs(): graph → (unprintable)");
 
         graph.add_edge(0, 1);
         graph.add_edge(1, 2);
@@ -80,14 +96,18 @@ mod tests {
         graph.add_edge(4, 2);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_single_sccs(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 1);
+		log::debug!("<<< Exiting test_kosaraju_single_sccs()");
         assert!(sccs.contains(&vec![0, 3, 2, 1, 4]));
     }
 
     #[test]
     fn test_kosaraju_multiple_sccs() {
+		log::debug!(">>> Entering test_kosaraju_multiple_sccs()");
         let vertices = 8;
         let mut graph = Graph::new(vertices);
+		log::debug!("test_kosaraju_multiple_sccs(): graph → (unprintable)");
 
         graph.add_edge(1, 0);
         graph.add_edge(0, 1);
@@ -102,17 +122,21 @@ mod tests {
         graph.add_edge(6, 4);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_multiple_sccs(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 4);
         assert!(sccs.contains(&vec![0, 1, 2]));
         assert!(sccs.contains(&vec![3]));
         assert!(sccs.contains(&vec![4, 6, 5]));
+		log::debug!("<<< Exiting test_kosaraju_multiple_sccs()");
         assert!(sccs.contains(&vec![7]));
     }
 
     #[test]
     fn test_kosaraju_multiple_sccs1() {
+		log::debug!(">>> Entering test_kosaraju_multiple_sccs1()");
         let vertices = 8;
         let mut graph = Graph::new(vertices);
+		log::debug!("test_kosaraju_multiple_sccs1(): graph → (unprintable)");
         graph.add_edge(0, 2);
         graph.add_edge(1, 0);
         graph.add_edge(2, 3);
@@ -124,34 +148,44 @@ mod tests {
         graph.add_edge(7, 6);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_multiple_sccs1(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 3);
         assert!(sccs.contains(&vec![0]));
         assert!(sccs.contains(&vec![1]));
+		log::debug!("<<< Exiting test_kosaraju_multiple_sccs1()");
         assert!(sccs.contains(&vec![2, 5, 6, 7, 4, 3]));
     }
 
     #[test]
     fn test_kosaraju_no_scc() {
+		log::debug!(">>> Entering test_kosaraju_no_scc()");
         let vertices = 4;
         let mut graph = Graph::new(vertices);
+		log::debug!("test_kosaraju_no_scc(): graph → (unprintable)");
 
         graph.add_edge(0, 1);
         graph.add_edge(1, 2);
         graph.add_edge(2, 3);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_no_scc(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 4);
         for (i, _) in sccs.iter().enumerate().take(vertices) {
             assert_eq!(sccs[i], vec![i]);
+		log::debug!("<<< Exiting test_kosaraju_no_scc()");
         }
     }
 
     #[test]
     fn test_kosaraju_empty_graph() {
+		log::debug!(">>> Entering test_kosaraju_empty_graph()");
         let vertices = 0;
         let graph = Graph::new(vertices);
+		log::debug!("test_kosaraju_empty_graph(): graph → (unprintable)");
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_empty_graph(): sccs → {:?}", sccs);
+		log::debug!("<<< Exiting test_kosaraju_empty_graph()");
         assert_eq!(sccs.len(), 0);
     }
 }

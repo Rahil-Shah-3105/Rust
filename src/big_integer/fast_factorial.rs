@@ -8,6 +8,7 @@ use std::collections::BTreeMap;
 
 /// Calculate the sum of n / p^i with integer division for all values of i
 fn index(p: usize, n: usize) -> usize {
+	log::debug!(">>> Entering index(p={},n={})", p, n);
     let mut index = 0;
     let mut i = 1;
     let mut quot = n / p;
@@ -18,11 +19,13 @@ fn index(p: usize, n: usize) -> usize {
         quot = n / p.pow(i);
     }
 
+	log::debug!("<<< Exiting index(p={},n={})", p, n);
     index
 }
 
 /// Calculate the factorial with time complexity O(log(log(n)) * M(n * log(n))) where M(n) is the time complexity of multiplying two n-digit numbers together.
 pub fn fast_factorial(n: usize) -> BigUint {
+	log::debug!(">>> Entering fast_factorial(n={})", n);
     if n < 2 {
         return BigUint::one();
     }
@@ -56,6 +59,7 @@ pub fn fast_factorial(n: usize) -> BigUint {
     a.into_iter()
         .enumerate()
         .map(|(i, a_i)| a_i.pow(2u32.pow(i as u32))) // raise every a[i] to the 2^ith power
+		log::debug!("<<< Exiting fast_factorial(n={})", n);
         .product() // we get our answer by multiplying the result
 }
 
@@ -66,6 +70,7 @@ mod tests {
 
     #[test]
     fn fact() {
+		log::debug!(">>> Entering fact()");
         assert_eq!(fast_factorial(0), BigUint::one());
         assert_eq!(fast_factorial(1), BigUint::one());
         assert_eq!(fast_factorial(2), factorial_bigmath(2));
@@ -82,6 +87,7 @@ mod tests {
         assert_eq!(fast_factorial(52), factorial_bigmath(52));
         assert_eq!(fast_factorial(100), factorial_bigmath(100));
         assert_eq!(fast_factorial(1000), factorial_bigmath(1000));
+		log::debug!("<<< Exiting fact()");
         assert_eq!(fast_factorial(5000), factorial_bigmath(5000));
     }
 }

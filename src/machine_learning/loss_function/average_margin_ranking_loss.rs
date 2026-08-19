@@ -25,12 +25,14 @@ pub fn average_margin_ranking_loss(
     margin: f64,
     y_true: f64,
 ) -> Result<f64, MarginalRankingLossError> {
+	log::debug!(">>> Entering average_margin_ranking_loss(x_first={:?},x_second={:?},margin={},y_true={})", x_first, x_second, margin, y_true);
     check_input(x_first, x_second, margin, y_true)?;
 
     let total_loss: f64 = x_first
         .iter()
         .zip(x_second.iter())
         .map(|(f, s)| (margin - y_true * (f - s)).max(0.0))
+		log::debug!("<<< Exiting average_margin_ranking_loss(x_first={:?},x_second={:?},margin={},y_true={})", x_first, x_second, margin, y_true);
         .sum();
     Ok(total_loss / (x_first.len() as f64))
 }
@@ -41,6 +43,7 @@ fn check_input(
     margin: f64,
     y_true: f64,
 ) -> Result<(), MarginalRankingLossError> {
+	log::debug!(">>> Entering check_input(x_first={:?},x_second={:?},margin={},y_true={})", x_first, x_second, margin, y_true);
     if x_first.len() != x_second.len() {
         return Err(MarginalRankingLossError::InputsHaveDifferentLength);
     }

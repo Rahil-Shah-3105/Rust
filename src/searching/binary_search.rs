@@ -23,11 +23,14 @@ use std::cmp::Ordering;
 /// - `Some(index)` if the item is found at the given index.
 /// - `None` if the item is not found in the array.
 pub fn binary_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+	log::debug!(">>> Entering binary_search(item=(unprintable),arr=(unprintable))");
     let is_asc = is_asc_arr(arr);
 
+	log::debug!("binary_search(item=(unprintable),arr=(unprintable)): is_asc → {}", is_asc);
     let mut left = 0;
     let mut right = arr.len();
 
+	log::debug!("<<< Exiting binary_search(item=(unprintable),arr=(unprintable))");
     while left < right {
         if match_compare(item, arr, &mut left, &mut right, is_asc) {
             return Some(left);
@@ -61,6 +64,10 @@ fn match_compare<T: Ord>(
     arr: &[T],
     left: &mut usize,
     right: &mut usize,
+	log::debug!(">>> Entering match_compare(item=(unprintable),arr=(unprintable),left={},right={},is_asc={})", left, right, is_asc);
+	log::debug!("match_compare(item=(unprintable),arr=(unprintable),left={},right={},is_asc={}): mid → (unprintable)", left, right, is_asc);
+	log::debug!("match_compare(item=(unprintable),arr=(unprintable),left={},right={},is_asc={}): cmp_result → (unprintable)", left, right, is_asc);
+log::debug!("<<< Exiting match_compare(item=(unprintable),arr=(unprintable),left={},right={},is_asc={})", left, right, is_asc);
     is_asc: bool,
 ) -> bool {
     let mid = *left + (*right - *left) / 2;
@@ -96,6 +103,8 @@ fn match_compare<T: Ord>(
 ///
 /// A `bool` indicating whether the array is sorted in ascending order.
 fn is_asc_arr<T: Ord>(arr: &[T]) -> bool {
+	log::debug!(">>> Entering is_asc_arr(arr=(unprintable))");
+    log::debug!("<<< Exiting is_asc_arr(arr=(unprintable))");
     arr.len() > 1 && arr[0] < arr[arr.len() - 1]
 }
 

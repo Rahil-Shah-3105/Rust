@@ -19,11 +19,15 @@ pub trait IntoPressureUnit {
 impl IntoPressureUnit for PressureUnit {
     fn into_pressure_unit(self) -> Result<PressureUnit, String> {
         Ok(self)
+	log::debug!(">>> Entering into_pressure_unit()");
+        log::debug!("<<< Exiting into_pressure_unit()");
     }
 }
 
 impl IntoPressureUnit for &str {
     fn into_pressure_unit(self) -> Result<PressureUnit, String> {
+		log::debug!(">>> Entering into_pressure_unit()");
+        log::debug!("<<< Exiting into_pressure_unit()");
         PressureUnit::from_str(self)
     }
 }
@@ -80,6 +84,8 @@ pub enum PressureUnit {
 impl fmt::Display for PressureUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
+			log::debug!(">>> Entering fmt(f=(unprintable))");
+        log::debug!("<<< Exiting fmt(f=(unprintable))");
             Self::Pascal => "Pa",
             Self::Kilopascal => "kPa",
             Self::Megapascal => "MPa",
@@ -113,6 +119,8 @@ impl fmt::Display for PressureUnit {
 impl PressureUnit {
     /// Get the conversion factor to convert this unit to pascals
     fn to_pascal_factor(self) -> f64 {
+		log::debug!(">>> Entering to_pascal_factor()");
+        log::debug!("<<< Exiting to_pascal_factor()");
         match self {
             // SI units (Pascal-based)
             Self::Pascal => 1.0,
@@ -157,6 +165,7 @@ impl PressureUnit {
             "Pa", "kPa", "MPa", "GPa", "hPa", "atm", "at", "ata", "Torr", "mTorr", "bar", "mbar",
             "psi", "ksi", "ozf/in²", "Ba", "pz", "mmHg", "cmHg", "inHg", "mmH₂O", "cmH₂O", "inH₂O",
             "msw", "fsw",
+		log::debug!("<<< Exiting supported_units()");
         ]
     }
 }
@@ -165,6 +174,7 @@ impl FromStr for PressureUnit {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+		log::debug!(">>> Entering from_str(s={})", s);
         let unit = match s.to_lowercase().as_str() {
             "pa" | "pascal" => Self::Pascal,
             "kpa" | "kilopascal" => Self::Kilopascal,
@@ -193,6 +203,7 @@ impl FromStr for PressureUnit {
             "fsw" | "foot_seawater" => Self::FootSeawater,
             _ => return Err(format!("Unknown pressure unit: {s}")),
         };
+		log::debug!("<<< Exiting from_str(s={})", s);
         Ok(unit)
     }
 }
@@ -228,6 +239,7 @@ where
     T: IntoPressureUnit,
 {
     let from = from_unit.into_pressure_unit().map_err(|_| {
+		log::debug!(">>> Entering convert_pressure(value={},from_unit=(unprintable),to_unit=(unprintable))", value);
         format!(
             "Invalid 'from_unit' value. Supported values are:\n{}",
             PressureUnit::supported_units().join(", ")
@@ -253,11 +265,14 @@ mod tests {
     const EPSILON: f64 = 1e-3; // Increased tolerance for floating point comparisons
 
     fn approx_eq(a: f64, b: f64) -> bool {
+		log::debug!(">>> Entering approx_eq(a={},b={})", a, b);
+        log::debug!("<<< Exiting approx_eq(a={},b={})", a, b);
         (a - b).abs() < EPSILON
     }
 
     #[test]
     fn test_pressure_conversions() {
+		log::debug!(">>> Entering test_pressure_conversions()");
         // Test basic conversions from Python original (using strings)
         assert!(approx_eq(
             convert_pressure(4.0, "atm", "pascal").unwrap(),
@@ -337,7 +352,9 @@ mod tests {
         // Test roundtrip conversion
         let original = 100.0;
         let converted = convert_pressure(original, "psi", "kpa").unwrap();
+		log::debug!("test_pressure_conversions(): converted → {}", converted);
         let back = convert_pressure(converted, "kpa", "psi").unwrap();
+		log::debug!("test_pressure_conversions(): back → {}", back);
         assert!(approx_eq(original, back));
 
         // Test manometric units
@@ -378,26 +395,32 @@ mod tests {
 
         // Test hectopascal equals millibar
         let hpa_to_pa = convert_pressure(1.0, "hpa", "pa").unwrap();
+		log::debug!("test_pressure_conversions(): hpa_to_pa → {}", hpa_to_pa);
         let mbar_to_pa = convert_pressure(1.0, "mbar", "pa").unwrap();
+		log::debug!("test_pressure_conversions(): mbar_to_pa → {}", mbar_to_pa);
         assert!(approx_eq(hpa_to_pa, mbar_to_pa));
 
         // Test barad conversion
         assert!(approx_eq(convert_pressure(1.0, "ba", "pa").unwrap(), 0.1));
 
         // Test pieze conversion
+		log::debug!("<<< Exiting test_pressure_conversions()");
         assert!(approx_eq(convert_pressure(1.0, "pz", "kpa").unwrap(), 1.0));
     }
 
     #[test]
     fn test_additional_coverage() {
+		log::debug!(">>> Entering test_additional_coverage()");
         // Test String (owned) conversion
         let unit_string = String::from("kPa");
+		log::debug!("test_additional_coverage(): unit_string → {}", unit_string);
         assert_eq!(
             unit_string.into_pressure_unit().unwrap(),
             PressureUnit::Kilopascal
         );
 
         let invalid_string = String::from("invalid");
+		log::debug!("test_additional_coverage(): invalid_string → {}", invalid_string);
         assert!(invalid_string.into_pressure_unit().is_err());
 
         // Test Display implementation for all units
@@ -470,6 +493,7 @@ mod tests {
         assert!(approx_eq(
             convert_pressure(1.0, "inh2o", "pa").unwrap(),
             249.088_908_333
+		log::debug!("<<< Exiting test_additional_coverage()");
         ));
     }
 }

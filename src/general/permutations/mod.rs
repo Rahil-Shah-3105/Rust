@@ -12,18 +12,22 @@ mod tests {
     use std::collections::HashMap;
 
     pub fn assert_permutations(original: &[i32], permutations: &[Vec<i32>]) {
+		log::debug!(">>> Entering assert_permutations(original={:?},permutations={:?})", original, permutations);
         if original.is_empty() {
             assert_eq!(vec![vec![] as Vec<i32>], permutations);
             return;
         }
         let n = original.len();
+		log::debug!("assert_permutations(original={:?},permutations={:?}): n → {}", original, permutations, n);
         assert_eq!((1..=n).product::<usize>(), permutations.len()); // n!
         for permut in permutations {
             assert_valid_permutation(original, permut);
+		log::debug!("<<< Exiting assert_permutations(original={:?},permutations={:?})", original, permutations);
         }
     }
 
     pub fn assert_valid_permutation(original: &[i32], permuted: &[i32]) {
+		log::debug!(">>> Entering assert_valid_permutation(original={:?},permuted={:?})", original, permuted);
         assert_eq!(original.len(), permuted.len());
         let mut indices = HashMap::with_capacity(original.len());
         for value in original {
@@ -38,40 +42,51 @@ mod tests {
                 indices.remove(permut_value); // so that we can simply check every value has been removed properly
             }
         }
+		log::debug!("<<< Exiting assert_valid_permutation(original={:?},permuted={:?})", original, permuted);
         assert!(indices.is_empty())
     }
 
     #[test]
     fn test_valid_permutations() {
+		log::debug!(">>> Entering test_valid_permutations()");
         assert_valid_permutation(&[1, 2, 3], &[1, 2, 3]);
         assert_valid_permutation(&[1, 2, 3], &[1, 3, 2]);
         assert_valid_permutation(&[1, 2, 3], &[2, 1, 3]);
         assert_valid_permutation(&[1, 2, 3], &[2, 3, 1]);
         assert_valid_permutation(&[1, 2, 3], &[3, 1, 2]);
+		log::debug!("<<< Exiting test_valid_permutations()");
         assert_valid_permutation(&[1, 2, 3], &[3, 2, 1]);
     }
 
     #[test]
     #[should_panic]
     fn test_invalid_permutation_1() {
+		log::debug!(">>> Entering test_invalid_permutation_1()");
+		log::debug!("<<< Exiting test_invalid_permutation_1()");
         assert_valid_permutation(&[1, 2, 3], &[4, 2, 3]);
     }
 
     #[test]
     #[should_panic]
     fn test_invalid_permutation_2() {
+		log::debug!(">>> Entering test_invalid_permutation_2()");
+		log::debug!("<<< Exiting test_invalid_permutation_2()");
         assert_valid_permutation(&[1, 2, 3], &[1, 4, 3]);
     }
 
     #[test]
     #[should_panic]
     fn test_invalid_permutation_3() {
+		log::debug!(">>> Entering test_invalid_permutation_3()");
+		log::debug!("<<< Exiting test_invalid_permutation_3()");
         assert_valid_permutation(&[1, 2, 3], &[1, 2, 4]);
     }
 
     #[test]
     #[should_panic]
     fn test_invalid_permutation_repeat() {
+		log::debug!(">>> Entering test_invalid_permutation_repeat()");
+		log::debug!("<<< Exiting test_invalid_permutation_repeat()");
         assert_valid_permutation(&[1, 2, 3], &[1, 2, 2]);
     }
 
@@ -85,8 +100,12 @@ mod tests {
     const MAX_SIZE: usize = 8; // 8! ~= 40k permutations already
     impl Arbitrary for NotTooBigVec {
         fn arbitrary(g: &mut Gen) -> Self {
+			log::debug!(">>> Entering arbitrary(g=(unprintable))");
             let size = usize::arbitrary(g) % MAX_SIZE;
             let res = (0..size).map(|_| i32::arbitrary(g)).collect();
+			log::debug!("arbitrary(g=(unprintable)): res → (unprintable)");
+            log::debug!("arbitrary(g=(unprintable)): size → (unprintable)");
+            log::debug!("<<< Exiting arbitrary(g=(unprintable))");
             NotTooBigVec { inner: res }
         }
     }

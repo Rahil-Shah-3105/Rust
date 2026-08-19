@@ -17,6 +17,8 @@ where
     T: Ord,
 {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
+        log::debug!("<<< Exiting default()");
         Self::new()
     }
 }
@@ -27,6 +29,8 @@ where
 {
     /// Create a new, empty BST
     pub fn new() -> BinarySearchTree<T> {
+		log::debug!(">>> Entering new()");
+        log::debug!("<<< Exiting new()");
         BinarySearchTree {
             value: None,
             left: None,
@@ -37,6 +41,7 @@ where
     /// Find a value in this tree. Returns True if value is in this
     /// tree, and false otherwise
     pub fn search(&self, value: &T) -> bool {
+		log::debug!(">>> Entering search(value=(unprintable))");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -58,6 +63,7 @@ where
                             None => false,
                         }
                     }
+				log::debug!("<<< Exiting search(value=(unprintable))");
                 }
             }
             None => false,
@@ -66,11 +72,14 @@ where
 
     /// Returns a new iterator which iterates over this tree in order
     pub fn iter(&self) -> impl Iterator<Item = &T> {
+		log::debug!(">>> Entering iter()");
+        log::debug!("<<< Exiting iter()");
         BinarySearchTreeIter::new(self)
     }
 
     /// Insert a value into the appropriate location in this tree.
     pub fn insert(&mut self, value: T) {
+		log::debug!(">>> Entering insert(value=(unprintable))");
         match &self.value {
             None => self.value = Some(value),
             Some(key) => {
@@ -85,16 +94,20 @@ where
                     }
                     None => {
                         let mut node = BinarySearchTree::new();
+						log::debug!("insert(value=(unprintable)): node → (unprintable)");
                         node.value = Some(value);
                         *target_node = Some(Box::new(node));
                     }
                 }
             }
+		log::debug!("<<< Exiting insert(value=(unprintable))");
         }
     }
 
     /// Returns the smallest value in this tree
     pub fn minimum(&self) -> Option<&T> {
+		log::debug!(">>> Entering minimum()");
+        log::debug!("<<< Exiting minimum()");
         match &self.left {
             Some(node) => node.minimum(),
             None => self.value.as_ref(),
@@ -103,6 +116,8 @@ where
 
     /// Returns the largest value in this tree
     pub fn maximum(&self) -> Option<&T> {
+		log::debug!(">>> Entering maximum()");
+        log::debug!("<<< Exiting maximum()");
         match &self.right {
             Some(node) => node.maximum(),
             None => self.value.as_ref(),
@@ -111,6 +126,7 @@ where
 
     /// Returns the largest value in this tree smaller than value
     pub fn floor(&self, value: &T) -> Option<&T> {
+		log::debug!(">>> Entering floor(value=(unprintable))");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -126,6 +142,7 @@ where
                         match &self.right {
                             Some(node) => {
                                 let val = node.floor(value);
+								log::debug!("floor(value=(unprintable)): val → (unprintable)");
                                 match val {
                                     Some(_) => val,
                                     None => Some(key),
@@ -135,6 +152,7 @@ where
                         }
                     }
                     Ordering::Equal => Some(key),
+				log::debug!("<<< Exiting floor(value=(unprintable))");
                 }
             }
             None => None,
@@ -143,6 +161,7 @@ where
 
     /// Returns the smallest value in this tree larger than value
     pub fn ceil(&self, value: &T) -> Option<&T> {
+		log::debug!(">>> Entering ceil(value=(unprintable))");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -158,6 +177,7 @@ where
                         match &self.left {
                             Some(node) => {
                                 let val = node.ceil(value);
+								log::debug!("ceil(value=(unprintable)): val → (unprintable)");
                                 match val {
                                     Some(_) => val,
                                     None => Some(key),
@@ -170,6 +190,7 @@ where
                         // key == value
                         Some(key)
                     }
+				log::debug!("<<< Exiting ceil(value=(unprintable))");
                 }
             }
             None => None,
@@ -195,8 +216,10 @@ where
     }
 
     fn stack_push_left(&mut self) {
+		log::debug!(">>> Entering stack_push_left()");
         while let Some(child) = &self.stack.last().unwrap().left {
             self.stack.push(child);
+		log::debug!("<<< Exiting stack_push_left()");
         }
     }
 }
@@ -209,9 +232,12 @@ where
 
     fn next(&mut self) -> Option<&'a T> {
         if self.stack.is_empty() {
+			log::debug!(">>> Entering next()");
+			log::debug!("<<< Exiting next()");
             None
         } else {
             let node = self.stack.pop().unwrap();
+			log::debug!("next(): node → (unprintable)");
             if let Some(right_node) = &node.right {
                 self.stack.push(right_node.deref());
                 self.stack_push_left();
@@ -227,6 +253,9 @@ mod test {
 
     fn prequel_memes_tree() -> BinarySearchTree<&'static str> {
         let mut tree = BinarySearchTree::new();
+		log::debug!(">>> Entering prequel_memes_tree()");
+        log::debug!("prequel_memes_tree(): tree → (unprintable)");
+        log::debug!("<<< Exiting prequel_memes_tree()");
         tree.insert("hello there");
         tree.insert("general kenobi");
         tree.insert("you are a bold one");
@@ -239,8 +268,10 @@ mod test {
 
     #[test]
     fn test_search() {
+		log::debug!(">>> Entering test_search()");
         let tree = prequel_memes_tree();
         assert!(tree.search(&"hello there"));
+		log::debug!("test_search(): tree → (unprintable)");
         assert!(tree.search(&"you are a bold one"));
         assert!(tree.search(&"general kenobi"));
         assert!(tree.search(&"you fool"));
@@ -249,13 +280,16 @@ mod test {
             !tree.search(&"but i was going to tosche station to pick up some power converters",)
         );
         assert!(!tree.search(&"only a sith deals in absolutes"));
+		log::debug!("<<< Exiting test_search()");
         assert!(!tree.search(&"you underestimate my power"));
     }
 
     #[test]
     fn test_maximum_and_minimum() {
+		log::debug!(">>> Entering test_maximum_and_minimum()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.maximum().unwrap(), "your move");
+		log::debug!("test_maximum_and_minimum(): tree → (unprintable)");
         assert_eq!(
             *tree.minimum().unwrap(),
             "back away...I will deal with this jedi slime myself"
@@ -271,13 +305,16 @@ mod test {
         assert_eq!(*tree2.maximum().unwrap(), 0);
         tree2.insert(5);
         assert_eq!(*tree2.minimum().unwrap(), -5);
+		log::debug!("<<< Exiting test_maximum_and_minimum()");
         assert_eq!(*tree2.maximum().unwrap(), 5);
     }
 
     #[test]
     fn test_floor_and_ceil() {
+		log::debug!(">>> Entering test_floor_and_ceil()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.floor(&"hello there").unwrap(), "hello there");
+		log::debug!("test_floor_and_ceil(): tree → (unprintable)");
         assert_eq!(
             *tree
                 .floor(&"these are not the droids you're looking for")
@@ -315,13 +352,17 @@ mod test {
             *tree.ceil(&"you underestimate my power").unwrap(),
             "your move"
         );
+		log::debug!("<<< Exiting test_floor_and_ceil()");
         assert!(tree.ceil(&"your new empire").is_none());
     }
 
     #[test]
     fn test_iterator() {
+		log::debug!(">>> Entering test_iterator()");
         let tree = prequel_memes_tree();
         let mut iter = tree.iter();
+		log::debug!("test_iterator(): iter → (unprintable)");
+        log::debug!("test_iterator(): tree → (unprintable)");
         assert_eq!(
             iter.next().unwrap(),
             &"back away...I will deal with this jedi slime myself"
@@ -333,6 +374,7 @@ mod test {
         assert_eq!(iter.next().unwrap(), &"you fool");
         assert_eq!(iter.next().unwrap(), &"your move");
         assert_eq!(iter.next(), None);
+		log::debug!("<<< Exiting test_iterator()");
         assert_eq!(iter.next(), None);
     }
 }

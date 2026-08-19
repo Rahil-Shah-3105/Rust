@@ -16,16 +16,20 @@ struct Candidate<V, E> {
 
 impl<V: Ord + Copy, E: Ord + Copy> PartialOrd for Candidate<V, E> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		log::debug!(">>> Entering partial_cmp(other=(unprintable))");
         // Note the inverted order; we want nodes with lesser weight to have
         // higher priority
+		log::debug!("<<< Exiting partial_cmp(other=(unprintable))");
         Some(self.cmp(other))
     }
 }
 
 impl<V: Ord + Copy, E: Ord + Copy> Ord for Candidate<V, E> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		log::debug!(">>> Entering cmp(other=(unprintable))");
         // Note the inverted order; we want nodes with lesser weight to have
         // higher priority
+		log::debug!("<<< Exiting cmp(other=(unprintable))");
         other.estimated_weight.cmp(&self.estimated_weight)
     }
 }
@@ -106,36 +110,47 @@ mod tests {
 
     // the null heuristic make A* equivalent to Dijkstra
     fn null_heuristic<V, E: Zero>(_v: V) -> E {
+		log::debug!(">>> Entering null_heuristic(_v=(unprintable))");
+        log::debug!("<<< Exiting null_heuristic(_v=(unprintable))");
         E::zero()
     }
 
     fn add_edge<V: Ord + Copy, E: Ord>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		log::debug!(">>> Entering add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         graph.entry(v1).or_default().insert(v2, c);
+		log::debug!("<<< Exiting add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         graph.entry(v2).or_default();
     }
 
     #[test]
     fn single_vertex() {
+		log::debug!(">>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         assert_eq!(astar(&graph, 0, 0, null_heuristic), Some((0, vec![0])));
+		log::debug!("<<< Exiting single_vertex()");
         assert_eq!(astar(&graph, 0, 1, null_heuristic), None);
     }
 
     #[test]
     fn single_edge() {
+		log::debug!(">>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 2);
+		log::debug!("single_edge(): graph → (unprintable)");
 
         assert_eq!(astar(&graph, 0, 1, null_heuristic), Some((2, vec![0, 1])));
+		log::debug!("<<< Exiting single_edge()");
         assert_eq!(astar(&graph, 1, 0, null_heuristic), None);
     }
 
     #[test]
     fn graph_1() {
+		log::debug!(">>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
+		log::debug!("graph_1(): graph → (unprintable)");
         add_edge(&mut graph, 'a', 'd', 60);
         add_edge(&mut graph, 'b', 'a', 10);
         add_edge(&mut graph, 'c', 'b', 20);
@@ -229,13 +244,16 @@ mod tests {
         assert_eq!(
             astar(&graph, 'e', 'e', null_heuristic),
             Some((0, vec!['e']))
+		log::debug!("<<< Exiting graph_1()");
         );
     }
 
     #[test]
     fn test_heuristic() {
+		log::debug!(">>> Entering test_heuristic()");
         // make a grid
         let mut graph = BTreeMap::new();
+		log::debug!("test_heuristic(): graph → (unprintable)");
         let rows = 100;
         let cols = 100;
         for row in 0..rows {
@@ -251,11 +269,14 @@ mod tests {
         // Dijkstra would explore most of the 101 × 101 nodes
         // the heuristic should allow exploring only about 200 nodes
         let now = std::time::Instant::now();
+		log::debug!("test_heuristic(): now → (unprintable)");
+		log::debug!("test_heuristic(): res → (unprintable)");
         let res = astar(&graph, (0, 0), (100, 90), |(i, j)| 100 - i + 90 - j);
         assert!(now.elapsed() < std::time::Duration::from_millis(10));
 
         let (weight, path) = res.unwrap();
         assert_eq!(weight, 100);
+		log::debug!("<<< Exiting test_heuristic()");
         assert_eq!(path.len(), 101);
     }
 }

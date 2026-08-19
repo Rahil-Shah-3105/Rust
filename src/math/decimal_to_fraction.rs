@@ -1,4 +1,5 @@
 pub fn decimal_to_fraction(decimal: f64) -> (i64, i64) {
+	log::debug!(">>> Entering decimal_to_fraction(decimal={})", decimal);
     // Calculate the fractional part of the decimal number
     let fractional_part = decimal - decimal.floor();
 
@@ -8,6 +9,7 @@ pub fn decimal_to_fraction(decimal: f64) -> (i64, i64) {
     } else {
         // Calculate the number of decimal places in the fractional part
         let number_of_frac_digits = decimal.to_string().split('.').nth(1).unwrap_or("").len();
+		log::debug!("decimal_to_fraction(decimal={}): number_of_frac_digits → {}", decimal, number_of_frac_digits);
 
         // Calculate the numerator and denominator using integer multiplication
         let numerator = (decimal * 10f64.powi(number_of_frac_digits as i32)) as i64;
@@ -27,6 +29,7 @@ pub fn decimal_to_fraction(decimal: f64) -> (i64, i64) {
         let numerator = numerator / gcd;
         let denominator = denominator / gcd;
 
+		log::debug!("<<< Exiting decimal_to_fraction(decimal={})", decimal);
         (numerator, denominator)
     }
 }
@@ -37,31 +40,43 @@ mod tests {
 
     #[test]
     fn test_decimal_to_fraction_1() {
+		log::debug!(">>> Entering test_decimal_to_fraction_1()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_1()");
         assert_eq!(decimal_to_fraction(2.0), (2, 1));
     }
 
     #[test]
     fn test_decimal_to_fraction_2() {
+		log::debug!(">>> Entering test_decimal_to_fraction_2()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_2()");
         assert_eq!(decimal_to_fraction(89.45), (1789, 20));
     }
 
     #[test]
     fn test_decimal_to_fraction_3() {
+		log::debug!(">>> Entering test_decimal_to_fraction_3()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_3()");
         assert_eq!(decimal_to_fraction(67.), (67, 1));
     }
 
     #[test]
     fn test_decimal_to_fraction_4() {
+		log::debug!(">>> Entering test_decimal_to_fraction_4()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_4()");
         assert_eq!(decimal_to_fraction(45.2), (226, 5));
     }
 
     #[test]
     fn test_decimal_to_fraction_5() {
+		log::debug!(">>> Entering test_decimal_to_fraction_5()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_5()");
         assert_eq!(decimal_to_fraction(1.5), (3, 2));
     }
 
     #[test]
     fn test_decimal_to_fraction_6() {
+		log::debug!(">>> Entering test_decimal_to_fraction_6()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_6()");
         assert_eq!(decimal_to_fraction(6.25), (25, 4));
     }
 }

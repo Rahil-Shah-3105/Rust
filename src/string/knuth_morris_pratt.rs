@@ -16,6 +16,7 @@
 /// A vector of starting indices where the pattern is found in the string. If the pattern or the
 /// string is empty, an empty vector is returned.
 pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
+	log::debug!(">>> Entering knuth_morris_pratt(string={},pattern={})", string, pattern);
     if string.is_empty() || pattern.is_empty() {
         return vec![];
     }
@@ -23,6 +24,8 @@ pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
     let text_chars = string.chars().collect::<Vec<char>>();
     let pattern_chars = pattern.chars().collect::<Vec<char>>();
     let partial_match_table = build_partial_match_table(&pattern_chars);
+	log::debug!("knuth_morris_pratt(string={},pattern={}): partial_match_table → {:?}", string, pattern, partial_match_table);
+    log::debug!("<<< Exiting knuth_morris_pratt(string={},pattern={})", string, pattern);
     find_pattern(&text_chars, &pattern_chars, &partial_match_table)
 }
 
@@ -40,6 +43,7 @@ pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
 ///
 /// A vector representing the partial match table.
 fn build_partial_match_table(pattern_chars: &[char]) -> Vec<usize> {
+	log::debug!(">>> Entering build_partial_match_table(pattern_chars={:?})", pattern_chars);
     let mut partial_match_table = vec![0];
     pattern_chars
         .iter()
@@ -47,6 +51,7 @@ fn build_partial_match_table(pattern_chars: &[char]) -> Vec<usize> {
         .skip(1)
         .for_each(|(index, &char)| {
             let mut length = partial_match_table[index - 1];
+			log::debug!("build_partial_match_table(pattern_chars={:?}): length → (unprintable)", pattern_chars);
             while length > 0 && pattern_chars[length] != char {
                 length = partial_match_table[length - 1];
             }
@@ -55,6 +60,7 @@ fn build_partial_match_table(pattern_chars: &[char]) -> Vec<usize> {
             } else {
                 length
             });
+		log::debug!("<<< Exiting build_partial_match_table(pattern_chars={:?})", pattern_chars);
         });
     partial_match_table
 }
@@ -78,8 +84,11 @@ fn find_pattern(
     pattern_chars: &[char],
     partial_match_table: &[usize],
 ) -> Vec<usize> {
+	log::debug!(">>> Entering find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?})", text_chars, pattern_chars, partial_match_table);
     let mut result_indices = vec![];
     let mut match_length = 0;
+	log::debug!("find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?}): match_length → {}", text_chars, pattern_chars, partial_match_table, match_length);
+	log::debug!("find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?}): result_indices → (unprintable)", text_chars, pattern_chars, partial_match_table);
 
     text_chars
         .iter()
@@ -95,6 +104,7 @@ fn find_pattern(
                 result_indices.push(text_index + 1 - match_length);
                 match_length = partial_match_table[match_length - 1];
             }
+	log::debug!("<<< Exiting find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?})", text_chars, pattern_chars, partial_match_table);
         });
 
     result_indices

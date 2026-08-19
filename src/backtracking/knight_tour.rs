@@ -23,6 +23,7 @@ pub fn find_knight_tour(
     start_x: usize,
     start_y: usize,
 ) -> Option<Vec<Vec<usize>>> {
+	log::debug!(">>> Entering find_knight_tour(size_x={},size_y={},start_x={},start_y={})", size_x, size_y, start_x, start_y);
     let mut tour = KnightTour::new(size_x, size_y);
     tour.find_tour(start_x, start_y)
 }
@@ -55,17 +56,23 @@ impl KnightTour {
     ///
     /// A new KnightTour instance.
     fn new(size_x: usize, size_y: usize) -> Self {
+		log::debug!(">>> Entering new(size_x={},size_y={})", size_x, size_y);
         let board = vec![vec![0; size_x]; size_y];
+		log::debug!("<<< Exiting new(size_x={},size_y={})", size_x, size_y);
         KnightTour { board }
     }
 
     /// Returns the width of the chessboard.
     fn size_x(&self) -> usize {
+		log::debug!(">>> Entering size_x()");
+        log::debug!("<<< Exiting size_x()");
         self.board.len()
     }
 
     /// Returns the height of the chessboard.
     fn size_y(&self) -> usize {
+		log::debug!(">>> Entering size_y()");
+        log::debug!("<<< Exiting size_y()");
         self.board[0].len()
     }
 
@@ -80,6 +87,8 @@ impl KnightTour {
     ///
     /// A boolean indicating whether the position is safe to move to.
     fn is_safe(&self, x: isize, y: isize) -> bool {
+		log::debug!(">>> Entering is_safe(x={},y={})", x, y);
+        log::debug!("<<< Exiting is_safe(x={},y={})", x, y);
         x >= 0
             && y >= 0
             && x < self.size_x() as isize
@@ -99,6 +108,7 @@ impl KnightTour {
     ///
     /// A boolean indicating whether a solution was found.
     fn solve_tour(&mut self, x: isize, y: isize, move_count: usize) -> bool {
+		log::debug!(">>> Entering solve_tour(x={},y={},move_count={})", x, y, move_count);
         if move_count == self.size_x() * self.size_y() {
             return true;
         }
@@ -131,6 +141,7 @@ impl KnightTour {
     ///
     /// A tour matrix if the tour was found or None if not found.
     fn find_tour(&mut self, start_x: usize, start_y: usize) -> Option<Vec<Vec<usize>>> {
+		log::debug!(">>> Entering find_tour(start_x={},start_y={})", start_x, start_y);
         if !self.is_safe(start_x as isize, start_y as isize) {
             return None;
         }

@@ -4,6 +4,7 @@ use std::sync::RwLock;
 
 /// Returns the number of ways you can select r items given n options
 fn n_choose_r(n: u32, r: u32) -> BigUint {
+	log::debug!(">>> Entering n_choose_r(n={},r={})", n, r);
     if r == n || r == 0 {
         return One::one();
     }
@@ -29,10 +30,13 @@ struct MemTable {
 
 impl MemTable {
     const fn new() -> Self {
+		log::debug!(">>> Entering new()");
+        log::debug!("<<< Exiting new()");
         MemTable { buffer: Vec::new() }
     }
 
     fn get(&self, n: usize) -> Option<BigUint> {
+		log::debug!(">>> Entering get(n={})", n);
         if n == 0 || n == 1 {
             Some(BigUint::one())
         } else if let Some(entry) = self.buffer.get(n) {
@@ -42,23 +46,30 @@ impl MemTable {
                 Some(entry.clone())
             }
         } else {
+			log::debug!("<<< Exiting get(n={})", n);
             None
         }
     }
 
     fn set(&mut self, n: usize, b: BigUint) {
+		log::debug!(">>> Entering set(n={},b=(unprintable))", n);
+		log::debug!("<<< Exiting set(n={},b=(unprintable))", n);
         self.buffer[n] = b;
     }
 
     #[inline]
     fn capacity(&self) -> usize {
+		log::debug!(">>> Entering capacity()");
+        log::debug!("<<< Exiting capacity()");
         self.buffer.capacity()
     }
 
     #[inline]
     fn resize(&mut self, new_size: usize) {
+		log::debug!(">>> Entering resize(new_size={})", new_size);
         if new_size > self.buffer.len() {
             self.buffer.resize(new_size, Zero::zero());
+		log::debug!("<<< Exiting resize(new_size={})", new_size);
         }
     }
 }
@@ -67,11 +78,13 @@ impl MemTable {
 static LOOKUP_TABLE_LOCK: RwLock<MemTable> = RwLock::new(MemTable::new());
 
 pub fn bell_number(n: u32) -> BigUint {
+	log::debug!(">>> Entering bell_number(n={})", n);
     let needs_resize;
 
     // Check if number is already in lookup table
     {
         let lookup_table = LOOKUP_TABLE_LOCK.read().unwrap();
+		log::debug!("bell_number(n={}): lookup_table → (unprintable)", n);
 
         if let Some(entry) = lookup_table.get(n as usize) {
             return entry;
@@ -79,6 +92,7 @@ pub fn bell_number(n: u32) -> BigUint {
 
         needs_resize = (n + 1) as usize > lookup_table.capacity();
     }
+	log::debug!("bell_number(n={}): needs_resize → (unprintable)", n);
 
     // Resize table before recursion so that if more values need to be added during recursion the table isn't
     // reallocated every single time
@@ -97,6 +111,7 @@ pub fn bell_number(n: u32) -> BigUint {
         lookup_table.set(n as usize, new_bell_number.clone());
     }
 
+    log::debug!("<<< Exiting bell_number(n={})", n);
     new_bell_number
 }
 
@@ -107,41 +122,55 @@ pub mod tests {
 
     #[test]
     fn test_choose_zero() {
+		log::debug!(">>> Entering test_choose_zero()");
         for i in 1..100 {
             assert_eq!(n_choose_r(i, 0), One::one());
+		log::debug!("<<< Exiting test_choose_zero()");
         }
     }
 
     #[test]
     fn test_combination() {
+		log::debug!(">>> Entering test_combination()");
         let five_choose_1 = BigUint::from(5u32);
         assert_eq!(n_choose_r(5, 1), five_choose_1);
+		log::debug!("test_combination(): five_choose_1 → (unprintable)");
         assert_eq!(n_choose_r(5, 4), five_choose_1);
 
         let ten_choose_3 = BigUint::from(120u32);
+		log::debug!("test_combination(): ten_choose_3 → (unprintable)");
         assert_eq!(n_choose_r(10, 3), ten_choose_3);
         assert_eq!(n_choose_r(10, 7), ten_choose_3);
 
         let fourty_two_choose_thirty = BigUint::from_str("11058116888").unwrap();
+		log::debug!("test_combination(): fourty_two_choose_thirty → (unprintable)");
         assert_eq!(n_choose_r(42, 30), fourty_two_choose_thirty);
+		log::debug!("<<< Exiting test_combination()");
         assert_eq!(n_choose_r(42, 12), fourty_two_choose_thirty);
     }
 
     #[test]
     fn test_bell_numbers() {
+		log::debug!(">>> Entering test_bell_numbers()");
         let bell_one = BigUint::from(1u32);
         assert_eq!(bell_number(1), bell_one);
+		log::debug!("test_bell_numbers(): bell_one → (unprintable)");
 
         let bell_three = BigUint::from(5u32);
+		log::debug!("test_bell_numbers(): bell_three → (unprintable)");
         assert_eq!(bell_number(3), bell_three);
 
         let bell_eight = BigUint::from(4140u32);
+		log::debug!("test_bell_numbers(): bell_eight → (unprintable)");
         assert_eq!(bell_number(8), bell_eight);
 
         let bell_six = BigUint::from(203u32);
+		log::debug!("test_bell_numbers(): bell_six → (unprintable)");
         assert_eq!(bell_number(6), bell_six);
 
         let bell_twenty_six = BigUint::from_str("49631246523618756274").unwrap();
+		log::debug!("test_bell_numbers(): bell_twenty_six → (unprintable)");
+		log::debug!("<<< Exiting test_bell_numbers()");
         assert_eq!(bell_number(26), bell_twenty_six);
     }
 }

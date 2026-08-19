@@ -5,8 +5,10 @@
 ///
 /// Inspired by [this LeetCode problem](https://leetcode.com/problems/longest-increasing-subsequence/).
 pub fn longest_increasing_subsequence<T: Ord + Clone>(input_array: &[T]) -> Vec<T> {
+	log::debug!(">>> Entering longest_increasing_subsequence(input_array=(unprintable))");
     let n = input_array.len();
     if n <= 1 {
+		log::debug!("longest_increasing_subsequence(input_array=(unprintable)): n → {}", n);
         return input_array.to_vec();
     }
 
@@ -16,6 +18,7 @@ pub fn longest_increasing_subsequence<T: Ord + Clone>(input_array: &[T]) -> Vec<
     increasing_sequence.push((input_array[0].clone(), 1));
     for i in 1..n {
         let value = input_array[i].clone();
+		log::debug!("longest_increasing_subsequence(input_array=(unprintable)): value → (unprintable)");
         if value > increasing_sequence.last().unwrap().0 {
             previous[i] = increasing_sequence.last().unwrap().1 - 1;
             increasing_sequence.push((value, i + 1));
@@ -37,11 +40,13 @@ pub fn longest_increasing_subsequence<T: Ord + Clone>(input_array: &[T]) -> Vec<
 
     out.push(increasing_sequence.last().unwrap().0.clone());
     let mut current_index = increasing_sequence.last().unwrap().1 - 1;
+	log::debug!("longest_increasing_subsequence(input_array=(unprintable)): current_index → (unprintable)");
     while previous[current_index] != current_index {
         current_index = previous[current_index];
         out.push(input_array[current_index].clone());
     }
 
+    log::debug!("<<< Exiting longest_increasing_subsequence(input_array=(unprintable))");
     out.into_iter().rev().collect()
 }
 
@@ -52,35 +57,44 @@ mod tests {
     #[test]
     /// Need to specify generic type T in order to function
     fn test_empty_vec() {
+		log::debug!(">>> Entering test_empty_vec()");
+		log::debug!("<<< Exiting test_empty_vec()");
         assert_eq!(longest_increasing_subsequence::<i32>(&[]), vec![]);
     }
 
     #[test]
     fn test_example_1() {
+		log::debug!(">>> Entering test_example_1()");
         assert_eq!(
             longest_increasing_subsequence(&[10, 9, 2, 5, 3, 7, 101, 18]),
             vec![2, 3, 7, 18]
+		log::debug!("<<< Exiting test_example_1()");
         );
     }
 
     #[test]
     fn test_example_2() {
+		log::debug!(">>> Entering test_example_2()");
         assert_eq!(
             longest_increasing_subsequence(&[0, 1, 0, 3, 2, 3]),
             vec![0, 1, 2, 3]
+		log::debug!("<<< Exiting test_example_2()");
         );
     }
 
     #[test]
     fn test_example_3() {
+		log::debug!(">>> Entering test_example_3()");
         assert_eq!(
             longest_increasing_subsequence(&[7, 7, 7, 7, 7, 7, 7]),
             vec![7]
+		log::debug!("<<< Exiting test_example_3()");
         );
     }
 
     #[test]
     fn test_tle() {
+		log::debug!(">>> Entering test_tle()");
         let mut input_array = vec![0i64; 1e5 as usize];
         let mut expected_result: Vec<i64> = Vec::with_capacity(5e4 as usize);
         for (idx, num) in input_array.iter_mut().enumerate() {
@@ -99,11 +113,14 @@ mod tests {
             expected_result
         );
         // should be [-1, 2, 4, 6, 8, ...]
+		log::debug!("<<< Exiting test_tle()");
         // the first number is not 0, it would be replaced by -1 before 2 is added
     }
 
     #[test]
     fn test_negative_elements() {
+		log::debug!(">>> Entering test_negative_elements()");
+		log::debug!("<<< Exiting test_negative_elements()");
         assert_eq!(longest_increasing_subsequence(&[-2, -1]), vec![-2, -1]);
     }
 }

@@ -71,32 +71,42 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn add_edge<V: Ord + Copy, E: Ord + Copy>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		log::debug!(">>> Entering add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
+		log::debug!("<<< Exiting add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         graph.entry(v1).or_default().insert(v2, c);
     }
 
     fn bi_add_edge<V: Ord + Copy, E: Ord + Copy>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		log::debug!(">>> Entering bi_add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         add_edge(graph, v1, v2, c);
+		log::debug!("<<< Exiting bi_add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         add_edge(graph, v2, v1, c);
     }
 
     #[test]
     fn single_vertex() {
+		log::debug!(">>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         let mut dists = BTreeMap::new();
+		log::debug!("single_vertex(): dists → (unprintable)");
         dists.insert(0, BTreeMap::new());
         dists.get_mut(&0).unwrap().insert(0, 0);
+		log::debug!("<<< Exiting single_vertex()");
         assert_eq!(floyd_warshall(&graph), dists);
     }
 
     #[test]
     fn single_edge() {
+		log::debug!(">>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         bi_add_edge(&mut graph, 0, 1, 2);
+		log::debug!("single_edge(): graph → (unprintable)");
         bi_add_edge(&mut graph, 1, 2, 3);
 
         let mut dists_0 = BTreeMap::new();
+		log::debug!("single_edge(): dists_0 → (unprintable)");
         dists_0.insert(0, BTreeMap::new());
         dists_0.insert(1, BTreeMap::new());
         dists_0.insert(2, BTreeMap::new());
@@ -110,13 +120,16 @@ mod tests {
         dists_0.get_mut(&2).unwrap().insert(0, 5);
         dists_0.get_mut(&0).unwrap().insert(2, 5);
 
+		log::debug!("<<< Exiting single_edge()");
         assert_eq!(floyd_warshall(&graph), dists_0);
     }
 
     #[test]
     fn graph_1() {
+		log::debug!(">>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
+		log::debug!("graph_1(): graph → (unprintable)");
         add_edge(&mut graph, 'a', 'd', 60);
         add_edge(&mut graph, 'b', 'a', 10);
         add_edge(&mut graph, 'c', 'b', 20);
@@ -124,6 +137,7 @@ mod tests {
         add_edge(&mut graph, 'e', 'a', 7);
 
         let mut dists_a = BTreeMap::new();
+		log::debug!("graph_1(): dists_a → (unprintable)");
         dists_a.insert('d', BTreeMap::new());
 
         dists_a.entry('a').or_insert(BTreeMap::new()).insert('a', 0);
@@ -186,6 +200,7 @@ mod tests {
             .or_insert(BTreeMap::new())
             .insert('b', 39);
 
+		log::debug!("<<< Exiting graph_1()");
         assert_eq!(floyd_warshall(&graph), dists_a);
     }
 }

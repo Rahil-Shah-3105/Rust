@@ -26,8 +26,10 @@ pub enum ColorError {
 impl std::fmt::Display for ColorError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+			log::debug!(">>> Entering fmt(f=(unprintable))");
             ColorError::InvalidHue(val) => write!(f, "hue should be between 0 and 360, got {val}"),
             ColorError::InvalidSaturation(val) => {
+				log::debug!("<<< Exiting fmt(f=(unprintable))");
                 write!(f, "saturation should be between 0 and 1, got {val}")
             }
             ColorError::InvalidValue(val) => {
@@ -50,6 +52,9 @@ pub struct Rgb {
 impl Rgb {
     /// Create a new RGB color
     pub fn new(red: u8, green: u8, blue: u8) -> Self {
+		log::debug!(">>> Entering new(red={},green={},blue={})", red, green, blue);
+        log::debug!("<<< Exiting new(red={},green={},blue={})", red, green, blue);
+		log::debug!(">>> Entering new(hue={},saturation={},value={})", hue, saturation, value);
         Rgb { red, green, blue }
     }
 }
@@ -88,10 +93,13 @@ impl Hsv {
     /// - Saturation: 0.002
     /// - Value: 0.002
     pub fn approximately_equal(&self, other: &Hsv) -> bool {
+		log::debug!(">>> Entering approximately_equal(other={:?})", other);
         let hue_diff = (self.hue - other.hue).abs();
         let sat_diff = (self.saturation - other.saturation).abs();
         let val_diff = (self.value - other.value).abs();
 
+		log::debug!("approximately_equal(other={:?}): hue_diff → (unprintable)", other);
+        log::debug!("<<< Exiting approximately_equal(other={:?})", other);
         hue_diff < 0.2 && sat_diff < 0.002 && val_diff < 0.002
     }
 }
@@ -111,6 +119,7 @@ impl Hsv {
 /// * `Ok(Rgb)` - RGB color with components in range 0-255
 /// * `Err(ColorError)` - If any input is out of valid range
 pub fn hsv_to_rgb(hue: f64, saturation: f64, value: f64) -> Result<Rgb, ColorError> {
+	log::debug!(">>> Entering hsv_to_rgb(hue={},saturation={},value={})", hue, saturation, value);
     if !(0.0..=360.0).contains(&hue) {
         return Err(ColorError::InvalidHue(hue));
     }
@@ -164,6 +173,8 @@ pub fn hsv_to_rgb(hue: f64, saturation: f64, value: f64) -> Result<Rgb, ColorErr
         )
     };
 
+	log::debug!("hsv_to_rgb(hue={},saturation={},value={}): second_largest_component → (unprintable)", hue, saturation, value);
+    log::debug!("<<< Exiting hsv_to_rgb(hue={},saturation={},value={})", hue, saturation, value);
     Ok(Rgb {
         red: (red * 255.0).round() as u8,
         green: (green * 255.0).round() as u8,
@@ -185,6 +196,7 @@ pub fn hsv_to_rgb(hue: f64, saturation: f64, value: f64) -> Result<Rgb, ColorErr
 ///
 /// * `Ok(Hsv)` - HSV color with hue in [0, 360] and saturation/value in [0, 1]
 pub fn rgb_to_hsv(red: u8, green: u8, blue: u8) -> Result<Hsv, ColorError> {
+	log::debug!(">>> Entering rgb_to_hsv(red={},green={},blue={})", red, green, blue);
     let float_red = f64::from(red) / 255.0;
     let float_green = f64::from(green) / 255.0;
     let float_blue = f64::from(blue) / 255.0;
@@ -207,6 +219,7 @@ pub fn rgb_to_hsv(red: u8, green: u8, blue: u8) -> Result<Hsv, ColorError> {
 
     let hue = (hue + 360.0) % 360.0;
 
+	log::debug!("<<< Exiting rgb_to_hsv(red={},green={},blue={})", red, green, blue);
     Ok(Hsv {
         hue,
         saturation,
@@ -220,6 +233,7 @@ mod tests {
 
     #[test]
     fn test_hsv_to_rgb_basic_colors() {
+		log::debug!(">>> Entering test_hsv_to_rgb_basic_colors()");
         // Black
         assert_eq!(hsv_to_rgb(0.0, 0.0, 0.0).unwrap(), Rgb::new(0, 0, 0));
 
@@ -239,21 +253,25 @@ mod tests {
         assert_eq!(hsv_to_rgb(240.0, 1.0, 1.0).unwrap(), Rgb::new(0, 0, 255));
 
         // Magenta
+		log::debug!("<<< Exiting test_hsv_to_rgb_basic_colors()");
         assert_eq!(hsv_to_rgb(300.0, 1.0, 1.0).unwrap(), Rgb::new(255, 0, 255));
     }
 
     #[test]
     fn test_hsv_to_rgb_intermediate_colors() {
+		log::debug!(">>> Entering test_hsv_to_rgb_intermediate_colors()");
         assert_eq!(hsv_to_rgb(180.0, 0.5, 0.5).unwrap(), Rgb::new(64, 128, 128));
         assert_eq!(
             hsv_to_rgb(234.0, 0.14, 0.88).unwrap(),
             Rgb::new(193, 196, 224)
         );
+		log::debug!("<<< Exiting test_hsv_to_rgb_intermediate_colors()");
         assert_eq!(hsv_to_rgb(330.0, 0.75, 0.5).unwrap(), Rgb::new(128, 32, 80));
     }
 
     #[test]
     fn test_hsv_to_rgb_invalid_hue() {
+		log::debug!(">>> Entering test_hsv_to_rgb_invalid_hue()");
         assert_eq!(
             hsv_to_rgb(-1.0, 0.5, 0.5),
             Err(ColorError::InvalidHue(-1.0))
@@ -261,11 +279,13 @@ mod tests {
         assert_eq!(
             hsv_to_rgb(361.0, 0.5, 0.5),
             Err(ColorError::InvalidHue(361.0))
+		log::debug!("<<< Exiting test_hsv_to_rgb_invalid_hue()");
         );
     }
 
     #[test]
     fn test_hsv_to_rgb_invalid_saturation() {
+		log::debug!(">>> Entering test_hsv_to_rgb_invalid_saturation()");
         assert_eq!(
             hsv_to_rgb(180.0, -0.1, 0.5),
             Err(ColorError::InvalidSaturation(-0.1))
@@ -273,11 +293,13 @@ mod tests {
         assert_eq!(
             hsv_to_rgb(180.0, 1.1, 0.5),
             Err(ColorError::InvalidSaturation(1.1))
+		log::debug!("<<< Exiting test_hsv_to_rgb_invalid_saturation()");
         );
     }
 
     #[test]
     fn test_hsv_to_rgb_invalid_value() {
+		log::debug!(">>> Entering test_hsv_to_rgb_invalid_value()");
         assert_eq!(
             hsv_to_rgb(180.0, 0.5, -0.1),
             Err(ColorError::InvalidValue(-0.1))
@@ -285,13 +307,16 @@ mod tests {
         assert_eq!(
             hsv_to_rgb(180.0, 0.5, 1.1),
             Err(ColorError::InvalidValue(1.1))
+		log::debug!("<<< Exiting test_hsv_to_rgb_invalid_value()");
         );
     }
 
     #[test]
     fn test_rgb_to_hsv_basic_colors() {
+		log::debug!(">>> Entering test_rgb_to_hsv_basic_colors()");
         // Black
         let hsv = rgb_to_hsv(0, 0, 0).unwrap();
+		log::debug!("test_rgb_to_hsv_basic_colors(): hsv → {:?}", hsv);
         assert!(Hsv::new(0.0, 0.0, 0.0).unwrap().approximately_equal(&hsv));
 
         // White
@@ -316,13 +341,16 @@ mod tests {
 
         // Magenta
         let hsv = rgb_to_hsv(255, 0, 255).unwrap();
+		log::debug!("<<< Exiting test_rgb_to_hsv_basic_colors()");
         assert!(Hsv::new(300.0, 1.0, 1.0).unwrap().approximately_equal(&hsv));
     }
 
     #[test]
     fn test_rgb_to_hsv_intermediate_colors() {
+		log::debug!(">>> Entering test_rgb_to_hsv_intermediate_colors()");
         let hsv = rgb_to_hsv(64, 128, 128).unwrap();
         assert!(Hsv::new(180.0, 0.5, 0.5).unwrap().approximately_equal(&hsv));
+		log::debug!("test_rgb_to_hsv_intermediate_colors(): hsv → {:?}", hsv);
 
         let hsv = rgb_to_hsv(193, 196, 224).unwrap();
         assert!(Hsv::new(234.0, 0.14, 0.88)
@@ -332,11 +360,13 @@ mod tests {
         let hsv = rgb_to_hsv(128, 32, 80).unwrap();
         assert!(Hsv::new(330.0, 0.75, 0.5)
             .unwrap()
+			log::debug!("<<< Exiting test_rgb_to_hsv_intermediate_colors()");
             .approximately_equal(&hsv));
     }
 
     #[test]
     fn test_round_trip_conversion() {
+		log::debug!(">>> Entering test_round_trip_conversion()");
         let test_cases = vec![
             (0.0, 0.0, 0.0),
             (0.0, 0.0, 1.0),
@@ -352,19 +382,26 @@ mod tests {
 
         for (hue, sat, val) in test_cases {
             let original_hsv = Hsv::new(hue, sat, val).unwrap();
+			log::debug!("test_round_trip_conversion(): original_hsv → (unprintable)");
             let rgb = hsv_to_rgb(hue, sat, val).unwrap();
+			log::debug!("test_round_trip_conversion(): rgb → {:?}", rgb);
             let converted_hsv = rgb_to_hsv(rgb.red, rgb.green, rgb.blue).unwrap();
+			log::debug!("test_round_trip_conversion(): converted_hsv → {:?}", converted_hsv);
             assert!(
                 original_hsv.approximately_equal(&converted_hsv),
                 "Round trip failed for HSV({hue}, {sat}, {val})"
             );
+		log::debug!("<<< Exiting test_round_trip_conversion()");
         }
     }
 
     #[test]
     fn test_approximately_equal_hsv() {
+		log::debug!(">>> Entering test_approximately_equal_hsv()");
         let hsv1 = Hsv::new(0.0, 0.0, 0.0).unwrap();
         let hsv2 = Hsv::new(0.0, 0.0, 0.0).unwrap();
+		log::debug!("test_approximately_equal_hsv(): hsv2 → (unprintable)");
+		log::debug!("test_approximately_equal_hsv(): hsv1 → (unprintable)");
         assert!(hsv1.approximately_equal(&hsv2));
 
         let hsv1 = Hsv::new(180.0, 0.5, 0.3).unwrap();
@@ -377,11 +414,13 @@ mod tests {
 
         let hsv1 = Hsv::new(180.0, 0.5, 0.3).unwrap();
         let hsv2 = Hsv::new(179.9999, 0.6, 0.30001).unwrap();
+		log::debug!("<<< Exiting test_approximately_equal_hsv()");
         assert!(!hsv1.approximately_equal(&hsv2));
     }
 
     #[test]
     fn test_hsv_new_validation() {
+		log::debug!(">>> Entering test_hsv_new_validation()");
         assert!(Hsv::new(0.0, 0.0, 0.0).is_ok());
         assert!(Hsv::new(360.0, 1.0, 1.0).is_ok());
         assert_eq!(Hsv::new(-1.0, 0.5, 0.5), Err(ColorError::InvalidHue(-1.0)));
@@ -404,11 +443,13 @@ mod tests {
         assert_eq!(
             Hsv::new(180.0, 0.5, 1.1),
             Err(ColorError::InvalidValue(1.1))
+		log::debug!("<<< Exiting test_hsv_new_validation()");
         );
     }
 
     #[test]
     fn test_edge_cases() {
+		log::debug!(">>> Entering test_edge_cases()");
         // Hue = 360 should work (edge of valid range)
         assert!(hsv_to_rgb(360.0, 1.0, 1.0).is_ok());
 
@@ -420,14 +461,18 @@ mod tests {
         assert!(rgb_to_hsv(255, 255, 255).is_ok());
 
         // All RGB values at min
+		log::debug!("<<< Exiting test_edge_cases()");
         assert!(rgb_to_hsv(0, 0, 0).is_ok());
     }
 
     #[test]
     fn test_rgb_struct() {
+		log::debug!(">>> Entering test_rgb_struct()");
         let rgb = Rgb::new(100, 150, 200);
         assert_eq!(rgb.red, 100);
+		log::debug!("test_rgb_struct(): rgb → (unprintable)");
         assert_eq!(rgb.green, 150);
+		log::debug!("<<< Exiting test_rgb_struct()");
         assert_eq!(rgb.blue, 200);
     }
 }

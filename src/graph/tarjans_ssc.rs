@@ -5,6 +5,8 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(n: usize) -> Self {
+		log::debug!(">>> Entering new(n={})", n);
+        log::debug!("<<< Exiting new(n={})", n);
         Self {
             n,
             adj_list: vec![vec![]; n],
@@ -12,10 +14,13 @@ impl Graph {
     }
 
     pub fn add_edge(&mut self, u: usize, v: usize) {
+		log::debug!(">>> Entering add_edge(u={},v={})", u, v);
+		log::debug!("<<< Exiting add_edge(u={},v={})", u, v);
         self.adj_list[u].push(v);
     }
 }
 pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
+	log::debug!(">>> Entering tarjan_scc(graph=(unprintable))");
     struct TarjanState {
         index: i32,
         stack: Vec<usize>,
@@ -33,8 +38,10 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
         lowlink_of: vec![-1; graph.n],
         components: Vec::new(),
     };
+	log::debug!("<<< Exiting tarjan_scc(graph=(unprintable))");
 
     fn strong_connect(v: usize, graph: &Graph, state: &mut TarjanState) {
+		log::debug!(">>> Entering strong_connect(v={},graph=(unprintable),state=(unprintable))", v);
         state.index_of[v] = state.index;
         state.lowlink_of[v] = state.index;
         state.index += 1;
@@ -60,6 +67,7 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
                 }
             }
             state.components.push(component);
+		log::debug!("<<< Exiting strong_connect(v={},graph=(unprintable),state=(unprintable))", v);
         }
     }
 
@@ -78,6 +86,7 @@ mod tests {
 
     #[test]
     fn test_tarjan_scc() {
+		log::debug!(">>> Entering test_tarjan_scc()");
         // Test 1: A graph with multiple strongly connected components
         let n_vertices = 11;
         let edges = vec![
@@ -100,12 +109,14 @@ mod tests {
             (9, 8),
         ];
         let mut graph = Graph::new(n_vertices);
+		log::debug!("test_tarjan_scc(): graph → (unprintable)");
 
         for &(u, v) in &edges {
             graph.add_edge(u, v);
         }
 
         let components = tarjan_scc(&graph);
+		log::debug!("test_tarjan_scc(): components → {:?}", components);
         assert_eq!(
             components,
             vec![
@@ -168,6 +179,7 @@ mod tests {
         assert_eq!(
             components,
             vec![vec![5], vec![3], vec![4], vec![6], vec![2, 1, 0],]
+		log::debug!("<<< Exiting test_tarjan_scc()");
         );
     }
 }

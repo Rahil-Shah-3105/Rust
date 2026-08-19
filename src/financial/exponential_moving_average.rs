@@ -37,6 +37,8 @@ pub fn exponential_moving_average(
     window_size: usize,
 ) -> Result<impl Iterator<Item = f64>, &'static str> {
     if window_size == 0 {
+		log::debug!(">>> Entering exponential_moving_average(stock_prices=(unprintable),window_size={})", window_size);
+		log::debug!("<<< Exiting exponential_moving_average(stock_prices=(unprintable),window_size={})", window_size);
         return Err("window_size must be > 0");
     }
 
@@ -67,11 +69,14 @@ mod tests {
     use super::*;
 
     fn approx_eq(a: f64, b: f64) -> bool {
+		log::debug!(">>> Entering approx_eq(a={},b={})", a, b);
+        log::debug!("<<< Exiting approx_eq(a={},b={})", a, b);
         (a - b).abs() < 1e-9
     }
 
     #[test]
     fn test_basic_ema() {
+		log::debug!(">>> Entering test_basic_ema()");
         let prices = vec![2.0, 5.0, 3.0, 8.2, 6.0, 9.0, 10.0];
         let expected = [2.0, 3.5, 3.25, 5.725, 5.8625, 7.43125, 8.715625];
         let result: Vec<f64> = exponential_moving_average(prices.into_iter(), 3)
@@ -81,11 +86,13 @@ mod tests {
         assert_eq!(result.len(), expected.len());
         for (r, e) in result.iter().zip(expected.iter()) {
             assert!(approx_eq(*r, *e), "Expected {e}, got {r}");
+		log::debug!("<<< Exiting test_basic_ema()");
         }
     }
 
     #[test]
     fn test_window_size_one() {
+		log::debug!(">>> Entering test_window_size_one()");
         // With window_size=1, alpha=1.0, so EMA should equal each price after the first
         let prices = vec![1.0, 2.0, 3.0];
         let result: Vec<f64> = exponential_moving_average(prices.into_iter(), 1)
@@ -94,30 +101,37 @@ mod tests {
         // i=0: price (window boundary), i=1: SMA=(1+2)*0.5=1.5, i=2: alpha=1.0 => 3.0
         assert!(approx_eq(result[0], 1.0));
         assert!(approx_eq(result[1], 1.5));
+		log::debug!("<<< Exiting test_window_size_one()");
         assert!(approx_eq(result[2], 3.0));
     }
 
     #[test]
     fn test_single_price() {
+		log::debug!(">>> Entering test_single_price()");
         let prices = vec![42.0];
         let result: Vec<f64> = exponential_moving_average(prices.into_iter(), 3)
             .unwrap()
             .collect();
+		log::debug!("<<< Exiting test_single_price()");
         assert_eq!(result, vec![42.0]);
     }
 
     #[test]
     fn test_empty_prices() {
+		log::debug!(">>> Entering test_empty_prices()");
         let prices: Vec<f64> = vec![];
         assert!(exponential_moving_average(prices.into_iter(), 3)
             .unwrap()
             .next()
+			log::debug!("<<< Exiting test_empty_prices()");
             .is_none());
     }
 
     #[test]
     fn test_zero_window_size_returns_error() {
+		log::debug!(">>> Entering test_zero_window_size_returns_error()");
         let prices = vec![1.0, 2.0, 3.0];
+		log::debug!("<<< Exiting test_zero_window_size_returns_error()");
         assert!(exponential_moving_average(prices.into_iter(), 0).is_err());
     }
 }

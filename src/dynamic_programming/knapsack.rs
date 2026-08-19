@@ -43,17 +43,21 @@ pub struct KnapsackSolution {
 ///
 /// where `num_items` is the number of items and `capacity` is the knapsack capacity.
 pub fn knapsack(capacity: usize, items: Vec<Item>) -> KnapsackSolution {
+	log::debug!(">>> Entering knapsack(capacity={},items={:?})", capacity, items);
     let num_items = items.len();
     let item_weights: Vec<usize> = items.iter().map(|item| item.weight).collect();
+	log::debug!("knapsack(capacity={},items={:?}): num_items → {}", capacity, items, num_items);
     let item_values: Vec<usize> = items.iter().map(|item| item.value).collect();
 
     let knapsack_matrix = generate_knapsack_matrix(capacity, &item_weights, &item_values);
+	log::debug!("knapsack(capacity={},items={:?}): knapsack_matrix → {:?}", capacity, items, knapsack_matrix);
     let items_included =
         retrieve_knapsack_items(&item_weights, &knapsack_matrix, num_items, capacity);
 
     let total_weight = items_included
         .iter()
         .map(|&index| item_weights[index - 1])
+	log::debug!("<<< Exiting knapsack(capacity={},items={:?})", capacity, items);
         .sum();
 
     KnapsackSolution {
@@ -74,8 +78,11 @@ fn generate_knapsack_matrix(
     item_weights: &[usize],
     item_values: &[usize],
 ) -> Vec<Vec<usize>> {
+	log::debug!(">>> Entering generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?})", capacity, item_weights, item_values);
     let num_items = item_weights.len();
 
+	log::debug!("generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?}): num_items → {}", capacity, item_weights, item_values, num_items);
+    log::debug!("<<< Exiting generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?})", capacity, item_weights, item_values);
     (0..=num_items).fold(
         vec![vec![0; capacity + 1]; num_items + 1],
         |mut matrix, item_index| {
@@ -114,6 +121,7 @@ fn retrieve_knapsack_items(
     item_index: usize,
     remaining_capacity: usize,
 ) -> Vec<usize> {
+	log::debug!(">>> Entering retrieve_knapsack_items(item_weights={:?},knapsack_matrix={:?},item_index={},remaining_capacity={})", item_weights, knapsack_matrix, item_index, remaining_capacity);
     match item_index {
         0 => vec![],
         _ => {
@@ -137,6 +145,7 @@ fn retrieve_knapsack_items(
                     item_index - 1,
                     remaining_capacity,
                 ),
+			log::debug!("<<< Exiting retrieve_knapsack_items(item_weights={:?},knapsack_matrix={:?},item_index={},remaining_capacity={})", item_weights, knapsack_matrix, item_index, remaining_capacity);
             }
         }
     }

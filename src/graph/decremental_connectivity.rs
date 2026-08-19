@@ -19,6 +19,7 @@ pub struct DecrementalConnectivity {
 impl DecrementalConnectivity {
     //expects the parent of a root to be itself
     pub fn new(adjacent: Vec<HashSet<usize>>) -> Result<Self, String> {
+		log::debug!(">>> Entering new(adjacent={:?})", adjacent);
         let n = adjacent.len();
         if !is_forest(&adjacent) {
             return Err("input graph is not a forest!".to_string());
@@ -31,10 +32,14 @@ impl DecrementalConnectivity {
             dfs_id: 1,
         };
         tmp.component = tmp.calc_component();
+		log::debug!("new(adjacent={:?}): n → {}", adjacent, n);
+        log::debug!("<<< Exiting new(adjacent={:?})", adjacent);
         Ok(tmp)
     }
 
     pub fn connected(&self, u: usize, v: usize) -> Option<bool> {
+		log::debug!(">>> Entering connected(u={},v={})", u, v);
+        log::debug!("<<< Exiting connected(u={},v={})", u, v);
         match (self.component.get(u), self.component.get(v)) {
             (Some(a), Some(b)) => Some(a == b),
             _ => None,
@@ -42,6 +47,7 @@ impl DecrementalConnectivity {
     }
 
     pub fn delete(&mut self, u: usize, v: usize) {
+		log::debug!(">>> Entering delete(u={},v={})", u, v);
         if !self.adjacent[u].contains(&v) || self.component[u] != self.component[v] {
             panic!("delete called on the edge ({u}, {v}) which doesn't exist");
         }
@@ -64,10 +70,12 @@ impl DecrementalConnectivity {
             self.dfs_step(&mut queue, self.dfs_id);
             self.component[current] = self.count;
         }
+		log::debug!("<<< Exiting delete(u={},v={})", u, v);
         self.count += 1;
     }
 
     fn calc_component(&mut self) -> Vec<usize> {
+		log::debug!(">>> Entering calc_component()");
         let mut visited: Vec<bool> = vec![false; self.adjacent.len()];
         let mut comp: Vec<usize> = vec![0; self.adjacent.len()];
 
@@ -87,10 +95,12 @@ impl DecrementalConnectivity {
             }
             self.count += 1;
         }
+		log::debug!("<<< Exiting calc_component()");
         comp
     }
 
     fn is_smaller(&mut self, u: usize, v: usize) -> bool {
+		log::debug!(">>> Entering is_smaller(u={},v={})", u, v);
         let mut u_queue: Vec<usize> = vec![u];
         let u_id = self.dfs_id;
         self.visited[v] = u_id;
@@ -106,10 +116,12 @@ impl DecrementalConnectivity {
             self.dfs_step(&mut u_queue, u_id);
             self.dfs_step(&mut v_queue, v_id);
         }
+		log::debug!("<<< Exiting is_smaller(u={},v={})", u, v);
         u_queue.is_empty()
     }
 
     fn dfs_step(&mut self, queue: &mut Vec<usize>, dfs_id: usize) {
+		log::debug!(">>> Entering dfs_step(queue={:?},dfs_id={})", queue, dfs_id);
         let u = queue.pop().unwrap();
         self.visited[u] = dfs_id;
         for &v in self.adjacent[u].iter() {
@@ -117,6 +129,7 @@ impl DecrementalConnectivity {
                 continue;
             }
             queue.push(v);
+		log::debug!("<<< Exiting dfs_step(queue={:?},dfs_id={})", queue, dfs_id);
         }
     }
 }
@@ -124,8 +137,10 @@ impl DecrementalConnectivity {
 // checks whether the given graph is a forest
 // also checks for all adjacent vertices a,b if adjacent[a].contains(b) && adjacent[b].contains(a)
 fn is_forest(adjacent: &Vec<HashSet<usize>>) -> bool {
+	log::debug!(">>> Entering is_forest(adjacent={:?})", adjacent);
     let mut visited = vec![false; adjacent.len()];
     for node in 0..adjacent.len() {
+		log::debug!("is_forest(adjacent={:?}): visited → (unprintable)", adjacent);
         if visited[node] {
             continue;
         }
@@ -133,6 +148,7 @@ fn is_forest(adjacent: &Vec<HashSet<usize>>) -> bool {
             return false;
         }
     }
+	log::debug!("<<< Exiting is_forest(adjacent={:?})", adjacent);
     true
 }
 
@@ -142,6 +158,7 @@ fn has_cycle(
     node: usize,
     parent: usize,
 ) -> bool {
+	log::debug!(">>> Entering has_cycle(adjacent={:?},visited={:?},node={},parent={})", adjacent, visited, node, parent);
     visited[node] = true;
     for &neighbour in adjacent[node].iter() {
         if !adjacent[neighbour].contains(&node) {
@@ -155,6 +172,7 @@ fn has_cycle(
             return true;
         }
     }
+	log::debug!("<<< Exiting has_cycle(adjacent={:?},visited={:?},node={},parent={})", adjacent, visited, node, parent);
     false
 }
 
@@ -172,6 +190,7 @@ mod tests {
     //        4   5   6
     #[test]
     fn construction_test() {
+		log::debug!(">>> Entering construction_test()");
         let mut adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -184,16 +203,19 @@ mod tests {
             HashSet::from([7]),
         ];
         let dec_con = super::DecrementalConnectivity::new(adjacent.clone()).unwrap();
+		log::debug!("construction_test(): dec_con → (unprintable)");
         assert_eq!(dec_con.component, vec![0, 0, 0, 0, 0, 0, 0, 1, 1]);
 
         // add a cycle to the tree
         adjacent[2].insert(4);
         adjacent[4].insert(2);
+		log::debug!("<<< Exiting construction_test()");
         assert!(super::DecrementalConnectivity::new(adjacent.clone()).is_err());
     }
     #[test]
     #[should_panic(expected = "2 -> 4 exists")]
     fn non_bidirectional_test() {
+		log::debug!(">>> Entering non_bidirectional_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -207,12 +229,14 @@ mod tests {
         ];
 
         // should panic now since our graph is not bidirectional
+		log::debug!("<<< Exiting non_bidirectional_test()");
         super::DecrementalConnectivity::new(adjacent).unwrap();
     }
 
     #[test]
     #[should_panic(expected = "delete called on the edge (2, 4)")]
     fn delete_panic_test() {
+		log::debug!(">>> Entering delete_panic_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -225,11 +249,14 @@ mod tests {
             HashSet::from([7]),
         ];
         let mut dec_con = super::DecrementalConnectivity::new(adjacent).unwrap();
+		log::debug!("delete_panic_test(): dec_con → (unprintable)");
+		log::debug!("<<< Exiting delete_panic_test()");
         dec_con.delete(2, 4);
     }
 
     #[test]
     fn query_test() {
+		log::debug!(">>> Entering query_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -242,6 +269,7 @@ mod tests {
             HashSet::from([7]),
         ];
         let mut dec_con1 = super::DecrementalConnectivity::new(adjacent.clone()).unwrap();
+		log::debug!("query_test(): dec_con1 → (unprintable)");
         assert!(dec_con1.connected(3, 4).unwrap());
         assert!(dec_con1.connected(5, 0).unwrap());
         assert!(!dec_con1.connected(2, 7).unwrap());
@@ -257,11 +285,14 @@ mod tests {
         assert!(!dec_con1.connected(1, 4).unwrap());
 
         let mut dec_con2 = super::DecrementalConnectivity::new(adjacent.clone()).unwrap();
+		log::debug!("query_test(): dec_con2 → (unprintable)");
         dec_con2.delete(4, 1);
         assert!(!dec_con2.connected(1, 4).unwrap());
 
         let mut dec_con3 = super::DecrementalConnectivity::new(adjacent).unwrap();
+		log::debug!("query_test(): dec_con3 → (unprintable)");
         dec_con3.delete(1, 4);
+		log::debug!("<<< Exiting query_test()");
         assert!(!dec_con3.connected(4, 1).unwrap());
     }
 }

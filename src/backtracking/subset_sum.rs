@@ -3,10 +3,13 @@
 
 /// Checks if there exists a subset of the given set that sums to the target value.
 pub fn has_subset_with_sum(set: &[isize], target: isize) -> bool {
+	log::debug!(">>> Entering has_subset_with_sum(set={:?},target={})", set, target);
+    log::debug!("<<< Exiting has_subset_with_sum(set={:?},target={})", set, target);
     backtrack(set, set.len(), target)
 }
 
 fn backtrack(set: &[isize], remaining_items: usize, target: isize) -> bool {
+	log::debug!(">>> Entering backtrack(set={:?},remaining_items={},target={})", set, remaining_items, target);
     // Found a subset with the required sum
     if target == 0 {
         return true;
@@ -17,6 +20,7 @@ fn backtrack(set: &[isize], remaining_items: usize, target: isize) -> bool {
     }
     // Check if we can find a subset including or excluding the last element
     backtrack(set, remaining_items - 1, target)
+		log::debug!("<<< Exiting backtrack(set={:?},remaining_items={},target={})", set, remaining_items, target);
         || backtrack(set, remaining_items - 1, target - set[remaining_items - 1])
 }
 

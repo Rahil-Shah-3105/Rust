@@ -10,6 +10,7 @@ pub enum PresentValueError {
 }
 
 pub fn present_value(discount_rate: f64, cash_flows: Vec<f64>) -> Result<f64, PresentValueError> {
+	log::debug!(">>> Entering present_value(discount_rate={},cash_flows={:?})", discount_rate, cash_flows);
     if discount_rate < 0.0 {
         return Err(PresentValueError::NegetiveDiscount);
     }
@@ -27,6 +28,8 @@ pub fn present_value(discount_rate: f64, cash_flows: Vec<f64>) -> Result<f64, Pr
 }
 
 fn round(value: f64) -> f64 {
+	log::debug!(">>> Entering round(value={})", value);
+    log::debug!("<<< Exiting round(value={})", value);
     (value * 100.0).round() / 100.0
 }
 

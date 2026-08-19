@@ -3,10 +3,12 @@ use std::fmt::Debug;
 /// Computes all permutations of an array using Heap's algorithm
 /// Read `recurse_naive` first, since we're building on top of the same intuition
 pub fn heap_permute<T: Clone + Debug>(arr: &[T]) -> Vec<Vec<T>> {
+	log::debug!(">>> Entering heap_permute(arr={})", arr);
     if arr.is_empty() {
         return vec![vec![]];
     }
     let n = arr.len();
+	log::debug!("heap_permute(arr={}): n → {}", arr, n);
     let mut collector = Vec::with_capacity((1..=n).product()); // collects the permuted arrays
     let mut arr = arr.to_owned(); // Heap's algorithm needs to mutate the array
     heap_recurse(&mut arr, n, &mut collector);
@@ -14,6 +16,7 @@ pub fn heap_permute<T: Clone + Debug>(arr: &[T]) -> Vec<Vec<T>> {
 }
 
 fn heap_recurse<T: Clone + Debug>(arr: &mut [T], k: usize, collector: &mut Vec<Vec<T>>) {
+	log::debug!(">>> Entering heap_recurse(arr=(unprintable),k={},collector=(unprintable))", k);
     if k == 1 {
         // same base-case as in the naive version
         collector.push((*arr).to_owned());
@@ -26,6 +29,7 @@ fn heap_recurse<T: Clone + Debug>(arr: &mut [T], k: usize, collector: &mut Vec<V
         let swap_idx = if k.is_multiple_of(2) { i } else { 0 };
         arr.swap(swap_idx, k - 1);
         heap_recurse(arr, k - 1, collector);
+	log::debug!("<<< Exiting heap_recurse(arr=(unprintable),k={},collector=(unprintable))", k);
     }
 }
 
@@ -40,27 +44,36 @@ mod tests {
 
     #[test]
     fn test_3_different_values() {
+		log::debug!(">>> Entering test_3_different_values()");
         let original = vec![1, 2, 3];
         let res = heap_permute(&original);
+		log::debug!("test_3_different_values(): res → (unprintable)");
         assert_eq!(res.len(), 6); // 3!
         for permut in res {
             assert_valid_permutation(&original, &permut)
+		log::debug!("<<< Exiting test_3_different_values()");
         }
     }
 
     #[test]
     fn test_3_times_the_same_value() {
+		log::debug!(">>> Entering test_3_times_the_same_value()");
         let original = vec![1, 1, 1];
         let res = heap_permute(&original);
+		log::debug!("test_3_times_the_same_value(): res → (unprintable)");
         assert_eq!(res.len(), 6); // 3!
         for permut in res {
             assert_valid_permutation(&original, &permut)
+		log::debug!("<<< Exiting test_3_times_the_same_value()");
         }
     }
 
     #[quickcheck]
     fn test_some_elements(NotTooBigVec { inner: original }: NotTooBigVec) {
+		log::debug!(">>> Entering test_some_elements(inner=(unprintable))");
         let permutations = heap_permute(&original);
+		log::debug!("test_some_elements(inner=(unprintable)): permutations → (unprintable)");
+        log::debug!("<<< Exiting test_some_elements(inner=(unprintable))");
         assert_permutations(&original, &permutations)
     }
 }

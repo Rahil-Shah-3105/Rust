@@ -24,19 +24,27 @@ const K: [u32; 4] = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6];
 
 /// Nonlinear mixing functions for each of the four 20-round stages
 fn ch(b: u32, c: u32, d: u32) -> u32 {
+	log::debug!(">>> Entering ch(b={},c={},d={})", b, c, d);
+    log::debug!("<<< Exiting ch(b={},c={},d={})", b, c, d);
     (b & c) | ((!b) & d)
 }
 
 fn parity(b: u32, c: u32, d: u32) -> u32 {
+	log::debug!(">>> Entering parity(b={},c={},d={})", b, c, d);
+    log::debug!("<<< Exiting parity(b={},c={},d={})", b, c, d);
     b ^ c ^ d
 }
 
 fn maj(b: u32, c: u32, d: u32) -> u32 {
+	log::debug!(">>> Entering maj(b={},c={},d={})", b, c, d);
+    log::debug!("<<< Exiting maj(b={},c={},d={})", b, c, d);
     (b & c) | (b & d) | (c & d)
 }
 
 /// Selects the mixing function and round constant for a given round index
 fn round_params(t: usize) -> (fn(u32, u32, u32) -> u32, u32) {
+	log::debug!(">>> Entering round_params(t={})", t);
+    log::debug!("<<< Exiting round_params(t={})", t);
     match t {
         0..=19 => (ch, K[0]),
         20..=39 => (parity, K[1]),
@@ -52,6 +60,7 @@ fn round_params(t: usize) -> (fn(u32, u32, u32) -> u32, u32) {
 /// message length as a 64-bit big-endian integer, such that the total length is
 /// congruent to 0 mod 512.
 fn pad(message: &[u8]) -> Vec<u8> {
+	log::debug!(">>> Entering pad(message={:?})", message);
     let bit_len = (message.len() as u64).wrapping_mul(8);
 
     let mut padded = message.to_vec();
@@ -66,33 +75,39 @@ fn pad(message: &[u8]) -> Vec<u8> {
     padded.extend_from_slice(&bit_len.to_be_bytes());
 
     debug_assert!(padded.len().is_multiple_of(BLOCK_BYTES));
+	log::debug!("<<< Exiting pad(message={:?})", message);
     padded
 }
 
 /// Parses a 64-byte block into sixteen 32-bit big-endian words
 fn parse_block(block: &[u8]) -> [u32; BLOCK_WORDS] {
+	log::debug!(">>> Entering parse_block(block={:?})", block);
     debug_assert_eq!(block.len(), BLOCK_BYTES);
 
     let mut words = [0u32; BLOCK_WORDS];
     for (i, word) in words.iter_mut().enumerate() {
         *word = u32::from_be_bytes(block[i * 4..i * 4 + 4].try_into().unwrap());
     }
+	log::debug!("<<< Exiting parse_block(block={:?})", block);
     words
 }
 
 /// Expands sixteen message words into eighty scheduled words using the message schedule
 fn schedule(m: [u32; BLOCK_WORDS]) -> [u32; ROUNDS] {
+	log::debug!(">>> Entering schedule(m={:?})", m);
     let mut w = [0u32; ROUNDS];
     w[..BLOCK_WORDS].copy_from_slice(&m);
 
     for t in BLOCK_WORDS..ROUNDS {
         w[t] = (w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16]).rotate_left(1);
     }
+	log::debug!("<<< Exiting schedule(m={:?})", m);
     w
 }
 
 /// Processes a single 512-bit block, updating the running hash state in place
 fn compress(state: &mut [u32; 5], block: &[u8]) {
+	log::debug!(">>> Entering compress(state={:?},block={:?})", state, block);
     let w = schedule(parse_block(block));
 
     let [mut a, mut b, mut c, mut d, mut e] = *state;
@@ -116,13 +131,16 @@ fn compress(state: &mut [u32; 5], block: &[u8]) {
     state[1] = state[1].wrapping_add(b);
     state[2] = state[2].wrapping_add(c);
     state[3] = state[3].wrapping_add(d);
+	log::debug!("<<< Exiting compress(state={:?},block={:?})", state, block);
     state[4] = state[4].wrapping_add(e);
 }
 
 /// Computes the SHA-1 digest of the given byte slice, returning a 20-byte array
 pub fn sha1(message: &[u8]) -> [u8; DIGEST_BYTES] {
+	log::debug!(">>> Entering sha1(message={:?})", message);
     let padded = pad(message);
     let mut state = H_INIT;
+	log::debug!("sha1(message={:?}): padded → {:?}", message, padded);
 
     for block in padded.chunks(BLOCK_BYTES) {
         compress(&mut state, block);
@@ -133,6 +151,7 @@ pub fn sha1(message: &[u8]) -> [u8; DIGEST_BYTES] {
     for (i, &word) in state.iter().enumerate() {
         digest[i * 4..i * 4 + 4].copy_from_slice(&word.to_be_bytes());
     }
+	log::debug!("<<< Exiting sha1(message={:?})", message);
     digest
 }
 
@@ -201,12 +220,16 @@ mod tests {
     // Verifies that the sponge-like multi-block path is exercised correctly.
     #[test]
     fn sha1_million_a() {
+		log::debug!(">>> Entering sha1_million_a()");
         let input = vec![b'a'; 1_000_000];
         let digest = sha1(&input);
+		log::debug!("sha1_million_a(): digest → (unprintable)");
+        log::debug!("sha1_million_a(): input → (unprintable)");
         let expected: [u8; DIGEST_BYTES] = [
             0x34, 0xaa, 0x97, 0x3c, 0xd4, 0xc4, 0xda, 0xa4, 0xf6, 0x1e, 0xeb, 0x2b, 0xdb, 0xad,
             0x27, 0x31, 0x65, 0x34, 0x01, 0x6f,
         ];
+		log::debug!("<<< Exiting sha1_million_a()");
         assert_eq!(digest, expected);
     }
 }

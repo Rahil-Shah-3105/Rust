@@ -20,6 +20,7 @@ static MIN_MERGE: usize = 32;
 ///
 /// The minimum run length.
 fn compute_min_run_length(array_length: usize) -> usize {
+	log::debug!(">>> Entering compute_min_run_length(array_length={})", array_length);
     let mut remaining_length = array_length;
     let mut result = 0;
 
@@ -28,6 +29,7 @@ fn compute_min_run_length(array_length: usize) -> usize {
         remaining_length >>= 1;
     }
 
+	log::debug!("<<< Exiting compute_min_run_length(array_length={})", array_length);
     remaining_length + result
 }
 
@@ -42,8 +44,11 @@ fn compute_min_run_length(array_length: usize) -> usize {
 /// * `mid` - The ending index of the first subarray.
 /// * `right` - The ending index of the second subarray.
 fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
+	log::debug!(">>> Entering merge(arr=(unprintable),left={},mid={},right={})", left, mid, right);
     let left_slice = arr[left..=mid].to_vec();
     let right_slice = arr[mid + 1..=right].to_vec();
+	log::debug!("merge(arr=(unprintable),left={},mid={},right={}): right_slice → (unprintable)", left, mid, right);
+	log::debug!("merge(arr=(unprintable),left={},mid={},right={}): left_slice → (unprintable)", left, mid, right);
     let mut i = 0;
     let mut j = 0;
     let mut k = left;
@@ -71,6 +76,7 @@ fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
         arr[k] = right_slice[j];
         k += 1;
         j += 1;
+	log::debug!("<<< Exiting merge(arr=(unprintable),left={},mid={},right={})", left, mid, right);
     }
 }
 
@@ -82,8 +88,11 @@ fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
 ///
 /// * `arr` - The slice to be sorted.
 pub fn tim_sort<T: Ord + Copy>(arr: &mut [T]) {
+	log::debug!(">>> Entering tim_sort(arr=(unprintable))");
     let n = arr.len();
     let min_run = compute_min_run_length(MIN_MERGE);
+	log::debug!("tim_sort(arr=(unprintable)): min_run → {}", min_run);
+	log::debug!("tim_sort(arr=(unprintable)): n → {}", n);
 
     // Perform insertion sort on small subarrays
     let mut i = 0;
@@ -99,6 +108,7 @@ pub fn tim_sort<T: Ord + Copy>(arr: &mut [T]) {
         while left < n {
             let mid = left + size - 1;
             let right = cmp::min(left + 2 * size - 1, n - 1);
+			log::debug!("tim_sort(arr=(unprintable)): right → (unprintable)");
             if mid < right {
                 merge(arr, left, mid, right);
             }
@@ -106,6 +116,7 @@ pub fn tim_sort<T: Ord + Copy>(arr: &mut [T]) {
             left += 2 * size;
         }
         size *= 2;
+	log::debug!("<<< Exiting tim_sort(arr=(unprintable))");
     }
 }
 
@@ -116,9 +127,11 @@ mod tests {
 
     #[test]
     fn min_run_length_returns_correct_value() {
+		log::debug!(">>> Entering min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(0), 0);
         assert_eq!(compute_min_run_length(10), 10);
         assert_eq!(compute_min_run_length(33), 17);
+		log::debug!("<<< Exiting min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(64), 16);
     }
 

@@ -74,21 +74,27 @@ impl RandomForest {
 
         // Default max_features to sqrt of total features
         let max_features = max_features.unwrap_or_else(|| (num_features as f64).sqrt() as usize);
+		log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): max_features → {:?}", training_data, num_trees, max_depth, min_samples_split, max_features, max_features);
         let max_features = max_features.max(1).min(num_features);
 
         let mut trees = Vec::new();
+		log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): trees → (unprintable)", training_data, num_trees, max_depth, min_samples_split, max_features);
+		log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): all_feature_indices → (unprintable)", training_data, num_trees, max_depth, min_samples_split, max_features);
         let mut all_feature_indices = Vec::new();
 
         // Train multiple decision trees
         for _ in 0..num_trees {
             let mut rng = rand::rng();
+			log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): rng → (unprintable)", training_data, num_trees, max_depth, min_samples_split, max_features);
             let mut feature_indices: Vec<usize> = (0..num_features).collect();
             feature_indices.shuffle(&mut rng);
             feature_indices.truncate(max_features);
 
             let mut bootstrap_sample = Vec::with_capacity(training_data.len());
+			log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): bootstrap_sample → (unprintable)", training_data, num_trees, max_depth, min_samples_split, max_features);
             for _ in 0..training_data.len() {
                 let random_index = rng.random_range(0..training_data.len());
+				log::debug!("fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?}): random_index → (unprintable)", training_data, num_trees, max_depth, min_samples_split, max_features);
                 bootstrap_sample.push(training_data[random_index].clone());
             }
 
@@ -132,6 +138,7 @@ impl RandomForest {
     }
 
     pub fn predict(&self, test_point: &[f64]) -> Option<f64> {
+		log::debug!(">>> Entering predict(test_point={:?})", test_point);
         if test_point.is_empty() || self.trees.is_empty() {
             return None;
         }
@@ -157,6 +164,7 @@ impl RandomForest {
 
         for &pred in &predictions {
             let mut found = false;
+			log::debug!("predict(test_point={:?}): found → {}", test_point, found);
             for (i, &label) in unique_labels.iter().enumerate() {
                 if (label - pred).abs() < 1e-10 {
                     counts[i] += 1;
@@ -171,6 +179,7 @@ impl RandomForest {
         }
 
         let mut max_count = 0;
+		log::debug!("predict(test_point={:?}): max_count → {}", test_point, max_count);
         let mut best_label = unique_labels[0];
         for (i, &count) in counts.iter().enumerate() {
             if count > max_count {
@@ -184,6 +193,8 @@ impl RandomForest {
 
     #[allow(dead_code)]
     pub fn predict_batch(&self, test_points: &[Vec<f64>]) -> Vec<Option<f64>> {
+		log::debug!(">>> Entering predict_batch(test_points={:?})", test_points);
+        log::debug!("<<< Exiting predict_batch(test_points={:?})", test_points);
         test_points
             .iter()
             .map(|point| self.predict(point))
@@ -200,6 +211,7 @@ pub fn random_forest(
     min_samples_split: usize,
     max_features: Option<usize>,
 ) -> Option<f64> {
+	log::debug!(">>> Entering random_forest(training_data={:?},test_point={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?})", training_data, test_point, num_trees, max_depth, min_samples_split, max_features);
     let model = RandomForest::fit(
         training_data,
         num_trees,
@@ -207,6 +219,7 @@ pub fn random_forest(
         min_samples_split,
         max_features,
     )?;
+	log::debug!("<<< Exiting random_forest(training_data={:?},test_point={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?})", training_data, test_point, num_trees, max_depth, min_samples_split, max_features);
     model.predict(&test_point)
 }
 
@@ -216,6 +229,7 @@ mod tests {
 
     #[test]
     fn test_random_forest_linearly_separable() {
+		log::debug!(">>> Entering test_random_forest_linearly_separable()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -226,16 +240,19 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_linearly_separable(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[1.5, 1.5]), Some(0.0));
+		log::debug!("<<< Exiting test_random_forest_linearly_separable()");
         assert_eq!(model.predict(&[5.5, 5.5]), Some(1.0));
     }
 
     #[test]
     fn test_random_forest_xor() {
+		log::debug!(">>> Entering test_random_forest_xor()");
         let training_data = vec![
             (vec![0.0, 0.0], 0.0),
             (vec![0.0, 1.0], 1.0),
@@ -249,20 +266,24 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 20, 5, 2, Some(2));
+		log::debug!("test_random_forest_xor(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         // Verify model can make predictions (not necessarily perfect)
         let result = model.predict(&[0.0, 0.0]);
+		log::debug!("test_random_forest_xor(): result → {:?}", result);
         assert!(result.is_some());
 
         let result = model.predict(&[1.0, 1.0]);
+		log::debug!("<<< Exiting test_random_forest_xor()");
         assert!(result.is_some());
     }
 
     #[test]
     fn test_random_forest_multiple_classes() {
+		log::debug!(">>> Entering test_random_forest_multiple_classes()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -273,17 +294,20 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_multiple_classes(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[1.5, 1.5]), Some(0.0));
         assert_eq!(model.predict(&[5.5, 5.5]), Some(1.0));
+		log::debug!("<<< Exiting test_random_forest_multiple_classes()");
         assert_eq!(model.predict(&[9.5, 9.5]), Some(2.0));
     }
 
     #[test]
     fn test_random_forest_one_feature() {
+		log::debug!(">>> Entering test_random_forest_one_feature()");
         let training_data = vec![
             (vec![1.0], 0.0),
             (vec![2.0], 0.0),
@@ -294,30 +318,41 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_one_feature(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[2.5]), Some(0.0));
+		log::debug!("<<< Exiting test_random_forest_one_feature()");
         assert_eq!(model.predict(&[5.5]), Some(1.0));
     }
 
     #[test]
     fn test_random_forest_empty_training_data() {
+		log::debug!(">>> Entering test_random_forest_empty_training_data()");
         let training_data = vec![];
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_empty_training_data(): model → (unprintable)");
+		log::debug!("test_random_forest_empty_training_data(): training_data → (unprintable)");
+    log::debug!("<<< Exiting test_random_forest_empty_training_data()");
         assert_eq!(model, None);
     }
 
     #[test]
     fn test_random_forest_empty_features() {
+		log::debug!(">>> Entering test_random_forest_empty_features()");
         let training_data = vec![(vec![], 0.0), (vec![], 1.0)];
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_empty_features(): model → (unprintable)");
+		log::debug!("test_random_forest_empty_features(): training_data → (unprintable)");
+    log::debug!("<<< Exiting test_random_forest_empty_features()");
         assert_eq!(model, None);
     }
 
     #[test]
     fn test_random_forest_predict_batch() {
+		log::debug!(">>> Entering test_random_forest_predict_batch()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -326,20 +361,24 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_predict_batch(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         let test_points = vec![vec![1.5, 1.5], vec![5.5, 5.5]];
         let predictions = model.predict_batch(&test_points);
+		log::debug!("test_random_forest_predict_batch(): predictions → {:?}", predictions);
 
         assert_eq!(predictions.len(), 2);
         assert_eq!(predictions[0], Some(0.0));
+		log::debug!("<<< Exiting test_random_forest_predict_batch()");
         assert_eq!(predictions[1], Some(1.0));
     }
 
     #[test]
     fn test_random_forest_custom_max_features() {
+		log::debug!(">>> Entering test_random_forest_custom_max_features()");
         let training_data = vec![
             (vec![1.0, 2.0, 3.0], 0.0),
             (vec![2.0, 3.0, 4.0], 0.0),
@@ -348,16 +387,19 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, Some(2));
+		log::debug!("test_random_forest_custom_max_features(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[1.5, 2.5, 3.5]), Some(0.0));
+		log::debug!("<<< Exiting test_random_forest_custom_max_features()");
         assert_eq!(model.predict(&[5.5, 6.5, 7.5]), Some(1.0));
     }
 
     #[test]
     fn test_random_forest_convenience_function() {
+		log::debug!(">>> Entering test_random_forest_convenience_function()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -366,6 +408,7 @@ mod tests {
         ];
 
         let result = random_forest(training_data, vec![1.5, 1.5], 10, 5, 2, None);
+		log::debug!("test_random_forest_convenience_function(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let training_data = vec![
@@ -376,11 +419,13 @@ mod tests {
         ];
 
         let result = random_forest(training_data, vec![5.5, 5.5], 10, 5, 2, None);
+		log::debug!("<<< Exiting test_random_forest_convenience_function()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_random_forest_single_tree() {
+		log::debug!(">>> Entering test_random_forest_single_tree()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -389,6 +434,7 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 1, 5, 2, None);
+		log::debug!("test_random_forest_single_tree(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
@@ -396,14 +442,18 @@ mod tests {
         // With single tree and bootstrap sampling, predictions may vary
         // Just verify model can make predictions
         let result1 = model.predict(&[1.5, 1.5]);
+		log::debug!("test_random_forest_single_tree(): result1 → {:?}", result1);
         let result2 = model.predict(&[5.5, 5.5]);
+		log::debug!("test_random_forest_single_tree(): result2 → {:?}", result2);
 
         assert!(result1.is_some());
+		log::debug!("<<< Exiting test_random_forest_single_tree()");
         assert!(result2.is_some());
     }
 
     #[test]
     fn test_random_forest_empty_test_point() {
+		log::debug!(">>> Entering test_random_forest_empty_test_point()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -412,16 +462,20 @@ mod tests {
         ];
 
         let model = RandomForest::fit(training_data, 10, 5, 2, None);
+		log::debug!("test_random_forest_empty_test_point(): model → (unprintable)");
         assert!(model.is_some());
 
         let model = model.unwrap();
 
         let result = model.predict(&[]);
+		log::debug!("test_random_forest_empty_test_point(): result → {:?}", result);
+		log::debug!("<<< Exiting test_random_forest_empty_test_point()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_random_forest_different_num_trees() {
+		log::debug!(">>> Entering test_random_forest_different_num_trees()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -430,6 +484,8 @@ mod tests {
         ];
 
         let model_5 = RandomForest::fit(training_data.clone(), 5, 5, 2, None);
+		log::debug!("test_random_forest_different_num_trees(): model_5 → (unprintable)");
+		log::debug!("test_random_forest_different_num_trees(): model_20 → (unprintable)");
         let model_20 = RandomForest::fit(training_data, 20, 5, 2, None);
 
         assert!(model_5.is_some());
@@ -439,6 +495,7 @@ mod tests {
         let model_20 = model_20.unwrap();
 
         assert_eq!(model_5.predict(&[1.5, 1.5]), Some(0.0));
+		log::debug!("<<< Exiting test_random_forest_different_num_trees()");
         assert_eq!(model_20.predict(&[1.5, 1.5]), Some(0.0));
     }
 }

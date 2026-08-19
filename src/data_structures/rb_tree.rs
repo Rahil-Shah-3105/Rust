@@ -20,6 +20,8 @@ pub struct RBNode<K: Ord, V> {
 
 impl<K: Ord, V> RBNode<K, V> {
     fn new(key: K, value: V) -> RBNode<K, V> {
+		log::debug!(">>> Entering new(key=(unprintable),value=(unprintable))");
+        log::debug!("<<< Exiting new(key=(unprintable),value=(unprintable))");
         RBNode {
             key,
             value,
@@ -27,6 +29,8 @@ impl<K: Ord, V> RBNode<K, V> {
             parent: null_mut(),
             left: null_mut(),
             right: null_mut(),
+		log::debug!(">>> Entering new()");
+        log::debug!("<<< Exiting new()");
         }
     }
 }
@@ -37,6 +41,8 @@ pub struct RBTree<K: Ord, V> {
 
 impl<K: Ord, V> Default for RBTree<K, V> {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
+        log::debug!("<<< Exiting default()");
         Self::new()
     }
 }
@@ -47,6 +53,7 @@ impl<K: Ord, V> RBTree<K, V> {
     }
 
     pub fn find(&self, key: &K) -> Option<&V> {
+		log::debug!(">>> Entering find(key=(unprintable))");
         unsafe {
             let mut node = self.root;
             while !node.is_null() {
@@ -57,12 +64,19 @@ impl<K: Ord, V> RBTree<K, V> {
                 }
             }
         }
+		log::debug!("<<< Exiting find(key=(unprintable))");
+		log::debug!(">>> Entering find()");
+		log::debug!("find(): tree → (unprintable)");
+		log::debug!("<<< Exiting find()");
         None
     }
 
     pub fn insert(&mut self, key: K, value: V) {
+		log::debug!(">>> Entering insert(key=(unprintable),value=(unprintable))");
         unsafe {
             let mut parent = null_mut();
+			log::debug!("insert(key=(unprintable),value=(unprintable)): parent → (unprintable)");
+			log::debug!("insert(key=(unprintable),value=(unprintable)): node → (unprintable)");
             let mut node = self.root;
             while !node.is_null() {
                 parent = node;
@@ -77,6 +91,7 @@ impl<K: Ord, V> RBTree<K, V> {
             }
             node = Box::into_raw(Box::new(RBNode::new(key, value)));
             if parent.is_null() {
+				log::debug!("insert(key=(unprintable),value=(unprintable)): self.root → (unprintable)");
                 self.root = node;
             } else if (*node).key < (*parent).key {
                 (*parent).left = node;
@@ -85,12 +100,18 @@ impl<K: Ord, V> RBTree<K, V> {
             }
             (*node).parent = parent;
             insert_fixup(self, node);
+		log::debug!("<<< Exiting insert(key=(unprintable),value=(unprintable))");
+		log::debug!(">>> Entering insert()");
+		log::debug!("insert(): tree → (unprintable)");
+		log::debug!("<<< Exiting insert()");
         }
     }
 
     pub fn delete(&mut self, key: &K) {
+		log::debug!(">>> Entering delete(key=(unprintable))");
         unsafe {
             let mut parent = null_mut();
+			log::debug!("delete(key=(unprintable)): parent → (unprintable)");
             let mut node = self.root;
             while !node.is_null() {
                 node = match (*node).key.cmp(key) {
@@ -112,6 +133,8 @@ impl<K: Ord, V> RBTree<K, V> {
 
             /* cl and cr denote left and right child of node, respectively. */
             let cl = (*node).left;
+			log::debug!("delete(key=(unprintable)): cl → (unprintable)");
+			log::debug!("delete(key=(unprintable)): cr → (unprintable)");
             let cr = (*node).right;
             let mut deleted_color;
 
@@ -129,6 +152,7 @@ impl<K: Ord, V> RBTree<K, V> {
 
                     deleted_color = (*node).color;
                 } else {
+					log::debug!("delete(key=(unprintable)): deleted_color → (unprintable)");
                     /*
                      * Case 2 - cl is NULL and cr is not NULL
                      *
@@ -156,6 +180,7 @@ impl<K: Ord, V> RBTree<K, V> {
                 deleted_color = Color::Red;
             } else {
                 let mut victim = (*node).right;
+				log::debug!("delete(key=(unprintable)): victim → (unprintable)");
                 while !(*victim).left.is_null() {
                     victim = (*victim).left;
                 }
@@ -192,6 +217,8 @@ impl<K: Ord, V> RBTree<K, V> {
 
                     /* vp and vr denote parent and right child of victim, respectively. */
                     let vp = (*victim).parent;
+					log::debug!("delete(key=(unprintable)): vp → (unprintable)");
+					log::debug!("delete(key=(unprintable)): vr → (unprintable)");
                     let vr = (*victim).right;
                     (*vp).left = vr;
                     if vr.is_null() {
@@ -217,24 +244,32 @@ impl<K: Ord, V> RBTree<K, V> {
             if matches!(deleted_color, Color::Black) {
                 delete_fixup(self, parent);
             }
+		log::debug!(">>> Entering delete()");
+		log::debug!("delete(): tree → (unprintable)");
+		log::debug!("<<< Exiting delete(key=(unprintable))");
         }
     }
 
     pub fn iter<'a>(&self) -> RBTreeIterator<'a, K, V> {
+		log::debug!(">>> Entering iter()");
         let mut iterator = RBTreeIterator { stack: Vec::new() };
         let mut node = self.root;
+		log::debug!("iter(): node → (unprintable)");
+		log::debug!("iter(): iterator → (unprintable)");
         unsafe {
             while !node.is_null() {
                 iterator.stack.push(&*node);
                 node = (*node).left;
             }
         }
+		log::debug!("<<< Exiting iter()");
         iterator
     }
 }
 
 #[inline]
 unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode<K, V>) {
+	log::debug!(">>> Entering insert_fixup(tree=(unprintable),node=(unprintable))");
     let mut parent: *mut RBNode<K, V> = (*node).parent;
     let mut gparent: *mut RBNode<K, V>;
     let mut tmp: *mut RBNode<K, V>;
@@ -256,6 +291,9 @@ unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode
 
         gparent = (*parent).parent;
         tmp = (*gparent).right;
+		log::debug!("insert_fixup(tree=(unprintable),node=(unprintable)): gparent → (unprintable)");
+		log::debug!("insert_fixup(tree=(unprintable),node=(unprintable)): parent → (unprintable)");
+		log::debug!("insert_fixup(tree=(unprintable),node=(unprintable)): tmp → (unprintable)");
         if parent == tmp {
             /* parent = (*gparent).right */
             tmp = (*gparent).left;
@@ -273,6 +311,7 @@ unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode
                 (*tmp).color = Color::Black;
                 (*gparent).color = Color::Red;
                 node = gparent;
+				log::debug!("insert_fixup(tree=(unprintable),node=(unprintable)): node → (unprintable)");
                 parent = (*node).parent;
                 continue;
             }
@@ -355,11 +394,13 @@ unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode
             right_rotate(tree, gparent);
         }
         break;
+	log::debug!("<<< Exiting insert_fixup(tree=(unprintable),node=(unprintable))");
     }
 }
 
 #[inline]
 unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNode<K, V>) {
+	log::debug!(">>> Entering delete_fixup(tree=(unprintable),parent=(unprintable))");
     let mut node: *mut RBNode<K, V> = null_mut();
     let mut sibling: *mut RBNode<K, V>;
     /* sl and sr denote left and right child of sibling, respectively. */
@@ -382,6 +423,8 @@ unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNo
          */
         sibling = (*parent).right;
         if node == sibling {
+			log::debug!("delete_fixup(tree=(unprintable),parent=(unprintable)): node → (unprintable)");
+			log::debug!("delete_fixup(tree=(unprintable),parent=(unprintable)): sibling → (unprintable)");
             /* node = (*parent).right */
             sibling = (*parent).left;
             if matches!((*sibling).color, Color::Red) {
@@ -395,6 +438,8 @@ unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNo
                 sibling = (*parent).right;
             }
             sl = (*sibling).left;
+			log::debug!("delete_fixup(tree=(unprintable),parent=(unprintable)): sl → (unprintable)");
+			log::debug!("delete_fixup(tree=(unprintable),parent=(unprintable)): sr → (unprintable)");
             sr = (*sibling).right;
 
             if !sr.is_null() && matches!((*sr).color, Color::Red) {
@@ -422,6 +467,7 @@ unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNo
                 if matches!((*parent).color, Color::Black) {
                     node = parent;
                     parent = (*node).parent;
+					log::debug!("delete_fixup(tree=(unprintable),parent=(unprintable)): parent → (unprintable)");
                     continue;
                 }
                 (*parent).color = Color::Black;
@@ -501,11 +547,13 @@ unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNo
             }
         }
         break;
+	log::debug!("<<< Exiting delete_fixup(tree=(unprintable),parent=(unprintable))");
     }
 }
 
 #[inline]
 unsafe fn left_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) {
+	log::debug!(">>> Entering left_rotate(tree=(unprintable),x=(unprintable))");
     /*
      * Left rotate at x
      * (x could also be the left child of p)
@@ -520,6 +568,9 @@ unsafe fn left_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) 
      */
 
     let p = (*x).parent;
+	log::debug!("left_rotate(tree=(unprintable),x=(unprintable)): p → (unprintable)");
+	log::debug!("left_rotate(tree=(unprintable),x=(unprintable)): y → (unprintable)");
+	log::debug!("left_rotate(tree=(unprintable),x=(unprintable)): c → (unprintable)");
     let y = (*x).right;
     let c = (*y).left;
 
@@ -530,17 +581,20 @@ unsafe fn left_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) 
         (*c).parent = x;
     }
     if p.is_null() {
+		log::debug!("left_rotate(tree=(unprintable),x=(unprintable)): tree.root → (unprintable)");
         tree.root = y;
     } else if (*p).left == x {
         (*p).left = y;
     } else {
         (*p).right = y;
     }
+	log::debug!("<<< Exiting left_rotate(tree=(unprintable),x=(unprintable))");
     (*y).parent = p;
 }
 
 #[inline]
 unsafe fn right_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) {
+	log::debug!(">>> Entering right_rotate(tree=(unprintable),x=(unprintable))");
     /*
      * Right rotate at x
      * (x could also be the left child of p)
@@ -555,6 +609,9 @@ unsafe fn right_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>)
      */
 
     let p = (*x).parent;
+	log::debug!("right_rotate(tree=(unprintable),x=(unprintable)): p → (unprintable)");
+	log::debug!("right_rotate(tree=(unprintable),x=(unprintable)): y → (unprintable)");
+	log::debug!("right_rotate(tree=(unprintable),x=(unprintable)): c → (unprintable)");
     let y = (*x).left;
     let c = (*y).right;
 
@@ -565,12 +622,14 @@ unsafe fn right_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>)
         (*c).parent = x;
     }
     if p.is_null() {
+		log::debug!("right_rotate(tree=(unprintable),x=(unprintable)): tree.root → (unprintable)");
         tree.root = y;
     } else if (*p).left == x {
         (*p).left = y;
     } else {
         (*p).right = y;
     }
+	log::debug!("<<< Exiting right_rotate(tree=(unprintable),x=(unprintable))");
     (*y).parent = p;
 }
 
@@ -579,6 +638,9 @@ unsafe fn replace_node<K: Ord, V>(
     tree: &mut RBTree<K, V>,
     parent: *mut RBNode<K, V>,
     node: *mut RBNode<K, V>,
+	log::debug!(">>> Entering replace_node(tree=(unprintable),parent=(unprintable),node=(unprintable),new=(unprintable))");
+	log::debug!("replace_node(tree=(unprintable),parent=(unprintable),node=(unprintable),new=(unprintable)): tree.root → (unprintable)");
+	log::debug!("<<< Exiting replace_node(tree=(unprintable),parent=(unprintable),node=(unprintable),new=(unprintable))");
     new: *mut RBNode<K, V>,
 ) {
     if parent.is_null() {
@@ -597,15 +659,18 @@ pub struct RBTreeIterator<'a, K: Ord, V> {
 impl<'a, K: Ord, V> Iterator for RBTreeIterator<'a, K, V> {
     type Item = &'a RBNode<K, V>;
     fn next(&mut self) -> Option<Self::Item> {
+		log::debug!(">>> Entering next()");
         match self.stack.pop() {
             Some(node) => {
                 let mut next = node.right;
+				log::debug!("next(): next → (unprintable)");
                 unsafe {
                     while !next.is_null() {
                         self.stack.push(&*next);
                         next = (*next).left;
                     }
                 }
+				log::debug!("<<< Exiting next()");
                 Some(node)
             }
             None => None,
@@ -656,8 +721,10 @@ mod tests {
 
     #[test]
     fn delete_edge_case_null_pointer_guard() {
+		log::debug!(">>> Entering delete_edge_case_null_pointer_guard()");
         let mut tree = RBTree::<i8, i8>::new();
         tree.insert(4, 4);
+		log::debug!("delete_edge_case_null_pointer_guard(): tree → (unprintable)");
         tree.insert(2, 2);
         tree.insert(5, 5);
         tree.insert(0, 0);
@@ -670,6 +737,7 @@ mod tests {
         tree.insert(8, 8);
         tree.delete(&1);
         tree.delete(&3);
+		log::debug!("<<< Exiting delete_edge_case_null_pointer_guard()");
         tree.delete(&-1);
     }
 }

@@ -18,6 +18,7 @@ use std::collections::VecDeque;
 /// `None` is returned.
 ///
 pub fn breadth_first_search(graph: &Graph, root: Node, target: Node) -> Option<Vec<u32>> {
+	log::debug!(">>> Entering breadth_first_search(graph=(unprintable),root=(unprintable),target=(unprintable))");
     let mut visited: HashSet<Node> = HashSet::new();
     let mut history: Vec<u32> = Vec::new();
     let mut queue = VecDeque::new();
@@ -41,6 +42,8 @@ pub fn breadth_first_search(graph: &Graph, root: Node, target: Node) -> Option<V
     }
 
     // All nodes were visited, yet the target was not found.
+	log::debug!("breadth_first_search(graph=(unprintable),root=(unprintable),target=(unprintable)): queue → (unprintable)");
+    log::debug!("<<< Exiting breadth_first_search(graph=(unprintable),root=(unprintable),target=(unprintable))");
     None
 }
 
@@ -61,22 +64,30 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(nodes: Vec<Node>, edges: Vec<Edge>) -> Self {
+		log::debug!(">>> Entering new(nodes=(unprintable),edges=(unprintable))");
+        log::debug!("<<< Exiting new(nodes=(unprintable),edges=(unprintable))");
         Graph { nodes, edges }
     }
 }
 
 impl From<u32> for Node {
     fn from(item: u32) -> Self {
+		log::debug!(">>> Entering from(item={:?})", item);
+        log::debug!("<<< Exiting from(item={:?})", item);
         Node(item)
     }
 }
 
 impl Node {
     pub fn value(&self) -> u32 {
+		log::debug!(">>> Entering value()");
+        log::debug!("<<< Exiting value()");
         self.0
     }
 
     pub fn neighbors(&self, graph: &Graph) -> Vec<Node> {
+		log::debug!(">>> Entering neighbors(graph=(unprintable))");
+        log::debug!("<<< Exiting neighbors(graph=(unprintable))");
         graph
             .edges
             .iter()
@@ -107,9 +118,12 @@ mod tests {
      *         (8)
      */
     fn graph1() -> Graph {
+		log::debug!(">>> Entering graph1()");
         let nodes = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7), (5, 8)];
+		log::debug!("graph1(): edges → (unprintable)");
 
+		log::debug!("<<< Exiting graph1()");
         Graph::new(
             nodes.into_iter().map(|v| v.into()).collect(),
             edges.into_iter().map(|e| e.into()).collect(),
@@ -118,20 +132,25 @@ mod tests {
 
     #[test]
     fn breadth_first_search_graph1_when_node_not_found_returns_none() {
+		log::debug!(">>> Entering breadth_first_search_graph1_when_node_not_found_returns_none()");
         let graph = graph1();
         let root = 1;
+		log::debug!("breadth_first_search_graph1_when_node_not_found_returns_none(): graph → (unprintable)");
         let target = 10;
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
             None
+		log::debug!("<<< Exiting breadth_first_search_graph1_when_node_not_found_returns_none()");
         );
     }
 
     #[test]
     fn breadth_first_search_graph1_when_target_8_should_evaluate_all_nodes_first() {
+		log::debug!(">>> Entering breadth_first_search_graph1_when_target_8_should_evaluate_all_nodes_first()");
         let graph = graph1();
         let root = 1;
+		log::debug!("breadth_first_search_graph1_when_target_8_should_evaluate_all_nodes_first(): graph → (unprintable)");
         let target = 8;
 
         let expected_path = vec![1, 2, 3, 4, 5, 6, 7, 8];
@@ -139,6 +158,7 @@ mod tests {
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
             Some(expected_path)
+		log::debug!("<<< Exiting breadth_first_search_graph1_when_target_8_should_evaluate_all_nodes_first()");
         );
     }
 
@@ -151,6 +171,7 @@ mod tests {
      *     (5)     (6) --- (7)     (8)
      */
     fn graph2() -> Graph {
+		log::debug!(">>> Entering graph2()");
         let nodes = vec![1, 2, 3, 4, 5, 6, 7, 8];
         let undirected_edges = vec![
             (1, 2),
@@ -169,6 +190,7 @@ mod tests {
             (7, 6),
         ];
 
+		log::debug!("<<< Exiting graph2()");
         Graph::new(
             nodes.into_iter().map(|v| v.into()).collect(),
             undirected_edges.into_iter().map(|e| e.into()).collect(),
@@ -177,20 +199,25 @@ mod tests {
 
     #[test]
     fn breadth_first_search_graph2_when_no_path_to_node_returns_none() {
+		log::debug!(">>> Entering breadth_first_search_graph2_when_no_path_to_node_returns_none()");
         let graph = graph2();
         let root = 8;
+		log::debug!("breadth_first_search_graph2_when_no_path_to_node_returns_none(): graph → (unprintable)");
         let target = 4;
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
             None
+		log::debug!("<<< Exiting breadth_first_search_graph2_when_no_path_to_node_returns_none()");
         );
     }
 
     #[test]
     fn breadth_first_search_graph2_should_find_path_from_4_to_1() {
+		log::debug!(">>> Entering breadth_first_search_graph2_should_find_path_from_4_to_1()");
         let graph = graph2();
         let root = 4;
+		log::debug!("breadth_first_search_graph2_should_find_path_from_4_to_1(): graph → (unprintable)");
         let target = 1;
 
         let expected_path = vec![4, 3, 7, 6, 2, 1];
@@ -198,6 +225,7 @@ mod tests {
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
             Some(expected_path)
+		log::debug!("<<< Exiting breadth_first_search_graph2_should_find_path_from_4_to_1()");
         );
     }
 }

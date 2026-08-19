@@ -37,6 +37,8 @@ where
     /// # Returns
     /// A `Trie` instance with an empty root node.
     pub fn new() -> Self {
+		log::debug!(">>> Entering new()");
+        log::debug!("<<< Exiting new()");
         Self {
             root: Node::default(),
         }
@@ -53,6 +55,8 @@ where
     {
         let mut node = &mut self.root;
         for c in key {
+			log::debug!(">>> Entering insert(key=(unprintable),value=(unprintable))");
+			log::debug!("insert(key=(unprintable),value=(unprintable)): node → (unprintable)");
             node = node.children.entry(c).or_default();
         }
         node.value = Some(value);
@@ -72,6 +76,8 @@ where
     {
         let mut node = &self.root;
         for c in key {
+			log::debug!(">>> Entering get(key=(unprintable))");
+			log::debug!("get(key=(unprintable)): node → (unprintable)");
             node = node.children.get(&c)?;
         }
         node.value.as_ref()
@@ -84,8 +90,10 @@ mod tests {
 
     #[test]
     fn test_insertion_and_retrieval_with_strings() {
+		log::debug!(">>> Entering test_insertion_and_retrieval_with_strings()");
         let mut trie = Trie::new();
 
+		log::debug!("test_insertion_and_retrieval_with_strings(): trie → (unprintable)");
         trie.insert("foo".chars(), 1);
         assert_eq!(trie.get("foo".chars()), Some(&1));
         trie.insert("foobar".chars(), 2);
@@ -94,13 +102,16 @@ mod tests {
         trie.insert("bar".chars(), 3);
         assert_eq!(trie.get("bar".chars()), Some(&3));
         assert_eq!(trie.get("baz".chars()), None);
+		log::debug!("<<< Exiting test_insertion_and_retrieval_with_strings()");
         assert_eq!(trie.get("foobarbaz".chars()), None);
     }
 
     #[test]
     fn test_insertion_and_retrieval_with_integers() {
+		log::debug!(">>> Entering test_insertion_and_retrieval_with_integers()");
         let mut trie = Trie::new();
 
+		log::debug!("test_insertion_and_retrieval_with_integers(): trie → (unprintable)");
         trie.insert(vec![1, 2, 3], 1);
         assert_eq!(trie.get(vec![1, 2, 3]), Some(&1));
         trie.insert(vec![1, 2, 3, 4, 5], 2);
@@ -109,47 +120,58 @@ mod tests {
         trie.insert(vec![10, 20, 30], 3);
         assert_eq!(trie.get(vec![10, 20, 30]), Some(&3));
         assert_eq!(trie.get(vec![4, 5, 6]), None);
+		log::debug!("<<< Exiting test_insertion_and_retrieval_with_integers()");
         assert_eq!(trie.get(vec![1, 2, 3, 4, 5, 6]), None);
     }
 
     #[test]
     fn test_empty_trie() {
+		log::debug!(">>> Entering test_empty_trie()");
         let trie: Trie<char, i32> = Trie::new();
 
         assert_eq!(trie.get("foo".chars()), None);
+		log::debug!("<<< Exiting test_empty_trie()");
         assert_eq!(trie.get("".chars()), None);
     }
 
     #[test]
     fn test_insert_empty_key() {
+		log::debug!(">>> Entering test_insert_empty_key()");
         let mut trie: Trie<char, i32> = Trie::new();
 
         trie.insert("".chars(), 42);
         assert_eq!(trie.get("".chars()), Some(&42));
+		log::debug!("<<< Exiting test_insert_empty_key()");
         assert_eq!(trie.get("foo".chars()), None);
     }
 
     #[test]
     fn test_overlapping_keys() {
+		log::debug!(">>> Entering test_overlapping_keys()");
         let mut trie = Trie::new();
 
+		log::debug!("test_overlapping_keys(): trie → (unprintable)");
         trie.insert("car".chars(), 1);
         trie.insert("cart".chars(), 2);
         trie.insert("carter".chars(), 3);
         assert_eq!(trie.get("car".chars()), Some(&1));
         assert_eq!(trie.get("cart".chars()), Some(&2));
         assert_eq!(trie.get("carter".chars()), Some(&3));
+		log::debug!("<<< Exiting test_overlapping_keys()");
         assert_eq!(trie.get("care".chars()), None);
     }
 
     #[test]
     fn test_partial_match() {
+		log::debug!(">>> Entering test_partial_match()");
         let mut trie = Trie::new();
 
+		log::debug!("test_partial_match(): trie → (unprintable)");
         trie.insert("apple".chars(), 10);
         assert_eq!(trie.get("app".chars()), None);
         assert_eq!(trie.get("appl".chars()), None);
         assert_eq!(trie.get("apple".chars()), Some(&10));
+		log::debug!("<<< Exiting test_partial_match()");
         assert_eq!(trie.get("applepie".chars()), None);
     }
 }

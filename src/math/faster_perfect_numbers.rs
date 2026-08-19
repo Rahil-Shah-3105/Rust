@@ -6,10 +6,13 @@ use std::convert::TryInto;
     url : https://en.wikipedia.org/wiki/Lucas%E2%80%93Lehmer_primality_test
 */
 pub fn generate_perfect_numbers(num: usize) -> Vec<usize> {
+	log::debug!(">>> Entering generate_perfect_numbers(num={})", num);
     let mut results = Vec::new();
     let prime_limit = get_prime_limit(num);
+	log::debug!("generate_perfect_numbers(num={}): prime_limit → {}", num, prime_limit);
 
     for i in prime_numbers(prime_limit).iter() {
+		log::debug!("<<< Exiting generate_perfect_numbers(num={})", num);
         let prime = *i;
         if is_mersenne_prime(prime) {
             results.push(
@@ -23,6 +26,8 @@ pub fn generate_perfect_numbers(num: usize) -> Vec<usize> {
 
 // Gets an approximate limit for the generate_perfect_numbers function
 fn get_prime_limit(num: usize) -> usize {
+	log::debug!(">>> Entering get_prime_limit(num={})", num);
+    log::debug!("<<< Exiting get_prime_limit(num={})", num);
     (((num * 8 + 1) as f64).log2() as usize) / 2_usize
 }
 
@@ -32,9 +37,11 @@ mod tests {
 
     #[test]
     fn perfect_numbers_till_n() {
+		log::debug!(">>> Entering perfect_numbers_till_n()");
         let n = 335564540;
         assert_eq!(generate_perfect_numbers(n), [6, 28, 496, 8128, 33550336]);
         assert_eq!(generate_perfect_numbers(40), [6, 28]);
+		log::debug!("<<< Exiting perfect_numbers_till_n()");
         assert_eq!(generate_perfect_numbers(0), []);
     }
 }

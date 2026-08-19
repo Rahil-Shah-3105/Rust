@@ -18,6 +18,7 @@
 //! This implementation takes two references to vectors of f64 values, `actual` and `predicted`, and a `delta` value. It returns the Huber loss between them, providing a robust measure of dissimilarity between actual and predicted values.
 //!
 pub fn huber_loss(actual: &[f64], predicted: &[f64], delta: f64) -> f64 {
+	log::debug!(">>> Entering huber_loss(actual={:?},predicted={:?},delta={})", actual, predicted, delta);
     let mut loss: Vec<f64> = Vec::new();
     for (a, p) in actual.iter().zip(predicted.iter()) {
         if (a - p).abs() <= delta {
@@ -27,6 +28,7 @@ pub fn huber_loss(actual: &[f64], predicted: &[f64], delta: f64) -> f64 {
         }
     }
 
+	log::debug!("<<< Exiting huber_loss(actual={:?},predicted={:?},delta={})", actual, predicted, delta);
     loss.iter().sum()
 }
 
@@ -36,8 +38,10 @@ mod tests {
 
     #[test]
     fn test_huber_loss() {
+		log::debug!(">>> Entering test_huber_loss()");
         let test_vector_actual = vec![1.0, 2.0, 3.0, 4.0, 5.0];
         let test_vector = vec![5.0, 7.0, 9.0, 11.0, 13.0];
+		log::debug!("<<< Exiting test_huber_loss()");
         assert_eq!(huber_loss(&test_vector_actual, &test_vector, 1.0), 27.5);
     }
 }

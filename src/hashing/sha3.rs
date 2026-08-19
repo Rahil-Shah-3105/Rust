@@ -27,26 +27,33 @@ type SpongeFn = fn(&[bool]) -> [bool; B];
 type State = [[[bool; W]; 5]; 5];
 
 fn state_new() -> State {
+	log::debug!(">>> Entering state_new()");
+    log::debug!("<<< Exiting state_new()");
     [[[false; W]; 5]; 5]
 }
 
 fn state_fill(dest: &mut State, bits: &[bool]) {
+	log::debug!(">>> Entering state_fill(dest=(unprintable),bits={:?})", bits);
     let mut i = 0usize;
 
     iterate!(x, y, z => {
         if i >= bits.len() { return; }
         dest[x][y][z] = bits[i];
         i += 1;
+	log::debug!("<<< Exiting state_fill(dest=(unprintable),bits={:?})", bits);
     });
 }
 
 fn state_copy(dest: &mut State, src: &State) {
+	log::debug!(">>> Entering state_copy(dest=(unprintable),src=(unprintable))");
     iterate!(x, y, z => {
         dest[x][y][z] = src[x][y][z];
+	log::debug!("<<< Exiting state_copy(dest=(unprintable),src=(unprintable))");
     });
 }
 
 fn state_dump(state: &State) -> [bool; B] {
+	log::debug!(">>> Entering state_dump(state=(unprintable))");
     let mut bits = [false; B];
 
     let mut i = 0usize;
@@ -56,11 +63,13 @@ fn state_dump(state: &State) -> [bool; B] {
         i += 1;
     });
 
+	log::debug!("<<< Exiting state_dump(state=(unprintable))");
     bits
 }
 
 /// XORs the state with the parities of two columns in the state array
 fn theta(state: &mut State) {
+	log::debug!(">>> Entering theta(state=(unprintable))");
     let mut c = [[false; W]; 5];
     let mut d = [[false; W]; 5];
 
@@ -79,6 +88,8 @@ fn theta(state: &mut State) {
     for x in 0..5 {
         for z in 0..W {
             let x1 = (x as isize - 1).rem_euclid(5) as usize;
+			log::debug!("theta(state=(unprintable)): x1 → (unprintable)");
+			log::debug!("theta(state=(unprintable)): z2 → (unprintable)");
             let z2 = (z as isize - 1).rem_euclid(W as isize) as usize;
 
             d[x][z] = c[x1][z] ^ c[(x + 1) % 5][z2];
@@ -88,24 +99,30 @@ fn theta(state: &mut State) {
     // Xor values of D[x,z] into our state array
     iterate!(x, y, z => {
         state[x][y][z] ^= d[x][z];
+	log::debug!("<<< Exiting theta(state=(unprintable))");
     });
 }
 
 /// Rotates each lane by an offset depending of the x and y indeces
 fn rho(state: &mut State) {
+	log::debug!(">>> Entering rho(state=(unprintable))");
     let mut new_state = state_new();
 
+	log::debug!("rho(state=(unprintable)): new_state → (unprintable)");
     for z in 0..W {
         new_state[0][0][z] = state[0][0][z];
     }
 
     let mut x = 1;
+	log::debug!("rho(state=(unprintable)): x → {}", x);
     let mut y = 0;
+	log::debug!("rho(state=(unprintable)): y → {}", y);
 
     for t in 0..=23isize {
         for z in 0..W {
             let z_offset: isize = ((t + 1) * (t + 2)) / 2;
             let new_z = (z as isize - z_offset).rem_euclid(W as isize) as usize;
+			log::debug!("rho(state=(unprintable)): new_z → (unprintable)");
 
             new_state[x][y][z] = state[x][y][new_z];
         }
@@ -115,32 +132,40 @@ fn rho(state: &mut State) {
         x = old_y;
     }
 
+	log::debug!("<<< Exiting rho(state=(unprintable))");
     state_copy(state, &new_state);
 }
 
 /// Rearrange the positions of the lanes of the state array
 fn pi(state: &mut State) {
+	log::debug!(">>> Entering pi(state=(unprintable))");
     let mut new_state = state_new();
 
+	log::debug!("pi(state=(unprintable)): new_state → (unprintable)");
     iterate!(x, y, z => {
         new_state[x][y][z] = state[(x + (3 * y)) % 5][x][z];
     });
 
+	log::debug!("<<< Exiting pi(state=(unprintable))");
     state_copy(state, &new_state);
 }
 
 fn chi(state: &mut State) {
+	log::debug!(">>> Entering chi(state=(unprintable))");
     let mut new_state = state_new();
 
+	log::debug!("chi(state=(unprintable)): new_state → (unprintable)");
     iterate!(x, y, z => {
         new_state[x][y][z] = state[x][y][z] ^ ((state[(x + 1) % 5][y][z] ^ true) & state[(x + 2) % 5][y][z]);
     });
 
+	log::debug!("<<< Exiting chi(state=(unprintable))");
     state_copy(state, &new_state);
 }
 
 /// Calculates the round constant depending on what the round number is
 fn rc(t: u8) -> bool {
+	log::debug!(">>> Entering rc(t={})", t);
     let mut b1: u16;
     let mut b2: u16;
     let mut r: u16 = 0x80; // tread r as an array of bits
@@ -167,11 +192,13 @@ fn rc(t: u8) -> bool {
         r >>= 1;
     }
 
+	log::debug!("<<< Exiting rc(t={})", t);
     (r >> 7) != 0
 }
 
 /// Applies the round constant to the first lane of the state array
 fn iota(state: &mut State, i_r: u8) {
+	log::debug!(">>> Entering iota(state=(unprintable),i_r={})", i_r);
     let mut rc_arr = [false; W];
 
     for j in 0..=L {
@@ -180,18 +207,22 @@ fn iota(state: &mut State, i_r: u8) {
 
     for (z, bit) in rc_arr.iter().enumerate() {
         state[0][0][z] ^= *bit;
+	log::debug!("<<< Exiting iota(state=(unprintable),i_r={})", i_r);
     }
 }
 
 fn rnd(state: &mut State, i_r: u8) {
+	log::debug!(">>> Entering rnd(state=(unprintable),i_r={})", i_r);
     theta(state);
     rho(state);
     pi(state);
     chi(state);
+	log::debug!("<<< Exiting rnd(state=(unprintable),i_r={})", i_r);
     iota(state, i_r);
 }
 
 fn keccak_f(bits: &[bool]) -> [bool; B] {
+	log::debug!(">>> Entering keccak_f(bits={:?})", bits);
     let n_r = 12 + (2 * L);
 
     let mut state = state_new();
@@ -201,10 +232,12 @@ fn keccak_f(bits: &[bool]) -> [bool; B] {
         rnd(&mut state, i_r as u8);
     }
 
+	log::debug!("<<< Exiting keccak_f(bits={:?})", bits);
     state_dump(&state)
 }
 
 fn pad101(x: isize, m: isize) -> Vec<bool> {
+	log::debug!(">>> Entering pad101(x={},m={})", x, m);
     let mut j = -m - 2;
 
     while j < 0 {
@@ -214,9 +247,11 @@ fn pad101(x: isize, m: isize) -> Vec<bool> {
     j %= x;
 
     let mut ret = vec![false; (j as usize) + 2];
+	log::debug!("pad101(x={},m={}): ret → (unprintable)", x, m);
     *ret.first_mut().unwrap() = true;
     *ret.last_mut().unwrap() = true;
 
+	log::debug!("<<< Exiting pad101(x={},m={})", x, m);
     ret
 }
 
@@ -224,6 +259,7 @@ fn pad101(x: isize, m: isize) -> Vec<bool> {
 /// strings( here we use keccak_f), 2) a padding function (pad10*1), and 3) a rate. The input and
 /// output of this method can be arbitrarily long
 fn sponge(f: SpongeFn, pad: PadFn, r: usize, n: &[bool], d: usize) -> Vec<bool> {
+	log::debug!(">>> Entering sponge(f=(unprintable),pad=(unprintable),r={},n={:?},d={})", r, n, d);
     let mut p = Vec::from(n);
     p.append(&mut pad(r as isize, n.len() as isize));
 
@@ -246,14 +282,18 @@ fn sponge(f: SpongeFn, pad: PadFn, r: usize, n: &[bool], d: usize) -> Vec<bool> 
     }
 
     z.truncate(d);
+	log::debug!("<<< Exiting sponge(f=(unprintable),pad=(unprintable),r={},n={:?},d={})", r, n, d);
     z
 }
 
 fn keccak(c: usize, n: &[bool], d: usize) -> Vec<bool> {
+	log::debug!(">>> Entering keccak(c={},n={:?},d={})", c, n, d);
+    log::debug!("<<< Exiting keccak(c={},n={:?},d={})", c, n, d);
     sponge(keccak_f, pad101, B - c, n, d)
 }
 
 fn h2b(h: &[u8], n: usize) -> Vec<bool> {
+	log::debug!(">>> Entering h2b(h={:?},n={})", h, n);
     let mut bits = Vec::with_capacity(h.len() * U8BITS);
 
     for byte in h {
@@ -267,10 +307,12 @@ fn h2b(h: &[u8], n: usize) -> Vec<bool> {
     assert_eq!(bits.len(), h.len() * U8BITS);
 
     bits.truncate(n);
+	log::debug!("<<< Exiting h2b(h={:?},n={})", h, n);
     bits
 }
 
 fn b2h(s: &[bool]) -> Vec<u8> {
+	log::debug!(">>> Entering b2h(s={:?})", s);
     let m = if s.len().is_multiple_of(U8BITS) {
         s.len() / 8
     } else {
@@ -281,10 +323,12 @@ fn b2h(s: &[bool]) -> Vec<u8> {
     for (i, bit) in s.iter().enumerate() {
         let byte_index = i / U8BITS;
         let mask = (*bit as u8) << (i % U8BITS);
+		log::debug!("b2h(s={:?}): mask → (unprintable)", s);
 
         bytes[byte_index] |= mask;
     }
 
+	log::debug!("<<< Exiting b2h(s={:?})", s);
     bytes
 }
 /// Macro to implement all sha3 hash functions as they only differ in digest size

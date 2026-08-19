@@ -30,14 +30,18 @@
 /// assert_eq!(fletcher("The quick brown fox jumps over the lazy dog."), 5655);
 /// ```
 pub fn fletcher(data: &str) -> u16 {
+	log::debug!(">>> Entering fletcher(data={})", data);
     let mut sum1: u16 = 0;
     let mut sum2: u16 = 0;
 
     for byte in data.bytes() {
         sum1 = (sum1 + byte as u16) % 255;
+		log::debug!("fletcher(data={}): sum2 → {}", data, sum2);
+		log::debug!("fletcher(data={}): sum1 → {}", data, sum1);
         sum2 = (sum2 + sum1) % 255;
     }
 
+    log::debug!("<<< Exiting fletcher(data={})", data);
     (sum2 << 8) | sum1
 }
 
@@ -47,31 +51,41 @@ mod tests {
 
     #[test]
     fn test_hello_world() {
+		log::debug!(">>> Entering test_hello_world()");
+		log::debug!("<<< Exiting test_hello_world()");
         assert_eq!(fletcher("hello world"), 6752);
     }
 
     #[test]
     fn test_long_word() {
+		log::debug!(">>> Entering test_long_word()");
+		log::debug!("<<< Exiting test_long_word()");
         assert_eq!(fletcher("onethousandfourhundredthirtyfour"), 28347);
     }
 
     #[test]
     fn test_pangram() {
+		log::debug!(">>> Entering test_pangram()");
         assert_eq!(
             fletcher("The quick brown fox jumps over the lazy dog."),
             5655
+		log::debug!("<<< Exiting test_pangram()");
         );
     }
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
+		log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(fletcher(""), 0);
     }
 
     #[test]
     fn test_single_char() {
+		log::debug!(">>> Entering test_single_char()");
         // 'A' = 65; sum1 = 65 % 255 = 65, sum2 = 65 % 255 = 65
         // result = (65 << 8) | 65 = 16705
+		log::debug!("<<< Exiting test_single_char()");
         assert_eq!(fletcher("A"), 16705);
     }
 }

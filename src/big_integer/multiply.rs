@@ -1,5 +1,6 @@
 /// Performs long multiplication on string representations of non-negative numbers.
 pub fn multiply(num1: &str, num2: &str) -> String {
+	log::debug!(">>> Entering multiply(num1={},num2={})", num1, num2);
     if !is_valid_nonnegative(num1) || !is_valid_nonnegative(num2) {
         panic!("String does not conform to specification")
     }
@@ -8,6 +9,7 @@ pub fn multiply(num1: &str, num2: &str) -> String {
         return "0".to_string();
     }
     let output_size = num1.len() + num2.len();
+	log::debug!("multiply(num1={},num2={}): output_size → {}", num1, num2, output_size);
 
     let mut mult = vec![0; output_size];
     for (i, c1) in num1.chars().rev().enumerate() {
@@ -22,10 +24,14 @@ pub fn multiply(num1: &str, num2: &str) -> String {
     if mult[output_size - 1] == 0 {
         mult.pop();
     }
+	log::debug!("multiply(num1={},num2={}): mul → (unprintable)", num1, num2);
+    log::debug!("<<< Exiting multiply(num1={},num2={})", num1, num2);
     mult.iter().rev().map(|&n| n.to_string()).collect()
 }
 
 pub fn is_valid_nonnegative(num: &str) -> bool {
+	log::debug!(">>> Entering is_valid_nonnegative(num={})", num);
+    log::debug!("<<< Exiting is_valid_nonnegative(num={})", num);
     num.chars().all(char::is_numeric) && !num.is_empty() && (!num.starts_with('0') || num == "0")
 }
 

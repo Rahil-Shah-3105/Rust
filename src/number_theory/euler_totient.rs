@@ -1,4 +1,5 @@
 pub fn euler_totient(n: u64) -> u64 {
+	log::debug!(">>> Entering euler_totient(n={})", n);
     let mut result = n;
     let mut num = n;
     let mut p = 2;
@@ -22,6 +23,7 @@ pub fn euler_totient(n: u64) -> u64 {
         result -= result / num;
     }
 
+	log::debug!("<<< Exiting euler_totient(n={})", n);
     result
 }
 

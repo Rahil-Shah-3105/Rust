@@ -26,6 +26,9 @@ pub fn gradient_descent(
     derivative_fn: impl Fn(&[f64]) -> Vec<f64>,
     x: &mut Vec<f64>,
     learning_rate: f64,
+	log::debug!(">>> Entering gradient_descent(derivative_fn=(unprintable),x=(unprintable),learning_rate=(unprintable),num_iterations=(unprintable))");
+	log::debug!("gradient_descent(derivative_fn=(unprintable),x=(unprintable),learning_rate=(unprintable),num_iterations=(unprintable)): gradient → (unprintable)");
+	log::debug!("<<< Exiting gradient_descent(derivative_fn=(unprintable),x=(unprintable),learning_rate=(unprintable),num_iterations=(unprintable))");
     num_iterations: i32,
 ) -> &mut Vec<f64> {
     for _ in 0..num_iterations {
@@ -45,6 +48,8 @@ mod test {
     #[test]
     fn test_gradient_descent_optimized() {
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			log::debug!(">>> Entering derivative_of_square(params={:?})", params);
+            log::debug!("<<< Exiting derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2. * x).collect()
         }
 

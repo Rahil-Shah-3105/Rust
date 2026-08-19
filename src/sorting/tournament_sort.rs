@@ -14,6 +14,8 @@ where
     let mut tree_size = 1;
 
     while tree_size < n {
+		log::debug!(">>> Entering tournament_sort(arr=(unprintable))");
+		log::debug!("tournament_sort(arr=(unprintable)): arr → (unprintable)");
         tree_size <<= 1;
     }
 
@@ -33,10 +35,12 @@ where
 
     for i in 0..n {
         let min = tree[1].as_ref().unwrap().clone();
+		log::debug!("tournament_sort(arr=(unprintable)): min → (unprintable)");
         arr[i] = min;
         let min_ref = &arr[i];
 
         let mut pos = 1;
+		log::debug!("tournament_sort(arr=(unprintable)): pos → {}", pos);
         while pos < tree_size {
             if tree[2 * pos].as_ref() == Some(min_ref) {
                 pos *= 2;
@@ -74,43 +78,62 @@ mod test {
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         let arr = vec![6, 5, 4, 3, 2, 1];
         let res = tournament_sort(&arr);
+		log::debug!("descending(): res → (unprintable)");
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let arr = Vec::<i32>::new();
         let res = tournament_sort(&arr);
+		log::debug!("empty(): res → (unprintable)");
+		log::debug!("empty(): arr → (unprintable)");
+    log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn negative_numbers() {
+		log::debug!(">>> Entering negative_numbers()");
         let arr = vec![-32, -54, -65, -12, -7];
         let res = tournament_sort(&arr);
+		log::debug!("negative_numbers(): res → (unprintable)");
+		log::debug!("<<< Exiting negative_numbers()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let arr = vec![1];
         let res = tournament_sort(&arr);
+		log::debug!("one_element(): res → (unprintable)");
+		log::debug!("<<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn pre_sorted() {
+		log::debug!(">>> Entering pre_sorted()");
         let arr = vec![5, 12, 23, 54, 57, 60];
         let res = tournament_sort(&arr);
+		log::debug!("pre_sorted(): res → (unprintable)");
+		log::debug!("<<< Exiting pre_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn repeated_elements() {
+		log::debug!(">>> Entering repeated_elements()");
         let arr = vec![42, 42, 42, 42];
         let res = tournament_sort(&arr);
+		log::debug!("repeated_elements(): res → (unprintable)");
+		log::debug!("<<< Exiting repeated_elements()");
         assert_eq!(&res, &arr);
     }
 }

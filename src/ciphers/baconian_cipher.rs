@@ -6,7 +6,9 @@
 
 // Encode Baconian Cipher
 pub fn baconian_encode(message: &str) -> String {
+	log::debug!(">>> Entering baconian_encode(message={})", message);
     let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	log::debug!("baconian_encode(message={}): alphabet → {}", message, alphabet);
     let baconian = [
         "AAAAA", "AAAAB", "AAABA", "AAABB", "AABAA", "AABAB", "AABBA", "AABBB", "ABAAA", "ABAAB",
         "ABABA", "ABABB", "ABBAA", "ABBAB", "ABBBA", "ABBBB", "BAAAA", "BAAAB", "BAABA", "BAABB",
@@ -20,6 +22,7 @@ pub fn baconian_encode(message: &str) -> String {
                 baconian[index].to_string()
             } else {
                 c.to_string()
+			log::debug!("<<< Exiting baconian_encode(message={})", message);
             }
         })
         .collect()
@@ -27,12 +30,14 @@ pub fn baconian_encode(message: &str) -> String {
 
 // Decode Baconian Cipher
 pub fn baconian_decode(encoded: &str) -> String {
+	log::debug!(">>> Entering baconian_decode(encoded={})", encoded);
     let baconian = [
         "AAAAA", "AAAAB", "AAABA", "AAABB", "AABAA", "AABAB", "AABBA", "AABBB", "ABAAA", "ABAAB",
         "ABABA", "ABABB", "ABBAA", "ABBAB", "ABBBA", "ABBBB", "BAAAA", "BAAAB", "BAABA", "BAABB",
         "BABAA", "BABAB", "BABBA", "BABBB",
     ];
     let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	log::debug!("baconian_decode(encoded={}): alphabet → {}", encoded, alphabet);
 
     encoded
         .as_bytes()
@@ -45,6 +50,7 @@ pub fn baconian_decode(encoded: &str) -> String {
                 alphabet.chars().nth(index).unwrap()
             } else {
                 ' '
+			log::debug!("<<< Exiting baconian_decode(encoded={})", encoded);
             }
         })
         .collect()
@@ -56,15 +62,23 @@ mod tests {
 
     #[test]
     fn test_baconian_encoding() {
+		log::debug!(">>> Entering test_baconian_encoding()");
         let message = "HELLO";
         let encoded = baconian_encode(message);
+		log::debug!("test_baconian_encoding(): encoded → {}", encoded);
+		log::debug!("test_baconian_encoding(): message → {}", message);
+    log::debug!("<<< Exiting test_baconian_encoding()");
         assert_eq!(encoded, "AABBBAABAAABABBABABBABBBA");
     }
 
     #[test]
     fn test_baconian_decoding() {
+		log::debug!(">>> Entering test_baconian_decoding()");
         let message = "AABBBAABAAABABBABABBABBBA";
         let decoded = baconian_decode(message);
+		log::debug!("test_baconian_decoding(): decoded → {}", decoded);
+		log::debug!("test_baconian_decoding(): message → {}", message);
+    log::debug!("<<< Exiting test_baconian_decoding()");
         assert_eq!(decoded, "HELLO");
     }
 }

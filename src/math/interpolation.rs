@@ -4,6 +4,8 @@
 /// Source: https://en.wikipedia.org/wiki/Linear_interpolation
 /// point0 and point1 are a tuple containing x and y values we want to interpolate between
 pub fn linear_interpolation(x: f64, point0: (f64, f64), point1: (f64, f64)) -> f64 {
+	log::debug!(">>> Entering linear_interpolation(x={},point0={:?},point1={:?})", x, point0, point1);
+    log::debug!("<<< Exiting linear_interpolation(x={},point0={:?},point1={:?})", x, point0, point1);
     point0.1 + (x - point0.0) * (point1.1 - point0.1) / (point1.0 - point0.0)
 }
 
@@ -15,6 +17,7 @@ pub fn linear_interpolation(x: f64, point0: (f64, f64), point1: (f64, f64)) -> f
 /// x is the point we wish to interpolate
 /// defined points are a vector of tuples containing known x and y values of our function
 pub fn lagrange_polynomial_interpolation(x: f64, defined_points: &Vec<(f64, f64)>) -> f64 {
+	log::debug!(">>> Entering lagrange_polynomial_interpolation(x={},defined_points={:?})", x, defined_points);
     let mut defined_x_values: Vec<f64> = Vec::new();
     let mut defined_y_values: Vec<f64> = Vec::new();
 
@@ -38,6 +41,7 @@ pub fn lagrange_polynomial_interpolation(x: f64, defined_points: &Vec<(f64, f64)
 
         sum += numerator / denominator * defined_y_values[y_index];
     }
+	log::debug!("<<< Exiting lagrange_polynomial_interpolation(x={},defined_points={:?})", x, defined_points);
     sum
 }
 
@@ -49,28 +53,37 @@ mod tests {
     use super::*;
     #[test]
     fn test_linear_intepolation() {
+		log::debug!(">>> Entering test_linear_intepolation()");
         let point1 = (0.0, 0.0);
         let point2 = (1.0, 1.0);
+		log::debug!("test_linear_intepolation(): point2 → (unprintable)");
+		log::debug!("test_linear_intepolation(): point3 → (unprintable)");
+		log::debug!("test_linear_intepolation(): point1 → (unprintable)");
         let point3 = (2.0, 2.0);
 
         let x1 = 0.5;
         let x2 = 1.5;
 
         let y1 = linear_interpolation(x1, point1, point2);
+		log::debug!("test_linear_intepolation(): y1 → {}", y1);
         let y2 = linear_interpolation(x2, point2, point3);
+		log::debug!("test_linear_intepolation(): y2 → {}", y2);
 
         assert_eq!(y1, x1);
         assert_eq!(y2, x2);
         assert_eq!(
             linear_interpolation(x1, point1, point2),
             linear_interpolation(x1, point2, point1)
+		log::debug!("<<< Exiting test_linear_intepolation()");
         );
     }
 
     #[test]
     fn test_lagrange_polynomial_interpolation() {
+		log::debug!(">>> Entering test_lagrange_polynomial_interpolation()");
         // defined values for x^2 function
         let defined_points = vec![(0.0, 0.0), (1.0, 1.0), (2.0, 4.0), (3.0, 9.0)];
+		log::debug!("test_lagrange_polynomial_interpolation(): defined_points → (unprintable)");
 
         // check for equality
         assert_eq!(lagrange_polynomial_interpolation(1.0, &defined_points), 1.0);
@@ -85,6 +98,7 @@ mod tests {
         assert_eq!(
             lagrange_polynomial_interpolation(2.5, &defined_points),
             6.25
+		log::debug!("<<< Exiting test_lagrange_polynomial_interpolation()");
         );
     }
 }

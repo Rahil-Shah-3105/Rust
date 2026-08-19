@@ -44,21 +44,28 @@ const SIGMA: [[usize; 16]; 10] = [
 
 #[inline]
 const fn blank_block() -> Block {
+	log::debug!(">>> Entering blank_block()");
+    log::debug!("<<< Exiting blank_block()");
     [0u64; BB / U64BYTES]
 }
 
 // Overflowing addition
 #[inline]
 fn add(a: &mut Word, b: Word) {
+	log::debug!(">>> Entering add(a=(unprintable),b=(unprintable))");
+	log::debug!("<<< Exiting add(a=(unprintable),b=(unprintable))");
     *a = a.overflowing_add(b).0;
 }
 
 #[inline]
 const fn ceil(dividend: usize, divisor: usize) -> usize {
+	log::debug!(">>> Entering ceil(dividend={},divisor={})", dividend, divisor);
+    log::debug!("<<< Exiting ceil(dividend={},divisor={})", dividend, divisor);
     (dividend / divisor) + (!dividend.is_multiple_of(divisor) as usize)
 }
 
 fn g(v: &mut [Word; 16], a: usize, b: usize, c: usize, d: usize, x: Word, y: Word) {
+	log::debug!(">>> Entering g(v=(unprintable),a={},b={},c={},d={},x=(unprintable),y=(unprintable))", a, b, c, d);
     for (m, r) in [x, y].into_iter().zip(RC.chunks(2)) {
         let v_b = v[b];
         add(&mut v[a], v_b);
@@ -70,10 +77,12 @@ fn g(v: &mut [Word; 16], a: usize, b: usize, c: usize, d: usize, x: Word, y: Wor
         add(&mut v[c], v_d);
 
         v[b] = (v[b] ^ v[c]).rotate_right(r[1]);
+	log::debug!("<<< Exiting g(v=(unprintable),a={},b={},c={},d={},x=(unprintable),y=(unprintable))", a, b, c, d);
     }
 }
 
 fn f(h: &mut [Word; 8], m: Block, t: u128, flag: bool) {
+	log::debug!(">>> Entering f(h=(unprintable),m=(unprintable),t={},flag={})", t, flag);
     let mut v: [Word; 16] = [0; 16];
 
     for (i, (h_i, iv_i)) in h.iter().zip(IV.iter()).enumerate() {
@@ -133,10 +142,12 @@ fn f(h: &mut [Word; 8], m: Block, t: u128, flag: bool) {
 
     for (i, n) in h.iter_mut().enumerate() {
         *n ^= v[i] ^ v[i + 8];
+	log::debug!("<<< Exiting f(h=(unprintable),m=(unprintable),t={},flag={})", t, flag);
     }
 }
 
 fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
+	log::debug!(">>> Entering blake2(d=(unprintable),ll={},kk=(unprintable),nn=(unprintable))", ll);
     let mut h: [Word; 8] = IV
         .iter()
         .take(8)
@@ -156,6 +167,7 @@ fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
     let ll = if kk > 0 { ll + BB as u128 } else { ll };
     f(&mut h, d[d.len() - 1], ll, true);
 
+	log::debug!("<<< Exiting blake2(d=(unprintable),ll={},kk=(unprintable),nn=(unprintable))", ll);
     h.iter()
         .flat_map(|n| n.to_le_bytes())
         .take(nn as usize)
@@ -164,6 +176,7 @@ fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
 
 // Take arbitrarily long slice of u8's and turn up to 8 bytes into u64
 fn bytes_to_word(bytes: &[u8]) -> Word {
+	log::debug!(">>> Entering bytes_to_word(bytes={:?})", bytes);
     if let Ok(arr) = <[u8; U64BYTES]>::try_from(bytes) {
         Word::from_le_bytes(arr)
     } else {
@@ -172,18 +185,23 @@ fn bytes_to_word(bytes: &[u8]) -> Word {
             *a_i = *b_i;
         }
 
+		log::debug!("<<< Exiting bytes_to_word(bytes={:?})", bytes);
         Word::from_le_bytes(arr)
     }
 }
 
 pub fn blake2b(m: &[u8], k: &[u8], nn: u8) -> Vec<u8> {
+	log::debug!(">>> Entering blake2b(m={:?},k={:?},nn={})", m, k, nn);
     let kk = min(k.len(), KK_MAX);
     let nn = min(nn, NN_MAX);
+	log::debug!("blake2b(m={:?},k={:?},nn={}): nn → {}", m, k, nn, nn);
+	log::debug!("blake2b(m={:?},k={:?},nn={}): kk → (unprintable)", m, k, nn);
 
     // Prevent user from giving a key that is too long
     let k = &k[..kk];
 
     let dd = max(ceil(kk, BB) + ceil(m.len(), BB), 1);
+	log::debug!("blake2b(m={:?},k={:?},nn={}): dd → (unprintable)", m, k, nn);
 
     let mut blocks: Vec<Block> = vec![blank_block(); dd];
 
@@ -193,15 +211,19 @@ pub fn blake2b(m: &[u8], k: &[u8], nn: u8) -> Vec<u8> {
     }
 
     let first_index = (kk > 0) as usize;
+	log::debug!("blake2b(m={:?},k={:?},nn={}): first_index → (unprintable)", m, k, nn);
 
     // Copy bytes from message into blocks
     for (i, c) in m.chunks(U64BYTES).enumerate() {
         let block_index = first_index + (i / (BB / U64BYTES));
+		log::debug!("blake2b(m={:?},k={:?},nn={}): block_index → (unprintable)", m, k, nn);
+		log::debug!("blake2b(m={:?},k={:?},nn={}): word_in_block → (unprintable)", m, k, nn);
         let word_in_block = i % (BB / U64BYTES);
 
         blocks[block_index][word_in_block] = bytes_to_word(c);
     }
 
+	log::debug!("<<< Exiting blake2b(m={:?},k={:?},nn={})", m, k, nn);
     blake2(blocks, m.len() as u128, kk as u64, nn as Word)
 }
 

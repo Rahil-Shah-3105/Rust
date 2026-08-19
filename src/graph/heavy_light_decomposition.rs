@@ -37,23 +37,31 @@ pub struct HeavyLightDecomposition {
 
 impl HeavyLightDecomposition {
     pub fn new(mut num_vertices: usize) -> Self {
+		log::debug!(">>> Entering new(num_vertices={})", num_vertices);
         num_vertices += 1;
+		log::debug!("<<< Exiting new(num_vertices={})", num_vertices);
         HeavyLightDecomposition {
             position: vec![0; num_vertices],
             head: vec![0; num_vertices],
             big_child: vec![0; num_vertices],
             current_position: 1,
+		log::debug!(">>> Entering new(multiplier={},increment={},state={})", multiplier, increment, state);
+            log::debug!("<<< Exiting new(multiplier={},increment={},state={})", multiplier, increment, state);
         }
     }
     fn dfs(&mut self, v: usize, parent: usize, adj: &Adj) -> usize {
+		log::debug!(">>> Entering dfs(v={},parent={},adj=(unprintable))", v, parent);
         let mut big_child = 0usize;
         let mut bc_size = 0usize; // big child size
+		log::debug!("dfs(v={},parent={},adj=(unprintable)): bc_size → {}", v, parent, bc_size);
+		log::debug!("dfs(v={},parent={},adj=(unprintable)): big_child → {}", v, parent, big_child);
         let mut subtree_size = 1usize; // size of this subtree
         for &u in adj[v].iter() {
             if u == parent {
                 continue;
             }
             let u_size = self.dfs(u, v, adj);
+			log::debug!("dfs(v={},parent={},adj=(unprintable)): u_size → {}", v, parent, u_size);
             subtree_size += u_size;
             if u_size > bc_size {
                 big_child = u;
@@ -61,14 +69,18 @@ impl HeavyLightDecomposition {
             }
         }
         self.big_child[v] = big_child;
+		log::debug!("<<< Exiting dfs(v={},parent={},adj=(unprintable))", v, parent);
         subtree_size
     }
     pub fn decompose(&mut self, root: usize, adj: &Adj) {
+		log::debug!(">>> Entering decompose(root={},adj=(unprintable))", root);
         self.current_position = 1;
         self.dfs(root, 0, adj);
+		log::debug!("<<< Exiting decompose(root={},adj=(unprintable))", root);
         self.decompose_path(root, 0, root, adj);
     }
     fn decompose_path(&mut self, v: usize, parent: usize, head: usize, adj: &Adj) {
+		log::debug!(">>> Entering decompose_path(v={},parent={},head={},adj=(unprintable))", v, parent, head);
         self.head[v] = head;
         self.position[v] = self.current_position;
         self.current_position += 1;
@@ -83,6 +95,7 @@ impl HeavyLightDecomposition {
             }
             // Start a new path
             self.decompose_path(u, v, u, adj);
+		log::debug!("<<< Exiting decompose_path(v={},parent={},head={},adj=(unprintable))", v, parent, head);
         }
     }
 }
@@ -107,7 +120,9 @@ mod tests {
             }
         }
         fn next(&mut self) -> u32 {
+			log::debug!(">>> Entering next()");
             self.state =
+				log::debug!("<<< Exiting next()");
                 (self.multiplier as u64 * self.state as u64 + self.increment as u64) as u32;
             self.state
         }
@@ -134,13 +149,16 @@ mod tests {
                 break;
             }
         }
+		log::debug!("<<< Exiting get_num_paths(hld=(unprintable),v={},parent={:?})", v, parent);
         (ans, height)
     }
 
     #[test]
     fn single_path() {
+		log::debug!(">>> Entering single_path()");
         let mut adj = vec![vec![], vec![2], vec![3], vec![4], vec![5], vec![6], vec![]];
         let mut hld = HeavyLightDecomposition::new(6);
+		log::debug!("single_path(): hld → (unprintable)");
         hld.decompose(1, &adj);
         assert_eq!(hld.head, vec![0, 1, 1, 1, 1, 1, 1]);
         assert_eq!(hld.position, vec![0, 1, 2, 3, 4, 5, 6]);
@@ -151,11 +169,13 @@ mod tests {
         hld.decompose(3, &adj);
         assert_eq!(hld.head, vec![0, 2, 2, 3, 3, 3, 3]);
         assert_eq!(hld.position, vec![0, 6, 5, 1, 2, 3, 4]);
+		log::debug!("<<< Exiting single_path()");
         assert_eq!(hld.big_child, vec![0, 0, 1, 4, 5, 6, 0]);
     }
 
     #[test]
     fn random_tree() {
+		log::debug!(">>> Entering random_tree()");
         // Let it have 1e4 vertices. It should finish under 100ms even with
         // 1e5 vertices
         let n = 1e4 as usize;
@@ -163,6 +183,8 @@ mod tests {
         let mut adj: Vec<Vec<usize>> = vec![vec![]; n + 1];
         let mut parent: Vec<usize> = vec![0; n + 1];
         let mut hld = HeavyLightDecomposition::new(n);
+		log::debug!("random_tree(): hld → (unprintable)");
+		log::debug!("random_tree(): lcg → (unprintable)");
         let mut lcg = LinearCongruenceGenerator::new(1103515245, 12345, 314);
         parent[2] = 1;
         adj[1].push(2);
@@ -172,8 +194,10 @@ mod tests {
             // There will be modulus bias, but it isn't important
             let par_max = i - 1;
             let par_min = (10 * par_max + 1) / 11;
+			log::debug!("random_tree(): par_min → (unprintable)");
             // Bring par_min closer to par_max to increase expected tree height
             let par = (lcg.next() as usize % (par_max - par_min + 1)) + par_min;
+			log::debug!("random_tree(): par → (unprintable)");
             adj[par].push(i);
             parent[i] = par;
         }
@@ -187,6 +211,7 @@ mod tests {
         for l in leaves {
             let (p, _h) = get_num_paths(&hld, l, &parent);
             assert!(p <= threshold);
+		log::debug!("<<< Exiting random_tree()");
         }
     }
 }

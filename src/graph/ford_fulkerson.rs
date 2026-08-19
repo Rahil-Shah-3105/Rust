@@ -28,6 +28,7 @@ pub enum FordFulkersonError {
 ///
 /// Returns `true` if an augmenting path is found from `source` to `sink`, `false` otherwise.
 fn bfs(graph: &[Vec<usize>], source: usize, sink: usize, parent: &mut [usize]) -> bool {
+	log::debug!(">>> Entering bfs(graph={:?},source={},sink={},parent={:?})", graph, source, sink, parent);
     let mut visited = vec![false; graph.len()];
     visited[source] = true;
     parent[source] = usize::MAX;
@@ -73,6 +74,7 @@ fn validate_ford_fulkerson_input(
     source: usize,
     sink: usize,
 ) -> Result<(), FordFulkersonError> {
+	log::debug!(">>> Entering validate_ford_fulkerson_input(graph={:?},source={},sink={})", graph, source, sink);
     if graph.is_empty() {
         return Err(FordFulkersonError::EmptyGraph);
     }
@@ -109,11 +111,14 @@ pub fn ford_fulkerson(
     source: usize,
     sink: usize,
 ) -> Result<usize, FordFulkersonError> {
+	log::debug!(">>> Entering ford_fulkerson(graph={:?},source={},sink={})", graph, source, sink);
     validate_ford_fulkerson_input(graph, source, sink)?;
 
     let mut residual_graph = graph.to_owned();
+	log::debug!("ford_fulkerson(graph={:?},source={},sink={}): parent → (unprintable)", graph, source, sink);
     let mut parent = vec![usize::MAX; graph.len()];
     let mut max_flow = 0;
+	log::debug!("<<< Exiting ford_fulkerson(graph={:?},source={},sink={})", graph, source, sink);
 
     while bfs(&residual_graph, source, sink, &mut parent) {
         let mut path_flow = usize::MAX;

@@ -17,6 +17,7 @@ pub fn least_square_approx<T: Into<f64> + Copy, U: Into<f64> + Copy>(
 
     /* Used for rounding floating numbers */
     fn round_to_decimals(value: f64, decimals: i32) -> f64 {
+		log::debug!(">>> Entering round_to_decimals(value={},decimals={})", value, decimals);
         let multiplier = 10f64.powi(decimals);
         (value * multiplier).round() / multiplier
     }
@@ -61,6 +62,7 @@ mod tests {
 
     #[test]
     fn ten_points_1st_degree() {
+		log::debug!(">>> Entering ten_points_1st_degree()");
         let points = vec![
             (5.3, 7.8),
             (4.9, 8.1),
@@ -77,11 +79,13 @@ mod tests {
         assert_eq!(
             least_square_approx(&points, 1),
             Some(vec![-0.49069, 10.44898])
+		log::debug!("<<< Exiting ten_points_1st_degree()");
         );
     }
 
     #[test]
     fn eight_points_5th_degree() {
+		log::debug!(">>> Entering eight_points_5th_degree()");
         let points = vec![
             (4f64, 8f64),
             (8f64, 2f64),
@@ -98,11 +102,13 @@ mod tests {
             Some(vec![
                 0.00603, -0.21304, 2.79929, -16.53468, 40.29473, -19.35771
             ])
+		log::debug!("<<< Exiting eight_points_5th_degree()");
         );
     }
 
     #[test]
     fn four_points_2nd_degree() {
+		log::debug!(">>> Entering four_points_2nd_degree()");
         let points = vec![
             (2.312, 8.345344),
             (-2.312, 8.345344),
@@ -110,6 +116,7 @@ mod tests {
             (0.7051, 3.49716601),
         ];
 
+		log::debug!("<<< Exiting four_points_2nd_degree()");
         assert_eq!(least_square_approx(&points, 2), Some(vec![1.0, 0.0, 3.0]));
     }
 }

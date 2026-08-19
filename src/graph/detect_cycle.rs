@@ -14,6 +14,7 @@ fn undirected_graph_detect_cycle_dfs<'a>(
     parent: Option<&'a String>,
     u: &'a String,
 ) -> bool {
+	log::debug!(">>> Entering undirected_graph_detect_cycle_dfs(graph=(unprintable),visited_node={:?},parent={:?},u={})", visited_node, parent, u);
     visited_node.insert(u);
     for (v, _) in graph.adjacency_table().get(u).unwrap() {
         if matches!(parent, Some(parent) if v == parent) {
@@ -34,6 +35,7 @@ fn undirected_graph_detect_cycle_bfs<'a>(
     visited_node: &mut HashSet<&'a String>,
     u: &'a String,
 ) -> bool {
+	log::debug!(">>> Entering undirected_graph_detect_cycle_bfs(graph=(unprintable),visited_node={:?},u={})", visited_node, u);
     visited_node.insert(u);
 
     // Initialize the queue for BFS, storing (current node, parent node) tuples
@@ -79,6 +81,8 @@ impl DetectCycle for UndirectedGraph {
                 return true;
             }
         }
+		log::debug!(">>> Entering detect_cycle_bfs()");
+		log::debug!("<<< Exiting detect_cycle_bfs()");
         false
     }
 }
@@ -90,6 +94,7 @@ fn directed_graph_detect_cycle_dfs<'a>(
     in_stack_visited_node: &mut HashSet<&'a String>,
     u: &'a String,
 ) -> bool {
+	log::debug!(">>> Entering directed_graph_detect_cycle_dfs(graph=(unprintable),visited_node={:?},in_stack_visited_node={:?},u={})", visited_node, in_stack_visited_node, u);
     visited_node.insert(u);
     in_stack_visited_node.insert(u);
     for (v, _) in graph.adjacency_table().get(u).unwrap() {
@@ -99,6 +104,11 @@ fn directed_graph_detect_cycle_dfs<'a>(
         if !visited_node.contains(v)
             && directed_graph_detect_cycle_dfs(graph, visited_node, in_stack_visited_node, v)
         {
+			log::debug!(">>> Entering detect_cycle_dfs()");
+			log::debug!("detect_cycle_dfs(): in_stack_visited_node → (unprintable)");
+			log::debug!("detect_cycle_dfs(): adj → (unprintable)");
+			log::debug!("detect_cycle_dfs(): visited_node → (unprintable)");
+        log::debug!("<<< Exiting detect_cycle_dfs()");
             return true;
         }
     }
@@ -170,94 +180,133 @@ mod test {
     use super::DetectCycle;
     use crate::data_structures::{graph::Graph, DirectedGraph, UndirectedGraph};
     fn get_undirected_single_node_with_loop() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_single_node_with_loop()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "a", 1));
+		log::debug!("get_undirected_single_node_with_loop(): res → (unprintable)");
+        log::debug!("<<< Exiting get_undirected_single_node_with_loop()");
         res
     }
     fn get_directed_single_node_with_loop() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_single_node_with_loop()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "a", 1));
+		log::debug!("get_directed_single_node_with_loop(): res → (unprintable)");
+        log::debug!("<<< Exiting get_directed_single_node_with_loop()");
         res
     }
     fn get_undirected_two_nodes_connected() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_two_nodes_connected()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_undirected_two_nodes_connected(): res → (unprintable)");
+        log::debug!("<<< Exiting get_undirected_two_nodes_connected()");
         res
     }
     fn get_directed_two_nodes_connected() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_two_nodes_connected()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_directed_two_nodes_connected(): res → (unprintable)");
         res.add_edge(("b", "a", 1));
+		log::debug!("<<< Exiting get_directed_two_nodes_connected()");
         res
     }
     fn get_directed_two_nodes() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_two_nodes()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_directed_two_nodes(): res → (unprintable)");
+        log::debug!("<<< Exiting get_directed_two_nodes()");
         res
     }
     fn get_undirected_triangle() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_triangle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_undirected_triangle(): res → (unprintable)");
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "a", 1));
+		log::debug!("<<< Exiting get_undirected_triangle()");
         res
     }
     fn get_directed_triangle() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_triangle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_directed_triangle(): res → (unprintable)");
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "a", 1));
+		log::debug!("<<< Exiting get_directed_triangle()");
         res
     }
     fn get_undirected_triangle_with_tail() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_triangle_with_tail()");
         let mut res = get_undirected_triangle();
         res.add_edge(("c", "d", 1));
+		log::debug!("get_undirected_triangle_with_tail(): res → (unprintable)");
         res.add_edge(("d", "e", 1));
         res.add_edge(("e", "f", 1));
         res.add_edge(("g", "h", 1));
+		log::debug!("<<< Exiting get_undirected_triangle_with_tail()");
         res
     }
     fn get_directed_triangle_with_tail() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_triangle_with_tail()");
         let mut res = get_directed_triangle();
         res.add_edge(("c", "d", 1));
+		log::debug!("get_directed_triangle_with_tail(): res → (unprintable)");
         res.add_edge(("d", "e", 1));
         res.add_edge(("e", "f", 1));
         res.add_edge(("g", "h", 1));
+		log::debug!("<<< Exiting get_directed_triangle_with_tail()");
         res
     }
     fn get_undirected_graph_with_cycle() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_graph_with_cycle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_undirected_graph_with_cycle(): res → (unprintable)");
         res.add_edge(("a", "c", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("b", "d", 1));
         res.add_edge(("c", "d", 1));
+		log::debug!("<<< Exiting get_undirected_graph_with_cycle()");
         res
     }
     fn get_undirected_graph_without_cycle() -> UndirectedGraph {
+		log::debug!(">>> Entering get_undirected_graph_without_cycle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		log::debug!("get_undirected_graph_without_cycle(): res → (unprintable)");
         res.add_edge(("a", "c", 1));
         res.add_edge(("b", "d", 1));
         res.add_edge(("c", "e", 1));
+		log::debug!("<<< Exiting get_undirected_graph_without_cycle()");
         res
     }
     fn get_directed_graph_with_cycle() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_graph_with_cycle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("b", "a", 1));
+		log::debug!("get_directed_graph_with_cycle(): res → (unprintable)");
         res.add_edge(("c", "a", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "d", 1));
         res.add_edge(("d", "b", 1));
+		log::debug!("<<< Exiting get_directed_graph_with_cycle()");
         res
     }
     fn get_directed_graph_without_cycle() -> DirectedGraph {
+		log::debug!(">>> Entering get_directed_graph_without_cycle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("b", "a", 1));
+		log::debug!("get_directed_graph_without_cycle(): res → (unprintable)");
         res.add_edge(("c", "a", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "d", 1));
         res.add_edge(("b", "d", 1));
+		log::debug!("<<< Exiting get_directed_graph_without_cycle()");
         res
     }
     macro_rules! test_detect_cycle {

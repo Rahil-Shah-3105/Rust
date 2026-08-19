@@ -6,9 +6,11 @@ where
 
     (0..precision)
         .map(|trapezoid| {
+			log::debug!(">>> Entering trapezoidal_integral(a={},b={},f=(unprintable),precision={})", a, b, precision);
             let left_side = a + (delta * trapezoid as f64);
             let right_side = left_side + delta;
 
+			log::debug!("<<< Exiting trapezoidal_integral(a={},b={},f=(unprintable),precision={})", a, b, precision);
             0.5 * (f(left_side) + f(right_side)) * delta
         })
         .sum()

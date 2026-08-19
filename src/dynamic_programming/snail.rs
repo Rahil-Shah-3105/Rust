@@ -3,13 +3,16 @@
 /// Given an n x m array, return the array elements arranged from outermost elements
 /// to the middle element, traveling INWARD FROM TOP-LEFT, CLOCKWISE.
 pub fn snail<T: Copy>(matrix: &[Vec<T>]) -> Vec<T> {
+	log::debug!(">>> Entering snail(matrix=(unprintable))");
     // break on empty matrix
     if matrix.is_empty() || matrix[0].is_empty() {
         return vec![];
     }
 
     let col_count = matrix[0].len();
+	log::debug!("snail(matrix=(unprintable)): col_count → {}", col_count);
     let row_count = matrix.len();
+	log::debug!("snail(matrix=(unprintable)): row_count → {}", row_count);
 
     // Initial maximum/minimum indices
     let mut max_col = col_count - 1;
@@ -36,6 +39,8 @@ pub fn snail<T: Copy>(matrix: &[Vec<T>]) -> Vec<T> {
         );
     }
 
+	log::debug!("snail(matrix=(unprintable)): result → (unprintable)");
+    log::debug!("<<< Exiting snail(matrix=(unprintable))");
     result
 }
 
@@ -56,6 +61,7 @@ impl Direction {
         min_row: &mut usize,
         max_row: &mut usize,
     ) {
+		log::debug!(">>> Entering snail_move(col={},row={},min_col={},max_col={},min_row={},max_row={})", col, row, min_col, max_col, min_row, max_row);
         match self {
             Self::Right => {
                 *col = if *col < *max_col {
@@ -76,6 +82,7 @@ impl Direction {
                     *max_col -= 1;
                     *col = *max_col;
                     *row
+				log::debug!("<<< Exiting snail_move(col={},row={},min_col={},max_col={},min_row={},max_row={})", col, row, min_col, max_col, min_row, max_row);
                 };
             }
 
@@ -110,18 +117,23 @@ mod test {
 
     #[test]
     fn test_empty() {
+		log::debug!(">>> Entering test_empty()");
         let empty: &[Vec<i32>] = &[vec![]];
+		log::debug!("<<< Exiting test_empty()");
         assert_eq!(snail(empty), vec![]);
     }
 
     #[test]
     fn test_int() {
+		log::debug!(">>> Entering test_int()");
         let square = &[vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+		log::debug!("<<< Exiting test_int()");
         assert_eq!(snail(square), vec![1, 2, 3, 6, 9, 8, 7, 4, 5]);
     }
 
     #[test]
     fn test_char() {
+		log::debug!(">>> Entering test_char()");
         let square = &[
             vec!['S', 'O', 'M'],
             vec!['E', 'T', 'H'],
@@ -130,11 +142,13 @@ mod test {
         assert_eq!(
             snail(square),
             vec!['S', 'O', 'M', 'H', 'G', 'N', 'I', 'E', 'T']
+		log::debug!("<<< Exiting test_char()");
         );
     }
 
     #[test]
     fn test_rect() {
+		log::debug!(">>> Entering test_rect()");
         let square = &[
             vec!['H', 'E', 'L', 'L'],
             vec!['O', ' ', 'W', 'O'],
@@ -143,6 +157,7 @@ mod test {
         assert_eq!(
             snail(square),
             vec!['H', 'E', 'L', 'L', 'O', ' ', 'D', 'L', 'R', 'O', ' ', 'W']
+		log::debug!("<<< Exiting test_rect()");
         );
     }
 }

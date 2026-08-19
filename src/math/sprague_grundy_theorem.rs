@@ -18,6 +18,7 @@ pub fn calculate_grundy_number(
     grundy_numbers: &mut [i64],
     possible_moves: &[i64],
 ) -> i64 {
+	log::debug!(">>> Entering calculate_grundy_number(position={},grundy_numbers={:?},possible_moves={:?})", position, grundy_numbers, possible_moves);
     // Check if we've already calculated the Grundy number for this position.
     if grundy_numbers[position as usize] != -1 {
         return grundy_numbers[position as usize];
@@ -62,9 +63,11 @@ mod tests {
 
     #[test]
     fn calculate_grundy_number_test() {
+		log::debug!(">>> Entering calculate_grundy_number_test()");
         let mut grundy_numbers: Vec<i64> = vec![-1; 7];
         let possible_moves: Vec<i64> = vec![1, 4];
         calculate_grundy_number(6, &mut grundy_numbers, &possible_moves);
+		log::debug!("<<< Exiting calculate_grundy_number_test()");
         assert_eq!(grundy_numbers, [0, 1, 0, 1, 2, 0, 1]);
     }
 }

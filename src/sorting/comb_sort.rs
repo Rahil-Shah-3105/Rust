@@ -1,7 +1,10 @@
 pub fn comb_sort<T: Ord>(arr: &mut [T]) {
+	log::debug!(">>> Entering comb_sort(arr=(unprintable))");
     let mut gap = arr.len();
     let shrink = 1.3;
+	log::debug!("comb_sort(arr=(unprintable)): gap → {}", gap);
     let mut sorted = false;
+	log::debug!("comb_sort(arr=(unprintable)): sorted → {}", sorted);
 
     while !sorted {
         gap = (gap as f32 / shrink).floor() as usize;
@@ -16,6 +19,7 @@ pub fn comb_sort<T: Ord>(arr: &mut [T]) {
                 sorted = false;
             }
         }
+	log::debug!("<<< Exiting comb_sort(arr=(unprintable))");
     }
 }
 
@@ -27,28 +31,37 @@ mod tests {
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         //descending
         let mut ve1 = vec![6, 5, 4, 3, 2, 1];
         let cloned = ve1.clone();
+		log::debug!("descending(): cloned → (unprintable)");
         comb_sort(&mut ve1);
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn ascending() {
+		log::debug!(">>> Entering ascending()");
         //pre-sorted
         let mut ve2 = vec![1, 2, 3, 4, 5, 6];
         let cloned = ve2.clone();
+		log::debug!("ascending(): cloned → (unprintable)");
         comb_sort(&mut ve2);
+		log::debug!("<<< Exiting ascending()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
 
     #[test]
     fn duplicates() {
+		log::debug!(">>> Entering duplicates()");
         //pre-sorted
         let mut ve3 = vec![2, 2, 2, 2, 2, 1];
         let cloned = ve3.clone();
+		log::debug!("duplicates(): cloned → (unprintable)");
         comb_sort(&mut ve3);
+		log::debug!("<<< Exiting duplicates()");
         assert!(is_sorted(&ve3) && have_same_elements(&ve3, &cloned));
     }
 }

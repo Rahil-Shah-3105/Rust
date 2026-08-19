@@ -9,6 +9,7 @@ where
     T: PartialOrd + Copy,
 {
     if input.is_empty() {
+		log::debug!(">>> Entering kth_smallest(input=(unprintable),k={})", k);
         return None;
     }
 
@@ -21,6 +22,8 @@ where
     T: PartialOrd + Copy,
 {
     if lo == hi {
+		log::debug!(">>> Entering _kth_smallest(input=(unprintable),k={},lo={},hi={})", k, lo, hi);
+		log::debug!("<<< Exiting _kth_smallest(input=(unprintable),k={},lo={},hi={})", k, lo, hi);
         return input[lo];
     }
 
@@ -40,26 +43,37 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut zero: [u8; 0] = [];
         let first = kth_smallest(&mut zero, 1);
+		log::debug!("empty(): first → (unprintable)");
 
+		log::debug!("<<< Exiting empty()");
         assert_eq!(None, first);
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let mut one = [1];
         let first = kth_smallest(&mut one, 1);
+		log::debug!("one_element(): first → (unprintable)");
 
+		log::debug!("<<< Exiting one_element()");
         assert_eq!(1, first.unwrap());
     }
 
     #[test]
     fn many_elements() {
+		log::debug!(">>> Entering many_elements()");
         // 0 1 3 4 5 7 8 9 9 10 12 13 16 17
         let mut many = [9, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0];
 
         let first = kth_smallest(&mut many, 1);
+		log::debug!("many_elements(): first → (unprintable)");
+		log::debug!("many_elements(): third → (unprintable)");
+		log::debug!("many_elements(): sixth → (unprintable)");
+		log::debug!("many_elements(): fourteenth → (unprintable)");
         let third = kth_smallest(&mut many, 3);
         let sixth = kth_smallest(&mut many, 6);
         let fourteenth = kth_smallest(&mut many, 14);
@@ -67,6 +81,7 @@ mod tests {
         assert_eq!(0, first.unwrap());
         assert_eq!(3, third.unwrap());
         assert_eq!(7, sixth.unwrap());
+		log::debug!("<<< Exiting many_elements()");
         assert_eq!(17, fourteenth.unwrap());
     }
 }

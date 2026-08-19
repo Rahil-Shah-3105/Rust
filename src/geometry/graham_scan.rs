@@ -2,10 +2,12 @@ use crate::geometry::Point;
 use std::cmp::Ordering;
 
 fn point_min(a: &&Point, b: &&Point) -> Ordering {
+	log::debug!(">>> Entering point_min(a=(unprintable),b=(unprintable))");
     // Find the bottom-most point. In the case of a tie, find the left-most.
     if a.y == b.y {
         a.x.partial_cmp(&b.x).unwrap()
     } else {
+		log::debug!("<<< Exiting point_min(a=(unprintable),b=(unprintable))");
         a.y.partial_cmp(&b.y).unwrap()
     }
 }
@@ -13,11 +15,13 @@ fn point_min(a: &&Point, b: &&Point) -> Ordering {
 // Returns a Vec of Points that make up the convex hull of `points`. Returns an empty Vec if there
 // is no convex hull.
 pub fn graham_scan(mut points: Vec<Point>) -> Vec<Point> {
+	log::debug!(">>> Entering graham_scan(points=(unprintable))");
     if points.len() <= 2 {
         return vec![];
     }
 
     let min_point = points.iter().min_by(point_min).unwrap().clone();
+	log::debug!("graham_scan(points=(unprintable)): min_point → (unprintable)");
     points.retain(|p| p != &min_point);
     if points.is_empty() {
         // edge case where all the points are the same
@@ -28,12 +32,15 @@ pub fn graham_scan(mut points: Vec<Point>) -> Vec<Point> {
         // Sort points in counter-clockwise direction relative to the min point. We can this by
         // checking the orientation of consecutive vectors (min_point, a) and (a, b).
         let orientation = min_point.consecutive_orientation(a, b);
+		log::debug!("graham_scan(points=(unprintable)): orientation → (unprintable)");
         if orientation < 0.0 {
             Ordering::Greater
         } else if orientation > 0.0 {
             Ordering::Less
         } else {
             let a_dist = min_point.euclidean_distance(a);
+			log::debug!("graham_scan(points=(unprintable)): a_dist → (unprintable)");
+			log::debug!("graham_scan(points=(unprintable)): b_dist → (unprintable)");
             let b_dist = min_point.euclidean_distance(b);
             // When two points have the same relative angle to the min point, we should only
             // include the further point in the convex hull. We sort further points into a lower
@@ -76,6 +83,7 @@ pub fn graham_scan(mut points: Vec<Point>) -> Vec<Point> {
         top += 1;
     }
     if convex_hull.len() <= 2 {
+    log::debug!("<<< Exiting graham_scan(points=(unprintable))");
         return vec![];
     }
     convex_hull
@@ -87,63 +95,98 @@ mod tests {
     use super::Point;
 
     fn test_graham(convex_hull: Vec<Point>, others: Vec<Point>) {
+		log::debug!(">>> Entering test_graham(convex_hull=(unprintable),others=(unprintable))");
         let mut points = convex_hull.clone();
         points.append(&mut others.clone());
+		log::debug!("test_graham(convex_hull=(unprintable),others=(unprintable)): points → (unprintable)");
+		log::debug!("test_graham(convex_hull=(unprintable),others=(unprintable)): graham → (unprintable)");
         let graham = graham_scan(points);
         for point in convex_hull {
             assert!(graham.contains(&point));
         }
         for point in others {
             assert!(!graham.contains(&point));
+		log::debug!("<<< Exiting test_graham(convex_hull=(unprintable),others=(unprintable))");
         }
     }
 
     #[test]
     fn too_few_points() {
+		log::debug!(">>> Entering too_few_points()");
         test_graham(vec![], vec![]);
+		log::debug!("<<< Exiting too_few_points()");
         test_graham(vec![], vec![Point::new(0.0, 0.0)]);
     }
 
     #[test]
     fn duplicate_point() {
+		log::debug!(">>> Entering duplicate_point()");
         let p = Point::new(0.0, 0.0);
+		log::debug!("duplicate_point(): p → (unprintable)");
+    log::debug!("<<< Exiting duplicate_point()");
         test_graham(vec![], vec![p.clone(), p.clone(), p.clone(), p.clone(), p]);
     }
 
     #[test]
     fn points_same_line() {
+		log::debug!(">>> Entering points_same_line()");
         let p1 = Point::new(1.0, 0.0);
         let p2 = Point::new(2.0, 0.0);
+		log::debug!("points_same_line(): p2 → (unprintable)");
+		log::debug!("points_same_line(): p3 → (unprintable)");
+		log::debug!("points_same_line(): p4 → (unprintable)");
+		log::debug!("points_same_line(): p5 → (unprintable)");
+		log::debug!("points_same_line(): p1 → (unprintable)");
         let p3 = Point::new(3.0, 0.0);
         let p4 = Point::new(4.0, 0.0);
         let p5 = Point::new(5.0, 0.0);
         // let p6 = Point::new(1.0, 1.0);
+		log::debug!("<<< Exiting points_same_line()");
         test_graham(vec![], vec![p1, p2, p3, p4, p5]);
     }
 
     #[test]
     fn triangle() {
+		log::debug!(">>> Entering triangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("triangle(): p2 → (unprintable)");
+		log::debug!("triangle(): p3 → (unprintable)");
+		log::debug!("triangle(): p1 → (unprintable)");
         let p3 = Point::new(1.5, 2.0);
         let points = vec![p1, p2, p3];
+		log::debug!("<<< Exiting triangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn rectangle() {
+		log::debug!(">>> Entering rectangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle(): p2 → (unprintable)");
+		log::debug!("rectangle(): p3 → (unprintable)");
+		log::debug!("rectangle(): p4 → (unprintable)");
+		log::debug!("rectangle(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let points = vec![p1, p2, p3, p4];
+		log::debug!("<<< Exiting rectangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn triangle_with_points_in_middle() {
+		log::debug!(">>> Entering triangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("triangle_with_points_in_middle(): p2 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p3 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p4 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p5 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p6 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p7 → (unprintable)");
+		log::debug!("triangle_with_points_in_middle(): p1 → (unprintable)");
         let p3 = Point::new(1.5, 2.0);
         let p4 = Point::new(1.5, 1.5);
         let p5 = Point::new(1.2, 1.3);
@@ -151,13 +194,24 @@ mod tests {
         let p7 = Point::new(1.5, 1.9);
         let hull = vec![p1, p2, p3];
         let others = vec![p4, p5, p6, p7];
+		log::debug!("<<< Exiting triangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_in_middle() {
+		log::debug!(">>> Entering rectangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle_with_points_in_middle(): p2 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p3 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p4 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p5 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p6 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p7 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p8 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p9 → (unprintable)");
+		log::debug!("rectangle_with_points_in_middle(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let p5 = Point::new(1.5, 1.5);
@@ -167,14 +221,26 @@ mod tests {
         let p9 = Point::new(1.4, 1.9);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8, p9];
+		log::debug!("<<< Exiting rectangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn star() {
+		log::debug!(">>> Entering star()");
         // A single stroke star shape (kind of). Only the tips(p1-5) are part of the convex hull. The
         // other points would create angles >180 degrees if they were part of the polygon.
         let p1 = Point::new(-5.0, 6.0);
+		log::debug!("star(): p1 → (unprintable)");
+		log::debug!("star(): p2 → (unprintable)");
+		log::debug!("star(): p3 → (unprintable)");
+		log::debug!("star(): p4 → (unprintable)");
+		log::debug!("star(): p5 → (unprintable)");
+		log::debug!("star(): p6 → (unprintable)");
+		log::debug!("star(): p7 → (unprintable)");
+		log::debug!("star(): p8 → (unprintable)");
+		log::debug!("star(): p9 → (unprintable)");
+		log::debug!("star(): p10 → (unprintable)");
         let p2 = Point::new(-11.0, 0.0);
         let p3 = Point::new(-9.0, -8.0);
         let p4 = Point::new(4.0, 4.0);
@@ -186,13 +252,23 @@ mod tests {
         let p10 = Point::new(-6.0, 1.0);
         let hull = vec![p1, p2, p3, p4, p5];
         let others = vec![p6, p7, p8, p9, p10];
+		log::debug!("<<< Exiting star()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_on_same_line() {
+		log::debug!(">>> Entering rectangle_with_points_on_same_line()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
+		log::debug!("rectangle_with_points_on_same_line(): p2 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p3 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p4 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p5 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p6 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p7 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p8 → (unprintable)");
+		log::debug!("rectangle_with_points_on_same_line(): p1 → (unprintable)");
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let p5 = Point::new(1.5, 1.0);
@@ -201,6 +277,7 @@ mod tests {
         let p8 = Point::new(1.5, 2.0);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8];
+		log::debug!("<<< Exiting rectangle_with_points_on_same_line()");
         test_graham(hull, others);
     }
 }

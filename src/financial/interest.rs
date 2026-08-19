@@ -28,6 +28,8 @@ pub fn simple_interest(
     days_between_payments: f64,
 ) -> Result<f64, &'static str> {
     if principal <= 0.0 {
+		log::debug!(">>> Entering simple_interest(principal={},daily_interest_rate={},days_between_payments={})", principal, daily_interest_rate, days_between_payments);
+		log::debug!("<<< Exiting simple_interest(principal={},daily_interest_rate={},days_between_payments={})", principal, daily_interest_rate, days_between_payments);
         return Err("principal must be > 0");
     }
     if daily_interest_rate < 0.0 {
@@ -51,9 +53,12 @@ pub fn simple_interest(
 pub fn compound_interest(
     principal: f64,
     nominal_annual_interest_rate: f64,
+	log::debug!(">>> Entering compound_interest(principal={},nominal_annual_interest_rate={},number_of_compounding_periods={})", principal, nominal_annual_interest_rate, number_of_compounding_periods);
+	log::debug!("<<< Exiting compound_interest(principal={},nominal_annual_interest_rate={},number_of_compounding_periods={})", principal, nominal_annual_interest_rate, number_of_compounding_periods);
     number_of_compounding_periods: f64,
 ) -> Result<f64, &'static str> {
     if principal <= 0.0 {
+		log::debug!(">>> Entering compound_interest(principal={},nominal_annual_interest_rate={},number_of_compounding_periods={})", principal, nominal_annual_interest_rate, number_of_compounding_periods);
         return Err("principal must be > 0");
     }
     if nominal_annual_interest_rate < 0.0 {
@@ -86,6 +91,8 @@ pub fn apr_interest(
     number_of_years: f64,
 ) -> Result<f64, &'static str> {
     if principal <= 0.0 {
+		log::debug!(">>> Entering apr_interest(principal={},nominal_annual_percentage_rate={},number_of_years={})", principal, nominal_annual_percentage_rate, number_of_years);
+		log::debug!("<<< Exiting apr_interest(principal={},nominal_annual_percentage_rate={},number_of_years={})", principal, nominal_annual_percentage_rate, number_of_years);
         return Err("principal must be > 0");
     }
     if nominal_annual_percentage_rate < 0.0 {
@@ -109,6 +116,7 @@ mod tests {
 
     #[test]
     fn test_simple_interest() {
+		log::debug!(">>> Entering test_simple_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -140,11 +148,13 @@ mod tests {
         assert_eq!(
             simple_interest(5500.0, 0.01, 0.0),
             Err("days_between_payments must be > 0")
+		log::debug!("<<< Exiting test_simple_interest()");
         );
     }
 
     #[test]
     fn test_compound_interest() {
+		log::debug!(">>> Entering test_compound_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -175,11 +185,13 @@ mod tests {
         assert_eq!(
             compound_interest(10000.0, 0.06, -4.0),
             Err("number_of_compounding_periods must be > 0")
+		log::debug!("<<< Exiting test_compound_interest()");
         );
     }
 
     #[test]
     fn test_apr_interest() {
+		log::debug!(">>> Entering test_apr_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -206,6 +218,7 @@ mod tests {
         assert_eq!(
             apr_interest(10000.0, 0.06, -4.0),
             Err("number_of_years must be > 0")
+		log::debug!("<<< Exiting test_apr_interest()");
         );
     }
 }

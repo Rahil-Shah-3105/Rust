@@ -1,6 +1,7 @@
 // Generate the nth prime number.
 // Algorithm is inspired by the optimized version of the Sieve of Eratosthenes.
 pub fn nthprime(nth: u64) -> u64 {
+	log::debug!(">>> Entering nthprime(nth={})", nth);
     let mut total_prime: u64 = 0;
     let mut size_factor: u64 = 2;
 
@@ -12,15 +13,19 @@ pub fn nthprime(nth: u64) -> u64 {
     while total_prime < n {
         primes = get_primes(s).to_vec();
 
+		log::debug!("nthprime(nth={}): primes → {:?}", nth, primes);
         total_prime = primes[2..].iter().sum();
         size_factor += 1;
+		log::debug!("nthprime(nth={}): total_prime → {}", nth, total_prime);
         s = n * size_factor;
     }
 
+	log::debug!("<<< Exiting nthprime(nth={})", nth);
     count_prime(primes, n).unwrap()
 }
 
 fn get_primes(s: u64) -> Vec<u64> {
+	log::debug!(">>> Entering get_primes(s={})", s);
     let mut v: Vec<u64> = vec![1; s as usize];
 
     for index in 2..s {
@@ -34,10 +39,12 @@ fn get_primes(s: u64) -> Vec<u64> {
             }
         }
     }
+	log::debug!("<<< Exiting get_primes(s={})", s);
     v
 }
 
 fn count_prime(primes: Vec<u64>, n: u64) -> Option<u64> {
+	log::debug!(">>> Entering count_prime(primes={:?},n={})", primes, n);
     let mut counter: u64 = 0;
     for (i, prime) in primes.iter().enumerate().skip(2) {
         counter += prime;
@@ -53,6 +60,8 @@ mod tests {
     use super::*;
     #[test]
     fn my_test() {
+		log::debug!(">>> Entering my_test()");
+		log::debug!("<<< Exiting my_test()");
         assert_eq!(nthprime(100), 541u64);
     }
 }

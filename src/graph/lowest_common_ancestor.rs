@@ -27,15 +27,21 @@ impl LowestCommonAncestorOnline {
     // fill_sparse_table(tree_root, 0, 0, adjacency_list)
     #[inline]
     fn get_parent(&self, v: usize, i: usize) -> usize {
+		log::debug!(">>> Entering get_parent(v={},i={})", v, i);
+        log::debug!("<<< Exiting get_parent(v={},i={})", v, i);
         self.parents_sparse_table[v][i]
     }
     #[inline]
     fn num_parents(&self, v: usize) -> usize {
+		log::debug!(">>> Entering num_parents(v={})", v);
+        log::debug!("<<< Exiting num_parents(v={})", v);
         self.parents_sparse_table[v].len()
     }
     pub fn new(num_vertices: usize) -> Self {
+		log::debug!(">>> Entering new(num_vertices={})", num_vertices);
         let mut pars = vec![vec![0]; num_vertices + 1];
         pars[0].clear();
+		log::debug!("<<< Exiting new(num_vertices={})", num_vertices);
         LowestCommonAncestorOnline {
             parents_sparse_table: pars,
             height: vec![0; num_vertices + 1],
@@ -48,6 +54,7 @@ impl LowestCommonAncestorOnline {
         height: usize,
         adj: &[Vec<usize>],
     ) {
+		log::debug!(">>> Entering fill_sparse_table(vertex={},parent={},height={},adj={:?})", vertex, parent, height, adj);
         self.parents_sparse_table[vertex][0] = parent;
         self.height[vertex] = height;
         let mut level = 1;
@@ -63,10 +70,12 @@ impl LowestCommonAncestorOnline {
                 continue;
             }
             self.fill_sparse_table(child, vertex, height + 1, adj);
+		log::debug!("<<< Exiting fill_sparse_table(vertex={},parent={},height={},adj={:?})", vertex, parent, height, adj);
         }
     }
 
     pub fn get_ancestor(&self, mut v: usize, mut u: usize) -> usize {
+		log::debug!(">>> Entering get_ancestor(v={},u={})", v, u);
         if self.height[v] < self.height[u] {
             std::mem::swap(&mut v, &mut u);
         }
@@ -78,6 +87,7 @@ impl LowestCommonAncestorOnline {
                 break;
             }
             if height_diff & bit != 0 {
+				log::debug!("get_ancestor(v={},u={}): v → {}", v, u, v);
                 v = self.get_parent(v, i);
             }
         }
@@ -87,12 +97,15 @@ impl LowestCommonAncestorOnline {
         // `self.num_parents` of u and v should be equal
         for i in (0..self.num_parents(v)).rev() {
             let nv = self.get_parent(v, i);
+			log::debug!("get_ancestor(v={},u={}): nv → {}", v, u, nv);
             let nu = self.get_parent(u, i);
+			log::debug!("get_ancestor(v={},u={}): nu → {}", v, u, nu);
             if nv != nu {
                 u = nu;
                 v = nv;
             }
         }
+        log::debug!("<<< Exiting get_ancestor(v={},u={})", v, u);
         self.get_parent(v, 0)
     }
 }
@@ -129,12 +142,14 @@ impl LowestCommonAncestorOffline {
         }
     }
     pub fn add_query(&mut self, u: usize, v: usize, query_id: usize) {
+		log::debug!(">>> Entering add_query(u={},v={},query_id={})", u, v, query_id);
         // We should add this query to both vertices, and it will be answered
         // the second time it is seen in DFS.
         self.queries[u].push(LCAQuery { other: v, query_id });
         if u == v {
             return;
         }
+		log::debug!("<<< Exiting add_query(u={},v={},query_id={})", u, v, query_id);
         self.queries[v].push(LCAQuery { other: u, query_id });
     }
 
@@ -145,6 +160,7 @@ impl LowestCommonAncestorOffline {
         adj: &[Vec<usize>],
         answers: &mut Vec<QueryAnswer>,
     ) {
+		log::debug!(">>> Entering calculate_answers(vertex={},parent={},adj={:?},answers={:?})", vertex, parent, adj, answers);
         self.dsu_parent[vertex] = (vertex as u64) << 1;
         for &child in adj[vertex].iter() {
             if child == parent {
@@ -164,11 +180,15 @@ impl LowestCommonAncestorOffline {
                     answer: (self.dsu_parent[self.dsu.find_set(query.other)] >> 1) as usize,
                 });
             }
+		log::debug!("<<< Exiting calculate_answers(vertex={},parent={},adj={:?},answers={:?})", vertex, parent, adj, answers);
         }
     }
     pub fn answer_queries(&mut self, root: usize, adj: &[Vec<usize>]) -> Vec<QueryAnswer> {
+		log::debug!(">>> Entering answer_queries(root={},adj={:?})", root, adj);
         let mut answers = Vec::new();
         self.calculate_answers(root, 0, adj, &mut answers);
+		log::debug!("answer_queries(root={},adj={:?}): answers → (unprintable)", root, adj);
+        log::debug!("<<< Exiting answer_queries(root={},adj={:?})", root, adj);
         answers
     }
 }
@@ -178,6 +198,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_binary_tree() {
+		log::debug!(">>> Entering small_binary_tree()");
         let num_verts = 127;
         let mut tree: Vec<Vec<usize>> = vec![vec![]; num_verts + 1];
         for i in 1..=num_verts >> 1 {
@@ -190,6 +211,8 @@ mod tests {
         }
         let mut online_answers: Vec<QueryAnswer> = Vec::new();
         let mut online = LowestCommonAncestorOnline::new(num_verts);
+		log::debug!("small_binary_tree(): online → (unprintable)");
+		log::debug!("small_binary_tree(): offline → (unprintable)");
         let mut offline = LowestCommonAncestorOffline::new(num_verts);
         let mut query_id = 314; // A random number, doesn't matter
         online.fill_sparse_table(1, 0, 0, &tree);
@@ -206,6 +229,7 @@ mod tests {
         }
         let mut offline_answers = offline.answer_queries(1, &tree);
         offline_answers.sort_unstable_by_key(|a| a.query_id);
+		log::debug!("<<< Exiting small_binary_tree()");
         assert_eq!(offline_answers, online_answers);
     }
 }

@@ -24,6 +24,8 @@ pub enum LengthUnit {
 }
 
 fn unit_to_meter_multiplier(from: LengthUnit) -> f64 {
+	log::debug!(">>> Entering unit_to_meter_multiplier(from=(unprintable))");
+    log::debug!("<<< Exiting unit_to_meter_multiplier(from=(unprintable))");
     match from {
         LengthUnit::Millimeter => 0.001,
         LengthUnit::Centimeter => 0.01,
@@ -37,16 +39,22 @@ fn unit_to_meter_multiplier(from: LengthUnit) -> f64 {
 }
 
 fn unit_to_meter(input: f64, from: LengthUnit) -> f64 {
+	log::debug!(">>> Entering unit_to_meter(input={},from=(unprintable))", input);
+    log::debug!("<<< Exiting unit_to_meter(input={},from=(unprintable))", input);
     input * unit_to_meter_multiplier(from)
 }
 
 fn meter_to_unit(input: f64, to: LengthUnit) -> f64 {
+	log::debug!(">>> Entering meter_to_unit(input={},to=(unprintable))", input);
+    log::debug!("<<< Exiting meter_to_unit(input={},to=(unprintable))", input);
     input / unit_to_meter_multiplier(to)
 }
 
 /// This function will convert a value in unit of [from] to value in unit of [to]
 /// by first converting it to meter and than convert it to destination unit
 pub fn length_conversion(input: f64, from: LengthUnit, to: LengthUnit) -> f64 {
+	log::debug!(">>> Entering length_conversion(input={},from=(unprintable),to=(unprintable))", input);
+    log::debug!("<<< Exiting length_conversion(input={},from=(unprintable),to=(unprintable))", input);
     meter_to_unit(unit_to_meter(input, from), to)
 }
 
@@ -59,6 +67,7 @@ mod length_conversion_tests {
 
     #[test]
     fn zero_to_zero() {
+		log::debug!(">>> Entering zero_to_zero()");
         let units = vec![
             Millimeter, Centimeter, Meter, Kilometer, Inch, Foot, Yard, Mile,
         ];
@@ -67,11 +76,13 @@ mod length_conversion_tests {
             for u2 in units.clone() {
                 assert_eq!(length_conversion(0f64, u1, u2), 0f64);
             }
+		log::debug!("<<< Exiting zero_to_zero()");
         }
     }
 
     #[test]
     fn length_of_one_meter() {
+		log::debug!(">>> Entering length_of_one_meter()");
         let meter_in_different_units = HashMap::from([
             (Millimeter, 1000f64),
             (Centimeter, 100f64),
@@ -89,6 +100,7 @@ mod length_conversion_tests {
                     ) < 0.0000001
                 );
             }
+		log::debug!("<<< Exiting length_of_one_meter()");
         }
     }
 }

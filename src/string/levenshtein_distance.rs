@@ -32,6 +32,7 @@ use std::cmp::min;
 /// Note that this implementation uses a straightforward dynamic programming approach without any space optimization.
 /// It may consume more memory for larger input strings compared to the optimized version.
 pub fn naive_levenshtein_distance(string1: &str, string2: &str) -> usize {
+	log::debug!(">>> Entering naive_levenshtein_distance(string1={},string2={})", string1, string2);
     let distance_matrix: Vec<Vec<usize>> = (0..=string1.len())
         .map(|i| {
             (0..=string2.len())
@@ -58,6 +59,7 @@ pub fn naive_levenshtein_distance(string1: &str, string2: &str) -> usize {
         })
     });
 
+	log::debug!("<<< Exiting naive_levenshtein_distance(string1={},string2={})", string1, string2);
     updated_matrix[string1.len()][string2.len()]
 }
 
@@ -87,10 +89,12 @@ pub fn naive_levenshtein_distance(string1: &str, string2: &str) -> usize {
 ///
 /// where n and m are lengths of `string1` and `string2`.
 pub fn optimized_levenshtein_distance(string1: &str, string2: &str) -> usize {
+	log::debug!(">>> Entering optimized_levenshtein_distance(string1={},string2={})", string1, string2);
     if string1.is_empty() {
         return string2.len();
     }
     let l1 = string1.len();
+	log::debug!("optimized_levenshtein_distance(string1={},string2={}): l1 → {}", string1, string2, l1);
     let mut prev_dist: Vec<usize> = (0..=l1).collect();
 
     for (row, c2) in string2.chars().enumerate() {
@@ -121,6 +125,8 @@ pub fn optimized_levenshtein_distance(string1: &str, string2: &str) -> usize {
 
 #[inline]
 fn _min3<T: Ord>(a: T, b: T, c: T) -> T {
+	log::debug!(">>> Entering _min3(a=(unprintable),b=(unprintable),c=(unprintable))");
+    log::debug!("<<< Exiting _min3(a=(unprintable),b=(unprintable),c=(unprintable))");
     min(a, min(b, c))
 }
 
@@ -141,18 +147,22 @@ mod tests {
                 use super::*;
 
                 fn run_test_case(string1: &str, string2: &str, expected_distance: usize) {
+					log::debug!(">>> Entering run_test_case(string1={},string2={},expected_distance={})", string1, string2, expected_distance);
                     assert_eq!(super::super::$function(string1, string2), expected_distance);
                     assert_eq!(super::super::$function(string2, string1), expected_distance);
                     assert_eq!(super::super::$function(string1, string1), 0);
+					log::debug!("<<< Exiting run_test_case(string1={},string2={},expected_distance={})", string1, string2, expected_distance);
                     assert_eq!(super::super::$function(string2, string2), 0);
                 }
 
                 #[test]
                 fn test_levenshtein_distance() {
+					log::debug!(">>> Entering test_levenshtein_distance()");
                     for &(string1, string2, expected_distance) in
                         LEVENSHTEIN_DISTANCE_TEST_CASES.iter()
                     {
                         run_test_case(string1, string2, expected_distance);
+					log::debug!("<<< Exiting test_levenshtein_distance()");
                     }
                 }
             }

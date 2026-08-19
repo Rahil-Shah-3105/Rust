@@ -10,10 +10,14 @@ pub struct Node<T> {
 
 impl<T> Node<T> {
     fn new(t: T) -> Node<T> {
+		log::debug!(">>> Entering new(t=(unprintable))");
+        log::debug!("<<< Exiting new(t=(unprintable))");
         Node {
             val: t,
             prev: None,
             next: None,
+		log::debug!(">>> Entering new()");
+        log::debug!("<<< Exiting new()");
         }
     }
 }
@@ -28,6 +32,8 @@ pub struct LinkedList<T> {
 
 impl<T> Default for LinkedList<T> {
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
+        log::debug!("<<< Exiting default()");
         Self::new()
     }
 }
@@ -43,8 +49,13 @@ impl<T> LinkedList<T> {
     }
 
     pub fn insert_at_head(&mut self, obj: T) {
+		log::debug!(">>> Entering insert_at_head(obj=(unprintable))");
         let mut node = Box::new(Node::new(obj));
         node.next = self.head;
+		log::debug!("insert_at_head(obj=(unprintable)): node.next → (unprintable)");
+		log::debug!("insert_at_head(obj=(unprintable)): node.prev → (unprintable)");
+		log::debug!("insert_at_head(obj=(unprintable)): node_ptr → (unprintable)");
+        log::debug!("insert_at_head(obj=(unprintable)): node → (unprintable)");
         node.prev = None;
         let node_ptr = NonNull::new(Box::into_raw(node));
         match self.head {
@@ -52,12 +63,19 @@ impl<T> LinkedList<T> {
             Some(head_ptr) => unsafe { (*head_ptr.as_ptr()).prev = node_ptr },
         }
         self.head = node_ptr;
+		log::debug!("insert_at_head(obj=(unprintable)): self.head → (unprintable)");
+		log::debug!("<<< Exiting insert_at_head(obj=(unprintable))");
         self.length += 1;
     }
 
     pub fn insert_at_tail(&mut self, obj: T) {
+		log::debug!(">>> Entering insert_at_tail(obj=(unprintable))");
         let mut node = Box::new(Node::new(obj));
         node.next = None;
+		log::debug!("insert_at_tail(obj=(unprintable)): node.next → (unprintable)");
+		log::debug!("insert_at_tail(obj=(unprintable)): node.prev → (unprintable)");
+		log::debug!("insert_at_tail(obj=(unprintable)): node_ptr → (unprintable)");
+        log::debug!("insert_at_tail(obj=(unprintable)): node → (unprintable)");
         node.prev = self.tail;
         let node_ptr = NonNull::new(Box::into_raw(node));
         match self.tail {
@@ -65,10 +83,13 @@ impl<T> LinkedList<T> {
             Some(tail_ptr) => unsafe { (*tail_ptr.as_ptr()).next = node_ptr },
         }
         self.tail = node_ptr;
+		log::debug!("insert_at_tail(obj=(unprintable)): self.tail → (unprintable)");
+		log::debug!("<<< Exiting insert_at_tail(obj=(unprintable))");
         self.length += 1;
     }
 
     pub fn insert_at_ith(&mut self, index: u32, obj: T) {
+		log::debug!(">>> Entering insert_at_ith(index={},obj=(unprintable))", index);
         if self.length < index {
             panic!("Index out of bounds");
         }
@@ -105,13 +126,18 @@ impl<T> LinkedList<T> {
                     self.length += 1;
                 }
             }
+		log::debug!("<<< Exiting insert_at_ith(index={},obj=(unprintable))", index);
         }
     }
 
     pub fn delete_head(&mut self) -> Option<T> {
+		log::debug!(">>> Entering delete_head()");
         // Safety: head_ptr points to a leaked boxed node managed by this list
         // We reassign pointers that pointed to the head node
         if self.length == 0 {
+		log::debug!("delete_head(): old_head → (unprintable)");
+        log::debug!("delete_head(): self.head → (unprintable)");
+        log::debug!("<<< Exiting delete_head()");
             return None;
         }
 
@@ -129,8 +155,12 @@ impl<T> LinkedList<T> {
     }
 
     pub fn delete_tail(&mut self) -> Option<T> {
+		log::debug!(">>> Entering delete_tail()");
         // Safety: tail_ptr points to a leaked boxed node managed by this list
         // We reassign pointers that pointed to the tail node
+		log::debug!("delete_tail(): old_tail → (unprintable)");
+        log::debug!("delete_tail(): self.tail → (unprintable)");
+        log::debug!("<<< Exiting delete_tail()");
         self.tail.map(|tail_ptr| unsafe {
             let old_tail = Box::from_raw(tail_ptr.as_ptr());
             match old_tail.prev {
@@ -144,6 +174,7 @@ impl<T> LinkedList<T> {
     }
 
     pub fn delete_ith(&mut self, index: u32) -> Option<T> {
+		log::debug!(">>> Entering delete_ith(index={})", index);
         if self.length <= index {
             panic!("Index out of bounds");
         }
@@ -180,14 +211,19 @@ impl<T> LinkedList<T> {
             }
         } else {
             None
+		log::debug!("<<< Exiting delete_ith(index={})", index);
         }
     }
 
     pub fn get(&self, index: i32) -> Option<&T> {
+		log::debug!(">>> Entering get(index={})", index);
+        log::debug!("<<< Exiting get(index={})", index);
         Self::get_ith_node(self.head, index).map(|ptr| unsafe { &(*ptr.as_ptr()).val })
     }
 
     fn get_ith_node(node: Option<NonNull<Node<T>>>, index: i32) -> Option<NonNull<Node<T>>> {
+		log::debug!(">>> Entering get_ith_node(node=(unprintable),index={})", index);
+        log::debug!("<<< Exiting get_ith_node(node=(unprintable),index={})", index);
         match node {
             None => None,
             Some(next_ptr) => match index {
@@ -200,7 +236,9 @@ impl<T> LinkedList<T> {
 
 impl<T> Drop for LinkedList<T> {
     fn drop(&mut self) {
+		log::debug!(">>> Entering drop()");
         // Pop items until there are none left
+		log::debug!("<<< Exiting drop()");
         while self.delete_head().is_some() {}
     }
 }
@@ -213,6 +251,8 @@ where
         match self.head {
             Some(node) => write!(f, "{}", unsafe { node.as_ref() }),
             None => Ok(()),
+		log::debug!(">>> Entering fmt(f=(unprintable))");
+        log::debug!("<<< Exiting fmt(f=(unprintable))");
         }
     }
 }
@@ -237,59 +277,73 @@ mod tests {
 
     #[test]
     fn insert_at_tail_works() {
+		log::debug!(">>> Entering insert_at_tail_works()");
         let mut list = LinkedList::<i32>::new();
         let second_value = 2;
+		log::debug!("insert_at_tail_works(): list → (unprintable)");
         list.insert_at_tail(1);
         list.insert_at_tail(second_value);
         println!("Linked List is {list}");
         match list.get(1) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 1"),
+		log::debug!("<<< Exiting insert_at_tail_works()");
         }
     }
     #[test]
     fn insert_at_head_works() {
+		log::debug!(">>> Entering insert_at_head_works()");
         let mut list = LinkedList::<i32>::new();
         let second_value = 2;
+		log::debug!("insert_at_head_works(): list → (unprintable)");
         list.insert_at_head(1);
         list.insert_at_head(second_value);
         println!("Linked List is {list}");
         match list.get(0) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 0"),
+		log::debug!("<<< Exiting insert_at_head_works()");
         }
     }
 
     #[test]
     fn insert_at_ith_can_add_to_tail() {
+		log::debug!(">>> Entering insert_at_ith_can_add_to_tail()");
         let mut list = LinkedList::<i32>::new();
         let second_value = 2;
+		log::debug!("insert_at_ith_can_add_to_tail(): list → (unprintable)");
         list.insert_at_ith(0, 0);
         list.insert_at_ith(1, second_value);
         println!("Linked List is {list}");
         match list.get(1) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 1"),
+		log::debug!("<<< Exiting insert_at_ith_can_add_to_tail()");
         }
     }
 
     #[test]
     fn insert_at_ith_can_add_to_head() {
+		log::debug!(">>> Entering insert_at_ith_can_add_to_head()");
         let mut list = LinkedList::<i32>::new();
         let second_value = 2;
+		log::debug!("insert_at_ith_can_add_to_head(): list → (unprintable)");
         list.insert_at_ith(0, 1);
         list.insert_at_ith(0, second_value);
         println!("Linked List is {list}");
         match list.get(0) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 0"),
+		log::debug!("<<< Exiting insert_at_ith_can_add_to_head()");
         }
     }
 
     #[test]
     fn insert_at_ith_can_add_to_middle() {
+		log::debug!(">>> Entering insert_at_ith_can_add_to_middle()");
         let mut list = LinkedList::<i32>::new();
         let second_value = 2;
+		log::debug!("insert_at_ith_can_add_to_middle(): list → (unprintable)");
         let third_value = 3;
         list.insert_at_ith(0, 1);
         list.insert_at_ith(1, second_value);
@@ -303,13 +357,16 @@ mod tests {
         match list.get(2) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 1"),
+		log::debug!("<<< Exiting insert_at_ith_can_add_to_middle()");
         }
     }
 
     #[test]
     fn insert_at_ith_and_delete_at_ith_in_the_middle() {
+		log::debug!(">>> Entering insert_at_ith_and_delete_at_ith_in_the_middle()");
         // Insert and delete in the middle of the list to ensure pointers are updated correctly
         let mut list = LinkedList::<i32>::new();
+		log::debug!("insert_at_ith_and_delete_at_ith_in_the_middle(): list → (unprintable)");
         let first_value = 0;
         let second_value = 1;
         let third_value = 2;
@@ -333,13 +390,16 @@ mod tests {
                 Some(val) => assert_eq!(*val, expected),
                 None => panic!("Expected to find {expected} at index {i}"),
             }
+		log::debug!("<<< Exiting insert_at_ith_and_delete_at_ith_in_the_middle()");
         }
     }
 
     #[test]
     fn insert_at_ith_and_delete_ith_work_over_many_iterations() {
+		log::debug!(">>> Entering insert_at_ith_and_delete_ith_work_over_many_iterations()");
         let mut list = LinkedList::<i32>::new();
         for i in 0..100 {
+			log::debug!("insert_at_ith_and_delete_ith_work_over_many_iterations(): list → (unprintable)");
             list.insert_at_ith(i, i.try_into().unwrap());
         }
 
@@ -367,13 +427,16 @@ mod tests {
             assert_eq!(*val, 78);
         } else {
             panic!("Expected to find 78 at index 78");
+		log::debug!("<<< Exiting insert_at_ith_and_delete_ith_work_over_many_iterations()");
         }
     }
 
     #[test]
     fn delete_tail_works() {
+		log::debug!(">>> Entering delete_tail_works()");
         let mut list = LinkedList::<i32>::new();
         let first_value = 1;
+		log::debug!("delete_tail_works(): list → (unprintable)");
         let second_value = 2;
         list.insert_at_tail(first_value);
         list.insert_at_tail(second_value);
@@ -386,13 +449,16 @@ mod tests {
         match list.get(0) {
             Some(val) => assert_eq!(*val, first_value),
             None => panic!("Expected to find {first_value} at index 0"),
+		log::debug!("<<< Exiting delete_tail_works()");
         }
     }
 
     #[test]
     fn delete_head_works() {
+		log::debug!(">>> Entering delete_head_works()");
         let mut list = LinkedList::<i32>::new();
         let first_value = 1;
+		log::debug!("delete_head_works(): list → (unprintable)");
         let second_value = 2;
         list.insert_at_tail(first_value);
         list.insert_at_tail(second_value);
@@ -405,13 +471,16 @@ mod tests {
         match list.get(0) {
             Some(val) => assert_eq!(*val, second_value),
             None => panic!("Expected to find {second_value} at index 0"),
+		log::debug!("<<< Exiting delete_head_works()");
         }
     }
 
     #[test]
     fn delete_ith_can_delete_at_tail() {
+		log::debug!(">>> Entering delete_ith_can_delete_at_tail()");
         let mut list = LinkedList::<i32>::new();
         let first_value = 1;
+		log::debug!("delete_ith_can_delete_at_tail(): list → (unprintable)");
         let second_value = 2;
         list.insert_at_tail(first_value);
         list.insert_at_tail(second_value);
@@ -420,13 +489,16 @@ mod tests {
             None => panic!("Expected to remove {second_value} at tail"),
         }
 
+		log::debug!("<<< Exiting delete_ith_can_delete_at_tail()");
         assert_eq!(list.length, 1);
     }
 
     #[test]
     fn delete_ith_can_delete_at_head() {
+		log::debug!(">>> Entering delete_ith_can_delete_at_head()");
         let mut list = LinkedList::<i32>::new();
         let first_value = 1;
+		log::debug!("delete_ith_can_delete_at_head(): list → (unprintable)");
         let second_value = 2;
         list.insert_at_tail(first_value);
         list.insert_at_tail(second_value);
@@ -435,13 +507,16 @@ mod tests {
             None => panic!("Expected to remove {first_value} at tail"),
         }
 
+		log::debug!("<<< Exiting delete_ith_can_delete_at_head()");
         assert_eq!(list.length, 1);
     }
 
     #[test]
     fn delete_ith_can_delete_in_middle() {
+		log::debug!(">>> Entering delete_ith_can_delete_in_middle()");
         let mut list = LinkedList::<i32>::new();
         let first_value = 1;
+		log::debug!("delete_ith_can_delete_in_middle(): list → (unprintable)");
         let second_value = 2;
         let third_value = 3;
         list.insert_at_tail(first_value);
@@ -455,58 +530,76 @@ mod tests {
         match list.get(1) {
             Some(val) => assert_eq!(*val, third_value),
             None => panic!("Expected to find {third_value} at index 1"),
+		log::debug!("<<< Exiting delete_ith_can_delete_in_middle()");
         }
     }
 
     #[test]
     fn create_numeric_list() {
+		log::debug!(">>> Entering create_numeric_list()");
         let mut list = LinkedList::<i32>::new();
         list.insert_at_tail(1);
+		log::debug!("create_numeric_list(): list → (unprintable)");
         list.insert_at_tail(2);
         list.insert_at_tail(3);
         println!("Linked List is {list}");
+		log::debug!("<<< Exiting create_numeric_list()");
         assert_eq!(3, list.length);
     }
 
     #[test]
     fn create_string_list() {
+		log::debug!(">>> Entering create_string_list()");
         let mut list_str = LinkedList::<String>::new();
         list_str.insert_at_tail("A".to_string());
+		log::debug!("create_string_list(): list_str → (unprintable)");
         list_str.insert_at_tail("B".to_string());
         list_str.insert_at_tail("C".to_string());
         println!("Linked List is {list_str}");
+		log::debug!("<<< Exiting create_string_list()");
         assert_eq!(3, list_str.length);
     }
 
     #[test]
     fn get_by_index_in_numeric_list() {
+		log::debug!(">>> Entering get_by_index_in_numeric_list()");
         let mut list = LinkedList::<i32>::new();
         list.insert_at_tail(1);
+		log::debug!("get_by_index_in_numeric_list(): list → (unprintable)");
         list.insert_at_tail(2);
         println!("Linked List is {list}");
         let retrived_item = list.get(1);
+		log::debug!("get_by_index_in_numeric_list(): retrived_item → (unprintable)");
         assert!(retrived_item.is_some());
+		log::debug!("<<< Exiting get_by_index_in_numeric_list()");
         assert_eq!(2, *retrived_item.unwrap());
     }
 
     #[test]
     fn get_by_index_in_string_list() {
+		log::debug!(">>> Entering get_by_index_in_string_list()");
         let mut list_str = LinkedList::<String>::new();
         list_str.insert_at_tail("A".to_string());
+		log::debug!("get_by_index_in_string_list(): list_str → (unprintable)");
         list_str.insert_at_tail("B".to_string());
         println!("Linked List is {list_str}");
         let retrived_item = list_str.get(1);
+		log::debug!("get_by_index_in_string_list(): retrived_item → (unprintable)");
         assert!(retrived_item.is_some());
+		log::debug!("<<< Exiting get_by_index_in_string_list()");
         assert_eq!("B", *retrived_item.unwrap());
     }
 
     #[test]
     #[should_panic(expected = "Index out of bounds")]
     fn delete_ith_panics_if_index_equals_length() {
+		log::debug!(">>> Entering delete_ith_panics_if_index_equals_length()");
         let mut list = LinkedList::<i32>::new();
         list.insert_at_tail(1);
+		log::debug!("delete_ith_panics_if_index_equals_length(): list → (unprintable)");
         list.insert_at_tail(2);
         // length is 2, so index 2 is out of bounds
+		log::debug!("<<< Exiting delete_ith_panics_if_index_equals_length()");
         list.delete_ith(2);
     }
 }

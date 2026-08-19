@@ -5,6 +5,7 @@
 // Returns vec of amicable pairs below N
 // N must be positive
 pub fn amicable_pairs_under_n(n: u32) -> Option<Vec<(u32, u32)>> {
+	log::debug!(">>> Entering amicable_pairs_under_n(n={})", n);
     let mut factor_sums = vec![0; n as usize];
 
     // Make a list of the sum of the factors of each number below N
@@ -28,6 +29,7 @@ pub fn amicable_pairs_under_n(n: u32) -> Option<Vec<(u32, u32)>> {
         None
     } else {
         out.remove(0);
+		log::debug!("<<< Exiting amicable_pairs_under_n(n={})", n);
         Some(out)
     }
 }
@@ -38,6 +40,7 @@ mod tests {
 
     #[test]
     pub fn test_amicable_numbers_below_n() {
+		log::debug!(">>> Entering test_amicable_numbers_below_n()");
         // First 10 amicable numbers, sorted (low, high)
         let expected_result = vec![
             (220, 284),
@@ -54,6 +57,7 @@ mod tests {
 
         // Generate pairs under 100,000
         let mut result = amicable_pairs_under_n(100_000).unwrap();
+		log::debug!("test_amicable_numbers_below_n(): result → {:?}", result);
 
         // There should be 13 pairs under 100,000
         assert_eq!(result.len(), 13);
@@ -63,6 +67,7 @@ mod tests {
         assert_eq!(result, expected_result);
 
         // N that does not have any amicable pairs below it, the result should be None
+		log::debug!("<<< Exiting test_amicable_numbers_below_n()");
         assert_eq!(amicable_pairs_under_n(100), None);
     }
 }

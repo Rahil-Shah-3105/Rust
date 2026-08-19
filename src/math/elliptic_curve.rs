@@ -33,7 +33,9 @@ pub struct EllipticCurve<F, const A: i64, const B: i64> {
 impl<F: Field, const A: i64, const B: i64> EllipticCurve<F, A, B> {
     /// Point at infinity also the neutral element of the group
     pub fn infinity() -> Self {
+		log::debug!(">>> Entering infinity()");
         Self::check_invariants();
+		log::debug!("<<< Exiting infinity()");
         Self {
             infinity: true,
             x: F::ZERO,
@@ -46,8 +48,11 @@ impl<F: Field, const A: i64, const B: i64> EllipticCurve<F, A, B> {
     ///
     /// Return `None` if the coordinates are not on the curve
     pub fn new(x: impl Into<F>, y: impl Into<F>) -> Option<Self> {
+		log::debug!(">>> Entering new(x=(unprintable),y=(unprintable))");
         Self::check_invariants();
         let x = x.into();
+		log::debug!("new(x=(unprintable),y=(unprintable)): x → (unprintable)");
+		log::debug!("new(x=(unprintable),y=(unprintable)): y → (unprintable)");
         let y = y.into();
         if Self::contains(x, y) {
             Some(Self {
@@ -56,40 +61,53 @@ impl<F: Field, const A: i64, const B: i64> EllipticCurve<F, A, B> {
                 y,
             })
         } else {
+			log::debug!("<<< Exiting new(x=(unprintable),y=(unprintable))");
             None
         }
     }
 
     /// Return `true` if this is the point at infinity
     pub fn is_infinity(&self) -> bool {
+		log::debug!(">>> Entering is_infinity()");
+        log::debug!("<<< Exiting is_infinity()");
         self.infinity
     }
 
     /// The affine x-coordinate of the point
     pub fn x(&self) -> &F {
+		log::debug!(">>> Entering x()");
+        log::debug!("<<< Exiting x()");
         &self.x
     }
 
     /// The affine y-coordinate of the point
     pub fn y(&self) -> &F {
+		log::debug!(">>> Entering y()");
+        log::debug!("<<< Exiting y()");
         &self.y
     }
 
     /// The discrimant of the elliptic curve
     pub const fn discriminant() -> i64 {
+		log::debug!(">>> Entering discriminant()");
         // Note: we can't return an element of F here, because it is not
         // possible to declare a trait function as const (cf.
         // <https://doc.rust-lang.org/error_codes/E0379.html>)
+		log::debug!("<<< Exiting discriminant()");
         (-16 * (4 * A * A * A + 27 * B * B)) % (F::CHARACTERISTIC as i64)
     }
 
     fn contains(x: F, y: F) -> bool {
+		log::debug!(">>> Entering contains(x=(unprintable),y=(unprintable))");
+        log::debug!("<<< Exiting contains(x=(unprintable),y=(unprintable))");
         y * y == x * x * x + x.integer_mul(A) + F::ONE.integer_mul(B)
     }
 
     const fn check_invariants() {
+		log::debug!(">>> Entering check_invariants()");
         assert!(F::CHARACTERISTIC != 2);
         assert!(F::CHARACTERISTIC != 3);
+		log::debug!("<<< Exiting check_invariants()");
         assert!(Self::discriminant() != 0);
     }
 }
@@ -99,6 +117,8 @@ impl<const P: u64, const A: i64, const B: i64> EllipticCurve<PrimeField<P>, A, B
     /// Naive calculation of points via enumeration
     // TODO: Implement via generators
     pub fn points() -> impl Iterator<Item = Self> {
+		log::debug!(">>> Entering points()");
+        log::debug!("<<< Exiting points()");
         std::iter::once(Self::infinity()).chain(
             PrimeField::elements()
                 .flat_map(|x| PrimeField::elements().filter_map(move |y| Self::new(x, y))),
@@ -107,7 +127,9 @@ impl<const P: u64, const A: i64, const B: i64> EllipticCurve<PrimeField<P>, A, B
 
     /// Number of points on the elliptic curve over `F`, that is, `#E(F)`
     pub fn cardinality() -> usize {
+		log::debug!(">>> Entering cardinality()");
         // TODO: implement counting for big P
+		log::debug!("<<< Exiting cardinality()");
         Self::cardinality_counted_legendre()
     }
 
@@ -121,16 +143,19 @@ impl<const P: u64, const A: i64, const B: i64> EllipticCurve<PrimeField<P>, A, B
     ///
     /// Only fast for small fields.
     pub fn cardinality_counted_table() -> usize {
+		log::debug!(">>> Entering cardinality_counted_table()");
         let squares: HashSet<_> = PrimeField::<P>::elements().map(|x| x * x).collect();
         1 + PrimeField::elements()
             .map(|x| {
                 let y_square = x * x * x + x.integer_mul(A) + PrimeField::from_integer(B);
+				log::debug!("cardinality_counted_table(): y_square → (unprintable)");
                 if y_square == PrimeField::ZERO {
                     1
                 } else if squares.contains(&y_square) {
                     2
                 } else {
                     0
+				log::debug!("<<< Exiting cardinality_counted_table()");
                 }
             })
             .sum::<usize>()
@@ -154,14 +179,18 @@ impl<const P: u64, const A: i64, const B: i64> EllipticCurve<PrimeField<P>, A, B
     ///
     /// [Legendre symbol]: https://en.wikipedia.org/wiki/Legendre_symbol
     pub fn cardinality_counted_legendre() -> usize {
+		log::debug!(">>> Entering cardinality_counted_legendre()");
         let cardinality: i64 = 1
             + P as i64
             + PrimeField::<P>::elements()
                 .map(|x| {
                     let y_square = x * x * x + x.integer_mul(A) + PrimeField::from_integer(B);
+					log::debug!("cardinality_counted_legendre(): y_square → (unprintable)");
+					log::debug!("cardinality_counted_legendre(): y_square_int → (unprintable)");
                     let y_square_int = y_square.to_integer();
                     legendre_symbol(y_square_int, P)
                 })
+				log::debug!("<<< Exiting cardinality_counted_legendre()");
                 .sum::<i64>();
         cardinality
             .try_into()
@@ -174,6 +203,7 @@ impl<F: Field, const A: i64, const B: i64> Add for EllipticCurve<F, A, B> {
     type Output = Self;
 
     fn add(self, p: Self) -> Self::Output {
+		log::debug!(">>> Entering add(p=(unprintable))");
         if self.infinity {
             p
         } else if p.infinity {
@@ -189,6 +219,8 @@ impl<F: Field, const A: i64, const B: i64> Add for EllipticCurve<F, A, B> {
             };
             let x = slope * slope - self.x - p.x;
             let y = -self.y + slope * (self.x - x);
+			log::debug!("add(p=(unprintable)): y → (unprintable)");
+            log::debug!("<<< Exiting add(p=(unprintable))");
             Self::new(x, y).expect("elliptic curve group law failed")
         }
     }
@@ -199,9 +231,11 @@ impl<F: Field, const A: i64, const B: i64> Neg for EllipticCurve<F, A, B> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
+		log::debug!(">>> Entering neg()");
         if self.infinity {
             self
         } else {
+			log::debug!("<<< Exiting neg()");
             Self::new(self.x, -self.y).expect("elliptic curves are x-axis symmetric")
         }
     }
@@ -212,6 +246,8 @@ impl<F: Field, const A: i64, const B: i64> Sub for EllipticCurve<F, A, B> {
     type Output = Self;
 
     fn sub(self, p: Self) -> Self::Output {
+		log::debug!(">>> Entering sub(p=(unprintable))");
+        log::debug!("<<< Exiting sub(p=(unprintable))");
         self + (-p)
     }
 }
@@ -220,6 +256,8 @@ impl<F: Field, const A: i64, const B: i64> Sub for EllipticCurve<F, A, B> {
 impl<F: fmt::Debug, const A: i64, const B: i64> fmt::Debug for EllipticCurve<F, A, B> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.infinity {
+			log::debug!(">>> Entering fmt(f=(unprintable))");
+			log::debug!("<<< Exiting fmt(f=(unprintable))");
             f.write_str("(0:0:1)")
         } else {
             write!(f, "({:?}:{:?}:1)", self.x, self.y)
@@ -230,6 +268,8 @@ impl<F: fmt::Debug, const A: i64, const B: i64> fmt::Debug for EllipticCurve<F, 
 /// Equality of the elliptic curve points (short-circuit at infinity)
 impl<F: Field, const A: i64, const B: i64> PartialEq for EllipticCurve<F, A, B> {
     fn eq(&self, other: &Self) -> bool {
+		log::debug!(">>> Entering eq(other=(unprintable))");
+        log::debug!("<<< Exiting eq(other=(unprintable))");
         (self.infinity && other.infinity)
             || (self.infinity == other.infinity && self.x == other.x && self.y == other.y)
     }
@@ -239,6 +279,7 @@ impl<F: Field, const A: i64, const B: i64> Eq for EllipticCurve<F, A, B> {}
 
 impl<F: Field + Hash, const A: i64, const B: i64> Hash for EllipticCurve<F, A, B> {
     fn hash<H: Hasher>(&self, state: &mut H) {
+		log::debug!(">>> Entering hash(state=(unprintable))");
         if self.infinity {
             state.write_u8(1);
             F::ZERO.hash(state);
@@ -247,6 +288,7 @@ impl<F: Field + Hash, const A: i64, const B: i64> Hash for EllipticCurve<F, A, B
             state.write_u8(0);
             self.x.hash(state);
             self.y.hash(state);
+		log::debug!("<<< Exiting hash(state=(unprintable))");
         }
     }
 }
@@ -261,23 +303,30 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_char_2_panic() {
+		log::debug!(">>> Entering test_char_2_panic()");
+		log::debug!("<<< Exiting test_char_2_panic()");
         EllipticCurve::<PrimeField<2>, -1, 1>::infinity();
     }
 
     #[test]
     #[should_panic]
     fn test_char_3_panic() {
+		log::debug!(">>> Entering test_char_3_panic()");
+		log::debug!("<<< Exiting test_char_3_panic()");
         EllipticCurve::<PrimeField<2>, -1, 1>::infinity();
     }
 
     #[test]
     #[should_panic]
     fn test_singular_panic() {
+		log::debug!(">>> Entering test_singular_panic()");
+		log::debug!("<<< Exiting test_singular_panic()");
         EllipticCurve::<PrimeField<5>, 0, 0>::infinity();
     }
 
     #[test]
     fn e_5_1_0_group_table() {
+		log::debug!(">>> Entering e_5_1_0_group_table()");
         type F = PrimeField<5>;
         type E = EllipticCurve<F, 1, 0>;
 
@@ -304,15 +353,18 @@ mod tests {
         assert_eq!(d + a, c);
         assert_eq!(d + b, d);
         assert_eq!(d + c, a);
+		log::debug!("<<< Exiting e_5_1_0_group_table()");
         assert_eq!(d + d, b);
     }
 
     #[test]
     fn group_law() {
         fn test<const P: u64>() {
+			log::debug!(">>> Entering test()");
             type E<const P: u64> = EllipticCurve<PrimeField<P>, 1, 0>;
 
             let o = E::<P>::infinity();
+			log::debug!("test(): o → (unprintable)");
             assert_eq!(-o, o);
 
             let points: Vec<_> = E::points().collect();
@@ -331,6 +383,9 @@ mod tests {
                         assert_eq!((p + q) + s, p + (q + s));
                     }
                 }
+			log::debug!("<<< Exiting test()");
+			log::debug!(">>> Entering test(expected={})", expected);
+			log::debug!("<<< Exiting test(expected={})", expected);
             }
         }
         test::<5>();
@@ -362,32 +417,39 @@ mod tests {
     #[test]
     #[ignore = "slow test for measuring time"]
     fn cardinality_perf() {
+		log::debug!(">>> Entering cardinality_perf()");
         const P: u64 = 1000003;
         type E = EllipticCurve<PrimeField<P>, 1, 0>;
         const EXPECTED: usize = 1000004;
 
         let now = Instant::now();
+		log::debug!("cardinality_perf(): now → (unprintable)");
         assert_eq!(E::cardinality_counted_table(), EXPECTED);
         println!("cardinality_counted_table    : {:?}", now.elapsed());
         let now = Instant::now();
         assert_eq!(E::cardinality_counted_legendre(), EXPECTED);
+		log::debug!("<<< Exiting cardinality_perf()");
         println!("cardinality_counted_legendre : {:?}", now.elapsed());
     }
 
     #[test]
     #[ignore = "slow test showing that cadinality is not yet feasible to compute for a large prime"]
     fn cardinality_large_prime() {
+		log::debug!(">>> Entering cardinality_large_prime()");
         const P: u64 = 2_u64.pow(63) - 25; // largest prime fitting into i64
         type E = EllipticCurve<PrimeField<P>, 1, 0>;
         const EXPECTED: usize = 9223372041295506260;
 
         let now = Instant::now();
+		log::debug!("cardinality_large_prime(): now → (unprintable)");
         assert_eq!(E::cardinality(), EXPECTED);
+		log::debug!("<<< Exiting cardinality_large_prime()");
         println!("cardinality: {:?}", now.elapsed());
     }
 
     #[test]
     fn test_points() {
+		log::debug!(">>> Entering test_points()");
         type F = PrimeField<5>;
         type E = EllipticCurve<F, 1, 0>;
 
@@ -400,6 +462,7 @@ mod tests {
         ]
         .into_iter()
         .collect();
+		log::debug!("<<< Exiting test_points()");
         assert_eq!(points, expected);
     }
 }

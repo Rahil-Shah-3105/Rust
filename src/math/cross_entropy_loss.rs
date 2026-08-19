@@ -17,10 +17,12 @@
 //! This implementation takes two references to vectors of f64 values, `actual` and `predicted`, and returns the cross-entropy loss between them.
 //!
 pub fn cross_entropy_loss(actual: &[f64], predicted: &[f64]) -> f64 {
+	log::debug!(">>> Entering cross_entropy_loss(actual={:?},predicted={:?})", actual, predicted);
     let mut loss: Vec<f64> = Vec::new();
     for (a, p) in actual.iter().zip(predicted.iter()) {
         loss.push(-a * p.ln());
     }
+	log::debug!("<<< Exiting cross_entropy_loss(actual={:?},predicted={:?})", actual, predicted);
     loss.iter().sum()
 }
 
@@ -30,11 +32,13 @@ mod tests {
 
     #[test]
     fn test_cross_entropy_loss() {
+		log::debug!(">>> Entering test_cross_entropy_loss()");
         let test_vector_actual = vec![0., 1., 0., 0., 0., 0.];
         let test_vector = vec![0.1, 0.7, 0.1, 0.05, 0.05, 0.1];
         assert_eq!(
             cross_entropy_loss(&test_vector_actual, &test_vector),
             0.35667494393873245
+		log::debug!("<<< Exiting test_cross_entropy_loss()");
         );
     }
 }

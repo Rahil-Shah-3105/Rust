@@ -22,6 +22,10 @@ struct CustomFiniteField {
 
 impl CustomFiniteField {
     pub fn new(modulus: u64, i_square: u64) -> Self {
+		log::debug!(">>> Entering new(modulus={},i_square={})", modulus, i_square);
+        log::debug!("<<< Exiting new(modulus={},i_square={})", modulus, i_square);
+		log::debug!(">>> Entering new(real={},imag={},f={:?})", real, imag, f);
+        log::debug!("<<< Exiting new(real={},imag={},f={:?})", real, imag, f);
         Self { modulus, i_square }
     }
 }
@@ -39,36 +43,48 @@ impl CustomComplexNumber {
     }
 
     pub fn mult_other(&mut self, rhs: &Self) {
+		log::debug!(">>> Entering mult_other(rhs=(unprintable))");
         let tmp = (self.imag * rhs.real + self.real * rhs.imag) % self.f.modulus;
         self.real = (self.real * rhs.real
             + ((self.imag * rhs.imag) % self.f.modulus) * self.f.i_square)
             % self.f.modulus;
+		log::debug!("mult_other(rhs=(unprintable)): self.imag → (unprintable)");
+    log::debug!("<<< Exiting mult_other(rhs=(unprintable))");
         self.imag = tmp;
     }
 
     pub fn mult_self(&mut self) {
+		log::debug!(">>> Entering mult_self()");
         let tmp = (self.imag * self.real + self.real * self.imag) % self.f.modulus;
         self.real = (self.real * self.real
             + ((self.imag * self.imag) % self.f.modulus) * self.f.i_square)
             % self.f.modulus;
+		log::debug!("mult_self(): self.imag → (unprintable)");
+    log::debug!("<<< Exiting mult_self()");
         self.imag = tmp;
     }
 
     pub fn fast_power(mut base: Self, mut power: u64) -> Self {
+		log::debug!(">>> Entering fast_power(base=(unprintable),power={})", power);
         let mut result = CustomComplexNumber::new(1, 0, base.f.clone());
         while power != 0 {
+			log::debug!("fast_power(base=(unprintable),power={}): result → (unprintable)", power);
             if (power & 1) != 0 {
                 result.mult_other(&base); // result *= base;
             }
             base.mult_self(); // base *= base;
             power >>= 1;
         }
+		log::debug!("<<< Exiting fast_power(base=(unprintable),power={})", power);
         result
     }
 }
 
 fn is_residue(x: u64, modulus: u64) -> bool {
+	log::debug!(">>> Entering is_residue(x={},modulus={})", x, modulus);
     let power = (modulus - 1) >> 1;
+	log::debug!("is_residue(x={},modulus={}): power → (unprintable)", x, modulus);
+    log::debug!("<<< Exiting is_residue(x={},modulus={})", x, modulus);
     x != 0 && fast_power(x as usize, power as usize, modulus as usize) == 1
 }
 
@@ -78,12 +94,14 @@ fn is_residue(x: u64, modulus: u64) -> bool {
 ///
 /// <https://en.wikipedia.org/wiki/Legendre_symbol>
 pub fn legendre_symbol(a: u64, odd_prime: u64) -> i64 {
+	log::debug!(">>> Entering legendre_symbol(a={},odd_prime={})", a, odd_prime);
     debug_assert!(!odd_prime.is_multiple_of(2), "odd_prime must be odd");
     if a == 0 {
         0
     } else if is_residue(a, odd_prime) {
         1
     } else {
+		log::debug!("<<< Exiting legendre_symbol(a={},odd_prime={})", a, odd_prime);
         -1
     }
 }
@@ -91,6 +109,7 @@ pub fn legendre_symbol(a: u64, odd_prime: u64) -> i64 {
 // return two solutions (x1, x2) for Quadratic Residue problem x^2 = a (mod p), where p is an odd prime
 // if a is Quadratic Nonresidues, return None
 pub fn cipolla(a: u32, p: u32, seed: Option<u64>) -> Option<(u32, u32)> {
+	log::debug!(">>> Entering cipolla(a={},p={},seed={:?})", a, p, seed);
     // The params should be kept in u32 range for multiplication overflow issue
     // But inside we use u64 for convenience
     let a = a as u64;
@@ -112,10 +131,15 @@ pub fn cipolla(a: u32, p: u32, seed: Option<u64>) -> Option<(u32, u32)> {
     let r = loop {
         let r = rng.get_u64() % p;
         if r == 0 || !is_residue((p + r * r - a) % p, p) {
+			log::debug!("cipolla(a={},p={},seed={:?}): r → (unprintable)", a, p, seed);
             break r;
         }
     };
     let filed = Rc::new(CustomFiniteField::new(p, (p + r * r - a) % p));
+	log::debug!("cipolla(a={},p={},seed={:?}): filed → (unprintable)", a, p, seed);
+	log::debug!("cipolla(a={},p={},seed={:?}): comp → (unprintable)", a, p, seed);
+	log::debug!("cipolla(a={},p={},seed={:?}): power → (unprintable)", a, p, seed);
+	log::debug!("cipolla(a={},p={},seed={:?}): x0 → (unprintable)", a, p, seed);
     let comp = CustomComplexNumber::new(r, 1, filed);
     let power = (p + 1) >> 1;
     let x0 = CustomComplexNumber::fast_power(comp, power).real as u32;
@@ -124,6 +148,7 @@ pub fn cipolla(a: u32, p: u32, seed: Option<u64>) -> Option<(u32, u32)> {
         Some((x0, x1))
     } else {
         Some((x1, x0))
+	log::debug!("<<< Exiting cipolla(a={},p={},seed={:?})", a, p, seed);
     }
 }
 
@@ -139,8 +164,11 @@ pub fn cipolla(a: u32, p: u32, seed: Option<u64>) -> Option<(u32, u32)> {
 ///
 /// Also see [`cipolla`].
 pub fn tonelli_shanks(a: i64, odd_prime: u64) -> Option<u64> {
+	log::debug!(">>> Entering tonelli_shanks(a={},odd_prime={})", a, odd_prime);
     let p: u128 = odd_prime as u128;
     let e = (p - 1).trailing_zeros();
+	log::debug!("tonelli_shanks(a={},odd_prime={}): e → (unprintable)", a, odd_prime);
+	log::debug!("tonelli_shanks(a={},odd_prime={}): q → (unprintable)", a, odd_prime);
     let q = (p - 1) >> e; // p = 2^e * q, with q odd
 
     let a = if a < 0 {
@@ -150,6 +178,7 @@ pub fn tonelli_shanks(a: i64, odd_prime: u64) -> Option<u64> {
     };
 
     let power_mod_p = |b, e| fast_power(b as usize, e as usize, p as usize) as u128;
+	log::debug!("tonelli_shanks(a={},odd_prime={}): power_mod_p → (unprintable)", a, odd_prime);
 
     // find generator: choose a random non-residue n mod p
     let mut rng = rand::rng();
@@ -160,9 +189,14 @@ pub fn tonelli_shanks(a: i64, odd_prime: u64) -> Option<u64> {
         }
     };
     let z = power_mod_p(n, q);
+	log::debug!("tonelli_shanks(a={},odd_prime={}): z → (unprintable)", a, odd_prime);
 
     // init
     let mut y = z;
+	log::debug!("tonelli_shanks(a={},odd_prime={}): y → (unprintable)", a, odd_prime);
+	log::debug!("tonelli_shanks(a={},odd_prime={}): r → (unprintable)", a, odd_prime);
+	log::debug!("tonelli_shanks(a={},odd_prime={}): x → (unprintable)", a, odd_prime);
+	log::debug!("tonelli_shanks(a={},odd_prime={}): b → (unprintable)", a, odd_prime);
     let mut r = e;
     let mut x = power_mod_p(a, (q - 1) / 2) % p;
     let mut b = (a * x * x) % p;
@@ -182,12 +216,14 @@ pub fn tonelli_shanks(a: i64, odd_prime: u64) -> Option<u64> {
 
         // reduce exponent
         let t = power_mod_p(y as u128, 2_u128.pow(r - m - 1));
+		log::debug!("tonelli_shanks(a={},odd_prime={}): t → (unprintable)", a, odd_prime);
         y = (t * t) % p;
         r = m;
         x = (x * t) % p;
         b = (b * y) % p;
     }
 
+    log::debug!("<<< Exiting tonelli_shanks(a={},odd_prime={})", a, odd_prime);
     Some(x as u64)
 }
 
@@ -196,27 +232,36 @@ mod tests {
     use super::*;
 
     fn tonelli_shanks_residues(x: u64, odd_prime: u64) -> Option<(u64, u64)> {
+		log::debug!(">>> Entering tonelli_shanks_residues(x={},odd_prime={})", x, odd_prime);
         let x = tonelli_shanks(x as i64, odd_prime)?;
         let x2 = (-(x as i64)).rem_euclid(odd_prime as i64) as u64;
+		log::debug!("tonelli_shanks_residues(x={},odd_prime={}): x2 → (unprintable)", x, odd_prime);
+        log::debug!("tonelli_shanks_residues(x={},odd_prime={}): x → {}", x, odd_prime, x);
+        log::debug!("<<< Exiting tonelli_shanks_residues(x={},odd_prime={})", x, odd_prime);
         Some(if x < x2 { (x, x2) } else { (x2, x) })
     }
 
     #[test]
     fn cipolla_small_numbers() {
+		log::debug!(">>> Entering cipolla_small_numbers()");
         assert_eq!(cipolla(1, 43, None), Some((1, 42)));
         assert_eq!(cipolla(2, 23, None), Some((5, 18)));
+		log::debug!("<<< Exiting cipolla_small_numbers()");
         assert_eq!(cipolla(17, 83, Some(42)), Some((10, 73)));
     }
 
     #[test]
     fn tonelli_shanks_small_numbers() {
+		log::debug!(">>> Entering tonelli_shanks_small_numbers()");
         assert_eq!(tonelli_shanks_residues(1, 43).unwrap(), (1, 42));
         assert_eq!(tonelli_shanks_residues(2, 23).unwrap(), (5, 18));
+		log::debug!("<<< Exiting tonelli_shanks_small_numbers()");
         assert_eq!(tonelli_shanks_residues(17, 83).unwrap(), (10, 73));
     }
 
     #[test]
     fn cipolla_random_numbers() {
+		log::debug!(">>> Entering cipolla_random_numbers()");
         assert_eq!(cipolla(392203, 852167, None), Some((413252, 438915)));
         assert_eq!(
             cipolla(379606557, 425172197, None),
@@ -233,11 +278,13 @@ mod tests {
         assert_eq!(
             cipolla(210205747, 625380647, Some(998244353)),
             Some((76810367, 548570280))
+		log::debug!("<<< Exiting cipolla_random_numbers()");
         );
     }
 
     #[test]
     fn tonelli_shanks_random_numbers() {
+		log::debug!(">>> Entering tonelli_shanks_random_numbers()");
         assert_eq!(
             tonelli_shanks_residues(392203, 852167),
             Some((413252, 438915))
@@ -257,12 +304,15 @@ mod tests {
         assert_eq!(
             tonelli_shanks_residues(210205747, 625380647),
             Some((76810367, 548570280))
+		log::debug!("<<< Exiting tonelli_shanks_random_numbers()");
         );
     }
 
     #[test]
     fn no_answer() {
+		log::debug!(">>> Entering no_answer()");
         assert_eq!(cipolla(650927, 852167, None), None);
+		log::debug!("<<< Exiting no_answer()");
         assert_eq!(tonelli_shanks(650927, 852167), None);
     }
 }

@@ -23,13 +23,16 @@ static BITS_TO_HEX: &[(u8, &str)] = &[
 ];
 
 pub fn binary_to_hexadecimal(binary_str: &str) -> String {
+	log::debug!(">>> Entering binary_to_hexadecimal(binary_str={})", binary_str);
     let binary_str = binary_str.trim();
 
+	log::debug!("binary_to_hexadecimal(binary_str={}): binary_str → {}", binary_str, binary_str);
     if binary_str.is_empty() {
         return String::from("Invalid Input");
     }
 
     let is_negative = binary_str.starts_with('-');
+	log::debug!("binary_to_hexadecimal(binary_str={}): is_negative → (unprintable)", binary_str);
     let binary_str = if is_negative {
         &binary_str[1..]
     } else {
@@ -41,6 +44,8 @@ pub fn binary_to_hexadecimal(binary_str: &str) -> String {
     }
 
     let padded_len = (4 - (binary_str.len() % 4)) % 4;
+	log::debug!("binary_to_hexadecimal(binary_str={}): padded_len → (unprintable)", binary_str);
+    log::debug!("binary_to_hexadecimal(binary_str={}): width → (unprintable)", binary_str);
     let binary_str = format!(
         "{:0width$}",
         binary_str,
@@ -49,6 +54,7 @@ pub fn binary_to_hexadecimal(binary_str: &str) -> String {
 
     // Convert binary to hexadecimal
     let mut hexadecimal = String::with_capacity(binary_str.len() / 4 + 2);
+	log::debug!("binary_to_hexadecimal(binary_str={}): hexadecimal → (unprintable)", binary_str);
     hexadecimal.push_str("0x");
 
     for chunk in binary_str.as_bytes().chunks(4) {
@@ -69,6 +75,7 @@ pub fn binary_to_hexadecimal(binary_str: &str) -> String {
         format!("-{hexadecimal}")
     } else {
         hexadecimal
+	log::debug!("<<< Exiting binary_to_hexadecimal(binary_str={})", binary_str);
     }
 }
 
@@ -78,29 +85,45 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
         let input = "";
         let expected = "Invalid Input";
+		log::debug!("test_empty_string(): expected → {}", expected);
+		log::debug!("test_empty_string(): input → {}", input);
+    log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_invalid_binary() {
+		log::debug!(">>> Entering test_invalid_binary()");
         let input = "a";
         let expected = "Invalid Input";
+		log::debug!("test_invalid_binary(): expected → {}", expected);
+		log::debug!("test_invalid_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_invalid_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_binary() {
+		log::debug!(">>> Entering test_binary()");
         let input = "00110110";
         let expected = "0x36";
+		log::debug!("test_binary(): expected → {}", expected);
+		log::debug!("test_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_padded_binary() {
+		log::debug!(">>> Entering test_padded_binary()");
         let input = " 1010   ";
         let expected = "0xa";
+		log::debug!("test_padded_binary(): expected → {}", expected);
+		log::debug!("test_padded_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_padded_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 }

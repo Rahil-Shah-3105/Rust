@@ -19,6 +19,7 @@
 /// assert_eq!(binary_count_trailing_zeros(58), 1);
 /// ```
 pub fn binary_count_trailing_zeros(num: u64) -> u32 {
+	log::debug!(">>> Entering binary_count_trailing_zeros(num={})", num);
     if num == 0 {
         return 0;
     }
@@ -45,6 +46,7 @@ pub fn binary_count_trailing_zeros(num: u64) -> u32 {
 /// ```
 #[allow(dead_code)]
 pub fn binary_count_trailing_zeros_bitwise(num: u64) -> u32 {
+	log::debug!(">>> Entering binary_count_trailing_zeros_bitwise(num={})", num);
     if num == 0 {
         return 0;
     }
@@ -59,29 +61,36 @@ mod tests {
 
     #[test]
     fn test_basic_cases() {
+		log::debug!(">>> Entering test_basic_cases()");
         assert_eq!(binary_count_trailing_zeros(25), 0);
         assert_eq!(binary_count_trailing_zeros(36), 2);
         assert_eq!(binary_count_trailing_zeros(16), 4);
         assert_eq!(binary_count_trailing_zeros(58), 1);
+		log::debug!("<<< Exiting test_basic_cases()");
         assert_eq!(binary_count_trailing_zeros(4294967296), 32);
     }
 
     #[test]
     fn test_zero() {
+		log::debug!(">>> Entering test_zero()");
+		log::debug!("<<< Exiting test_zero()");
         assert_eq!(binary_count_trailing_zeros(0), 0);
     }
 
     #[test]
     fn test_powers_of_two() {
+		log::debug!(">>> Entering test_powers_of_two()");
         assert_eq!(binary_count_trailing_zeros(1), 0);
         assert_eq!(binary_count_trailing_zeros(2), 1);
         assert_eq!(binary_count_trailing_zeros(4), 2);
         assert_eq!(binary_count_trailing_zeros(8), 3);
+		log::debug!("<<< Exiting test_powers_of_two()");
         assert_eq!(binary_count_trailing_zeros(1024), 10);
     }
 
     #[test]
     fn test_bitwise_vs_builtin() {
+		log::debug!(">>> Entering test_bitwise_vs_builtin()");
         // Test that bitwise implementation matches built-in trailing_zeros()
         let test_cases = vec![
             0,
@@ -114,6 +123,7 @@ mod tests {
                 binary_count_trailing_zeros_bitwise(num),
                 "Mismatch for input: {num}"
             );
+		log::debug!("<<< Exiting test_bitwise_vs_builtin()");
         }
     }
 }

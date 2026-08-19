@@ -1,13 +1,17 @@
 fn floor(value: f64, scale: u8) -> f64 {
+	log::debug!(">>> Entering floor(value={},scale={})", value, scale);
     let multiplier = 10i64.pow(scale as u32) as f64;
     (value * multiplier).floor()
 }
 
 fn double_to_int(amount: f64) -> i128 {
+	log::debug!(">>> Entering double_to_int(amount={})", amount);
+    log::debug!("<<< Exiting double_to_int(amount={})", amount);
     amount.round() as i128
 }
 
 pub fn trial_division(mut num: i128) -> Vec<i128> {
+	log::debug!(">>> Entering trial_division(num={})", num);
     if num < 0 {
         return trial_division(-num);
     }
@@ -46,6 +50,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert_eq!(trial_division(0), vec![]);
         assert_eq!(trial_division(1), vec![]);
         assert_eq!(trial_division(9), vec!(3, 3));
@@ -54,6 +59,7 @@ mod tests {
         assert_eq!(trial_division(11), vec!(11));
         assert_eq!(trial_division(33), vec!(3, 11));
         assert_eq!(trial_division(2003), vec!(2003));
+		log::debug!("<<< Exiting basic()");
         assert_eq!(trial_division(100001), vec!(11, 9091));
     }
 }

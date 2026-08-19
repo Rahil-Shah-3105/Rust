@@ -1,12 +1,15 @@
 pub fn cocktail_shaker_sort<T: Ord>(arr: &mut [T]) {
+	log::debug!(">>> Entering cocktail_shaker_sort(arr=(unprintable))");
     let len = arr.len();
 
+	log::debug!("cocktail_shaker_sort(arr=(unprintable)): len → {}", len);
     if len == 0 {
         return;
     }
 
     loop {
         let mut swapped = false;
+		log::debug!("cocktail_shaker_sort(arr=(unprintable)): swapped → {}", swapped);
 
         for i in 0..(len - 1).clamp(0, len) {
             if arr[i] > arr[i + 1] {
@@ -31,6 +34,7 @@ pub fn cocktail_shaker_sort<T: Ord>(arr: &mut [T]) {
         if !swapped {
             break;
         }
+	log::debug!("<<< Exiting cocktail_shaker_sort(arr=(unprintable))");
     }
 }
 
@@ -42,33 +46,46 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let mut arr = vec![5, 2, 1, 3, 4, 6];
         let cloned = arr.clone();
+		log::debug!("basic(): cloned → (unprintable)");
         cocktail_shaker_sort(&mut arr);
+		log::debug!("<<< Exiting basic()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut arr = Vec::<i32>::new();
         let cloned = arr.clone();
+		log::debug!("empty(): cloned → (unprintable)");
+		log::debug!("empty(): arr → (unprintable)");
         cocktail_shaker_sort(&mut arr);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let mut arr = vec![1];
         let cloned = arr.clone();
+		log::debug!("one_element(): cloned → (unprintable)");
         cocktail_shaker_sort(&mut arr);
+		log::debug!("<<< Exiting one_element()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn pre_sorted() {
+		log::debug!(">>> Entering pre_sorted()");
         let mut arr = vec![1, 2, 3, 4, 5, 6];
         let cloned = arr.clone();
+		log::debug!("pre_sorted(): cloned → (unprintable)");
         cocktail_shaker_sort(&mut arr);
+		log::debug!("<<< Exiting pre_sorted()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 }

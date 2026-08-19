@@ -25,6 +25,12 @@ pub trait Field:
     /// Z-mod structure
     fn integer_mul(self, a: i64) -> Self;
     fn from_integer(a: i64) -> Self {
+		log::debug!(">>> Entering from_integer(a={})", a);
+        log::debug!("<<< Exiting from_integer(a={})", a);
+		log::debug!(">>> Entering integer_mul(n={})", n);
+		log::debug!("integer_mul(n={}): x → (unprintable)", n);
+		log::debug!("integer_mul(n={}): y → (unprintable)", n);
+        log::debug!("<<< Exiting integer_mul(n={})", n);
         Self::ONE.integer_mul(a)
     }
 
@@ -47,27 +53,36 @@ pub struct PrimeField<const P: u64> {
 impl<const P: u64> PrimeField<P> {
     /// Reduces the representation into the range [0, p)
     fn reduce(self) -> Self {
+		log::debug!(">>> Entering reduce()");
         let Self { a } = self;
         let p: i64 = P.try_into().expect("module not fitting into signed 64 bit");
         let a = a.rem_euclid(p);
+		log::debug!("reduce(): a → (unprintable)");
         assert!(a >= 0);
+		log::debug!("<<< Exiting reduce()");
         Self { a }
     }
 
     /// Returns the positive integer in the range [0, p) representing this element
     pub fn to_integer(&self) -> u64 {
+		log::debug!(">>> Entering to_integer()");
+        log::debug!("<<< Exiting to_integer()");
         self.reduce().a as u64
     }
 }
 
 impl<const P: u64> From<i64> for PrimeField<P> {
     fn from(a: i64) -> Self {
+		log::debug!(">>> Entering from(a={})", a);
+        log::debug!("<<< Exiting from(a={})", a);
         Self { a }
     }
 }
 
 impl<const P: u64> PartialEq for PrimeField<P> {
     fn eq(&self, other: &Self) -> bool {
+		log::debug!(">>> Entering eq(other=(unprintable))");
+        log::debug!("<<< Exiting eq(other=(unprintable))");
         self.reduce().a == other.reduce().a
     }
 }
@@ -78,6 +93,8 @@ impl<const P: u64> Neg for PrimeField<P> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
+		log::debug!(">>> Entering neg()");
+        log::debug!("<<< Exiting neg()");
         Self { a: -self.a }
     }
 }
@@ -92,6 +109,10 @@ impl<const P: u64> Add for PrimeField<P> {
                 let y = rhs.reduce();
                 x.a + y.a
             }),
+		log::debug!(">>> Entering add(rhs=(unprintable))");
+        log::debug!("add(rhs=(unprintable)): x → (unprintable)");
+        log::debug!("add(rhs=(unprintable)): y → (unprintable)");
+        log::debug!("<<< Exiting add(rhs=(unprintable))");
         }
     }
 }
@@ -106,6 +127,10 @@ impl<const P: u64> Sub for PrimeField<P> {
                 let y = rhs.reduce();
                 x.a - y.a
             }),
+		log::debug!(">>> Entering sub(rhs=(unprintable))");
+        log::debug!("sub(rhs=(unprintable)): x → (unprintable)");
+        log::debug!("sub(rhs=(unprintable)): y → (unprintable)");
+        log::debug!("<<< Exiting sub(rhs=(unprintable))");
         }
     }
 }
@@ -120,6 +145,10 @@ impl<const P: u64> Mul for PrimeField<P> {
                 let y = rhs.reduce();
                 x.a * y.a
             }),
+		log::debug!(">>> Entering mul(rhs=(unprintable))");
+        log::debug!("mul(rhs=(unprintable)): x → (unprintable)");
+        log::debug!("mul(rhs=(unprintable)): y → (unprintable)");
+        log::debug!("<<< Exiting mul(rhs=(unprintable))");
         }
     }
 }
@@ -129,6 +158,8 @@ impl<const P: u64> Div for PrimeField<P> {
 
     #[allow(clippy::suspicious_arithmetic_impl)]
     fn div(self, rhs: Self) -> Self::Output {
+		log::debug!(">>> Entering div(rhs=(unprintable))");
+        log::debug!("<<< Exiting div(rhs=(unprintable))");
         self * rhs.inverse()
     }
 }
@@ -136,6 +167,9 @@ impl<const P: u64> Div for PrimeField<P> {
 impl<const P: u64> fmt::Debug for PrimeField<P> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let x = self.reduce();
+		log::debug!(">>> Entering fmt(f=(unprintable))");
+		log::debug!("fmt(f=(unprintable)): x → (unprintable)");
+		log::debug!("<<< Exiting fmt(f=(unprintable))");
         write!(f, "{}", x.reduce().a)
     }
 }
@@ -146,7 +180,9 @@ impl<const P: u64> Field for PrimeField<P> {
     const ONE: Self = Self { a: 1 };
 
     fn inverse(self) -> Self {
+		log::debug!(">>> Entering inverse()");
         assert_ne!(self.a, 0);
+		log::debug!("<<< Exiting inverse()");
         Self {
             a: mod_inverse(
                 self.a,
@@ -173,12 +209,15 @@ impl<const P: u64> Field for PrimeField<P> {
             x = x + x;
             n /= 2;
         }
+		log::debug!(">>> Entering integer_mul()");
         x + y
     }
 
     type ElementsIter = PrimeFieldElementsIter<P>;
 
     fn elements() -> Self::ElementsIter {
+		log::debug!(">>> Entering elements()");
+        log::debug!("<<< Exiting elements()");
         PrimeFieldElementsIter::default()
     }
 }
@@ -192,11 +231,14 @@ impl<const P: u64> Iterator for PrimeFieldElementsIter<P> {
     type Item = PrimeField<P>;
 
     fn next(&mut self) -> Option<Self::Item> {
+		log::debug!(">>> Entering next()");
         if self.x as u64 == P {
             None
         } else {
             let res = PrimeField::from_integer(self.x);
+			log::debug!("next(): res → (unprintable)");
             self.x += 1;
+			log::debug!("<<< Exiting next()");
             Some(res)
         }
     }
@@ -204,13 +246,16 @@ impl<const P: u64> Iterator for PrimeFieldElementsIter<P> {
 
 impl<const P: u64> Hash for PrimeField<P> {
     fn hash<H: Hasher>(&self, state: &mut H) {
+		log::debug!(">>> Entering hash(state=(unprintable))");
         let Self { a } = self.reduce();
+		log::debug!("<<< Exiting hash(state=(unprintable))");
         state.write_i64(a);
     }
 }
 
 // TODO: should we use extended_euclidean_algorithm adjusted to i64?
 fn mod_inverse(mut a: i64, mut b: i64) -> i64 {
+	log::debug!(">>> Entering mod_inverse(a={},b={})", a, b);
     let mut s = 1;
     let mut t = 0;
     let step = |x, y, q| (y, x - q * y);
@@ -220,6 +265,7 @@ fn mod_inverse(mut a: i64, mut b: i64) -> i64 {
         (s, t) = step(s, t, q);
     }
     assert!(a == 1 || a == -1);
+	log::debug!("<<< Exiting mod_inverse(a={},b={})", a, b);
     a * s
 }
 
@@ -243,6 +289,9 @@ mod tests {
                     generated.insert(x);
                 }
                 assert_eq!(generated, expected);
+			log::debug!(">>> Entering test()");
+			log::debug!("test(): x → (unprintable)");
+			log::debug!("<<< Exiting test()");
             }
         }
         test::<5>();
@@ -258,10 +307,14 @@ mod tests {
 
     #[test]
     fn large_prime_field() {
+		log::debug!(">>> Entering large_prime_field()");
         const P: u64 = 2_u64.pow(63) - 25; // largest prime fitting into i64
         type F = PrimeField<P>;
         let x = F::from(P as i64 - 1);
+		log::debug!("large_prime_field(): x → (unprintable)");
+		log::debug!("large_prime_field(): y → (unprintable)");
         let y = x.inverse();
+		log::debug!("<<< Exiting large_prime_field()");
         assert_eq!(x * y, F::ONE);
     }
 
@@ -296,6 +349,7 @@ mod tests {
 
     #[test]
     fn test_mod_inverse() {
+		log::debug!(">>> Entering test_mod_inverse()");
         assert_eq!(mod_inverse(-6, 7), 1);
         assert_eq!(mod_inverse(-5, 7), -3);
         assert_eq!(mod_inverse(-4, 7), -2);
@@ -307,6 +361,7 @@ mod tests {
         assert_eq!(mod_inverse(3, 7), -2);
         assert_eq!(mod_inverse(4, 7), 2);
         assert_eq!(mod_inverse(5, 7), 3);
+		log::debug!("<<< Exiting test_mod_inverse()");
         assert_eq!(mod_inverse(6, 7), -1);
     }
 

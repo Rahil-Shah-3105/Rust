@@ -14,6 +14,10 @@ type TopologicalSortResult<Node> = Result<Vec<Node>, TopoligicalSortError>;
 ///     return the topological sort of the graph
 ///     or detect if there's any cycle
 pub fn topological_sort<Node: Hash + Eq + Copy>(
+	log::debug!(">>> Entering topological_sort(edges=(unprintable))");
+	log::debug!("topological_sort(edges=(unprintable)): no_incoming_edges_q → (unprintable)");
+	log::debug!("topological_sort(edges=(unprintable)): sorted → (unprintable)");
+	log::debug!("<<< Exiting topological_sort(edges=(unprintable))");
     edges: &Vec<(Node, Node)>,
 ) -> TopologicalSortResult<Node> {
     // Preparation:
@@ -71,6 +75,7 @@ mod tests {
     use crate::graph::topological_sort::TopoligicalSortError;
 
     fn is_valid_sort<Node: Eq>(sorted: &[Node], graph: &[(Node, Node)]) -> bool {
+		log::debug!(">>> Entering is_valid_sort(sorted=(unprintable),graph=(unprintable))");
         for (source, dest) in graph {
             let source_pos = sorted.iter().position(|node| node == source);
             let dest_pos = sorted.iter().position(|node| node == dest);
@@ -81,21 +86,29 @@ mod tests {
                 }
             };
         }
+		log::debug!("is_valid_sort(sorted=(unprintable),graph=(unprintable)): source_pos → (unprintable)");
+            log::debug!("is_valid_sort(sorted=(unprintable),graph=(unprintable)): dest_pos → (unprintable)");
+            log::debug!("<<< Exiting is_valid_sort(sorted=(unprintable),graph=(unprintable))");
         true
     }
 
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         let graph = vec![(1, 2), (1, 3), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7)];
         let sort = topological_sort(&graph);
+		log::debug!("it_works(): sort → (unprintable)");
+		log::debug!("it_works(): graph → (unprintable)");
         assert!(sort.is_ok());
         let sort = sort.unwrap();
         assert!(is_valid_sort(&sort, &graph));
+		log::debug!("<<< Exiting it_works()");
         assert_eq!(sort, vec![1, 2, 3, 4, 5, 6, 7]);
     }
 
     #[test]
     fn test_wikipedia_example() {
+		log::debug!(">>> Entering test_wikipedia_example()");
         let graph = vec![
             (5, 11),
             (7, 11),
@@ -108,16 +121,22 @@ mod tests {
             (8, 9),
         ];
         let sort = topological_sort(&graph);
+		log::debug!("test_wikipedia_example(): sort → (unprintable)");
         assert!(sort.is_ok());
         let sort = sort.unwrap();
+		log::debug!("<<< Exiting test_wikipedia_example()");
         assert!(is_valid_sort(&sort, &graph));
     }
 
     #[test]
     fn test_cyclic_graph() {
+		log::debug!(">>> Entering test_cyclic_graph()");
         let graph = vec![(1, 2), (2, 3), (3, 4), (4, 5), (4, 2)];
         let sort = topological_sort(&graph);
+		log::debug!("test_cyclic_graph(): sort → (unprintable)");
+		log::debug!("test_cyclic_graph(): graph → (unprintable)");
         assert!(sort.is_err());
+		log::debug!("<<< Exiting test_cyclic_graph()");
         assert_eq!(sort.err().unwrap(), TopoligicalSortError::CycleDetected);
     }
 }

@@ -58,6 +58,7 @@ pub struct PlayActions {
 #[allow(dead_code)]
 #[cfg(not(test))]
 fn main() {
+	log::debug!(">>> Entering main()");
     let mut board = vec![vec![Players::Blank; 3]; 3];
 
     while !available_positions(&board).is_empty()
@@ -74,6 +75,7 @@ fn main() {
         let mut move_position: Option<Position> = None;
         input.make_ascii_lowercase();
         let bytes = input.trim().trim_start().as_bytes();
+		log::debug!("main(): bytes → (unprintable)");
         if bytes.len() as u32 == 2
             && (bytes[0] as char).is_alphabetic()
             && (bytes[1] as char).is_numeric()
@@ -83,14 +85,18 @@ fn main() {
 
             if column <= 2 && row <= 2 {
                 move_position = Some(Position { x: column, y: row });
+			log::debug!("main(): move_position → {:?}", move_position);
             }
         }
 
         //Take the validated user input coordinate and use it.
         if let Some(move_pos) = move_position {
             let open_positions = available_positions(&board);
+			log::debug!("main(): open_positions → {:?}", open_positions);
 
             let mut search = open_positions.iter();
+			log::debug!("main(): search → (unprintable)");
+			log::debug!("main(): result → (unprintable)");
             let result = search.find(|&&x| x == move_pos);
             if result.is_none() {
                 println!("Not a valid empty coordinate.");
@@ -129,11 +135,13 @@ fn main() {
                 }
             }
         }
+	log::debug!("<<< Exiting main()");
     }
 }
 
 #[allow(dead_code)]
 fn display_board(board: &[Vec<Players>]) {
+	log::debug!(">>> Entering display_board(board={:?})", board);
     println!();
     for (y, board_row) in board.iter().enumerate() {
         print!("{} ", (y + 1));
@@ -146,10 +154,12 @@ fn display_board(board: &[Vec<Players>]) {
         }
         println!();
     }
+	log::debug!("<<< Exiting display_board(board={:?})", board);
     println!("  a b c");
 }
 
 fn available_positions(board: &[Vec<Players>]) -> Vec<Position> {
+	log::debug!(">>> Entering available_positions(board={:?})", board);
     let mut available: Vec<Position> = Vec::new();
     for (y, board_row) in board.iter().enumerate() {
         for (x, board_cell) in board_row.iter().enumerate() {
@@ -161,10 +171,12 @@ fn available_positions(board: &[Vec<Players>]) -> Vec<Position> {
             }
         }
     }
+	log::debug!("<<< Exiting available_positions(board={:?})", board);
     available
 }
 
 fn win_check(player: Players, board: &[Vec<Players>]) -> bool {
+	log::debug!(">>> Entering win_check(player={:?},board={:?})", player, board);
     if player == Players::Blank {
         return false;
     }
@@ -193,6 +205,7 @@ fn win_check(player: Players, board: &[Vec<Players>]) -> bool {
 
 //Minimize the actions of the opponent while maximizing the game state of the current player.
 pub fn minimax(side: Players, board: &[Vec<Players>]) -> Option<PlayActions> {
+	log::debug!(">>> Entering minimax(side={:?},board={:?})", side, board);
     //Check that board is in a valid state.
     if win_check(Players::PlayerX, board) || win_check(Players::PlayerO, board) {
         return None;
@@ -205,6 +218,7 @@ pub fn minimax(side: Players, board: &[Vec<Players>]) -> Option<PlayActions> {
     };
 
     let positions = available_positions(board);
+	log::debug!("minimax(side={:?},board={:?}): positions → {:?}", side, board, positions);
     if positions.is_empty() {
         return None;
     }
@@ -256,6 +270,7 @@ pub fn minimax(side: Players, board: &[Vec<Players>]) -> Option<PlayActions> {
             },
         )
     }
+	log::debug!("<<< Exiting minimax(side={:?},board={:?})", side, board);
     best_move
 }
 
@@ -265,11 +280,13 @@ fn append_playaction(
     opt_play_actions: &mut Option<PlayActions>,
     appendee: SinglePlayAction,
 ) {
+	log::debug!(">>> Entering append_playaction(current_side={:?},opt_play_actions={:?},appendee={:?})", current_side, opt_play_actions, appendee);
     if opt_play_actions.is_none() {
         *opt_play_actions = Some(PlayActions {
             positions: vec![appendee.position],
             side: appendee.side,
         });
+		log::debug!("<<< Exiting append_playaction(current_side={:?},opt_play_actions={:?},appendee={:?})", current_side, opt_play_actions, appendee);
         return;
     }
 
@@ -325,16 +342,20 @@ mod test {
 
     #[test]
     fn win_state_check() {
+		log::debug!(">>> Entering win_state_check()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerX;
         let responses = minimax(Players::PlayerO, &board);
+		log::debug!("win_state_check(): responses → {:?}", responses);
+		log::debug!("<<< Exiting win_state_check()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn win_state_check2() {
+		log::debug!(">>> Entering win_state_check2()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerO;
@@ -342,44 +363,53 @@ mod test {
         board[1][1] = Players::PlayerO;
         board[2][1] = Players::PlayerO;
         let responses = minimax(Players::PlayerO, &board);
+		log::debug!("win_state_check2(): responses → {:?}", responses);
+		log::debug!("<<< Exiting win_state_check2()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn block_win_move() {
+		log::debug!(">>> Entering block_win_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[1][2] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("block_win_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 2, y: 0 }],
                 side: Players::PlayerX
             })
+		log::debug!("<<< Exiting block_win_move()");
         );
     }
 
     #[test]
     fn block_move() {
+		log::debug!(">>> Entering block_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
         board[2][0] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("block_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 1, y: 1 }],
                 side: Players::Blank
             })
+		log::debug!("<<< Exiting block_move()");
         );
     }
 
     #[test]
     fn expected_loss() {
+		log::debug!(">>> Entering expected_loss()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
@@ -387,6 +417,7 @@ mod test {
         board[2][0] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("expected_loss(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
@@ -398,6 +429,7 @@ mod test {
                 ],
                 side: Players::PlayerO
             })
+		log::debug!("<<< Exiting expected_loss()");
         );
     }
 }

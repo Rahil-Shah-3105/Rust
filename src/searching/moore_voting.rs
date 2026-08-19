@@ -43,6 +43,7 @@
 
 // boilerplate, because `==` isn't `const` yet
 const fn eq_s(a: &[u8], b: &[u8]) -> bool {
+	log::debug!(">>> Entering eq_s(a={:?},b={:?})", a, b);
     if a.len() != b.len() {
         return false;
     }
@@ -57,8 +58,11 @@ const fn eq_s(a: &[u8], b: &[u8]) -> bool {
 }
 
 pub fn moore_voting_2pass<T: Eq>(arr: &[T]) -> Option<&T> {
+	log::debug!(">>> Entering moore_voting_2pass(arr=(unprintable))");
     let mut ele = arr.first()?;
     let mut cnt = 0;
+	log::debug!("moore_voting_2pass(arr=(unprintable)): cnt → {}", cnt);
+	log::debug!("moore_voting_2pass(arr=(unprintable)): ele → (unprintable)");
 
     for item in arr.iter() {
         if cnt == 0 {
@@ -72,11 +76,14 @@ pub fn moore_voting_2pass<T: Eq>(arr: &[T]) -> Option<&T> {
     }
 
     let cnt_check = arr.iter().filter(|&x| x == ele).count();
+	log::debug!("moore_voting_2pass(arr=(unprintable)): cnt_check → (unprintable)");
 
     let n = arr.len();
+	log::debug!("moore_voting_2pass(arr=(unprintable)): n → {}", n);
     if cnt_check > (n / 2) {
         Some(ele)
     } else {
+		log::debug!("<<< Exiting moore_voting_2pass(arr=(unprintable))");
         None
     }
 }
@@ -84,6 +91,10 @@ pub fn moore_voting_2pass<T: Eq>(arr: &[T]) -> Option<&T> {
 pub const fn moore_voting_2pass_c<'a>(arr: &[&'a [u8]]) -> Option<&'a [u8]> {
     let n = arr.len();
     if n == 0 {
+		log::debug!(">>> Entering moore_voting_2pass_c(arr={:?})", arr);
+		log::debug!("moore_voting_2pass_c(arr={:?}): n → {}", arr, n);
+        log::debug!("moore_voting_2pass_c(arr={:?}): n → {}", arr, n);
+        log::debug!("<<< Exiting moore_voting_2pass_c(arr={:?})", arr);
         return None;
     }
     let mut cnt: usize = 1;
@@ -153,10 +164,12 @@ mod tests {
 
     #[test]
     fn test_moore_voting() {
+		log::debug!(">>> Entering test_moore_voting()");
         let arr1: Vec<i32> = vec![9, 1, 8, 1, 1];
         assert_eq!(moore_voting_2pass(&arr1), Some(&1));
         assert_eq!(moore_voting_it(arr1), Some(1));
         let arr2: Vec<i32> = vec![1, 2, 3, 4];
+		log::debug!("<<< Exiting test_moore_voting()");
         assert_eq!(moore_voting_2pass(&arr2), None);
     }
 }

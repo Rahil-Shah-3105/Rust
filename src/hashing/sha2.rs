@@ -66,6 +66,7 @@ const H224_INIT: [u32; 8] = [
 ];
 
 fn sha256_pad(msg: &[u8]) -> Vec<u8> {
+	log::debug!(">>> Entering sha256_pad(msg={:?})", msg);
     let len_bits: u64 = (msg.len() as u64)
         .checked_mul(8)
         .expect("message too long for SHA-256");
@@ -75,10 +76,12 @@ fn sha256_pad(msg: &[u8]) -> Vec<u8> {
         padded.push(0x00);
     }
     padded.extend_from_slice(&len_bits.to_be_bytes());
+	log::debug!("<<< Exiting sha256_pad(msg={:?})", msg);
     padded
 }
 
 fn sha256_compress(state: &mut [u32; 8], block: &[u8; 64]) {
+	log::debug!(">>> Entering sha256_compress(state={:?},block={:?})", state, block);
     let mut w = [0u32; 64];
     for i in 0..16 {
         w[i] = u32::from_be_bytes(block[4 * i..4 * i + 4].try_into().unwrap());
@@ -119,34 +122,42 @@ fn sha256_compress(state: &mut [u32; 8], block: &[u8; 64]) {
     state[4] = state[4].wrapping_add(e);
     state[5] = state[5].wrapping_add(f);
     state[6] = state[6].wrapping_add(g);
+	log::debug!("<<< Exiting sha256_compress(state={:?},block={:?})", state, block);
     state[7] = state[7].wrapping_add(h);
 }
 
 fn sha256_hash(msg: &[u8], mut state: [u32; 8]) -> [u32; 8] {
+	log::debug!(">>> Entering sha256_hash(msg={:?},state={:?})", msg, state);
     let padded = sha256_pad(msg);
     for chunk in padded.chunks_exact(64) {
+		log::debug!("sha256_hash(msg={:?},state={:?}): padded → {:?}", msg, state, padded);
         sha256_compress(&mut state, chunk.try_into().unwrap());
     }
+	log::debug!("<<< Exiting sha256_hash(msg={:?},state={:?})", msg, state);
     state
 }
 
 /// Computes the **SHA-256** digest of `msg`.
 pub fn sha256(msg: &[u8]) -> [u8; 32] {
+	log::debug!(">>> Entering sha256(msg={:?})", msg);
     let state = sha256_hash(msg, H256_INIT);
     let mut out = [0u8; 32];
     for (i, word) in state.iter().enumerate() {
         out[4 * i..4 * i + 4].copy_from_slice(&word.to_be_bytes());
     }
+	log::debug!("<<< Exiting sha256(msg={:?})", msg);
     out
 }
 
 /// Computes the **SHA-224** digest of `msg`.
 pub fn sha224(msg: &[u8]) -> [u8; 28] {
+	log::debug!(">>> Entering sha224(msg={:?})", msg);
     let state = sha256_hash(msg, H224_INIT);
     let mut out = [0u8; 28];
     for (i, word) in state[..7].iter().enumerate() {
         out[4 * i..4 * i + 4].copy_from_slice(&word.to_be_bytes());
     }
+	log::debug!("<<< Exiting sha224(msg={:?})", msg);
     out
 }
 
@@ -213,6 +224,7 @@ const H512_256_INIT: [u64; 8] = [
 ];
 
 fn sha512_pad(msg: &[u8]) -> Vec<u8> {
+	log::debug!(">>> Entering sha512_pad(msg={:?})", msg);
     let len_bits: u128 = (msg.len() as u128)
         .checked_mul(8)
         .expect("message too long for SHA-512");
@@ -222,10 +234,12 @@ fn sha512_pad(msg: &[u8]) -> Vec<u8> {
         padded.push(0x00);
     }
     padded.extend_from_slice(&len_bits.to_be_bytes());
+	log::debug!("<<< Exiting sha512_pad(msg={:?})", msg);
     padded
 }
 
 fn sha512_compress(state: &mut [u64; 8], block: &[u8; 128]) {
+	log::debug!(">>> Entering sha512_compress(state={:?},block={:?})", state, block);
     let mut w = [0u64; 80];
     for i in 0..16 {
         w[i] = u64::from_be_bytes(block[8 * i..8 * i + 8].try_into().unwrap());
@@ -266,14 +280,18 @@ fn sha512_compress(state: &mut [u64; 8], block: &[u8; 128]) {
     state[4] = state[4].wrapping_add(e);
     state[5] = state[5].wrapping_add(f);
     state[6] = state[6].wrapping_add(g);
+	log::debug!("<<< Exiting sha512_compress(state={:?},block={:?})", state, block);
     state[7] = state[7].wrapping_add(h);
 }
 
 fn sha512_hash(msg: &[u8], mut state: [u64; 8]) -> [u64; 8] {
+	log::debug!(">>> Entering sha512_hash(msg={:?},state={:?})", msg, state);
     let padded = sha512_pad(msg);
     for chunk in padded.chunks_exact(128) {
+		log::debug!("sha512_hash(msg={:?},state={:?}): padded → {:?}", msg, state, padded);
         sha512_compress(&mut state, chunk.try_into().unwrap());
     }
+	log::debug!("<<< Exiting sha512_hash(msg={:?},state={:?})", msg, state);
     state
 }
 
@@ -326,8 +344,10 @@ mod tests {
 
     #[test]
     fn test_constants() {
+		log::debug!(">>> Entering test_constants()");
         let mut ls = LinearSieve::new();
         ls.prepare(311).unwrap();
+		log::debug!("test_constants(): ls → (unprintable)");
         assert_eq!(64, ls.primes.len());
         assert_eq!(311, ls.primes[63]);
 
@@ -337,6 +357,8 @@ mod tests {
         for (pos, &k) in K32.iter().enumerate() {
             let a: f64 = ls.primes[pos] as f64;
             let bits = a.cbrt().to_bits();
+			log::debug!("test_constants(): bits → (unprintable)");
+			log::debug!("test_constants(): exp → (unprintable)");
             let exp = (bits >> float_len) as u32;
             let k_ref = ((bits & ((1u64 << float_len) - 1))
                 >> (float_len - constant_len + 1023 - exp)) as u32;
@@ -350,6 +372,7 @@ mod tests {
             let h_ref = ((bits & ((1u64 << float_len) - 1))
                 >> (float_len - constant_len + 1023 - exp)) as u32;
             assert_eq!(h, h_ref, "H256_INIT[{pos}] mismatch");
+		log::debug!("<<< Exiting test_constants()");
         }
     }
 

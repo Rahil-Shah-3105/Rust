@@ -11,6 +11,7 @@
 ///
 /// *  Returns `Some(position)` if a set bit exists or `None` if no bit is set.
 pub fn find_highest_set_bit(num: usize) -> Option<usize> {
+	log::debug!(">>> Entering find_highest_set_bit(num={})", num);
     if num == 0 {
         return None;
     }

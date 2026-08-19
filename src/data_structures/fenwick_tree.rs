@@ -40,6 +40,8 @@ where
     ///
     /// A new `FenwickTree` instance.
     pub fn with_capacity(capacity: usize) -> Self {
+		log::debug!(">>> Entering with_capacity(capacity={})", capacity);
+        log::debug!("<<< Exiting with_capacity(capacity={})", capacity);
         FenwickTree {
             data: vec![T::default(); capacity + 1],
         }
@@ -59,6 +61,7 @@ where
     /// A `Result` indicating success (`Ok`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn update(&mut self, index: usize, value: T) -> Result<(), FenwickTreeError> {
+		log::debug!(">>> Entering update(index={},value=(unprintable))", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -85,6 +88,7 @@ where
     /// A `Result` containing the prefix sum (`Ok(sum)`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn prefix_query(&self, index: usize) -> Result<T, FenwickTreeError> {
+		log::debug!(">>> Entering prefix_query(index={})", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -113,6 +117,7 @@ where
     /// A `Result` containing the range sum (`Ok(sum)`) or an error (`FenwickTreeError::InvalidRange`)
     /// if the left index is greater than the right index or the right index is out of bounds.
     pub fn range_query(&self, left: usize, right: usize) -> Result<T, FenwickTreeError> {
+		log::debug!(">>> Entering range_query(left={},right={})", left, right);
         if left > right || right >= self.data.len() - 1 {
             return Err(FenwickTreeError::InvalidRange);
         }
@@ -141,6 +146,7 @@ where
     /// A `Result` containing the value at the specified index (`Ok(value)`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn point_query(&self, index: usize) -> Result<T, FenwickTreeError> {
+		log::debug!(">>> Entering point_query(index={})", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -170,6 +176,8 @@ where
     /// A `Result` indicating success (`Ok`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn set(&mut self, index: usize, value: T) -> Result<(), FenwickTreeError> {
+		log::debug!(">>> Entering set(index={},value=(unprintable))", index);
+        log::debug!("<<< Exiting set(index={},value=(unprintable))", index);
         self.update(index, value - self.point_query(index)?)
     }
 }
@@ -192,6 +200,8 @@ where
 ///
 /// The value of the lowest set bit in `x`.
 const fn lowbit(x: usize) -> usize {
+	log::debug!(">>> Entering lowbit(x={})", x);
+    log::debug!("<<< Exiting lowbit(x={})", x);
     x & (!x + 1)
 }
 
@@ -201,8 +211,10 @@ mod tests {
 
     #[test]
     fn test_fenwick_tree() {
+		log::debug!(">>> Entering test_fenwick_tree()");
         let mut fenwick_tree = FenwickTree::with_capacity(10);
 
+		log::debug!("test_fenwick_tree(): fenwick_tree → (unprintable)");
         assert_eq!(fenwick_tree.update(0, 5), Ok(()));
         assert_eq!(fenwick_tree.update(1, 3), Ok(()));
         assert_eq!(fenwick_tree.update(2, -2), Ok(()));
@@ -259,6 +271,7 @@ mod tests {
         assert_eq!(
             fenwick_tree.point_query(10),
             Err(FenwickTreeError::IndexOutOfBounds)
+		log::debug!("<<< Exiting test_fenwick_tree()");
         );
     }
 }

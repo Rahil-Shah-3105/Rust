@@ -59,6 +59,7 @@ macro_rules! quarter_round {
 /// +------+------+------+------+
 /// ```
 pub fn salsa20(input: &[u32; 16], output: &mut [u32; 16]) {
+	log::debug!(">>> Entering salsa20(input={:?},output={:?})", input, output);
     output.copy_from_slice(&input[..]);
     for _ in 0..10 {
         // Odd round
@@ -75,6 +76,7 @@ pub fn salsa20(input: &[u32; 16], output: &mut [u32; 16]) {
     }
     for (a, &b) in output.iter_mut().zip(input.iter()) {
         *a = a.wrapping_add(b);
+	log::debug!("<<< Exiting salsa20(input={:?},output={:?})", input, output);
     }
 }
 
@@ -86,16 +88,19 @@ mod tests {
     const C: [u32; 4] = [0x65787061, 0x6e642033, 0x322d6279, 0x7465206b];
 
     fn output_hex(inp: &[u32; 16]) -> String {
+		log::debug!(">>> Entering output_hex(inp={:?})", inp);
         let mut res = String::new();
         res.reserve(512 / 4);
         for &x in inp {
             write!(&mut res, "{x:08x}").unwrap();
         }
+		log::debug!("<<< Exiting output_hex(inp={:?})", inp);
         res
     }
     #[test]
     // test vector 1
     fn basic_tv1() {
+		log::debug!(">>> Entering basic_tv1()");
         let mut inp = [0u32; 16];
         let mut out = [0u32; 16];
         inp[0] = C[0];
@@ -123,6 +128,7 @@ mod tests {
                 "de1d6f8d91dbf69d0db4b70c8b4320d236694432896d98b05aa7b76d5738ca13",
                 "04e5a170c8e479af1542ed2f30f26ba57da20203cfe955c66f4cc7a06dd34359"
             )
+		log::debug!("<<< Exiting basic_tv1()");
         );
     }
 }

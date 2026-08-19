@@ -45,6 +45,7 @@ pub fn find_path_in_maze(
     start_x: usize,
     start_y: usize,
 ) -> Result<Option<Vec<Vec<bool>>>, MazeError> {
+	log::debug!(">>> Entering find_path_in_maze(maze={:?},start_x={},start_y={})", maze, start_x, start_y);
     if maze.is_empty() {
         return Err(MazeError::EmptyMaze);
     }
@@ -83,6 +84,8 @@ impl Maze {
     ///
     /// A new Maze instance.
     fn new(maze: Vec<Vec<bool>>) -> Self {
+		log::debug!(">>> Entering new(maze={:?})", maze);
+        log::debug!("<<< Exiting new(maze={:?})", maze);
         Maze { maze }
     }
 
@@ -92,6 +95,8 @@ impl Maze {
     ///
     /// The width of the maze.
     fn width(&self) -> usize {
+		log::debug!(">>> Entering width()");
+        log::debug!("<<< Exiting width()");
         self.maze[0].len()
     }
 
@@ -101,6 +106,8 @@ impl Maze {
     ///
     /// The height of the maze.
     fn height(&self) -> usize {
+		log::debug!(">>> Entering height()");
+        log::debug!("<<< Exiting height()");
         self.maze.len()
     }
 
@@ -115,10 +122,12 @@ impl Maze {
     ///
     /// A solution matrix if a path is found or None if not found.
     fn find_path(&self, start_x: usize, start_y: usize) -> Option<Vec<Vec<bool>>> {
+		log::debug!(">>> Entering find_path(start_x={},start_y={})", start_x, start_y);
         let mut solution = vec![vec![false; self.width()]; self.height()];
         if self.solve(start_x as isize, start_y as isize, &mut solution) {
             Some(solution)
         } else {
+			log::debug!("<<< Exiting find_path(start_x={},start_y={})", start_x, start_y);
             None
         }
     }
@@ -135,6 +144,7 @@ impl Maze {
     ///
     /// A boolean indicating whether a solution was found.
     fn solve(&self, x: isize, y: isize, solution: &mut [Vec<bool>]) -> bool {
+		log::debug!(">>> Entering solve(x={},y={},solution={:?})", x, y, solution);
         if x == (self.height() as isize - 1) && y == (self.width() as isize - 1) {
             solution[x as usize][y as usize] = true;
             return true;
@@ -168,6 +178,8 @@ impl Maze {
     ///
     /// A boolean indicating whether the position is valid.
     fn is_valid(&self, x: isize, y: isize, solution: &[Vec<bool>]) -> bool {
+		log::debug!(">>> Entering is_valid(x={},y={},solution={:?})", x, y, solution);
+        log::debug!("<<< Exiting is_valid(x={},y={},solution={:?})", x, y, solution);
         x >= 0
             && y >= 0
             && x < self.height() as isize

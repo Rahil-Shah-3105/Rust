@@ -17,6 +17,8 @@ pub struct Edge {
 impl Edge {
     /// Creates a new edge with the specified source, destination, and cost.
     pub fn new(source: usize, destination: usize, cost: usize) -> Self {
+		log::debug!(">>> Entering new(source={},destination={},cost={})", source, destination, cost);
+        log::debug!("<<< Exiting new(source={},destination={},cost={})", source, destination, cost);
         Self {
             source,
             destination,
@@ -45,6 +47,7 @@ impl Edge {
 ///
 /// The time complexity is O(E log E), where E is the number of edges.
 pub fn kruskal(mut edges: Vec<Edge>, num_vertices: usize) -> Option<(usize, Vec<Edge>)> {
+	log::debug!(">>> Entering kruskal(edges={:?},num_vertices={})", edges, num_vertices);
     let mut dsu = DisjointSetUnion::new(num_vertices);
     let mut mst_cost: usize = 0;
     let mut mst_edges: Vec<Edge> = Vec::with_capacity(num_vertices - 1);
@@ -58,13 +61,16 @@ pub fn kruskal(mut edges: Vec<Edge>, num_vertices: usize) -> Option<(usize, Vec<
         }
 
         // Attempt to merge the sets containing the edge’s vertices
+		let __log_start = std::time::Instant::now();
         if dsu.merge(edge.source, edge.destination) != usize::MAX {
             mst_cost += edge.cost;
             mst_edges.push(edge);
         }
+	log::info!("kruskal(edges,num_vertices)={:?},{}: update query executed in {} ms", edges, num_vertices, __log_start.elapsed().as_millis());
     }
 
     // Return MST if it includes exactly num_vertices - 1 edges, otherwise None for disconnected graphs
+	log::debug!("<<< Exiting kruskal(edges={:?},num_vertices={})", edges, num_vertices);
     (mst_edges.len() == num_vertices - 1).then_some((mst_cost, mst_edges))
 }
 

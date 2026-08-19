@@ -9,21 +9,28 @@ struct Node<K: Ord, V> {
 
 impl<K: Ord, V> Node<K, V> {
     pub fn new() -> Self {
+		log::debug!(">>> Entering new()");
         let mut forward = Vec::with_capacity(4);
         forward.resize(4, null_mut());
+		log::debug!("new(): forward → (unprintable)");
+        log::debug!("<<< Exiting new()");
         Node {
             key: None,
             value: None,
             forward,
+		log::debug!(">>> Entering new(max_level={})", max_level);
+		log::debug!("<<< Exiting new(max_level={})", max_level);
         }
     }
 
     pub fn make_node(capacity: usize, key: K, value: V) -> Self {
+		log::debug!(">>> Entering make_node(capacity={},key=(unprintable),value=(unprintable))", capacity);
         let mut new_node = Self::new();
         new_node.key = Some(key);
         new_node.value = Some(value);
         new_node.forward = Vec::<*mut Node<K, V>>::with_capacity(capacity);
         new_node.forward.resize(capacity, null_mut());
+		log::debug!("<<< Exiting make_node(capacity={},key=(unprintable),value=(unprintable))", capacity);
         new_node
     }
 }
@@ -50,21 +57,27 @@ impl<K: Ord, V> SkipList<K, V> {
             level: 0,
             max_level,
             marker: PhantomData,
+		log::debug!(">>> Entering new(skip_list=(unprintable))");
+        log::debug!("<<< Exiting new(skip_list=(unprintable))");
         }
     }
 
     pub fn search(&self, searched_key: K) -> Option<&V> {
+		log::debug!(">>> Entering search(searched_key=(unprintable))");
         let mut x = self.header;
 
+		log::debug!("search(searched_key=(unprintable)): x → (unprintable)");
         unsafe {
             'outer: for i in (0..self.level).rev() {
                 loop {
                     let forward_i = (&*x).forward[i];
+					log::debug!("search(searched_key=(unprintable)): forward_i → (unprintable)");
                     if forward_i.is_null() {
                         continue 'outer;
                     }
 
                     let forward_i_key = (*forward_i).key.as_ref();
+					log::debug!("search(searched_key=(unprintable)): forward_i_key → (unprintable)");
                     match forward_i_key.cmp(&Some(&searched_key)) {
                         Ordering::Less => {
                             x = forward_i;
@@ -89,24 +102,30 @@ impl<K: Ord, V> SkipList<K, V> {
                     return None;
                 }
             }
+		log::debug!("<<< Exiting search(searched_key=(unprintable))");
         }
     }
 
     pub fn insert(&mut self, searched_key: K, new_value: V) -> bool {
+		log::debug!(">>> Entering insert(searched_key=(unprintable),new_value=(unprintable))");
         let mut update = Vec::<*mut Node<K, V>>::with_capacity(self.max_level);
         update.resize(self.max_level, null_mut());
+		log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): update → (unprintable)");
 
         let mut x = self.header;
+		log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): x → (unprintable)");
 
         unsafe {
             for i in (0..self.level).rev() {
                 loop {
                     let x_forward_i = (&*x).forward[i];
+					log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): x_forward_i → (unprintable)");
                     if x_forward_i.is_null() {
                         break;
                     }
 
                     let x_forward_i_key = (*x_forward_i).key.as_ref();
+					log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): x_forward_i_key → (unprintable)");
                     match x_forward_i_key.cmp(&Some(&searched_key)) {
                         Ordering::Less => {
                             x = x_forward_i;
@@ -124,13 +143,16 @@ impl<K: Ord, V> SkipList<K, V> {
             x = x_forward_i;
             if x.is_null() || (*x).key.as_ref().cmp(&Some(&searched_key)) != Ordering::Equal {
                 let v = random_value(self.max_level);
+				log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): v → {}", v);
                 if v > self.level {
                     for update_i in update.iter_mut().take(v).skip(self.level) {
                         *update_i = self.header;
                     }
+					log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): self.level → (unprintable)");
                     self.level = v;
                 }
                 let new_node = Node::make_node(v, searched_key, new_value);
+				log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): new_node → (unprintable)");
                 x = Box::into_raw(Box::new(new_node));
 
                 for (i, t) in update.iter_mut().enumerate().take(self.level) {
@@ -141,31 +163,38 @@ impl<K: Ord, V> SkipList<K, V> {
                     let x_forward_i = x_forward_i.unwrap();
                     let update_i = t;
                     let update_i_forward_i = &mut (&mut **update_i).forward[i];
+					log::debug!("insert(searched_key=(unprintable),new_value=(unprintable)): update_i_forward_i → (unprintable)");
                     *x_forward_i = *update_i_forward_i;
                     *update_i_forward_i = x;
                 }
                 return true;
             }
             (*x).value.replace(new_value);
+			log::debug!("<<< Exiting insert(searched_key=(unprintable),new_value=(unprintable))");
             return true;
         }
     }
 
     pub fn delete(&mut self, searched_key: K) -> bool {
+		log::debug!(">>> Entering delete(searched_key=(unprintable))");
         let mut update = Vec::<*mut Node<K, V>>::with_capacity(self.max_level);
         update.resize(self.max_level, null_mut());
+		log::debug!("delete(searched_key=(unprintable)): update → (unprintable)");
 
         let mut x = self.header;
+		log::debug!("delete(searched_key=(unprintable)): x → (unprintable)");
 
         unsafe {
             for i in (0..self.level).rev() {
                 loop {
                     let x_forward_i = (&*x).forward[i];
+					log::debug!("delete(searched_key=(unprintable)): x_forward_i → (unprintable)");
                     if x_forward_i.is_null() {
                         break;
                     }
 
                     let x_forward_i_key = (*x_forward_i).key.as_ref();
+					log::debug!("delete(searched_key=(unprintable)): x_forward_i_key → (unprintable)");
                     match x_forward_i_key.cmp(&Some(&searched_key)) {
                         Ordering::Less => {
                             x = x_forward_i;
@@ -190,6 +219,7 @@ impl<K: Ord, V> SkipList<K, V> {
                 Ordering::Equal => {
                     for (i, update_i) in update.iter_mut().enumerate().take(self.level) {
                         let update_i_forward_i = &mut (&mut **update_i).forward[i];
+						log::debug!("delete(searched_key=(unprintable)): update_i_forward_i → (unprintable)");
                         if update_i_forward_i.is_null() {
                             break;
                         }
@@ -203,6 +233,7 @@ impl<K: Ord, V> SkipList<K, V> {
                     }
 
                     let _v = Box::from_raw(x);
+					log::debug!("delete(searched_key=(unprintable)): _v → (unprintable)");
 
                     loop {
                         if self.level == 0 {
@@ -221,29 +252,38 @@ impl<K: Ord, V> SkipList<K, V> {
                 _ => {
                     return false;
                 }
+			log::debug!("delete(searched_key=(unprintable)): header_forward_level → (unprintable)");
+        log::debug!("<<< Exiting delete(searched_key=(unprintable))");
             }
         }
     }
 
     pub fn iter(&self) -> Iter<'_, K, V> {
+		log::debug!(">>> Entering iter()");
+        log::debug!("<<< Exiting iter()");
         Iter::new(self)
     }
 }
 
 impl<K: Ord, V> Drop for SkipList<K, V> {
     fn drop(&mut self) {
+		log::debug!(">>> Entering drop()");
         let mut node = unsafe { Box::from_raw(self.header) };
         loop {
+			log::debug!("drop(): node → (unprintable)");
+			log::debug!("drop(): node_forward_0 → (unprintable)");
             let node_forward_0 = node.forward.first().unwrap();
             if node_forward_0.is_null() {
                 break;
             }
             node = unsafe { Box::from_raw(*node_forward_0) };
+		log::debug!("<<< Exiting drop()");
         }
     }
 }
 
 fn random_value(max: usize) -> usize {
+	log::debug!(">>> Entering random_value(max={})", max);
     let mut v = 1usize;
     loop {
         if random_range(1usize..10usize) > 5 && v < max {
@@ -252,6 +292,7 @@ fn random_value(max: usize) -> usize {
             break;
         }
     }
+	log::debug!("<<< Exiting random_value(max={})", max);
     v
 }
 
@@ -273,14 +314,18 @@ impl<'a, K: Ord, V> Iterator for Iter<'a, K, V> {
     type Item = (&'a K, &'a V);
 
     fn next(&mut self) -> Option<Self::Item> {
+		log::debug!(">>> Entering next()");
         unsafe {
             let forward_0 = (&*self.current_node).forward.first();
+			log::debug!("next(): forward_0 → (unprintable)");
             forward_0?;
             let forward_0 = *forward_0.unwrap();
             if forward_0.is_null() {
                 return None;
             }
             self.current_node = forward_0;
+			log::debug!("next(): self.current_node → (unprintable)");
+        log::debug!("<<< Exiting next()");
             return match ((*forward_0).key.as_ref(), (*forward_0).value.as_ref()) {
                 (Some(key), Some(value)) => Some((key, value)),
                 _ => None,
@@ -293,12 +338,15 @@ impl<'a, K: Ord, V> Iterator for Iter<'a, K, V> {
 mod test {
     #[test]
     fn insert_and_delete() {
+		log::debug!(">>> Entering insert_and_delete()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
+		log::debug!("insert_and_delete(): skip_list → (unprintable)");
         skip_list.insert("b", 12);
 
         {
             let result = skip_list.search("b");
+			log::debug!("insert_and_delete(): result → (unprintable)");
             assert!(result.is_some());
             assert_eq!(result, Some(&12));
         }
@@ -309,25 +357,32 @@ mod test {
             assert!(result.is_none());
         }
 
+		log::debug!("<<< Exiting insert_and_delete()");
         skip_list.delete("a");
     }
 
     #[test]
     fn iterator() {
+		log::debug!(">>> Entering iterator()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("h", 22);
+		log::debug!("iterator(): skip_list → (unprintable)");
         skip_list.insert("a", 12);
         skip_list.insert("c", 11);
 
         let result: Vec<(&&'static str, &i32)> = skip_list.iter().collect();
+		log::debug!("<<< Exiting iterator()");
         assert_eq!(result, vec![(&"a", &12), (&"c", &11), (&"h", &22)]);
     }
 
     #[test]
     fn cannot_search() {
+		log::debug!(">>> Entering cannot_search()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
+			log::debug!("cannot_search(): skip_list → (unprintable)");
+			log::debug!("cannot_search(): result → (unprintable)");
             let result = skip_list.search("h");
             assert!(result.is_none());
         }
@@ -337,15 +392,19 @@ mod test {
         {
             let result = skip_list.search("a");
             assert!(result.is_none());
+		log::debug!("<<< Exiting cannot_search()");
         }
     }
 
     #[test]
     fn delete_unsuccessfully() {
+		log::debug!(">>> Entering delete_unsuccessfully()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
+			log::debug!("delete_unsuccessfully(): skip_list → (unprintable)");
             let result = skip_list.delete("a");
+			log::debug!("delete_unsuccessfully(): result → {}", result);
             assert!(!result);
         }
 
@@ -354,16 +413,20 @@ mod test {
         {
             let result = skip_list.delete("b");
             assert!(!result);
+		log::debug!("<<< Exiting delete_unsuccessfully()");
         }
     }
 
     #[test]
     fn update_value_with_insert_operation() {
+		log::debug!(">>> Entering update_value_with_insert_operation()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
+		log::debug!("update_value_with_insert_operation(): skip_list → (unprintable)");
 
         {
             let result = skip_list.search("a");
+			log::debug!("update_value_with_insert_operation(): result → (unprintable)");
             assert_eq!(result, Some(&10));
         }
 
@@ -372,6 +435,7 @@ mod test {
         {
             let result = skip_list.search("a");
             assert_eq!(result, Some(&100));
+		log::debug!("<<< Exiting update_value_with_insert_operation()");
         }
     }
 }

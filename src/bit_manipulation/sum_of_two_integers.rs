@@ -12,15 +12,18 @@
 ///
 /// * `isize` - The result of adding the two integers.
 pub fn add_two_integers(mut a: isize, mut b: isize) -> isize {
+	log::debug!(">>> Entering add_two_integers(a={},b={})", a, b);
     let mut carry;
 
     while b != 0 {
         let sum = a ^ b;
         carry = (a & b) << 1;
         a = sum;
+		log::debug!("add_two_integers(a={},b={}): carry → (unprintable)", a, b);
         b = carry;
     }
 
+	log::debug!("<<< Exiting add_two_integers(a={},b={})", a, b);
     a
 }
 

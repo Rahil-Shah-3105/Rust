@@ -38,10 +38,13 @@
 /// assert_eq!(ciphertext, "RIJVS");
 /// ```
 pub fn vernam_encrypt(plaintext: &str, key: &str) -> String {
+	log::debug!(">>> Entering vernam_encrypt(plaintext={},key={})", plaintext, key);
     assert!(!key.is_empty(), "Key cannot be empty");
 
     let plaintext = plaintext.to_uppercase();
+	log::debug!("vernam_encrypt(plaintext={},key={}): plaintext → {}", plaintext, key, plaintext);
     let key = key.to_uppercase();
+	log::warn!("vernam_encrypt(plaintext={},key={}): key → {}", plaintext, key, key);
 
     let plaintext_bytes: Vec<u8> = plaintext
         .chars()
@@ -66,6 +69,8 @@ pub fn vernam_encrypt(plaintext: &str, key: &str) -> String {
         .map(|(i, &p)| {
             let k = key_bytes[i % key_bytes.len()];
             let encrypted = (p + k) % 26;
+			log::debug!("vernam_encrypt(plaintext={},key={}): encrypted → (unprintable)", plaintext, key);
+            log::debug!("<<< Exiting vernam_encrypt(plaintext={},key={})", plaintext, key);
             (encrypted + b'A') as char
         })
         .collect()
@@ -98,10 +103,13 @@ pub fn vernam_encrypt(plaintext: &str, key: &str) -> String {
 /// assert_eq!(plaintext, "HELLO");
 /// ```
 pub fn vernam_decrypt(ciphertext: &str, key: &str) -> String {
+	log::debug!(">>> Entering vernam_decrypt(ciphertext={},key={})", ciphertext, key);
     assert!(!key.is_empty(), "Key cannot be empty");
 
     let ciphertext = ciphertext.to_uppercase();
+	log::debug!("vernam_decrypt(ciphertext={},key={}): ciphertext → {}", ciphertext, key, ciphertext);
     let key = key.to_uppercase();
+	log::warn!("vernam_decrypt(ciphertext={},key={}): key → {}", ciphertext, key, key);
 
     let ciphertext_bytes: Vec<u8> = ciphertext
         .chars()
@@ -127,6 +135,8 @@ pub fn vernam_decrypt(ciphertext: &str, key: &str) -> String {
             let k = key_bytes[i % key_bytes.len()];
             // Add 26 before modulo to handle negative numbers properly
             let decrypted = (c + 26 - k) % 26;
+			log::debug!("vernam_decrypt(ciphertext={},key={}): decrypted → (unprintable)", ciphertext, key);
+            log::debug!("<<< Exiting vernam_decrypt(ciphertext={},key={})", ciphertext, key);
             (decrypted + b'A') as char
         })
         .collect()
@@ -138,107 +148,153 @@ mod tests {
 
     #[test]
     fn test_encrypt_basic() {
+		log::debug!(">>> Entering test_encrypt_basic()");
+		log::debug!("<<< Exiting test_encrypt_basic()");
         assert_eq!(vernam_encrypt("HELLO", "KEY"), "RIJVS");
     }
 
     #[test]
     fn test_decrypt_basic() {
+		log::debug!(">>> Entering test_decrypt_basic()");
+		log::debug!("<<< Exiting test_decrypt_basic()");
         assert_eq!(vernam_decrypt("RIJVS", "KEY"), "HELLO");
     }
 
     #[test]
     fn test_encrypt_decrypt_roundtrip() {
+		log::debug!(">>> Entering test_encrypt_decrypt_roundtrip()");
         let plaintext = "HELLO";
         let key = "KEY";
+		log::warn!("test_encrypt_decrypt_roundtrip(): key → {}", key);
         let encrypted = vernam_encrypt(plaintext, key);
+		log::debug!("test_encrypt_decrypt_roundtrip(): encrypted → {}", encrypted);
         let decrypted = vernam_decrypt(&encrypted, key);
+		log::debug!("test_encrypt_decrypt_roundtrip(): decrypted → {}", decrypted);
+		log::debug!("test_encrypt_decrypt_roundtrip(): plaintext → {}", plaintext);
+    log::debug!("<<< Exiting test_encrypt_decrypt_roundtrip()");
         assert_eq!(decrypted, plaintext);
     }
 
     #[test]
     fn test_encrypt_decrypt_long_text() {
+		log::debug!(">>> Entering test_encrypt_decrypt_long_text()");
         let plaintext = "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG";
         let key = "SECRET";
+		log::warn!("test_encrypt_decrypt_long_text(): key → {}", key);
         let encrypted = vernam_encrypt(plaintext, key);
+		log::debug!("test_encrypt_decrypt_long_text(): encrypted → {}", encrypted);
         let decrypted = vernam_decrypt(&encrypted, key);
+		log::debug!("test_encrypt_decrypt_long_text(): decrypted → {}", decrypted);
+		log::debug!("test_encrypt_decrypt_long_text(): plaintext → {}", plaintext);
+    log::debug!("<<< Exiting test_encrypt_decrypt_long_text()");
         assert_eq!(decrypted, plaintext);
     }
 
     #[test]
     fn test_lowercase_input() {
+		log::debug!(">>> Entering test_lowercase_input()");
         // Should convert to uppercase
         assert_eq!(vernam_encrypt("hello", "key"), "RIJVS");
+		log::debug!("<<< Exiting test_lowercase_input()");
         assert_eq!(vernam_decrypt("rijvs", "key"), "HELLO");
     }
 
     #[test]
     fn test_mixed_case_input() {
+		log::debug!(">>> Entering test_mixed_case_input()");
         assert_eq!(vernam_encrypt("HeLLo", "KeY"), "RIJVS");
+		log::debug!("<<< Exiting test_mixed_case_input()");
         assert_eq!(vernam_decrypt("RiJvS", "kEy"), "HELLO");
     }
 
     #[test]
     fn test_single_character() {
+		log::debug!(">>> Entering test_single_character()");
         assert_eq!(vernam_encrypt("A", "B"), "B");
+		log::debug!("<<< Exiting test_single_character()");
         assert_eq!(vernam_decrypt("B", "B"), "A");
     }
 
     #[test]
     fn test_key_wrapping() {
+		log::debug!(">>> Entering test_key_wrapping()");
         // Key shorter than plaintext, should wrap around
         let encrypted = vernam_encrypt("AAAA", "BC");
+		log::debug!("test_key_wrapping(): encrypted → {}", encrypted);
         assert_eq!(encrypted, "BCBC");
         let decrypted = vernam_decrypt(&encrypted, "BC");
+		log::debug!("test_key_wrapping(): decrypted → {}", decrypted);
+		log::debug!("<<< Exiting test_key_wrapping()");
         assert_eq!(decrypted, "AAAA");
     }
 
     #[test]
     fn test_alphabet_boundary() {
+		log::debug!(">>> Entering test_alphabet_boundary()");
         // Test wrapping at alphabet boundaries
         assert_eq!(vernam_encrypt("Z", "B"), "A"); // 25 + 1 = 26 -> 0
+		log::debug!("<<< Exiting test_alphabet_boundary()");
         assert_eq!(vernam_decrypt("A", "B"), "Z"); // 0 - 1 = -1 -> 25
     }
 
     #[test]
     fn test_same_key_as_plaintext() {
+		log::debug!(">>> Entering test_same_key_as_plaintext()");
         let text = "HELLO";
         let encrypted = vernam_encrypt(text, text);
+		log::debug!("test_same_key_as_plaintext(): encrypted → {}", encrypted);
+		log::debug!("test_same_key_as_plaintext(): text → {}", text);
+    log::debug!("<<< Exiting test_same_key_as_plaintext()");
         assert_eq!(encrypted, "OIWWC");
     }
 
     #[test]
     fn test_with_spaces_and_numbers() {
+		log::debug!(">>> Entering test_with_spaces_and_numbers()");
         // Non-alphabetic characters should be filtered out
         let encrypted = vernam_encrypt("HELLO 123 WORLD", "KEY");
+		log::debug!("test_with_spaces_and_numbers(): encrypted → {}", encrypted);
         let expected = vernam_encrypt("HELLOWORLD", "KEY");
+		log::debug!("test_with_spaces_and_numbers(): expected → {}", expected);
+		log::debug!("<<< Exiting test_with_spaces_and_numbers()");
         assert_eq!(encrypted, expected);
     }
 
     #[test]
     #[should_panic(expected = "Key cannot be empty")]
     fn test_empty_key_encrypt() {
+		log::debug!(">>> Entering test_empty_key_encrypt()");
+		log::debug!("<<< Exiting test_empty_key_encrypt()");
         vernam_encrypt("HELLO", "");
     }
 
     #[test]
     #[should_panic(expected = "Key cannot be empty")]
     fn test_empty_key_decrypt() {
+		log::debug!(">>> Entering test_empty_key_decrypt()");
+		log::debug!("<<< Exiting test_empty_key_decrypt()");
         vernam_decrypt("HELLO", "");
     }
 
     #[test]
     #[should_panic(expected = "Key must contain at least one letter")]
     fn test_key_with_only_numbers() {
+		log::debug!(">>> Entering test_key_with_only_numbers()");
+		log::debug!("<<< Exiting test_key_with_only_numbers()");
         vernam_encrypt("HELLO", "12345");
     }
 
     #[test]
     fn test_empty_plaintext() {
+		log::debug!(">>> Entering test_empty_plaintext()");
+		log::debug!("<<< Exiting test_empty_plaintext()");
         assert_eq!(vernam_encrypt("", "KEY"), "");
     }
 
     #[test]
     fn test_plaintext_with_only_numbers() {
+		log::debug!(">>> Entering test_plaintext_with_only_numbers()");
+		log::debug!("<<< Exiting test_plaintext_with_only_numbers()");
         assert_eq!(vernam_encrypt("12345", "KEY"), "");
     }
 }

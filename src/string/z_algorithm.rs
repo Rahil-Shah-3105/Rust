@@ -16,10 +16,14 @@ fn calculate_z_value<T: Eq>(
     input_string: &[T],
     pattern: &[T],
     start_index: usize,
+	log::debug!(">>> Entering calculate_z_value(input_string=(unprintable),pattern=(unprintable),start_index={},z_value={})", start_index, z_value);
+	log::debug!("<<< Exiting calculate_z_value(input_string=(unprintable),pattern=(unprintable),start_index={},z_value={})", start_index, z_value);
     mut z_value: usize,
 ) -> usize {
     let size = input_string.len();
+	log::debug!("calculate_z_value(input_string=(unprintable),pattern=(unprintable),start_index={},z_value={}): size → {}", start_index, z_value, size);
     let pattern_size = pattern.len();
+	log::debug!("calculate_z_value(input_string=(unprintable),pattern=(unprintable),start_index={},z_value={}): pattern_size → {}", start_index, z_value, pattern_size);
 
     while (start_index + z_value) < size && z_value < pattern_size {
         if input_string[start_index + z_value] != pattern[z_value] {
@@ -47,6 +51,8 @@ fn initialize_z_array_from_previous_match(
     match_end: usize,
     last_match: usize,
 ) -> usize {
+	log::debug!(">>> Entering initialize_z_array_from_previous_match(z_array={:?},i={},match_end={},last_match={})", z_array, i, match_end, last_match);
+    log::debug!("<<< Exiting initialize_z_array_from_previous_match(z_array={:?},i={},match_end={},last_match={})", z_array, i, match_end, last_match);
     std::cmp::min(z_array[i - last_match], match_end - i + 1)
 }
 
@@ -60,6 +66,8 @@ fn initialize_z_array_from_previous_match(
 /// # Returns
 /// A vector containing the starting indices of full matches.
 fn find_full_matches(z_array: &[usize], pattern_size: usize) -> Vec<usize> {
+	log::debug!(">>> Entering find_full_matches(z_array={:?},pattern_size={})", z_array, pattern_size);
+    log::debug!("<<< Exiting find_full_matches(z_array={:?},pattern_size={})", z_array, pattern_size);
     z_array
         .iter()
         .enumerate()
@@ -82,10 +90,16 @@ fn match_with_z_array<T: Eq>(
     input_string: &[T],
     pattern: &[T],
     start_index: usize,
+	log::debug!(">>> Entering match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={})", start_index, only_full_matches);
+	log::debug!("match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={}): match_end → {}", start_index, only_full_matches, match_end);
+	log::debug!("match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={}): last_match → {}", start_index, only_full_matches, last_match);
+	log::debug!("<<< Exiting match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={})", start_index, only_full_matches);
     only_full_matches: bool,
 ) -> Vec<usize> {
     let size = input_string.len();
+	log::debug!("match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={}): size → {}", start_index, only_full_matches, size);
     let pattern_size = pattern.len();
+	log::debug!("match_with_z_array(input_string=(unprintable),pattern=(unprintable),start_index={},only_full_matches={}): pattern_size → {}", start_index, only_full_matches, pattern_size);
     let mut last_match: usize = 0;
     let mut match_end: usize = 0;
     let mut z_array = vec![0usize; size];
@@ -121,6 +135,8 @@ fn match_with_z_array<T: Eq>(
 /// # Returns
 /// A vector representing the Z-array of the input string.
 pub fn z_array<T: Eq>(input: &[T]) -> Vec<usize> {
+	log::debug!(">>> Entering z_array(input=(unprintable))");
+    log::debug!("<<< Exiting z_array(input=(unprintable))");
     match_with_z_array(input, input, 1, false)
 }
 
@@ -136,6 +152,8 @@ pub fn z_array<T: Eq>(input: &[T]) -> Vec<usize> {
 /// # Returns
 /// A vector of indices where the pattern matches the input string.
 pub fn match_pattern<T: Eq>(input: &[T], pattern: &[T]) -> Vec<usize> {
+	log::debug!(">>> Entering match_pattern(input=(unprintable),pattern=(unprintable))");
+    log::debug!("<<< Exiting match_pattern(input=(unprintable),pattern=(unprintable))");
     match_with_z_array(input, pattern, 0, true)
 }
 

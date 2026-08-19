@@ -49,6 +49,7 @@
 /// This will overflow the 64-bit unsigned integer for large values of `upper_limit`.
 /// For example, C(21) and beyond will cause overflow.
 pub fn catalan_numbers(upper_limit: usize) -> Vec<u64> {
+	log::debug!(">>> Entering catalan_numbers(upper_limit={})", upper_limit);
     let mut catalan_list = vec![0u64; upper_limit + 1];
 
     // Base case: C(0) = 1
@@ -66,6 +67,7 @@ pub fn catalan_numbers(upper_limit: usize) -> Vec<u64> {
         }
     }
 
+	log::debug!("<<< Exiting catalan_numbers(upper_limit={})", upper_limit);
     catalan_list
 }
 
@@ -75,20 +77,26 @@ mod tests {
 
     #[test]
     fn test_catalan_numbers_basic() {
+		log::debug!(">>> Entering test_catalan_numbers_basic()");
         assert_eq!(catalan_numbers(5), vec![1, 1, 2, 5, 14, 42]);
         assert_eq!(catalan_numbers(2), vec![1, 1, 2]);
+		log::debug!("<<< Exiting test_catalan_numbers_basic()");
         assert_eq!(catalan_numbers(0), vec![1]);
     }
 
     #[test]
     fn test_catalan_numbers_single() {
+		log::debug!(">>> Entering test_catalan_numbers_single()");
+		log::debug!("<<< Exiting test_catalan_numbers_single()");
         assert_eq!(catalan_numbers(1), vec![1, 1]);
     }
 
     #[test]
     fn test_catalan_numbers_extended() {
+		log::debug!(">>> Entering test_catalan_numbers_extended()");
         let result = catalan_numbers(10);
         assert_eq!(result.len(), 11);
+		log::debug!("test_catalan_numbers_extended(): result → {:?}", result);
         assert_eq!(result[0], 1);
         assert_eq!(result[1], 1);
         assert_eq!(result[2], 2);
@@ -99,13 +107,16 @@ mod tests {
         assert_eq!(result[7], 429);
         assert_eq!(result[8], 1430);
         assert_eq!(result[9], 4862);
+		log::debug!("<<< Exiting test_catalan_numbers_extended()");
         assert_eq!(result[10], 16796);
     }
 
     #[test]
     fn test_catalan_first_few() {
+		log::debug!(">>> Entering test_catalan_first_few()");
         // Verify the first few Catalan numbers match known values
         assert_eq!(catalan_numbers(3), vec![1, 1, 2, 5]);
+		log::debug!("<<< Exiting test_catalan_first_few()");
         assert_eq!(catalan_numbers(4), vec![1, 1, 2, 5, 14]);
     }
 }

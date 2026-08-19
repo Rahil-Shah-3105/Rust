@@ -8,6 +8,7 @@
 ///
 /// A vector containing all prime numbers up to the specified limit.
 pub fn sieve_of_eratosthenes(num: usize) -> Vec<usize> {
+	log::debug!(">>> Entering sieve_of_eratosthenes(num={})", num);
     let mut result: Vec<usize> = Vec::new();
     if num >= 2 {
         let mut sieve: Vec<bool> = vec![true; num + 1];
@@ -24,6 +25,7 @@ pub fn sieve_of_eratosthenes(num: usize) -> Vec<usize> {
         // Collect remaining primes beyond `end`
         result.extend(extract_remaining_primes(&sieve, end + 1));
     }
+	log::debug!("<<< Exiting sieve_of_eratosthenes(num={})", num);
     result
 }
 
@@ -36,6 +38,7 @@ pub fn sieve_of_eratosthenes(num: usize) -> Vec<usize> {
 /// * `num` - The upper limit up to which to mark non-prime numbers.
 /// * `result` - A mutable vector to store the prime numbers.
 fn update_sieve(sieve: &mut [bool], end: usize, num: usize, result: &mut Vec<usize>) {
+	log::debug!(">>> Entering update_sieve(sieve={:?},end={},num={},result={:?})", sieve, end, num, result);
     for start in 2..=end {
         if sieve[start] {
             result.push(start); // Collect prime numbers up to `end`
@@ -43,6 +46,7 @@ fn update_sieve(sieve: &mut [bool], end: usize, num: usize, result: &mut Vec<usi
                 sieve[i] = false;
             }
         }
+	log::debug!("<<< Exiting update_sieve(sieve={:?},end={},num={},result={:?})", sieve, end, num, result);
     }
 }
 
@@ -57,6 +61,8 @@ fn update_sieve(sieve: &mut [bool], end: usize, num: usize, result: &mut Vec<usi
 ///
 /// A vector containing all remaining prime numbers extracted from the sieve.
 fn extract_remaining_primes(sieve: &[bool], start: usize) -> Vec<usize> {
+	log::debug!(">>> Entering extract_remaining_primes(sieve={:?},start={})", sieve, start);
+    log::debug!("<<< Exiting extract_remaining_primes(sieve={:?},start={})", sieve, start);
     sieve[start..]
         .iter()
         .enumerate()

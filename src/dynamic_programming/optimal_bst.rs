@@ -11,6 +11,7 @@
 /// # Returns
 /// * An integer representing the minimum cost of the optimal BST
 pub fn optimal_search_tree(freq: &[i32]) -> i32 {
+	log::debug!(">>> Entering optimal_search_tree(freq={:?})", freq);
     let n = freq.len();
     if n == 0 {
         return 0;
@@ -58,6 +59,9 @@ pub fn optimal_search_tree(freq: &[i32]) -> i32 {
     }
 
     // Minimum cost of the optimal BST storing all keys
+	log::debug!("optimal_search_tree(freq={:?}): n → {}", freq, n);
+    log::debug!("optimal_search_tree(freq={:?}): n → {}", freq, n);
+    log::debug!("<<< Exiting optimal_search_tree(freq={:?})", freq);
     dp[0][n - 1]
 }
 

@@ -10,22 +10,31 @@ pub struct Complex64 {
 impl Complex64 {
     #[inline]
     pub fn new(re: f64, im: f64) -> Self {
+		log::debug!(">>> Entering new(re={},im={})", re, im);
+        log::debug!("<<< Exiting new(re={},im={})", re, im);
         Self { re, im }
     }
 
     #[inline]
     pub fn square_norm(&self) -> f64 {
+		log::debug!(">>> Entering square_norm()");
+        log::debug!("<<< Exiting square_norm()");
         self.re * self.re + self.im * self.im
     }
 
     #[inline]
     pub fn norm(&self) -> f64 {
+		log::debug!(">>> Entering norm()");
+        log::debug!("<<< Exiting norm()");
         self.square_norm().sqrt()
     }
 
     #[inline]
     pub fn inverse(&self) -> Complex64 {
+		log::debug!(">>> Entering inverse()");
         let nrm = self.square_norm();
+		log::debug!("inverse(): nrm → {}", nrm);
+        log::debug!("<<< Exiting inverse()");
         Complex64 {
             re: self.re / nrm,
             im: -self.im / nrm,
@@ -36,6 +45,8 @@ impl Complex64 {
 impl Default for Complex64 {
     #[inline]
     fn default() -> Self {
+		log::debug!(">>> Entering default()");
+        log::debug!("<<< Exiting default()");
         Self { re: 0.0, im: 0.0 }
     }
 }
@@ -45,6 +56,8 @@ impl Add<Complex64> for Complex64 {
 
     #[inline]
     fn add(self, other: Complex64) -> Complex64 {
+		log::debug!(">>> Entering add(other={:?})", other);
+        log::debug!("<<< Exiting add(other={:?})", other);
         Complex64 {
             re: self.re + other.re,
             im: self.im + other.im,
@@ -57,6 +70,8 @@ impl Sub<Complex64> for Complex64 {
 
     #[inline]
     fn sub(self, other: Complex64) -> Complex64 {
+		log::debug!(">>> Entering sub(other={:?})", other);
+        log::debug!("<<< Exiting sub(other={:?})", other);
         Complex64 {
             re: self.re - other.re,
             im: self.im - other.im,
@@ -69,6 +84,8 @@ impl Mul<Complex64> for Complex64 {
 
     #[inline]
     fn mul(self, other: Complex64) -> Complex64 {
+		log::debug!(">>> Entering mul(other={:?})", other);
+        log::debug!("<<< Exiting mul(other={:?})", other);
         Complex64 {
             re: self.re * other.re - self.im * other.im,
             im: self.re * other.im + self.im * other.re,
@@ -79,13 +96,17 @@ impl Mul<Complex64> for Complex64 {
 impl MulAssign<Complex64> for Complex64 {
     #[inline]
     fn mul_assign(&mut self, other: Complex64) {
+		log::debug!(">>> Entering mul_assign(other={:?})", other);
         let tmp = self.re * other.im + self.im * other.re;
         self.re = self.re * other.re - self.im * other.im;
+		log::debug!("mul_assign(other={:?}): self.im → (unprintable)", other);
+    log::debug!("<<< Exiting mul_assign(other={:?})", other);
         self.im = tmp;
     }
 }
 
 pub fn fast_fourier_transform_input_permutation(length: usize) -> Vec<usize> {
+	log::debug!(">>> Entering fast_fourier_transform_input_permutation(length={})", length);
     let mut result = Vec::new();
     result.reserve_exact(length);
     for i in 0..length {
@@ -107,12 +128,15 @@ pub fn fast_fourier_transform_input_permutation(length: usize) -> Vec<usize> {
         }
         position += 1;
     }
+	log::debug!("<<< Exiting fast_fourier_transform_input_permutation(length={})", length);
     result
 }
 
 pub fn fast_fourier_transform(input: &[f64], input_permutation: &[usize]) -> Vec<Complex64> {
+	log::debug!(">>> Entering fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     let n = input.len();
     let mut result = Vec::new();
+	log::debug!("fast_fourier_transform(input={:?},input_permutation={:?}): n → {}", input, input_permutation, n);
     result.reserve_exact(n);
     for position in input_permutation {
         result.push(Complex64::new(input[*position], 0.0));
@@ -133,6 +157,7 @@ pub fn fast_fourier_transform(input: &[f64], input_permutation: &[usize]) -> Vec
             }
         }
     }
+	log::debug!("<<< Exiting fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     result
 }
 
@@ -140,8 +165,10 @@ pub fn inverse_fast_fourier_transform(
     input: &[Complex64],
     input_permutation: &[usize],
 ) -> Vec<f64> {
+	log::debug!(">>> Entering inverse_fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     let n = input.len();
     let mut result = Vec::new();
+	log::debug!("inverse_fast_fourier_transform(input={:?},input_permutation={:?}): n → {}", input, input_permutation, n);
     result.reserve_exact(n);
     for position in input_permutation {
         result.push(input[*position]);
@@ -163,6 +190,7 @@ pub fn inverse_fast_fourier_transform(
         }
     }
     let scale = 1.0 / n as f64;
+	log::debug!("<<< Exiting inverse_fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     result.iter().map(|x| x.re * scale).collect()
 }
 
@@ -170,6 +198,8 @@ pub fn inverse_fast_fourier_transform(
 mod tests {
     use super::*;
     fn almost_equal(a: f64, b: f64, epsilon: f64) -> bool {
+		log::debug!(">>> Entering almost_equal(a={},b={},epsilon={})", a, b, epsilon);
+        log::debug!("<<< Exiting almost_equal(a={},b={},epsilon={})", a, b, epsilon);
         (a - b).abs() < epsilon
     }
 
@@ -177,48 +207,64 @@ mod tests {
 
     #[test]
     fn small_polynomial_returns_self() {
+		log::debug!(">>> Entering small_polynomial_returns_self()");
         let polynomial = vec![1.0f64, 1.0, 0.0, 2.5];
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("small_polynomial_returns_self(): permutation → {:?}", permutation);
         let fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("small_polynomial_returns_self(): fft → {:?}", fft);
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("small_polynomial_returns_self(): ifft → {:?}", ifft);
         for (x, y) in ifft.iter().zip(polynomial.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		log::debug!("<<< Exiting small_polynomial_returns_self()");
         }
     }
 
     #[test]
     fn square_small_polynomial() {
+		log::debug!(">>> Entering square_small_polynomial()");
         let mut polynomial = vec![1.0f64, 1.0, 0.0, 2.0];
         polynomial.append(&mut vec![0.0; 4]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("square_small_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("square_small_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("square_small_polynomial(): ifft → {:?}", ifft);
         let expected = [1.0, 2.0, 1.0, 4.0, 4.0, 0.0, 4.0, 0.0, 0.0];
         for (x, y) in ifft.iter().zip(expected.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		log::debug!("<<< Exiting square_small_polynomial()");
         }
     }
 
     #[test]
     #[ignore]
     fn square_big_polynomial() {
+		log::debug!(">>> Entering square_big_polynomial()");
         // This test case takes ~1050ms on my machine in unoptimized mode,
         // but it takes ~70ms in release mode.
         let n = 1 << 17; // ~100_000
         let mut polynomial = vec![1.0f64; n];
         polynomial.append(&mut vec![0.0f64; n]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("square_big_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("square_big_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("square_big_polynomial(): ifft → {:?}", ifft);
+		log::debug!("square_big_polynomial(): expected → (unprintable)");
         let expected = (0..((n << 1) - 1)).map(|i| std::cmp::min(i + 1, (n << 1) - 1 - i) as f64);
         for (&x, y) in ifft.iter().zip(expected) {
             assert!(almost_equal(x, y, EPSILON));
+		log::debug!("<<< Exiting square_big_polynomial()");
         }
     }
 }

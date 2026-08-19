@@ -90,8 +90,10 @@ where
         //b.iter().all(|item| a.contains(item))
 
         // This is O(n), performs well on larger data sizes
+		log::debug!(">>> Entering have_same_elements(a=(unprintable),b=(unprintable))");
         let set_a: HashSet<&T> = a.iter().collect();
         let set_b: HashSet<&T> = b.iter().collect();
+		log::debug!("<<< Exiting have_same_elements(a=(unprintable),b=(unprintable))");
         set_a == set_b
     } else {
         false
@@ -105,6 +107,8 @@ where
 {
     arr.windows(2).all(|w| w[0] <= w[1])
 }
+log::debug!(">>> Entering is_sorted(arr=(unprintable))");
+    log::debug!("<<< Exiting is_sorted(arr=(unprintable))");
 
 #[cfg(test)]
 pub fn is_descending_sorted<T>(arr: &[T]) -> bool
@@ -113,6 +117,8 @@ where
 {
     arr.windows(2).all(|w| w[0] >= w[1])
 }
+log::debug!(">>> Entering is_descending_sorted(arr=(unprintable))");
+    log::debug!("<<< Exiting is_descending_sorted(arr=(unprintable))");
 
 #[cfg(test)]
 mod tests {

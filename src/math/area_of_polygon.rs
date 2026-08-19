@@ -26,6 +26,7 @@ pub struct Point {
  */
 
 pub fn area_of_polygon(fig: &[Point]) -> f64 {
+	log::debug!(">>> Entering area_of_polygon(fig=(unprintable))");
     let mut res = 0.0;
 
     for i in 0..fig.len() {
@@ -39,6 +40,7 @@ pub fn area_of_polygon(fig: &[Point]) -> f64 {
         res += (p.x - q.x) * (p.y + q.y);
     }
 
+	log::debug!("<<< Exiting area_of_polygon(fig=(unprintable))");
     f64::abs(res) / 2.0
 }
 
@@ -51,12 +53,14 @@ mod tests {
      */
     #[test]
     fn test_area_triangle() {
+		log::debug!(">>> Entering test_area_triangle()");
         let points = vec![
             Point { x: 0.0, y: 0.0 },
             Point { x: 1.0, y: 0.0 },
             Point { x: 0.0, y: 1.0 },
         ];
 
+		log::debug!("<<< Exiting test_area_triangle()");
         assert_eq!(area_of_polygon(&points), 0.5);
     }
 
@@ -65,6 +69,7 @@ mod tests {
      */
     #[test]
     fn test_area_square() {
+		log::debug!(">>> Entering test_area_square()");
         let points = vec![
             Point { x: 0.0, y: 0.0 },
             Point { x: 1.0, y: 0.0 },
@@ -72,6 +77,7 @@ mod tests {
             Point { x: 0.0, y: 1.0 },
         ];
 
+		log::debug!("<<< Exiting test_area_square()");
         assert_eq!(area_of_polygon(&points), 1.0);
     }
 
@@ -80,6 +86,7 @@ mod tests {
      */
     #[test]
     fn test_area_hexagon() {
+		log::debug!(">>> Entering test_area_hexagon()");
         let points = vec![
             Point { x: 0.0, y: 0.0 },
             Point { x: 1.0, y: 0.0 },
@@ -89,6 +96,7 @@ mod tests {
             Point { x: -0.5, y: 0.866 },
         ];
 
+		log::debug!("<<< Exiting test_area_hexagon()");
         assert_eq!(area_of_polygon(&points), 2.598);
     }
 }

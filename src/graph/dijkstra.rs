@@ -57,42 +57,55 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn add_edge<V: Ord + Copy, E: Ord>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		log::debug!(">>> Entering add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         graph.entry(v1).or_default().insert(v2, c);
+		log::debug!("<<< Exiting add_edge(graph=(unprintable),v1=(unprintable),v2=(unprintable),c=(unprintable))");
         graph.entry(v2).or_default();
     }
 
     #[test]
     fn single_vertex() {
+		log::debug!(">>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         let mut dists = BTreeMap::new();
+		log::debug!("single_vertex(): dists → (unprintable)");
         dists.insert(0, None);
 
+		log::debug!("<<< Exiting single_vertex()");
         assert_eq!(dijkstra(&graph, 0), dists);
     }
 
     #[test]
     fn single_edge() {
+		log::debug!(">>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 2);
+		log::debug!("single_edge(): graph → (unprintable)");
 
         let mut dists_0 = BTreeMap::new();
+		log::debug!("single_edge(): dists_0 → (unprintable)");
         dists_0.insert(0, None);
         dists_0.insert(1, Some((0, 2)));
 
         assert_eq!(dijkstra(&graph, 0), dists_0);
 
         let mut dists_1 = BTreeMap::new();
+		log::debug!("single_edge(): dists_1 → (unprintable)");
         dists_1.insert(1, None);
 
+		log::debug!("<<< Exiting single_edge()");
         assert_eq!(dijkstra(&graph, 1), dists_1);
     }
 
     #[test]
     fn tree_1() {
+		log::debug!(">>> Entering tree_1()");
         let mut graph = BTreeMap::new();
         let mut dists = BTreeMap::new();
+		log::debug!("tree_1(): dists → (unprintable)");
+		log::debug!("tree_1(): graph → (unprintable)");
         dists.insert(1, None);
         for i in 1..100 {
             add_edge(&mut graph, i, i * 2, i * 2);
@@ -110,13 +123,16 @@ mod tests {
             }
         }
 
+		log::debug!("<<< Exiting tree_1()");
         assert_eq!(dijkstra(&graph, 1), dists);
     }
 
     #[test]
     fn graph_1() {
+		log::debug!(">>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
+		log::debug!("graph_1(): graph → (unprintable)");
         add_edge(&mut graph, 'a', 'd', 60);
         add_edge(&mut graph, 'b', 'a', 10);
         add_edge(&mut graph, 'c', 'b', 20);
@@ -124,6 +140,7 @@ mod tests {
         add_edge(&mut graph, 'e', 'a', 7);
 
         let mut dists_a = BTreeMap::new();
+		log::debug!("graph_1(): dists_a → (unprintable)");
         dists_a.insert('a', None);
         dists_a.insert('c', Some(('a', 12)));
         dists_a.insert('d', Some(('c', 44)));
@@ -131,6 +148,7 @@ mod tests {
         assert_eq!(dijkstra(&graph, 'a'), dists_a);
 
         let mut dists_b = BTreeMap::new();
+		log::debug!("graph_1(): dists_b → (unprintable)");
         dists_b.insert('b', None);
         dists_b.insert('a', Some(('b', 10)));
         dists_b.insert('c', Some(('a', 22)));
@@ -138,6 +156,7 @@ mod tests {
         assert_eq!(dijkstra(&graph, 'b'), dists_b);
 
         let mut dists_c = BTreeMap::new();
+		log::debug!("graph_1(): dists_c → (unprintable)");
         dists_c.insert('c', None);
         dists_c.insert('b', Some(('c', 20)));
         dists_c.insert('d', Some(('c', 32)));
@@ -145,15 +164,18 @@ mod tests {
         assert_eq!(dijkstra(&graph, 'c'), dists_c);
 
         let mut dists_d = BTreeMap::new();
+		log::debug!("graph_1(): dists_d → (unprintable)");
         dists_d.insert('d', None);
         assert_eq!(dijkstra(&graph, 'd'), dists_d);
 
         let mut dists_e = BTreeMap::new();
+		log::debug!("graph_1(): dists_e → (unprintable)");
         dists_e.insert('e', None);
         dists_e.insert('a', Some(('e', 7)));
         dists_e.insert('c', Some(('a', 19)));
         dists_e.insert('d', Some(('c', 51)));
         dists_e.insert('b', Some(('c', 39)));
+		log::debug!("<<< Exiting graph_1()");
         assert_eq!(dijkstra(&graph, 'e'), dists_e);
     }
 }

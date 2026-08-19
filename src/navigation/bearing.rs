@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
 
 pub fn bearing(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f64 {
+	log::debug!(">>> Entering bearing(lat1={},lng1={},lat2={},lng2={})", lat1, lng1, lat2, lng2);
     let lat1 = lat1 * PI / 180.0;
     let lng1 = lng1 * PI / 180.0;
 
@@ -10,11 +11,15 @@ pub fn bearing(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f64 {
     let delta_longitude = lng2 - lng1;
 
     let y = delta_longitude.sin() * lat2.cos();
+	log::debug!("bearing(lat1={},lng1={},lat2={},lng2={}): y → (unprintable)", lat1, lng1, lat2, lng2);
+	log::debug!("bearing(lat1={},lng1={},lat2={},lng2={}): x → (unprintable)", lat1, lng1, lat2, lng2);
     let x = lat1.cos() * lat2.sin() - lat1.sin() * lat2.cos() * delta_longitude.cos();
 
     let mut brng = y.atan2(x);
+	log::debug!("bearing(lat1={},lng1={},lat2={},lng2={}): brng → (unprintable)", lat1, lng1, lat2, lng2);
     brng = brng.to_degrees();
 
+	log::debug!("<<< Exiting bearing(lat1={},lng1={},lat2={},lng2={})", lat1, lng1, lat2, lng2);
     (brng + 360.0) % 360.0
 }
 
@@ -24,6 +29,7 @@ mod tests {
 
     #[test]
     fn testing() {
+		log::debug!(">>> Entering testing()");
         assert_eq!(
             format!(
                 "{:.0}º",
@@ -35,6 +41,7 @@ mod tests {
                 )
             ),
             "336º"
+		log::debug!("<<< Exiting testing()");
         );
     }
 }

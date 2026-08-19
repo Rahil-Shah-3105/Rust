@@ -28,6 +28,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// A new `Heap` instance.
     pub fn new(comparator: fn(&T, &T) -> bool) -> Self {
+		log::debug!(">>> Entering new(comparator=(unprintable))");
+        log::debug!("<<< Exiting new(comparator=(unprintable))");
         Self {
             items: vec![],
             comparator,
@@ -43,16 +45,21 @@ impl<T> Heap<T> {
     /// # Returns
     /// A `Heap` instance with the elements from the provided vector.
     pub fn from_vec(items: Vec<T>, comparator: fn(&T, &T) -> bool) -> Self {
+		log::debug!(">>> Entering from_vec(items=(unprintable),comparator=(unprintable))");
         let mut heap = Self { items, comparator };
         heap.build_heap();
+		log::debug!("<<< Exiting from_vec(items=(unprintable),comparator=(unprintable))");
         heap
     }
 
     /// Constructs the heap from an unsorted vector by applying the heapify process.
     fn build_heap(&mut self) {
+		log::debug!(">>> Entering build_heap()");
         let last_parent_idx = (self.len() / 2).wrapping_sub(1);
         for idx in (0..=last_parent_idx).rev() {
+			log::debug!("build_heap(): last_parent_idx → (unprintable)");
             self.heapify_down(idx);
+		log::debug!("<<< Exiting build_heap()");
         }
     }
 
@@ -61,6 +68,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// The number of elements in the heap.
     pub fn len(&self) -> usize {
+		log::debug!(">>> Entering len()");
+        log::debug!("<<< Exiting len()");
         self.items.len()
     }
 
@@ -69,6 +78,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// `true` if the heap is empty, `false` otherwise.
     pub fn is_empty(&self) -> bool {
+		log::debug!(">>> Entering is_empty()");
+        log::debug!("<<< Exiting is_empty()");
         self.len() == 0
     }
 
@@ -77,7 +88,9 @@ impl<T> Heap<T> {
     /// # Parameters
     /// - `value`: The value to add to the heap.
     pub fn add(&mut self, value: T) {
+		log::debug!(">>> Entering add(value=(unprintable))");
         self.items.push(value);
+		log::debug!("<<< Exiting add(value=(unprintable))");
         self.heapify_up(self.len() - 1);
     }
 
@@ -86,6 +99,7 @@ impl<T> Heap<T> {
     /// # Returns
     /// The root element if the heap is not empty, otherwise `None`.
     pub fn pop(&mut self) -> Option<T> {
+		log::debug!(">>> Entering pop()");
         if self.is_empty() {
             return None;
         }
@@ -93,6 +107,8 @@ impl<T> Heap<T> {
         if !self.is_empty() {
             self.heapify_down(0);
         }
+		log::debug!("pop(): next → (unprintable)");
+        log::debug!("<<< Exiting pop()");
         next
     }
 
@@ -101,6 +117,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// An iterator over the elements in the heap, in their internal order.
     pub fn iter(&self) -> Iter<'_, T> {
+		log::debug!(">>> Entering iter()");
+        log::debug!("<<< Exiting iter()");
         self.items.iter()
     }
 
@@ -109,6 +127,7 @@ impl<T> Heap<T> {
     /// # Parameters
     /// - `idx`: The index of the element to heapify up.
     fn heapify_up(&mut self, mut idx: usize) {
+		log::debug!(">>> Entering heapify_up(idx={})", idx);
         while let Some(pdx) = self.parent_idx(idx) {
             if (self.comparator)(&self.items[idx], &self.items[pdx]) {
                 self.items.swap(idx, pdx);
@@ -116,6 +135,7 @@ impl<T> Heap<T> {
             } else {
                 break;
             }
+		log::debug!("<<< Exiting heapify_up(idx={})", idx);
         }
     }
 
@@ -124,13 +144,16 @@ impl<T> Heap<T> {
     /// # Parameters
     /// - `idx`: The index of the element to heapify down.
     fn heapify_down(&mut self, mut idx: usize) {
+		log::debug!(">>> Entering heapify_down(idx={})", idx);
         while self.children_present(idx) {
             let cdx = {
                 if self.right_child_idx(idx) >= self.len() {
                     self.left_child_idx(idx)
                 } else {
                     let ldx = self.left_child_idx(idx);
+					log::debug!("heapify_down(idx={}): ldx → {}", idx, ldx);
                     let rdx = self.right_child_idx(idx);
+					log::debug!("heapify_down(idx={}): rdx → {}", idx, rdx);
                     if (self.comparator)(&self.items[ldx], &self.items[rdx]) {
                         ldx
                     } else {
@@ -145,6 +168,7 @@ impl<T> Heap<T> {
             } else {
                 break;
             }
+		log::debug!("<<< Exiting heapify_down(idx={})", idx);
         }
     }
 
@@ -156,9 +180,11 @@ impl<T> Heap<T> {
     /// # Returns
     /// The index of the parent element if it exists, otherwise `None`.
     fn parent_idx(&self, idx: usize) -> Option<usize> {
+		log::debug!(">>> Entering parent_idx(idx={})", idx);
         if idx > 0 {
             Some((idx - 1) / 2)
         } else {
+			log::debug!("<<< Exiting parent_idx(idx={})", idx);
             None
         }
     }
@@ -171,6 +197,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// `true` if the element has children, `false` otherwise.
     fn children_present(&self, idx: usize) -> bool {
+		log::debug!(">>> Entering children_present(idx={})", idx);
+        log::debug!("<<< Exiting children_present(idx={})", idx);
         self.left_child_idx(idx) < self.len()
     }
 
@@ -182,6 +210,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// The index of the left child.
     fn left_child_idx(&self, idx: usize) -> usize {
+		log::debug!(">>> Entering left_child_idx(idx={})", idx);
+        log::debug!("<<< Exiting left_child_idx(idx={})", idx);
         idx * 2 + 1
     }
 
@@ -193,6 +223,8 @@ impl<T> Heap<T> {
     /// # Returns
     /// The index of the right child.
     fn right_child_idx(&self, idx: usize) -> usize {
+		log::debug!(">>> Entering right_child_idx(idx={})", idx);
+        log::debug!("<<< Exiting right_child_idx(idx={})", idx);
         self.left_child_idx(idx) + 1
     }
 }
@@ -206,6 +238,8 @@ where
     /// # Returns
     /// A new `Heap` instance configured as a min-heap.
     pub fn new_min() -> Heap<T> {
+		log::debug!(">>> Entering new_min()");
+        log::debug!("<<< Exiting new_min()");
         Self::new(|a, b| a < b)
     }
 
@@ -214,6 +248,8 @@ where
     /// # Returns
     /// A new `Heap` instance configured as a max-heap.
     pub fn new_max() -> Heap<T> {
+		log::debug!(">>> Entering new_max()");
+        log::debug!("<<< Exiting new_max()");
         Self::new(|a, b| a > b)
     }
 
@@ -225,6 +261,8 @@ where
     /// # Returns
     /// A `Heap` instance configured as a min-heap.
     pub fn from_vec_min(items: Vec<T>) -> Heap<T> {
+		log::debug!(">>> Entering from_vec_min(items=(unprintable))");
+        log::debug!("<<< Exiting from_vec_min(items=(unprintable))");
         Self::from_vec(items, |a, b| a < b)
     }
 
@@ -236,6 +274,8 @@ where
     /// # Returns
     /// A `Heap` instance configured as a max-heap.
     pub fn from_vec_max(items: Vec<T>) -> Heap<T> {
+		log::debug!(">>> Entering from_vec_max(items=(unprintable))");
+        log::debug!("<<< Exiting from_vec_max(items=(unprintable))");
         Self::from_vec(items, |a, b| a > b)
     }
 }
@@ -246,14 +286,18 @@ mod tests {
 
     #[test]
     fn test_empty_heap() {
+		log::debug!(">>> Entering test_empty_heap()");
         let mut heap: Heap<i32> = Heap::new_max();
+		log::debug!("<<< Exiting test_empty_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_min_heap() {
+		log::debug!(">>> Entering test_min_heap()");
         let mut heap = Heap::new_min();
         heap.add(4);
+		log::debug!("test_min_heap(): heap → (unprintable)");
         heap.add(2);
         heap.add(9);
         heap.add(11);
@@ -264,13 +308,16 @@ mod tests {
         heap.add(1);
         assert_eq!(heap.pop(), Some(1));
         assert_eq!(heap.pop(), Some(11));
+		log::debug!("<<< Exiting test_min_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_max_heap() {
+		log::debug!(">>> Entering test_max_heap()");
         let mut heap = Heap::new_max();
         heap.add(4);
+		log::debug!("test_max_heap(): heap → (unprintable)");
         heap.add(2);
         heap.add(9);
         heap.add(11);
@@ -281,18 +328,22 @@ mod tests {
         heap.add(1);
         assert_eq!(heap.pop(), Some(2));
         assert_eq!(heap.pop(), Some(1));
+		log::debug!("<<< Exiting test_max_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_iter_heap() {
+		log::debug!(">>> Entering test_iter_heap()");
         let mut heap = Heap::new_min();
         heap.add(4);
+		log::debug!("test_iter_heap(): heap → (unprintable)");
         heap.add(2);
         heap.add(9);
         heap.add(11);
 
         let mut iter = heap.iter();
+		log::debug!("test_iter_heap(): iter → (unprintable)");
         assert_eq!(iter.next(), Some(&2));
         assert_eq!(iter.next(), Some(&4));
         assert_eq!(iter.next(), Some(&9));
@@ -304,30 +355,37 @@ mod tests {
         assert_eq!(heap.pop(), Some(4));
         assert_eq!(heap.pop(), Some(9));
         assert_eq!(heap.pop(), Some(11));
+		log::debug!("<<< Exiting test_iter_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_from_vec_min() {
+		log::debug!(">>> Entering test_from_vec_min()");
         let vec = vec![3, 1, 4, 1, 5, 9, 2, 6, 5];
         let mut heap = Heap::from_vec_min(vec);
+		log::debug!("test_from_vec_min(): heap → (unprintable)");
         assert_eq!(heap.len(), 9);
         assert_eq!(heap.pop(), Some(1));
         assert_eq!(heap.pop(), Some(1));
         assert_eq!(heap.pop(), Some(2));
         heap.add(0);
+		log::debug!("<<< Exiting test_from_vec_min()");
         assert_eq!(heap.pop(), Some(0));
     }
 
     #[test]
     fn test_from_vec_max() {
+		log::debug!(">>> Entering test_from_vec_max()");
         let vec = vec![3, 1, 4, 1, 5, 9, 2, 6, 5];
         let mut heap = Heap::from_vec_max(vec);
+		log::debug!("test_from_vec_max(): heap → (unprintable)");
         assert_eq!(heap.len(), 9);
         assert_eq!(heap.pop(), Some(9));
         assert_eq!(heap.pop(), Some(6));
         assert_eq!(heap.pop(), Some(5));
         heap.add(10);
+		log::debug!("<<< Exiting test_from_vec_max()");
         assert_eq!(heap.pop(), Some(10));
     }
 }

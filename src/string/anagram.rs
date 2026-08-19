@@ -19,9 +19,13 @@ pub enum AnagramError {
 /// * `Ok(false)` if the strings are not anagrams.
 /// * `Err(AnagramError)` if either string contains non-alphabetic characters.
 pub fn check_anagram(s: &str, t: &str) -> Result<bool, AnagramError> {
+	log::debug!(">>> Entering check_anagram(s={},t={})", s, t);
     let s_cleaned = clean_string(s)?;
     let t_cleaned = clean_string(t)?;
+	log::debug!("check_anagram(s={},t={}): t_cleaned → {}", s, t, t_cleaned);
 
+	log::debug!("check_anagram(s={},t={}): s_cleaned → {}", s, t, s_cleaned);
+    log::debug!("<<< Exiting check_anagram(s={},t={})", s, t);
     Ok(char_count(&s_cleaned) == char_count(&t_cleaned))
 }
 
@@ -37,6 +41,7 @@ pub fn check_anagram(s: &str, t: &str) -> Result<bool, AnagramError> {
 /// * `Ok(String)` containing the cleaned string (no spaces, lowercase).
 /// * `Err(AnagramError)` if the string contains non-alphabetic characters.
 fn clean_string(s: &str) -> Result<String, AnagramError> {
+	log::debug!(">>> Entering clean_string(s={})", s);
     s.chars()
         .filter(|c| !c.is_whitespace())
         .map(|c| {
@@ -44,6 +49,7 @@ fn clean_string(s: &str) -> Result<String, AnagramError> {
                 Ok(c.to_ascii_lowercase())
             } else {
                 Err(AnagramError::NonAlphabeticCharacter)
+			log::debug!("<<< Exiting clean_string(s={})", s);
             }
         })
         .collect()
@@ -59,10 +65,12 @@ fn clean_string(s: &str) -> Result<String, AnagramError> {
 ///
 /// * A `HashMap` where the keys are characters and values are their count.
 fn char_count(s: &str) -> HashMap<char, usize> {
+	log::debug!(">>> Entering char_count(s={})", s);
     let mut res = HashMap::new();
     for c in s.chars() {
         *res.entry(c).or_insert(0) += 1;
     }
+	log::debug!("<<< Exiting char_count(s={})", s);
     res
 }
 

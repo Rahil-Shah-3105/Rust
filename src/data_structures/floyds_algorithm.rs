@@ -6,9 +6,13 @@
 use crate::data_structures::linked_list::LinkedList; // Import the LinkedList from linked_list.rs
 
 pub fn detect_cycle<T>(linked_list: &LinkedList<T>) -> Option<usize> {
+	log::debug!(">>> Entering detect_cycle(linked_list=(unprintable))");
     let mut current = linked_list.head;
     let mut checkpoint = linked_list.head;
+	log::debug!("detect_cycle(linked_list=(unprintable)): checkpoint → (unprintable)");
     let mut steps_until_reset = 1;
+	log::debug!("detect_cycle(linked_list=(unprintable)): steps_until_reset → {}", steps_until_reset);
+	log::debug!("detect_cycle(linked_list=(unprintable)): current → (unprintable)");
     let mut times_reset = 0;
 
     while let Some(node) = current {
@@ -21,6 +25,8 @@ pub fn detect_cycle<T>(linked_list: &LinkedList<T>) -> Option<usize> {
 
         unsafe {
             let node_ptr = node.as_ptr();
+			log::debug!("detect_cycle(linked_list=(unprintable)): node_ptr → (unprintable)");
+			log::debug!("detect_cycle(linked_list=(unprintable)): next → (unprintable)");
             let next = (*node_ptr).next;
             current = next;
         }
@@ -29,12 +35,16 @@ pub fn detect_cycle<T>(linked_list: &LinkedList<T>) -> Option<usize> {
         }
     }
 
+    log::debug!("<<< Exiting detect_cycle(linked_list=(unprintable))");
     None
 }
 
 pub fn has_cycle<T>(linked_list: &LinkedList<T>) -> bool {
+	log::debug!(">>> Entering has_cycle(linked_list=(unprintable))");
     let mut slow = linked_list.head;
     let mut fast = linked_list.head;
+	log::debug!("has_cycle(linked_list=(unprintable)): fast → (unprintable)");
+	log::debug!("has_cycle(linked_list=(unprintable)): slow → (unprintable)");
 
     while let (Some(slow_node), Some(fast_node)) = (slow, fast) {
         unsafe {
@@ -54,6 +64,7 @@ pub fn has_cycle<T>(linked_list: &LinkedList<T>) -> bool {
         }
     }
     // println!("{}", flag);
+    log::debug!("<<< Exiting has_cycle(linked_list=(unprintable))");
     false // No cycle detected
 }
 
@@ -63,20 +74,25 @@ mod tests {
 
     #[test]
     fn test_detect_cycle_no_cycle() {
+		log::debug!(">>> Entering test_detect_cycle_no_cycle()");
         let mut linked_list = LinkedList::new();
         linked_list.insert_at_tail(1);
+		log::debug!("test_detect_cycle_no_cycle(): linked_list → (unprintable)");
         linked_list.insert_at_tail(2);
         linked_list.insert_at_tail(3);
 
         assert!(!has_cycle(&linked_list));
 
+		log::debug!("<<< Exiting test_detect_cycle_no_cycle()");
         assert_eq!(detect_cycle(&linked_list), None);
     }
 
     #[test]
     fn test_detect_cycle_with_cycle() {
+		log::debug!(">>> Entering test_detect_cycle_with_cycle()");
         let mut linked_list = LinkedList::new();
         linked_list.insert_at_tail(1);
+		log::debug!("test_detect_cycle_with_cycle(): linked_list → (unprintable)");
         linked_list.insert_at_tail(2);
         linked_list.insert_at_tail(3);
 
@@ -90,6 +106,7 @@ mod tests {
         }
 
         assert!(has_cycle(&linked_list));
+		log::debug!("<<< Exiting test_detect_cycle_with_cycle()");
         assert_eq!(detect_cycle(&linked_list), Some(3));
     }
 }

@@ -27,7 +27,9 @@ pub struct CentroidDecomposition {
 
 impl CentroidDecomposition {
     pub fn new(mut num_vertices: usize) -> Self {
+		log::debug!(">>> Entering new(num_vertices={})", num_vertices);
         num_vertices += 1;
+		log::debug!("<<< Exiting new(num_vertices={})", num_vertices);
         CentroidDecomposition {
             root: 0,
             decomposition: vec![0; num_vertices],
@@ -37,22 +39,30 @@ impl CentroidDecomposition {
     }
     #[inline]
     fn put_in_decomposition(&mut self, v: usize, parent: usize) {
+		log::debug!(">>> Entering put_in_decomposition(v={},parent={})", v, parent);
         self.decomposition[v] = parent;
+		log::debug!("<<< Exiting put_in_decomposition(v={},parent={})", v, parent);
         self.vert_state[v] |= IN_DECOMPOSITION;
     }
     #[inline]
     fn is_in_decomposition(&self, v: usize) -> bool {
+		log::debug!(">>> Entering is_in_decomposition(v={})", v);
+        log::debug!("<<< Exiting is_in_decomposition(v={})", v);
         (self.vert_state[v] & IN_DECOMPOSITION) != 0
     }
     fn dfs_size(&mut self, v: usize, parent: usize, adj: &Adj) -> usize {
+		log::debug!(">>> Entering dfs_size(v={},parent={},adj=(unprintable))", v, parent);
         self.vert_size[v] = 1;
         let mut big_child = 0_usize;
+		log::debug!("dfs_size(v={},parent={},adj=(unprintable)): big_child → {}", v, parent, big_child);
         let mut bc_size = 0_usize; // big child size
+		log::debug!("dfs_size(v={},parent={},adj=(unprintable)): bc_size → {}", v, parent, bc_size);
         for &u in adj[v].iter() {
             if u == parent || self.is_in_decomposition(u) {
                 continue;
             }
             let u_size = self.dfs_size(u, v, adj);
+			log::debug!("dfs_size(v={},parent={},adj=(unprintable)): u_size → {}", v, parent, u_size);
             self.vert_size[v] += u_size;
             if u_size > bc_size {
                 big_child = u;
@@ -60,10 +70,13 @@ impl CentroidDecomposition {
             }
         }
         self.vert_state[v] = big_child as u64;
+		log::debug!("<<< Exiting dfs_size(v={},parent={},adj=(unprintable))", v, parent);
         self.vert_size[v]
     }
     fn dfs_centroid(&self, v: usize, size_thr: usize) -> usize {
+		log::debug!(">>> Entering dfs_centroid(v={},size_thr={})", v, size_thr);
         // recurse until big child's size is <= `size_thr`
+		log::debug!("<<< Exiting dfs_centroid(v={},size_thr={})", v, size_thr);
         match self.vert_state[v] as usize {
             u if self.vert_size[u] <= size_thr => v,
             u => self.dfs_centroid(u, size_thr),
@@ -76,6 +89,7 @@ impl CentroidDecomposition {
         calculate_vert_size: bool,
         adj: &Adj,
     ) -> usize {
+		log::debug!(">>> Entering decompose_subtree(v={},centroid_parent={},calculate_vert_size={},adj=(unprintable))", v, centroid_parent, calculate_vert_size);
         // `calculate_vert_size` determines if it is necessary to recalculate
         // `self.vert_size`
         if calculate_vert_size {
@@ -83,6 +97,7 @@ impl CentroidDecomposition {
         }
         let v_size = self.vert_size[v];
         let centroid = self.dfs_centroid(v, v_size >> 1);
+		log::debug!("decompose_subtree(v={},centroid_parent={},calculate_vert_size={},adj=(unprintable)): centroid → {}", v, centroid_parent, calculate_vert_size, centroid);
         self.put_in_decomposition(centroid, centroid_parent);
         for &u in adj[centroid].iter() {
             if self.is_in_decomposition(u) {
@@ -95,9 +110,12 @@ impl CentroidDecomposition {
                 adj,
             );
         }
+		log::debug!("<<< Exiting decompose_subtree(v={},centroid_parent={},calculate_vert_size={},adj=(unprintable))", v, centroid_parent, calculate_vert_size);
         centroid
     }
     pub fn decompose_tree(&mut self, adj: &Adj) {
+		log::debug!(">>> Entering decompose_tree(adj=(unprintable))");
+		log::debug!("<<< Exiting decompose_tree(adj=(unprintable))");
         self.decompose_subtree(1, 0, true, adj);
     }
 }
@@ -110,13 +128,16 @@ mod tests {
         math::PCG32,
     };
     fn calculate_height(v: usize, heights: &mut [usize], parents: &mut [usize]) -> usize {
+		log::debug!(">>> Entering calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         if heights[v] == 0 {
             heights[v] = calculate_height(parents[v], heights, parents) + 1;
         }
+		log::debug!("<<< Exiting calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         heights[v]
     }
     #[test]
     fn single_path() {
+		log::debug!(">>> Entering single_path()");
         let len = 16;
         let mut adj: Vec<Vec<usize>> = vec![vec![]; len];
         adj[1].push(2);
@@ -127,33 +148,41 @@ mod tests {
             adj[i].push(i - 1);
         }
         let mut cd = CentroidDecomposition::new(len - 1);
+		log::debug!("single_path(): cd → (unprintable)");
         cd.decompose_tree(&adj);
         // We should get a complete binary tree
         assert_eq!(
             cd.decomposition,
             vec![0, 2, 4, 2, 8, 6, 4, 6, 0, 10, 12, 10, 8, 14, 12, 14]
+		log::debug!("<<< Exiting single_path()");
         );
     }
     #[test]
     #[ignore]
     fn random_tree_height() {
+		log::debug!(">>> Entering random_tree_height()");
         // Do not run this test in debug mode! It takes > 30s to run without
         // optimizations!
         let n = 1e6 as usize;
         let max_height = 1 + 20;
         let len = n + 1;
         let mut rng = PCG32::new_default(314159);
+		log::debug!("random_tree_height(): rng → (unprintable)");
         let mut tree_prufer_code: Vec<u32> = vec![0; n - 2];
         tree_prufer_code.fill_with(|| (rng.get_u32() % (n as u32)) + 1);
         let vertex_list: Vec<u32> = (1..=(n as u32)).collect();
         let adj = enumerate_graph(&prufer_code::prufer_decode(&tree_prufer_code, &vertex_list));
+		log::debug!("random_tree_height(): adj → (unprintable)");
+		log::debug!("random_tree_height(): cd → (unprintable)");
         let mut cd = CentroidDecomposition::new(n);
         cd.decompose_tree(&adj);
         let mut heights: Vec<usize> = vec![0; len];
         heights[0] = 1;
         for i in 1..=n {
             let h = calculate_height(i, &mut heights, &mut cd.decomposition);
+			log::debug!("random_tree_height(): h → {}", h);
             assert!(h <= max_height);
+		log::debug!("<<< Exiting random_tree_height()");
         }
     }
 }

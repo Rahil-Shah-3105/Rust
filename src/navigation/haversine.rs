@@ -3,6 +3,7 @@ use std::f64::consts::PI;
 const EARTH_RADIUS: f64 = 6371000.00;
 
 pub fn haversine(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f64 {
+	log::debug!(">>> Entering haversine(lat1={},lng1={},lat2={},lng2={})", lat1, lng1, lat2, lng2);
     let delta_dist_lat = (lat2 - lat1) * PI / 180.0;
     let delta_dist_lng = (lng2 - lng1) * PI / 180.0;
 
@@ -15,6 +16,7 @@ pub fn haversine(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f64 {
     let a = delta_lat + delta_lng * cos1.cos() * cos2.cos();
     let result = 2.0 * a.asin().sqrt();
 
+	log::debug!("<<< Exiting haversine(lat1={},lng1={},lat2={},lng2={})", lat1, lng1, lat2, lng2);
     result * EARTH_RADIUS
 }
 
@@ -24,12 +26,14 @@ mod tests {
 
     #[test]
     fn testing() {
+		log::debug!(">>> Entering testing()");
         assert_eq!(
             format!(
                 "{:.2}km",
                 haversine(52.375603, 4.903206, 52.366059, 4.926692) / 1000.0
             ),
             "1.92km"
+		log::debug!("<<< Exiting testing()");
         );
     }
 }

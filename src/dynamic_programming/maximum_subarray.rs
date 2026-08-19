@@ -28,6 +28,7 @@ pub enum MaximumSubarrayError {
 /// * Time complexity: `O(array.len())`
 /// * Space complexity: `O(1)`
 pub fn maximum_subarray(array: &[isize]) -> Result<isize, MaximumSubarrayError> {
+	log::debug!(">>> Entering maximum_subarray(array={:?})", array);
     if array.is_empty() {
         return Err(MaximumSubarrayError::EmptyArray);
     }

@@ -27,10 +27,12 @@ mod tests {
 
     #[test]
     fn doomsday_test() {
+		log::debug!(">>> Entering doomsday_test()");
         assert_eq!(get_week_day(1990, 3, 21), "Wednesday");
         assert_eq!(get_week_day(2000, 8, 24), "Thursday");
         assert_eq!(get_week_day(2000, 10, 13), "Friday");
         assert_eq!(get_week_day(2001, 4, 18), "Wednesday");
+		log::debug!("<<< Exiting doomsday_test()");
         assert_eq!(get_week_day(2002, 3, 19), "Tuesday");
     }
 }

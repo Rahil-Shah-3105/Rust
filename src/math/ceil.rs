@@ -16,43 +16,57 @@ mod tests {
 
     #[test]
     fn positive_decimal() {
+		log::debug!(">>> Entering positive_decimal()");
         let num = 1.10;
+		log::debug!("<<< Exiting positive_decimal()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn positive_decimal_with_small_number() {
+		log::debug!(">>> Entering positive_decimal_with_small_number()");
         let num = 3.01;
+		log::debug!("<<< Exiting positive_decimal_with_small_number()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn positive_integer() {
+		log::debug!(">>> Entering positive_integer()");
         let num = 1.00;
+		log::debug!("<<< Exiting positive_integer()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn negative_decimal() {
+		log::debug!(">>> Entering negative_decimal()");
         let num = -1.10;
+		log::debug!("<<< Exiting negative_decimal()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn negative_decimal_with_small_number() {
+		log::debug!(">>> Entering negative_decimal_with_small_number()");
         let num = -1.01;
+		log::debug!("<<< Exiting negative_decimal_with_small_number()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn negative_integer() {
+		log::debug!(">>> Entering negative_integer()");
         let num = -1.00;
+		log::debug!("<<< Exiting negative_integer()");
         assert_eq!(ceil(num), num.ceil());
     }
 
     #[test]
     fn zero() {
+		log::debug!(">>> Entering zero()");
         let num = 0.00;
+		log::debug!("<<< Exiting zero()");
         assert_eq!(ceil(num), num.ceil());
     }
 }

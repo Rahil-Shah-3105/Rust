@@ -38,6 +38,7 @@ mod tests {
 
     #[test]
     pub fn test_amicable_numbers_below_n() {
+		log::debug!(">>> Entering test_amicable_numbers_below_n()");
         // First 10 amicable numbers, sorted (low, high)
         let expected_result = vec![
             (220, 284),
@@ -54,6 +55,7 @@ mod tests {
 
         // Generate pairs under 100,000
         let mut result = amicable_pairs_under_n(100_000).unwrap();
+		log::debug!("test_amicable_numbers_below_n(): result → {:?}", result);
 
         // There should be 13 pairs under 100,000
         assert_eq!(result.len(), 13);
@@ -63,6 +65,7 @@ mod tests {
         assert_eq!(result, expected_result);
 
         // N that does not have any amicable pairs below it, the result should be None
+		log::debug!("<<< Exiting test_amicable_numbers_below_n()");
         assert_eq!(amicable_pairs_under_n(100), None);
     }
 }

@@ -51,6 +51,8 @@ mod tests {
     #[test]
     #[should_panic]
     fn panics_if_input_is_zero() {
+		log::debug!(">>> Entering panics_if_input_is_zero()");
+		log::debug!("<<< Exiting panics_if_input_is_zero()");
         aliquot_sum(0);
     }
 }

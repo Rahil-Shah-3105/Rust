@@ -290,6 +290,7 @@ mod tests {
 
     #[test]
     fn test_fibonacci() {
+		log::debug!(">>> Entering test_fibonacci()");
         assert_eq!(fibonacci(0), 1);
         assert_eq!(fibonacci(1), 1);
         assert_eq!(fibonacci(2), 2);
@@ -299,11 +300,13 @@ mod tests {
         assert_eq!(fibonacci(10), 89);
         assert_eq!(fibonacci(20), 10946);
         assert_eq!(fibonacci(100), 573147844013817084101);
+		log::debug!("<<< Exiting test_fibonacci()");
         assert_eq!(fibonacci(184), 205697230343233228174223751303346572685);
     }
 
     #[test]
     fn test_recursive_fibonacci() {
+		log::debug!(">>> Entering test_recursive_fibonacci()");
         assert_eq!(recursive_fibonacci(0), 1);
         assert_eq!(recursive_fibonacci(1), 1);
         assert_eq!(recursive_fibonacci(2), 2);
@@ -316,11 +319,13 @@ mod tests {
         assert_eq!(
             recursive_fibonacci(184),
             205697230343233228174223751303346572685
+		log::debug!("<<< Exiting test_recursive_fibonacci()");
         );
     }
 
     #[test]
     fn test_classical_fibonacci() {
+		log::debug!(">>> Entering test_classical_fibonacci()");
         assert_eq!(classical_fibonacci(0), 0);
         assert_eq!(classical_fibonacci(1), 1);
         assert_eq!(classical_fibonacci(2), 1);
@@ -334,11 +339,13 @@ mod tests {
         assert_eq!(
             classical_fibonacci(184),
             127127879743834334146972278486287885163
+		log::debug!("<<< Exiting test_classical_fibonacci()");
         );
     }
 
     #[test]
     fn test_logarithmic_fibonacci() {
+		log::debug!(">>> Entering test_logarithmic_fibonacci()");
         assert_eq!(logarithmic_fibonacci(0), 0);
         assert_eq!(logarithmic_fibonacci(1), 1);
         assert_eq!(logarithmic_fibonacci(2), 1);
@@ -352,6 +359,7 @@ mod tests {
         assert_eq!(
             logarithmic_fibonacci(184),
             127127879743834334146972278486287885163
+		log::debug!("<<< Exiting test_logarithmic_fibonacci()");
         );
     }
 
@@ -359,6 +367,7 @@ mod tests {
     /// Check that the iterative and recursive fibonacci
     /// produce the same value. Both are combinatorial ( F(0) = F(1) = 1 )
     fn test_iterative_and_recursive_equivalence() {
+		log::debug!(">>> Entering test_iterative_and_recursive_equivalence()");
         assert_eq!(fibonacci(0), recursive_fibonacci(0));
         assert_eq!(fibonacci(1), recursive_fibonacci(1));
         assert_eq!(fibonacci(2), recursive_fibonacci(2));
@@ -368,6 +377,7 @@ mod tests {
         assert_eq!(fibonacci(10), recursive_fibonacci(10));
         assert_eq!(fibonacci(20), recursive_fibonacci(20));
         assert_eq!(fibonacci(100), recursive_fibonacci(100));
+		log::debug!("<<< Exiting test_iterative_and_recursive_equivalence()");
         assert_eq!(fibonacci(184), recursive_fibonacci(184));
     }
 
@@ -377,6 +387,7 @@ mod tests {
     /// classical fibonacci: ( F(0) = 0, F(1) = 1 )
     /// combinatorial fibonacci: ( F(0) = F(1) = 1 )
     fn test_classical_and_combinatorial_are_off_by_one() {
+		log::debug!(">>> Entering test_classical_and_combinatorial_are_off_by_one()");
         assert_eq!(classical_fibonacci(1), fibonacci(0));
         assert_eq!(classical_fibonacci(2), fibonacci(1));
         assert_eq!(classical_fibonacci(3), fibonacci(2));
@@ -387,11 +398,13 @@ mod tests {
         assert_eq!(classical_fibonacci(20), fibonacci(19));
         assert_eq!(classical_fibonacci(21), fibonacci(20));
         assert_eq!(classical_fibonacci(101), fibonacci(100));
+		log::debug!("<<< Exiting test_classical_and_combinatorial_are_off_by_one()");
         assert_eq!(classical_fibonacci(185), fibonacci(184));
     }
 
     #[test]
     fn test_memoized_fibonacci() {
+		log::debug!(">>> Entering test_memoized_fibonacci()");
         assert_eq!(memoized_fibonacci(0), 0);
         assert_eq!(memoized_fibonacci(1), 1);
         assert_eq!(memoized_fibonacci(2), 1);
@@ -405,11 +418,13 @@ mod tests {
         assert_eq!(
             memoized_fibonacci(184),
             127127879743834334146972278486287885163
+		log::debug!("<<< Exiting test_memoized_fibonacci()");
         );
     }
 
     #[test]
     fn test_matrix_fibonacci() {
+		log::debug!(">>> Entering test_matrix_fibonacci()");
         assert_eq!(matrix_fibonacci(0), 0);
         assert_eq!(matrix_fibonacci(1), 1);
         assert_eq!(matrix_fibonacci(2), 1);
@@ -423,11 +438,13 @@ mod tests {
         assert_eq!(
             matrix_fibonacci(184),
             127127879743834334146972278486287885163
+		log::debug!("<<< Exiting test_matrix_fibonacci()");
         );
     }
 
     #[test]
     fn test_binary_lifting_fibonacci() {
+		log::debug!(">>> Entering test_binary_lifting_fibonacci()");
         assert_eq!(binary_lifting_fibonacci(0), 0);
         assert_eq!(binary_lifting_fibonacci(1), 1);
         assert_eq!(binary_lifting_fibonacci(2), 1);
@@ -441,11 +458,13 @@ mod tests {
         assert_eq!(
             binary_lifting_fibonacci(184),
             127127879743834334146972278486287885163
+		log::debug!("<<< Exiting test_binary_lifting_fibonacci()");
         );
     }
 
     #[test]
     fn test_nth_fibonacci_number_modulo_m() {
+		log::debug!(">>> Entering test_nth_fibonacci_number_modulo_m()");
         assert_eq!(nth_fibonacci_number_modulo_m(5, 10), 5);
         assert_eq!(nth_fibonacci_number_modulo_m(10, 7), 6);
         assert_eq!(nth_fibonacci_number_modulo_m(20, 100), 65);
@@ -456,11 +475,13 @@ mod tests {
         assert_eq!(nth_fibonacci_number_modulo_m(15, 2), 0);
         assert_eq!(nth_fibonacci_number_modulo_m(8, 1_000_000), 21);
         assert_eq!(nth_fibonacci_number_modulo_m(1000, 997), 996);
+		log::debug!("<<< Exiting test_nth_fibonacci_number_modulo_m()");
         assert_eq!(nth_fibonacci_number_modulo_m(200, 123), 0);
     }
 
     #[test]
     fn test_last_digit_of_the_sum_of_nth_fibonacci_number() {
+		log::debug!(">>> Entering test_last_digit_of_the_sum_of_nth_fibonacci_number()");
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(0), 0);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(1), 1);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(2), 2);
@@ -469,6 +490,7 @@ mod tests {
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(5), 2);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(25), 7);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(50), 8);
+		log::debug!("<<< Exiting test_last_digit_of_the_sum_of_nth_fibonacci_number()");
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(100), 5);
     }
 }

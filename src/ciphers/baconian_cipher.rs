@@ -56,15 +56,23 @@ mod tests {
 
     #[test]
     fn test_baconian_encoding() {
+		log::debug!(">>> Entering test_baconian_encoding()");
         let message = "HELLO";
         let encoded = baconian_encode(message);
+		log::debug!("test_baconian_encoding(): encoded → {}", encoded);
+		log::debug!("test_baconian_encoding(): message → {}", message);
+    log::debug!("<<< Exiting test_baconian_encoding()");
         assert_eq!(encoded, "AABBBAABAAABABBABABBABBBA");
     }
 
     #[test]
     fn test_baconian_decoding() {
+		log::debug!(">>> Entering test_baconian_decoding()");
         let message = "AABBBAABAAABABBABABBABBBA";
         let decoded = baconian_decode(message);
+		log::debug!("test_baconian_decoding(): decoded → {}", decoded);
+		log::debug!("test_baconian_decoding(): message → {}", message);
+    log::debug!("<<< Exiting test_baconian_decoding()");
         assert_eq!(decoded, "HELLO");
     }
 }

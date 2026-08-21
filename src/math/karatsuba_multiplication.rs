@@ -45,25 +45,34 @@ mod test {
 
     #[test]
     fn test_1() {
+		log::debug!(">>> Entering test_1()");
         let n1: i128 = 314159265;
         let n2: i128 = 314159265;
         let ans = multiply(n1, n2);
+		log::debug!("test_1(): ans → {}", ans);
+		log::debug!("<<< Exiting test_1()");
         assert_eq!(ans, n1 * n2);
     }
 
     #[test]
     fn test_2() {
+		log::debug!(">>> Entering test_2()");
         let n1: i128 = 3141592653589793232;
         let n2: i128 = 2718281828459045233;
         let ans = multiply(n1, n2);
+		log::debug!("test_2(): ans → {}", ans);
+		log::debug!("<<< Exiting test_2()");
         assert_eq!(ans, n1 * n2);
     }
 
     #[test]
     fn test_3() {
+		log::debug!(">>> Entering test_3()");
         let n1: i128 = 123456789;
         let n2: i128 = 101112131415;
         let ans = multiply(n1, n2);
+		log::debug!("test_3(): ans → {}", ans);
+		log::debug!("<<< Exiting test_3()");
         assert_eq!(ans, n1 * n2);
     }
 }

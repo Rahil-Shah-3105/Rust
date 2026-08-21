@@ -28,10 +28,12 @@ mod tests {
 
     #[test]
     fn test_decimal_to_octal() {
+		log::debug!(">>> Entering test_decimal_to_octal()");
         assert_eq!(decimal_to_octal(8), "10");
         assert_eq!(decimal_to_octal(15), "17");
         assert_eq!(decimal_to_octal(255), "377");
         assert_eq!(decimal_to_octal(100), "144");
+		log::debug!("<<< Exiting test_decimal_to_octal()");
         assert_eq!(decimal_to_octal(0), "0");
     }
 }

@@ -37,21 +37,25 @@ mod tests {
 
     #[test]
     fn test_perfect_square() {
+		log::debug!(">>> Entering test_perfect_square()");
         assert!(perfect_square(9));
         assert!(perfect_square(81));
         assert!(perfect_square(4));
         assert!(perfect_square(0));
         assert!(!perfect_square(3));
+		log::debug!("<<< Exiting test_perfect_square()");
         assert!(!perfect_square(-19));
     }
 
     #[test]
     fn test_perfect_square_binary_search() {
+		log::debug!(">>> Entering test_perfect_square_binary_search()");
         assert!(perfect_square_binary_search(9));
         assert!(perfect_square_binary_search(81));
         assert!(perfect_square_binary_search(4));
         assert!(perfect_square_binary_search(0));
         assert!(!perfect_square_binary_search(3));
+		log::debug!("<<< Exiting test_perfect_square_binary_search()");
         assert!(!perfect_square_binary_search(-19));
     }
 }

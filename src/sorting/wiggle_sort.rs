@@ -33,6 +33,7 @@ mod tests {
     use crate::sorting::have_same_elements;
 
     fn is_wiggle_sorted(nums: &[i32]) -> bool {
+		log::debug!(">>> Entering is_wiggle_sorted(nums={:?})", nums);
         if nums.is_empty() {
             return true;
         }
@@ -51,30 +52,39 @@ mod tests {
 
     #[test]
     fn wingle_elements() {
+		log::debug!(">>> Entering wingle_elements()");
         let arr = vec![3, 5, 2, 1, 6, 4];
         let mut cloned = arr.clone();
         let res = wiggle_sort(&mut cloned);
+		log::debug!("wingle_elements(): res → {:?}", res);
         assert!(is_wiggle_sorted(res));
+		log::debug!("<<< Exiting wingle_elements()");
         assert!(have_same_elements(res, &arr));
     }
 
     #[test]
     fn odd_number_of_elements() {
+		log::debug!(">>> Entering odd_number_of_elements()");
         let arr = vec![4, 1, 3, 5, 2];
         let mut cloned = arr.clone();
         let res = wiggle_sort(&mut cloned);
+		log::debug!("odd_number_of_elements(): res → {:?}", res);
         assert!(is_wiggle_sorted(res));
+		log::debug!("<<< Exiting odd_number_of_elements()");
         assert!(have_same_elements(res, &arr));
     }
 
     #[test]
     fn repeated_elements() {
+		log::debug!(">>> Entering repeated_elements()");
         let arr = vec![5, 5, 5, 5];
         let mut cloned = arr.clone();
         let res = wiggle_sort(&mut cloned);
+		log::debug!("repeated_elements(): res → {:?}", res);
 
         // Negative test, can't be wiggle sorted
         assert!(!is_wiggle_sorted(res));
+		log::debug!("<<< Exiting repeated_elements()");
         assert!(have_same_elements(res, &arr));
     }
 }

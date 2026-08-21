@@ -199,17 +199,20 @@ mod tests {
 
     #[test]
     fn test_roman_to_int_basic() {
+		log::debug!(">>> Entering test_roman_to_int_basic()");
         assert_eq!(roman_to_int("I").unwrap(), 1);
         assert_eq!(roman_to_int("V").unwrap(), 5);
         assert_eq!(roman_to_int("X").unwrap(), 10);
         assert_eq!(roman_to_int("L").unwrap(), 50);
         assert_eq!(roman_to_int("C").unwrap(), 100);
         assert_eq!(roman_to_int("D").unwrap(), 500);
+		log::debug!("<<< Exiting test_roman_to_int_basic()");
         assert_eq!(roman_to_int("M").unwrap(), 1000);
     }
 
     #[test]
     fn test_roman_to_int_additive() {
+		log::debug!(">>> Entering test_roman_to_int_additive()");
         assert_eq!(roman_to_int("II").unwrap(), 2);
         assert_eq!(roman_to_int("III").unwrap(), 3);
         assert_eq!(roman_to_int("VI").unwrap(), 6);
@@ -218,62 +221,76 @@ mod tests {
         assert_eq!(roman_to_int("XI").unwrap(), 11);
         assert_eq!(roman_to_int("XV").unwrap(), 15);
         assert_eq!(roman_to_int("XX").unwrap(), 20);
+		log::debug!("<<< Exiting test_roman_to_int_additive()");
         assert_eq!(roman_to_int("XXX").unwrap(), 30);
     }
 
     #[test]
     fn test_roman_to_int_subtractive() {
+		log::debug!(">>> Entering test_roman_to_int_subtractive()");
         assert_eq!(roman_to_int("IV").unwrap(), 4);
         assert_eq!(roman_to_int("IX").unwrap(), 9);
         assert_eq!(roman_to_int("XL").unwrap(), 40);
         assert_eq!(roman_to_int("XC").unwrap(), 90);
         assert_eq!(roman_to_int("CD").unwrap(), 400);
+		log::debug!("<<< Exiting test_roman_to_int_subtractive()");
         assert_eq!(roman_to_int("CM").unwrap(), 900);
     }
 
     #[test]
     fn test_roman_to_int_complex() {
+		log::debug!(">>> Entering test_roman_to_int_complex()");
         assert_eq!(roman_to_int("CLIV").unwrap(), 154);
         assert_eq!(roman_to_int("MCMXC").unwrap(), 1990);
         assert_eq!(roman_to_int("MMXIV").unwrap(), 2014);
         assert_eq!(roman_to_int("MIX").unwrap(), 1009);
         assert_eq!(roman_to_int("MMD").unwrap(), 2500);
+		log::debug!("<<< Exiting test_roman_to_int_complex()");
         assert_eq!(roman_to_int("MMMCMXCIX").unwrap(), 3999);
     }
 
     #[test]
     fn test_roman_to_int_case_insensitive() {
+		log::debug!(">>> Entering test_roman_to_int_case_insensitive()");
         assert_eq!(roman_to_int("iii").unwrap(), 3);
         assert_eq!(roman_to_int("Cliv").unwrap(), 154);
+		log::debug!("<<< Exiting test_roman_to_int_case_insensitive()");
         assert_eq!(roman_to_int("mIx").unwrap(), 1009);
     }
 
     #[test]
     fn test_roman_to_int_invalid_character() {
+		log::debug!(">>> Entering test_roman_to_int_invalid_character()");
         assert!(roman_to_int("INVALID").is_err());
         assert!(roman_to_int("XYZ").is_err());
         assert!(roman_to_int("123").is_err());
+		log::debug!("<<< Exiting test_roman_to_int_invalid_character()");
         assert!(roman_to_int("X5").is_err());
     }
 
     #[test]
     fn test_roman_to_int_empty() {
+		log::debug!(">>> Entering test_roman_to_int_empty()");
+		log::debug!("<<< Exiting test_roman_to_int_empty()");
         assert!(roman_to_int("").is_err());
     }
 
     #[test]
     fn test_int_to_roman_basic() {
+		log::debug!(">>> Entering test_int_to_roman_basic()");
         assert_eq!(int_to_roman(1).unwrap(), "I");
         assert_eq!(int_to_roman(5).unwrap(), "V");
         assert_eq!(int_to_roman(10).unwrap(), "X");
         assert_eq!(int_to_roman(50).unwrap(), "L");
         assert_eq!(int_to_roman(100).unwrap(), "C");
         assert_eq!(int_to_roman(500).unwrap(), "D");
+		log::debug!("<<< Exiting test_int_to_roman_basic()");
         assert_eq!(int_to_roman(1000).unwrap(), "M");
     }
 
     #[test]
     fn test_int_to_roman_additive() {
+		log::debug!(">>> Entering test_int_to_roman_additive()");
         assert_eq!(int_to_roman(2).unwrap(), "II");
         assert_eq!(int_to_roman(3).unwrap(), "III");
         assert_eq!(int_to_roman(6).unwrap(), "VI");
@@ -282,48 +299,60 @@ mod tests {
         assert_eq!(int_to_roman(11).unwrap(), "XI");
         assert_eq!(int_to_roman(15).unwrap(), "XV");
         assert_eq!(int_to_roman(20).unwrap(), "XX");
+		log::debug!("<<< Exiting test_int_to_roman_additive()");
         assert_eq!(int_to_roman(30).unwrap(), "XXX");
     }
 
     #[test]
     fn test_int_to_roman_subtractive() {
+		log::debug!(">>> Entering test_int_to_roman_subtractive()");
         assert_eq!(int_to_roman(4).unwrap(), "IV");
         assert_eq!(int_to_roman(9).unwrap(), "IX");
         assert_eq!(int_to_roman(40).unwrap(), "XL");
         assert_eq!(int_to_roman(90).unwrap(), "XC");
         assert_eq!(int_to_roman(400).unwrap(), "CD");
+		log::debug!("<<< Exiting test_int_to_roman_subtractive()");
         assert_eq!(int_to_roman(900).unwrap(), "CM");
     }
 
     #[test]
     fn test_int_to_roman_complex() {
+		log::debug!(">>> Entering test_int_to_roman_complex()");
         assert_eq!(int_to_roman(154).unwrap(), "CLIV");
         assert_eq!(int_to_roman(1990).unwrap(), "MCMXC");
         assert_eq!(int_to_roman(2014).unwrap(), "MMXIV");
         assert_eq!(int_to_roman(1009).unwrap(), "MIX");
         assert_eq!(int_to_roman(2500).unwrap(), "MMD");
+		log::debug!("<<< Exiting test_int_to_roman_complex()");
         assert_eq!(int_to_roman(3999).unwrap(), "MMMCMXCIX");
     }
 
     #[test]
     fn test_int_to_roman_out_of_range() {
+		log::debug!(">>> Entering test_int_to_roman_out_of_range()");
         assert!(int_to_roman(0).is_err());
         assert!(int_to_roman(4000).is_err());
+		log::debug!("<<< Exiting test_int_to_roman_out_of_range()");
         assert!(int_to_roman(5000).is_err());
     }
 
     #[test]
     fn test_roundtrip_conversion() {
+		log::debug!(">>> Entering test_roundtrip_conversion()");
         // Test that converting to Roman and back gives the same number
         for i in 1..=3999 {
             let roman = int_to_roman(i).unwrap();
+			log::debug!("test_roundtrip_conversion(): roman → {}", roman);
             let back = roman_to_int(&roman).unwrap();
+			log::debug!("test_roundtrip_conversion(): back → {}", back);
             assert_eq!(i, back, "Roundtrip failed for {i}: {roman} -> {back}");
+		log::debug!("<<< Exiting test_roundtrip_conversion()");
         }
     }
 
     #[test]
     fn test_all_examples_from_python() {
+		log::debug!(">>> Entering test_all_examples_from_python()");
         // Test cases from the original Python implementation
         let tests = [
             ("III", 3),
@@ -336,11 +365,13 @@ mod tests {
         for (roman, expected) in tests.iter() {
             assert_eq!(roman_to_int(roman).unwrap(), *expected);
             assert_eq!(int_to_roman(*expected).unwrap(), *roman);
+		log::debug!("<<< Exiting test_all_examples_from_python()");
         }
     }
 
     #[test]
     fn test_edge_cases() {
+		log::debug!(">>> Entering test_edge_cases()");
         // Minimum value
         assert_eq!(int_to_roman(1).unwrap(), "I");
         assert_eq!(roman_to_int("I").unwrap(), 1);
@@ -352,6 +383,7 @@ mod tests {
         // Powers of 10
         assert_eq!(int_to_roman(10).unwrap(), "X");
         assert_eq!(int_to_roman(100).unwrap(), "C");
+		log::debug!("<<< Exiting test_edge_cases()");
         assert_eq!(int_to_roman(1000).unwrap(), "M");
     }
 }

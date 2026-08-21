@@ -24,12 +24,14 @@ mod tests {
 
     #[test]
     fn testing() {
+		log::debug!(">>> Entering testing()");
         assert_eq!(
             format!(
                 "{:.2}km",
                 haversine(52.375603, 4.903206, 52.366059, 4.926692) / 1000.0
             ),
             "1.92km"
+		log::debug!("<<< Exiting testing()");
         );
     }
 }

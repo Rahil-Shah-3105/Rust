@@ -89,6 +89,7 @@ mod tests {
 
     #[test]
     fn test_intro_sort() {
+		log::debug!(">>> Entering test_intro_sort()");
         // Test with integers
         let mut arr1 = vec![67, 34, 29, 15, 21, 9, 99];
         intro_sort(&mut arr1);
@@ -102,6 +103,7 @@ mod tests {
         // Test with an empty array
         let mut arr3: Vec<i32> = vec![];
         intro_sort(&mut arr3);
+		log::debug!("<<< Exiting test_intro_sort()");
         assert_eq!(arr3, vec![]);
     }
 }

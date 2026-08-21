@@ -25,10 +25,12 @@ mod tests {
 
     #[test]
     fn test_sigmoid() {
+		log::debug!(">>> Entering test_sigmoid()");
         let mut test = Vec::from([1.0, 0.5, -1.0, 0.0, 0.3]);
         assert_eq!(
             sigmoid(&mut test),
             &mut Vec::<f32>::from([0.7310586, 0.62245935, 0.26894143, 0.5, 0.5744425,])
+		log::debug!("<<< Exiting test_sigmoid()");
         );
     }
 }

@@ -197,6 +197,7 @@ mod test {
 
     #[test]
     fn test_pca_simple() {
+		log::debug!(">>> Entering test_pca_simple()");
         let data = vec![
             vec![1.0, 2.0],
             vec![2.0, 3.0],
@@ -206,6 +207,7 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 1);
+		log::debug!("test_pca_simple(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
@@ -215,36 +217,47 @@ mod test {
         let all_values: Vec<f64> = transformed.iter().map(|v| v[0]).collect();
         let mean = all_values.iter().sum::<f64>() / all_values.len() as f64;
 
+		log::debug!("<<< Exiting test_pca_simple()");
         assert!((mean).abs() < 1e-5);
     }
 
     #[test]
     fn test_pca_empty_data() {
+		log::debug!(">>> Entering test_pca_empty_data()");
         let data = vec![];
         let result = principal_component_analysis(data, 2);
+		log::debug!("test_pca_empty_data(): result → {:?}", result);
+		log::debug!("<<< Exiting test_pca_empty_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_empty_features() {
+		log::debug!(">>> Entering test_pca_empty_features()");
         let data = vec![vec![], vec![]];
         let result = principal_component_analysis(data, 1);
+		log::debug!("test_pca_empty_features(): result → {:?}", result);
+		log::debug!("<<< Exiting test_pca_empty_features()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_invalid_num_components() {
+		log::debug!(">>> Entering test_pca_invalid_num_components()");
         let data = vec![vec![1.0, 2.0], vec![2.0, 3.0]];
 
         let result = principal_component_analysis(data.clone(), 3);
+		log::debug!("test_pca_invalid_num_components(): result → {:?}", result);
         assert_eq!(result, None);
 
         let result = principal_component_analysis(data, 0);
+		log::debug!("<<< Exiting test_pca_invalid_num_components()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_preserves_dimensions() {
+		log::debug!(">>> Entering test_pca_preserves_dimensions()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -252,15 +265,18 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 2);
+		log::debug!("test_pca_preserves_dimensions(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
         assert_eq!(transformed.len(), 3);
+		log::debug!("<<< Exiting test_pca_preserves_dimensions()");
         assert_eq!(transformed[0].len(), 2);
     }
 
     #[test]
     fn test_pca_reconstruction_variance() {
+		log::debug!(">>> Entering test_pca_reconstruction_variance()");
         let data = vec![
             vec![2.5, 2.4],
             vec![0.5, 0.7],
@@ -275,15 +291,18 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 1);
+		log::debug!("test_pca_reconstruction_variance(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
         assert_eq!(transformed.len(), 10);
+		log::debug!("<<< Exiting test_pca_reconstruction_variance()");
         assert_eq!(transformed[0].len(), 1);
     }
 
     #[test]
     fn test_center_data() {
+		log::debug!(">>> Entering test_center_data()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -292,14 +311,17 @@ mod test {
 
         let means = vec![4.0, 5.0, 6.0];
         let centered = center_data(&data, &means);
+		log::debug!("test_center_data(): centered → {:?}", centered);
 
         assert_eq!(centered[0], vec![-3.0, -3.0, -3.0]);
         assert_eq!(centered[1], vec![0.0, 0.0, 0.0]);
+		log::debug!("<<< Exiting test_center_data()");
         assert_eq!(centered[2], vec![3.0, 3.0, 3.0]);
     }
 
     #[test]
     fn test_compute_means() {
+		log::debug!(">>> Entering test_compute_means()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -307,11 +329,14 @@ mod test {
         ];
 
         let means = compute_means(&data);
+		log::debug!("test_compute_means(): means → {:?}", means);
+		log::debug!("<<< Exiting test_compute_means()");
         assert_eq!(means, vec![4.0, 5.0, 6.0]);
     }
 
     #[test]
     fn test_power_iteration() {
+		log::debug!(">>> Entering test_power_iteration()");
         let matrix = vec![4.0, 1.0, 1.0, 1.0, 3.0, 1.0, 1.0, 1.0, 2.0];
 
         let (eigenvalue, eigenvector) = power_iteration(&matrix, 3, 1000, 1e-10);
@@ -320,6 +345,7 @@ mod test {
         assert_eq!(eigenvector.len(), 3);
 
         let norm = eigenvector.iter().map(|x| x * x).sum::<f64>().sqrt();
+		log::debug!("<<< Exiting test_power_iteration()");
         assert!((norm - 1.0).abs() < 1e-6);
     }
 }

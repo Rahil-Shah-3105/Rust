@@ -35,12 +35,15 @@ mod tests {
     use super::*;
     #[test]
     fn test_simple() {
+		log::debug!(">>> Entering test_simple()");
         let x = 385.65_f64 * 0.03_f64 * 5.0_f64;
         let y = 385.65_f64 * (1.0 + (0.03_f64 * 5.0_f64));
+		log::debug!("<<< Exiting test_simple()");
         assert_eq!(simple_interest(385.65_f64, 0.03_f64, 5.0_f64), (x, y));
     }
     #[test]
     fn test_compounding() {
+		log::debug!(">>> Entering test_compounding()");
         let x = 385.65_f64 * E.powf(0.03_f64 * 5.0_f64);
         assert_eq!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, None), x);
 
@@ -50,6 +53,7 @@ mod tests {
             y
         );
         assert!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, Some(-5.0_f64)).is_nan());
+		log::debug!("<<< Exiting test_compounding()");
         assert!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, Some(0.0_f64)).is_nan());
     }
 }

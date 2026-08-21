@@ -41,6 +41,7 @@ mod tests {
 
     #[test]
     fn test_gaussian_error_linear_unit() {
+		log::debug!(">>> Entering test_gaussian_error_linear_unit()");
         let test_vector = vec![-10., 2., -3., 4., -5., 10., 0.05];
         assert_eq!(
             gaussian_error_linear_unit(&test_vector),
@@ -53,6 +54,7 @@ mod tests {
                 10.0,
                 0.025996938238622008
             ]
+		log::debug!("<<< Exiting test_gaussian_error_linear_unit()");
         );
     }
 }

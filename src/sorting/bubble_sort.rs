@@ -24,26 +24,32 @@ mod tests {
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         //descending
         let mut ve1 = vec![6, 5, 4, 3, 2, 1];
         let cloned = ve1.clone();
         bubble_sort(&mut ve1);
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn ascending() {
+		log::debug!(">>> Entering ascending()");
         //pre-sorted
         let mut ve2 = vec![1, 2, 3, 4, 5, 6];
         let cloned = ve2.clone();
         bubble_sort(&mut ve2);
+		log::debug!("<<< Exiting ascending()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut ve3: Vec<usize> = vec![];
         let cloned = ve3.clone();
         bubble_sort(&mut ve3);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&ve3) && have_same_elements(&ve3, &cloned));
     }
 }

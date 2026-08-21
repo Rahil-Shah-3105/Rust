@@ -163,6 +163,7 @@ mod tests {
 
     #[test]
     fn simple_query_tests() {
+		log::debug!(">>> Entering simple_query_tests()");
         let rmq = RangeMinimumQuery::new(&[1, 3, 6, 123, 7, 235, 3, -4, 6, 2]);
 
         assert_eq!(rmq.get_range_min(1, 6), Ok(3));
@@ -173,11 +174,13 @@ mod tests {
         assert_eq!(
             rmq.get_range_min(1000, 1001),
             Err(RangeError::IndexOutOfBound)
+		log::debug!("<<< Exiting simple_query_tests()");
         );
     }
 
     #[test]
     fn float_query_tests() {
+		log::debug!(">>> Entering float_query_tests()");
         let rmq = RangeMinimumQuery::new(&[0.4, -2.3, 0.0, 234.22, 12.2, -3.0]);
 
         assert_eq!(rmq.get_range_min(0, 6), Ok(-3.0));
@@ -189,6 +192,7 @@ mod tests {
         assert_eq!(
             rmq.get_range_min(1000, 1001),
             Err(RangeError::IndexOutOfBound)
+		log::debug!("<<< Exiting float_query_tests()");
         );
     }
 }

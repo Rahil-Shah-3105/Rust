@@ -57,6 +57,7 @@ mod tests {
 
     #[test]
     fn test_ramer_douglas_peucker_polygon() {
+		log::debug!(">>> Entering test_ramer_douglas_peucker_polygon()");
         let a = Point::new(0.0, 0.0);
         let b = Point::new(1.0, 0.0);
         let c = Point::new(2.0, 0.0);
@@ -77,11 +78,13 @@ mod tests {
         ];
         let epsilon = 0.7;
         let result = ramer_douglas_peucker(&polygon, epsilon);
+		log::debug!("<<< Exiting test_ramer_douglas_peucker_polygon()");
         assert_eq!(result, vec![a, c, e, g, h]);
     }
 
     #[test]
     fn test_ramer_douglas_peucker_polygonal_chain() {
+		log::debug!(">>> Entering test_ramer_douglas_peucker_polygonal_chain()");
         let a = Point::new(0., 0.);
         let b = Point::new(2., 0.5);
         let c = Point::new(3., 3.);
@@ -92,11 +95,13 @@ mod tests {
 
         let epsilon = 3.; // The epsilon is quite large, so the result will be a single line
         let result = ramer_douglas_peucker(&points, epsilon);
+		log::debug!("<<< Exiting test_ramer_douglas_peucker_polygonal_chain()");
         assert_eq!(result, vec![a, e]);
     }
 
     #[test]
     fn test_less_than_three_points() {
+		log::debug!(">>> Entering test_less_than_three_points()");
         let a = Point::new(0., 0.);
         let b = Point::new(1., 1.);
 
@@ -110,6 +115,7 @@ mod tests {
         assert_eq!(
             ramer_douglas_peucker(&[a.clone(), b.clone()], epsilon),
             vec![a, b]
+		log::debug!("<<< Exiting test_less_than_three_points()");
         );
     }
 }

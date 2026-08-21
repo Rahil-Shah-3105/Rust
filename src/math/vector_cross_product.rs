@@ -28,71 +28,86 @@ mod tests {
 
     #[test]
     fn test_cross_product_and_magnitude_1() {
+		log::debug!(">>> Entering test_cross_product_and_magnitude_1()");
         // Test case with non-trivial vectors
         let vec1 = [1.0, 2.0, 3.0];
         let vec2 = [4.0, 5.0, 6.0];
 
         let cross_product = cross_product(vec1, vec2);
         let magnitude = vector_magnitude(cross_product);
+		log::debug!("test_cross_product_and_magnitude_1(): magnitude → {}", magnitude);
 
         // Check the expected results with a tolerance for floating-point comparisons
         assert_eq!(cross_product, [-3.0, 6.0, -3.0]);
+		log::debug!("<<< Exiting test_cross_product_and_magnitude_1()");
         assert!((magnitude - 7.34847).abs() < 1e-5);
     }
 
     #[test]
     fn test_cross_product_and_magnitude_2() {
+		log::debug!(">>> Entering test_cross_product_and_magnitude_2()");
         // Test case with orthogonal vectors
         let vec1 = [1.0, 0.0, 0.0];
         let vec2 = [0.0, 1.0, 0.0];
 
         let cross_product = cross_product(vec1, vec2);
         let magnitude = vector_magnitude(cross_product);
+		log::debug!("test_cross_product_and_magnitude_2(): magnitude → {}", magnitude);
 
         // Check the expected results
         assert_eq!(cross_product, [0.0, 0.0, 1.0]);
+		log::debug!("<<< Exiting test_cross_product_and_magnitude_2()");
         assert_eq!(magnitude, 1.0);
     }
 
     #[test]
     fn test_cross_product_and_magnitude_3() {
+		log::debug!(">>> Entering test_cross_product_and_magnitude_3()");
         // Test case with vectors along the axes
         let vec1 = [2.0, 0.0, 0.0];
         let vec2 = [0.0, 3.0, 0.0];
 
         let cross_product = cross_product(vec1, vec2);
         let magnitude = vector_magnitude(cross_product);
+		log::debug!("test_cross_product_and_magnitude_3(): magnitude → {}", magnitude);
 
         // Check the expected results
         assert_eq!(cross_product, [0.0, 0.0, 6.0]);
+		log::debug!("<<< Exiting test_cross_product_and_magnitude_3()");
         assert_eq!(magnitude, 6.0);
     }
 
     #[test]
     fn test_cross_product_and_magnitude_4() {
+		log::debug!(">>> Entering test_cross_product_and_magnitude_4()");
         // Test case with parallel vectors
         let vec1 = [1.0, 2.0, 3.0];
         let vec2 = [2.0, 4.0, 6.0];
 
         let cross_product = cross_product(vec1, vec2);
         let magnitude = vector_magnitude(cross_product);
+		log::debug!("test_cross_product_and_magnitude_4(): magnitude → {}", magnitude);
 
         // Check the expected results
         assert_eq!(cross_product, [0.0, 0.0, 0.0]);
+		log::debug!("<<< Exiting test_cross_product_and_magnitude_4()");
         assert_eq!(magnitude, 0.0);
     }
 
     #[test]
     fn test_cross_product_and_magnitude_5() {
+		log::debug!(">>> Entering test_cross_product_and_magnitude_5()");
         // Test case with zero vectors
         let vec1 = [0.0, 0.0, 0.0];
         let vec2 = [0.0, 0.0, 0.0];
 
         let cross_product = cross_product(vec1, vec2);
         let magnitude = vector_magnitude(cross_product);
+		log::debug!("test_cross_product_and_magnitude_5(): magnitude → {}", magnitude);
 
         // Check the expected results
         assert_eq!(cross_product, [0.0, 0.0, 0.0]);
+		log::debug!("<<< Exiting test_cross_product_and_magnitude_5()");
         assert_eq!(magnitude, 0.0);
     }
 }

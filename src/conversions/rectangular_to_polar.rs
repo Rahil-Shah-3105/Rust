@@ -36,12 +36,14 @@ mod tests {
 
     #[test]
     fn test_rectangular_to_polar() {
+		log::debug!(">>> Entering test_rectangular_to_polar()");
         assert_eq!(rectangular_to_polar(5.0, -5.0), (7.07, -45.0));
         assert_eq!(rectangular_to_polar(-1.0, 1.0), (1.41, 135.0));
         assert_eq!(rectangular_to_polar(-1.0, -1.0), (1.41, -135.0));
         assert_eq!(rectangular_to_polar(1e-10, 1e-10), (0.0, 45.0));
         assert_eq!(rectangular_to_polar(-1e-10, 1e-10), (0.0, 135.0));
         assert_eq!(rectangular_to_polar(9.75, 5.93), (11.41, 31.31));
+		log::debug!("<<< Exiting test_rectangular_to_polar()");
         assert_eq!(rectangular_to_polar(10000.0, 99999.0), (100497.76, 84.29));
     }
 }

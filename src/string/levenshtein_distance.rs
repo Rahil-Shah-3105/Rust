@@ -141,18 +141,22 @@ mod tests {
                 use super::*;
 
                 fn run_test_case(string1: &str, string2: &str, expected_distance: usize) {
+					log::debug!(">>> Entering run_test_case(string1={},string2={},expected_distance={})", string1, string2, expected_distance);
                     assert_eq!(super::super::$function(string1, string2), expected_distance);
                     assert_eq!(super::super::$function(string2, string1), expected_distance);
                     assert_eq!(super::super::$function(string1, string1), 0);
+					log::debug!("<<< Exiting run_test_case(string1={},string2={},expected_distance={})", string1, string2, expected_distance);
                     assert_eq!(super::super::$function(string2, string2), 0);
                 }
 
                 #[test]
                 fn test_levenshtein_distance() {
+					log::debug!(">>> Entering test_levenshtein_distance()");
                     for &(string1, string2, expected_distance) in
                         LEVENSHTEIN_DISTANCE_TEST_CASES.iter()
                     {
                         run_test_case(string1, string2, expected_distance);
+					log::debug!("<<< Exiting test_levenshtein_distance()");
                     }
                 }
             }

@@ -49,6 +49,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_linear_intepolation() {
+		log::debug!(">>> Entering test_linear_intepolation()");
         let point1 = (0.0, 0.0);
         let point2 = (1.0, 1.0);
         let point3 = (2.0, 2.0);
@@ -57,18 +58,22 @@ mod tests {
         let x2 = 1.5;
 
         let y1 = linear_interpolation(x1, point1, point2);
+		log::debug!("test_linear_intepolation(): y1 → {}", y1);
         let y2 = linear_interpolation(x2, point2, point3);
+		log::debug!("test_linear_intepolation(): y2 → {}", y2);
 
         assert_eq!(y1, x1);
         assert_eq!(y2, x2);
         assert_eq!(
             linear_interpolation(x1, point1, point2),
             linear_interpolation(x1, point2, point1)
+		log::debug!("<<< Exiting test_linear_intepolation()");
         );
     }
 
     #[test]
     fn test_lagrange_polynomial_interpolation() {
+		log::debug!(">>> Entering test_lagrange_polynomial_interpolation()");
         // defined values for x^2 function
         let defined_points = vec![(0.0, 0.0), (1.0, 1.0), (2.0, 4.0), (3.0, 9.0)];
 
@@ -85,6 +90,7 @@ mod tests {
         assert_eq!(
             lagrange_polynomial_interpolation(2.5, &defined_points),
             6.25
+		log::debug!("<<< Exiting test_lagrange_polynomial_interpolation()");
         );
     }
 }

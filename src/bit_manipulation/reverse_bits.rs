@@ -82,50 +82,64 @@ mod tests {
 
     #[test]
     fn test_reverse_bits_basic() {
+		log::debug!(">>> Entering test_reverse_bits_basic()");
         // Test case 1: 43261596 (00000010100101000001111010011100)
         // Expected: 964176192 (00111001011110000010100101000000)
+		log::debug!("<<< Exiting test_reverse_bits_basic()");
         assert_eq!(reverse_bits(43261596), 964176192);
     }
 
     #[test]
     fn test_reverse_bits_one() {
+		log::debug!(">>> Entering test_reverse_bits_one()");
         // Test case 2: 1 (00000000000000000000000000000001)
         // Expected: 2147483648 (10000000000000000000000000000000)
+		log::debug!("<<< Exiting test_reverse_bits_one()");
         assert_eq!(reverse_bits(1), 2147483648);
     }
 
     #[test]
     fn test_reverse_bits_all_ones() {
+		log::debug!(">>> Entering test_reverse_bits_all_ones()");
         // Test case 3: 4294967293 (11111111111111111111111111111101)
         // Expected: 3221225471 (10111111111111111111111111111111)
+		log::debug!("<<< Exiting test_reverse_bits_all_ones()");
         assert_eq!(reverse_bits(4294967293), 3221225471);
     }
 
     #[test]
     fn test_reverse_bits_zero() {
+		log::debug!(">>> Entering test_reverse_bits_zero()");
         // Test case 4: 0 (00000000000000000000000000000000)
         // Expected: 0 (00000000000000000000000000000000)
+		log::debug!("<<< Exiting test_reverse_bits_zero()");
         assert_eq!(reverse_bits(0), 0);
     }
 
     #[test]
     fn test_reverse_bits_max() {
+		log::debug!(">>> Entering test_reverse_bits_max()");
         // Test case 5: u32::MAX (11111111111111111111111111111111)
         // Expected: u32::MAX (11111111111111111111111111111111)
+		log::debug!("<<< Exiting test_reverse_bits_max()");
         assert_eq!(reverse_bits(u32::MAX), u32::MAX);
     }
 
     #[test]
     fn test_reverse_bits_alternating() {
+		log::debug!(">>> Entering test_reverse_bits_alternating()");
         // Test case 6: 2863311530 (10101010101010101010101010101010)
         // Expected: 1431655765 (01010101010101010101010101010101)
+		log::debug!("<<< Exiting test_reverse_bits_alternating()");
         assert_eq!(reverse_bits(2863311530), 1431655765);
     }
 
     #[test]
     fn test_reverse_bits_symmetric() {
+		log::debug!(">>> Entering test_reverse_bits_symmetric()");
         // Test case 7: reversing twice should give original number
         let n = 12345678;
+		log::debug!("<<< Exiting test_reverse_bits_symmetric()");
         assert_eq!(reverse_bits(reverse_bits(n)), n);
     }
 }

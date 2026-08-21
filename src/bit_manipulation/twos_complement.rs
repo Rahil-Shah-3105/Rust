@@ -76,62 +76,84 @@ mod tests {
 
     #[test]
     fn test_zero() {
+		log::debug!(">>> Entering test_zero()");
+		log::debug!("<<< Exiting test_zero()");
         assert_eq!(twos_complement(0).unwrap(), "0b0");
     }
 
     #[test]
     fn test_negative_one() {
+		log::debug!(">>> Entering test_negative_one()");
+		log::debug!("<<< Exiting test_negative_one()");
         assert_eq!(twos_complement(-1).unwrap(), "0b11");
     }
 
     #[test]
     fn test_negative_five() {
+		log::debug!(">>> Entering test_negative_five()");
+		log::debug!("<<< Exiting test_negative_five()");
         assert_eq!(twos_complement(-5).unwrap(), "0b1011");
     }
 
     #[test]
     fn test_negative_seventeen() {
+		log::debug!(">>> Entering test_negative_seventeen()");
+		log::debug!("<<< Exiting test_negative_seventeen()");
         assert_eq!(twos_complement(-17).unwrap(), "0b101111");
     }
 
     #[test]
     fn test_negative_two_hundred_seven() {
+		log::debug!(">>> Entering test_negative_two_hundred_seven()");
+		log::debug!("<<< Exiting test_negative_two_hundred_seven()");
         assert_eq!(twos_complement(-207).unwrap(), "0b100110001");
     }
 
     #[test]
     fn test_negative_small_values() {
+		log::debug!(">>> Entering test_negative_small_values()");
         assert_eq!(twos_complement(-2).unwrap(), "0b110");
         assert_eq!(twos_complement(-3).unwrap(), "0b101");
+		log::debug!("<<< Exiting test_negative_small_values()");
         assert_eq!(twos_complement(-4).unwrap(), "0b1100");
     }
 
     #[test]
     fn test_negative_larger_values() {
+		log::debug!(">>> Entering test_negative_larger_values()");
         assert_eq!(twos_complement(-128).unwrap(), "0b110000000");
         assert_eq!(twos_complement(-255).unwrap(), "0b100000001");
+		log::debug!("<<< Exiting test_negative_larger_values()");
         assert_eq!(twos_complement(-1000).unwrap(), "0b10000011000");
     }
 
     #[test]
     fn test_positive_number_returns_error() {
+		log::debug!(">>> Entering test_positive_number_returns_error()");
         let result = twos_complement(1);
         assert!(result.is_err());
+		log::debug!("test_positive_number_returns_error(): result → {:?}", result);
+		log::debug!("<<< Exiting test_positive_number_returns_error()");
         assert_eq!(result.unwrap_err(), "input must be a negative integer");
     }
 
     #[test]
     fn test_large_positive_number_returns_error() {
+		log::debug!(">>> Entering test_large_positive_number_returns_error()");
         let result = twos_complement(100);
         assert!(result.is_err());
+		log::debug!("test_large_positive_number_returns_error(): result → {:?}", result);
+		log::debug!("<<< Exiting test_large_positive_number_returns_error()");
         assert_eq!(result.unwrap_err(), "input must be a negative integer");
     }
 
     #[test]
     fn test_edge_case_negative_powers_of_two() {
+		log::debug!(">>> Entering test_edge_case_negative_powers_of_two()");
         assert_eq!(twos_complement(-8).unwrap(), "0b11000");
         assert_eq!(twos_complement(-16).unwrap(), "0b110000");
         assert_eq!(twos_complement(-32).unwrap(), "0b1100000");
+		log::debug!("<<< Exiting test_edge_case_negative_powers_of_two()");
         assert_eq!(twos_complement(-64).unwrap(), "0b11000000");
     }
 }

@@ -148,93 +148,127 @@ mod tests {
 
     #[test]
     fn test_all_rotations_banana() {
+		log::debug!(">>> Entering test_all_rotations_banana()");
         let rotations = all_rotations("^BANANA|");
         assert_eq!(rotations.len(), 8);
+		log::debug!("test_all_rotations_banana(): rotations → {:?}", rotations);
         assert_eq!(
             rotations,
             vec![
                 "^BANANA|", "BANANA|^", "ANANA|^B", "NANA|^BA", "ANA|^BAN", "NA|^BANA", "A|^BANAN",
                 "|^BANANA"
             ]
+		log::debug!("<<< Exiting test_all_rotations_banana()");
         );
     }
 
     #[test]
     fn test_all_rotations_casa() {
+		log::debug!(">>> Entering test_all_rotations_casa()");
         let rotations = all_rotations("a_asa_da_casa");
         assert_eq!(rotations.len(), 13);
+		log::debug!("test_all_rotations_casa(): rotations → {:?}", rotations);
         assert_eq!(rotations[0], "a_asa_da_casa");
         assert_eq!(rotations[1], "_asa_da_casaa");
+		log::debug!("<<< Exiting test_all_rotations_casa()");
         assert_eq!(rotations[12], "aa_asa_da_cas");
     }
 
     #[test]
     fn test_all_rotations_panama() {
+		log::debug!(">>> Entering test_all_rotations_panama()");
         let rotations = all_rotations("panamabanana");
         assert_eq!(rotations.len(), 12);
+		log::debug!("test_all_rotations_panama(): rotations → {:?}", rotations);
         assert_eq!(rotations[0], "panamabanana");
+		log::debug!("<<< Exiting test_all_rotations_panama()");
         assert_eq!(rotations[11], "apanamabanan");
     }
 
     #[test]
     fn test_bwt_transform_banana() {
+		log::debug!(">>> Entering test_bwt_transform_banana()");
         let result = bwt_transform("^BANANA");
         assert_eq!(result.bwt_string, "BNN^AAA");
+		log::debug!("test_bwt_transform_banana(): result → {:?}", result);
+		log::debug!("<<< Exiting test_bwt_transform_banana()");
         assert_eq!(result.idx_original_string, 6);
     }
 
     #[test]
     fn test_bwt_transform_casa() {
+		log::debug!(">>> Entering test_bwt_transform_casa()");
         let result = bwt_transform("a_asa_da_casa");
         assert_eq!(result.bwt_string, "aaaadss_c__aa");
+		log::debug!("test_bwt_transform_casa(): result → {:?}", result);
+		log::debug!("<<< Exiting test_bwt_transform_casa()");
         assert_eq!(result.idx_original_string, 3);
     }
 
     #[test]
     fn test_bwt_transform_panama() {
+		log::debug!(">>> Entering test_bwt_transform_panama()");
         let result = bwt_transform("panamabanana");
         assert_eq!(result.bwt_string, "mnpbnnaaaaaa");
+		log::debug!("test_bwt_transform_panama(): result → {:?}", result);
+		log::debug!("<<< Exiting test_bwt_transform_panama()");
         assert_eq!(result.idx_original_string, 11);
     }
 
     #[test]
     #[should_panic(expected = "Input string must not be empty")]
     fn test_bwt_transform_empty() {
+		log::debug!(">>> Entering test_bwt_transform_empty()");
+		log::debug!("<<< Exiting test_bwt_transform_empty()");
         bwt_transform("");
     }
 
     #[test]
     fn test_reverse_bwt_banana() {
+		log::debug!(">>> Entering test_reverse_bwt_banana()");
         let original = reverse_bwt("BNN^AAA", 6);
+		log::debug!("test_reverse_bwt_banana(): original → {}", original);
+    log::debug!("<<< Exiting test_reverse_bwt_banana()");
         assert_eq!(original, "^BANANA");
     }
 
     #[test]
     fn test_reverse_bwt_casa() {
+		log::debug!(">>> Entering test_reverse_bwt_casa()");
         let original = reverse_bwt("aaaadss_c__aa", 3);
+		log::debug!("test_reverse_bwt_casa(): original → {}", original);
+    log::debug!("<<< Exiting test_reverse_bwt_casa()");
         assert_eq!(original, "a_asa_da_casa");
     }
 
     #[test]
     fn test_reverse_bwt_panama() {
+		log::debug!(">>> Entering test_reverse_bwt_panama()");
         let original = reverse_bwt("mnpbnnaaaaaa", 11);
+		log::debug!("test_reverse_bwt_panama(): original → {}", original);
+    log::debug!("<<< Exiting test_reverse_bwt_panama()");
         assert_eq!(original, "panamabanana");
     }
 
     #[test]
     #[should_panic(expected = "BWT string must not be empty")]
     fn test_reverse_bwt_empty_string() {
+		log::debug!(">>> Entering test_reverse_bwt_empty_string()");
+		log::debug!("<<< Exiting test_reverse_bwt_empty_string()");
         reverse_bwt("", 0);
     }
 
     #[test]
     #[should_panic(expected = "Index must be less than BWT string length")]
     fn test_reverse_bwt_index_too_high() {
+		log::debug!(">>> Entering test_reverse_bwt_index_too_high()");
+		log::debug!("<<< Exiting test_reverse_bwt_index_too_high()");
         reverse_bwt("mnpbnnaaaaaa", 12);
     }
 
     #[test]
     fn test_bwt_roundtrip() {
+		log::debug!(">>> Entering test_bwt_roundtrip()");
         // Test that transform -> reverse gives back original string
         let test_strings = vec![
             "^BANANA",
@@ -246,27 +280,38 @@ mod tests {
 
         for s in test_strings {
             let result = bwt_transform(s);
+			log::debug!("test_bwt_roundtrip(): result → {:?}", result);
             let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+			log::debug!("test_bwt_roundtrip(): recovered → {}", recovered);
             assert_eq!(recovered, s, "Roundtrip failed for '{s}'");
+		log::debug!("<<< Exiting test_bwt_roundtrip()");
         }
     }
 
     #[test]
     fn test_single_character() {
+		log::debug!(">>> Entering test_single_character()");
         let result = bwt_transform("A");
         assert_eq!(result.bwt_string, "A");
+		log::debug!("test_single_character(): result → {:?}", result);
         assert_eq!(result.idx_original_string, 0);
 
         let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+		log::debug!("test_single_character(): recovered → {}", recovered);
+		log::debug!("<<< Exiting test_single_character()");
         assert_eq!(recovered, "A");
     }
 
     #[test]
     fn test_repeated_characters() {
+		log::debug!(">>> Entering test_repeated_characters()");
         let result = bwt_transform("AAAA");
         assert_eq!(result.bwt_string, "AAAA");
+		log::debug!("test_repeated_characters(): result → {:?}", result);
 
         let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+		log::debug!("test_repeated_characters(): recovered → {}", recovered);
+		log::debug!("<<< Exiting test_repeated_characters()");
         assert_eq!(recovered, "AAAA");
     }
 }

@@ -27,9 +27,11 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert_eq!(chinese_remainder_theorem(&[3, 5, 7], &[2, 3, 1]), Some(5));
         assert_eq!(chinese_remainder_theorem(&[1, 4, 6], &[3, 5, 7]), Some(34));
         assert_eq!(chinese_remainder_theorem(&[1, 4, 6], &[1, 2, 0]), None);
+		log::debug!("<<< Exiting basic()");
         assert_eq!(chinese_remainder_theorem(&[2, 5, 7], &[6, 9, 15]), None);
     }
 }

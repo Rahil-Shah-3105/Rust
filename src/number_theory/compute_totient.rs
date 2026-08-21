@@ -42,19 +42,25 @@ mod tests {
 
     #[test]
     fn test_1() {
+		log::debug!(">>> Entering test_1()");
         assert_eq!(
             compute_totient(12),
             vec![1, 1, 2, 2, 4, 2, 6, 4, 6, 4, 10, 4]
+		log::debug!("<<< Exiting test_1()");
         );
     }
 
     #[test]
     fn test_2() {
+		log::debug!(">>> Entering test_2()");
+		log::debug!("<<< Exiting test_2()");
         assert_eq!(compute_totient(7), vec![1, 1, 2, 2, 4, 2, 6]);
     }
 
     #[test]
     fn test_3() {
+		log::debug!(">>> Entering test_3()");
+		log::debug!("<<< Exiting test_3()");
         assert_eq!(compute_totient(4), vec![1, 1, 2, 2]);
     }
 }

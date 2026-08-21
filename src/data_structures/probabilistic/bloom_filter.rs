@@ -180,6 +180,7 @@ mod tests {
 
     impl Arbitrary for TestSet {
         fn arbitrary(g: &mut Gen) -> Self {
+			log::debug!(">>> Entering arbitrary()");
             let mut qty = usize::arbitrary(g) % 5_000;
             if qty < 50 {
                 qty += 50; // won't be perfectly uniformly distributed
@@ -190,12 +191,14 @@ mod tests {
                 to_insert.insert(i32::arbitrary(g));
                 to_test.push(i32::arbitrary(g));
             }
+			log::debug!("<<< Exiting arbitrary()");
             TestSet { to_insert, to_test }
         }
     }
 
     #[quickcheck]
     fn basic_filter_must_not_return_false_negative(TestSet { to_insert, to_test }: TestSet) {
+		log::debug!(">>> Entering basic_filter_must_not_return_false_negative()");
         let mut basic_filter = BasicBloomFilter::<10_000>::default();
         for item in &to_insert {
             basic_filter.insert(*item);
@@ -204,11 +207,13 @@ mod tests {
             if !basic_filter.contains(&other) {
                 assert!(!to_insert.contains(&other))
             }
+		log::debug!("<<< Exiting basic_filter_must_not_return_false_negative()");
         }
     }
 
     #[quickcheck]
     fn binary_filter_must_not_return_false_negative(TestSet { to_insert, to_test }: TestSet) {
+		log::debug!(">>> Entering binary_filter_must_not_return_false_negative()");
         let mut binary_filter = SingleBinaryBloomFilter::default();
         for item in &to_insert {
             binary_filter.insert(*item);
@@ -217,6 +222,7 @@ mod tests {
             if !binary_filter.contains(&other) {
                 assert!(!to_insert.contains(&other))
             }
+		log::debug!("<<< Exiting binary_filter_must_not_return_false_negative()");
         }
     }
 

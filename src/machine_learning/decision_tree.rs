@@ -350,6 +350,7 @@ mod tests {
 
     #[test]
     fn test_decision_tree_simple_xor() {
+		log::debug!(">>> Entering test_decision_tree_simple_xor()");
         let training_data = vec![
             (vec![0.0, 0.0], 0.0),
             (vec![0.0, 1.0], 1.0),
@@ -365,14 +366,17 @@ mod tests {
         // XOR is difficult for decision trees with small dataset
         // Just verify the model can make predictions (not necessarily perfect for XOR)
         let result = model.predict(&[0.0, 0.0]);
+		log::debug!("test_decision_tree_simple_xor(): result → {:?}", result);
         assert!(result.is_some());
 
         let result = model.predict(&[1.0, 1.0]);
+		log::debug!("<<< Exiting test_decision_tree_simple_xor()");
         assert!(result.is_some());
     }
 
     #[test]
     fn test_decision_tree_linearly_separable() {
+		log::debug!(">>> Entering test_decision_tree_linearly_separable()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -388,11 +392,13 @@ mod tests {
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[1.5, 1.5]), Some(0.0));
+		log::debug!("<<< Exiting test_decision_tree_linearly_separable()");
         assert_eq!(model.predict(&[5.5, 5.5]), Some(1.0));
     }
 
     #[test]
     fn test_decision_tree_one_feature() {
+		log::debug!(">>> Entering test_decision_tree_one_feature()");
         let training_data = vec![
             (vec![1.0], 0.0),
             (vec![2.0], 0.0),
@@ -408,11 +414,13 @@ mod tests {
         let model = model.unwrap();
 
         assert_eq!(model.predict(&[2.5]), Some(0.0));
+		log::debug!("<<< Exiting test_decision_tree_one_feature()");
         assert_eq!(model.predict(&[5.5]), Some(1.0));
     }
 
     #[test]
     fn test_decision_tree_multiple_classes() {
+		log::debug!(">>> Entering test_decision_tree_multiple_classes()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -429,25 +437,31 @@ mod tests {
 
         assert_eq!(model.predict(&[1.5, 1.5]), Some(0.0));
         assert_eq!(model.predict(&[5.5, 5.5]), Some(1.0));
+		log::debug!("<<< Exiting test_decision_tree_multiple_classes()");
         assert_eq!(model.predict(&[9.5, 9.5]), Some(2.0));
     }
 
     #[test]
     fn test_decision_tree_empty_training_data() {
+		log::debug!(">>> Entering test_decision_tree_empty_training_data()");
         let training_data = vec![];
         let model = DecisionTree::fit(training_data, 10, 2);
+		log::debug!("<<< Exiting test_decision_tree_empty_training_data()");
         assert_eq!(model, None);
     }
 
     #[test]
     fn test_decision_tree_empty_features() {
+		log::debug!(">>> Entering test_decision_tree_empty_features()");
         let training_data = vec![(vec![], 0.0), (vec![], 1.0)];
         let model = DecisionTree::fit(training_data, 10, 2);
+		log::debug!("<<< Exiting test_decision_tree_empty_features()");
         assert_eq!(model, None);
     }
 
     #[test]
     fn test_decision_tree_max_depth() {
+		log::debug!(">>> Entering test_decision_tree_max_depth()");
         let training_data = vec![
             (vec![0.0, 0.0], 0.0),
             (vec![0.0, 1.0], 1.0),
@@ -460,11 +474,14 @@ mod tests {
 
         let model = model.unwrap();
         let result = model.predict(&[0.5, 0.5]);
+		log::debug!("test_decision_tree_max_depth(): result → {:?}", result);
+		log::debug!("<<< Exiting test_decision_tree_max_depth()");
         assert!(result.is_some());
     }
 
     #[test]
     fn test_decision_tree_min_samples_split() {
+		log::debug!(">>> Entering test_decision_tree_min_samples_split()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -477,11 +494,14 @@ mod tests {
 
         let model = model.unwrap();
         let result = model.predict(&[1.5, 1.5]);
+		log::debug!("test_decision_tree_min_samples_split(): result → {:?}", result);
+		log::debug!("<<< Exiting test_decision_tree_min_samples_split()");
         assert!(result.is_some());
     }
 
     #[test]
     fn test_decision_tree_predict_batch() {
+		log::debug!(">>> Entering test_decision_tree_predict_batch()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -496,14 +516,17 @@ mod tests {
 
         let test_points = vec![vec![1.5, 1.5], vec![5.5, 5.5]];
         let predictions = model.predict_batch(&test_points);
+		log::debug!("test_decision_tree_predict_batch(): predictions → {:?}", predictions);
 
         assert_eq!(predictions.len(), 2);
         assert_eq!(predictions[0], Some(0.0));
+		log::debug!("<<< Exiting test_decision_tree_predict_batch()");
         assert_eq!(predictions[1], Some(1.0));
     }
 
     #[test]
     fn test_decision_tree_convenience_function() {
+		log::debug!(">>> Entering test_decision_tree_convenience_function()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![2.0, 2.0], 0.0),
@@ -512,6 +535,7 @@ mod tests {
         ];
 
         let result = decision_tree(training_data, vec![1.5, 1.5], 10, 2);
+		log::debug!("test_decision_tree_convenience_function(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let training_data = vec![
@@ -522,13 +546,16 @@ mod tests {
         ];
 
         let result = decision_tree(training_data, vec![5.5, 5.5], 10, 2);
+		log::debug!("<<< Exiting test_decision_tree_convenience_function()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_calculate_entropy() {
+		log::debug!(">>> Entering test_calculate_entropy()");
         let labels = vec![0.0, 0.0, 0.0, 0.0];
         let entropy = calculate_entropy(&labels);
+		log::debug!("test_calculate_entropy(): entropy → {}", entropy);
         assert!((entropy - 0.0).abs() < 1e-10);
 
         let labels = vec![0.0, 0.0, 1.0, 1.0];
@@ -537,17 +564,21 @@ mod tests {
 
         let labels = vec![0.0, 1.0, 2.0];
         let entropy = calculate_entropy(&labels);
+		log::debug!("<<< Exiting test_calculate_entropy()");
         assert!(entropy > 0.0 && entropy < 2.0);
     }
 
     #[test]
     fn test_get_majority_class() {
+		log::debug!(">>> Entering test_get_majority_class()");
         let labels = vec![0.0, 0.0, 1.0, 1.0, 0.0];
         let majority = get_majority_class(&labels);
+		log::debug!("test_get_majority_class(): majority → {}", majority);
         assert_eq!(majority, 0.0);
 
         let labels = vec![1.0, 1.0, 2.0, 2.0, 2.0];
         let majority = get_majority_class(&labels);
+		log::debug!("<<< Exiting test_get_majority_class()");
         assert_eq!(majority, 2.0);
     }
 }

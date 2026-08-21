@@ -140,6 +140,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_graph_kuhn() {
+		log::debug!(">>> Entering small_graph_kuhn()");
         let n1 = 6;
         let n2 = 6;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -166,10 +167,12 @@ mod tests {
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
             assert_eq!(i as i32, answer[g.mt2[i] as usize]);
+		log::debug!("<<< Exiting small_graph_kuhn()");
         }
     }
     #[test]
     fn small_graph_hopcroft() {
+		log::debug!(">>> Entering small_graph_hopcroft()");
         let n1 = 6;
         let n2 = 6;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -185,6 +188,7 @@ mod tests {
         g.add_edge(5, 4);
         g.add_edge(6, 6);
         let x = g.hopcroft_karp();
+		log::debug!("small_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 5);
         g.print_matching();
         let answer: Vec<i32> = vec![-1, 2, -1, 1, 3, 4, 6];
@@ -197,33 +201,40 @@ mod tests {
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
             assert_eq!(i as i32, answer[g.mt2[i] as usize]);
+		log::debug!("<<< Exiting small_graph_hopcroft()");
         }
     }
     #[test]
     fn super_small_graph_kuhn() {
+		log::debug!(">>> Entering super_small_graph_kuhn()");
         let n1 = 1;
         let n2 = 1;
         let mut g = BipartiteMatching::new(n1, n2);
         g.add_edge(1, 1);
         g.kuhn();
         g.print_matching();
+		log::debug!("<<< Exiting super_small_graph_kuhn()");
         assert_eq!(g.mt2[1], 1);
     }
     #[test]
     fn super_small_graph_hopcroft() {
+		log::debug!(">>> Entering super_small_graph_hopcroft()");
         let n1 = 1;
         let n2 = 1;
         let mut g = BipartiteMatching::new(n1, n2);
         g.add_edge(1, 1);
         let x = g.hopcroft_karp();
+		log::debug!("super_small_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 1);
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
+		log::debug!("<<< Exiting super_small_graph_hopcroft()");
         assert_eq!(g.mt1[1], 1);
     }
 
     #[test]
     fn only_one_vertex_graph_kuhn() {
+		log::debug!(">>> Entering only_one_vertex_graph_kuhn()");
         let n1 = 10;
         let n2 = 10;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -242,10 +253,12 @@ mod tests {
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
             assert_eq!(g.mt2[i], -1);
+		log::debug!("<<< Exiting only_one_vertex_graph_kuhn()");
         }
     }
     #[test]
     fn only_one_vertex_graph_hopcroft() {
+		log::debug!(">>> Entering only_one_vertex_graph_hopcroft()");
         let n1 = 10;
         let n2 = 10;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -260,11 +273,13 @@ mod tests {
         g.add_edge(9, 1);
         g.add_edge(10, 1);
         let x = g.hopcroft_karp();
+		log::debug!("only_one_vertex_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 1);
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
             assert_eq!(g.mt2[i], -1);
+		log::debug!("<<< Exiting only_one_vertex_graph_hopcroft()");
         }
     }
 }

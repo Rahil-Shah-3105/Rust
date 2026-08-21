@@ -37,31 +37,43 @@ mod tests {
 
     #[test]
     fn test_decimal_to_fraction_1() {
+		log::debug!(">>> Entering test_decimal_to_fraction_1()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_1()");
         assert_eq!(decimal_to_fraction(2.0), (2, 1));
     }
 
     #[test]
     fn test_decimal_to_fraction_2() {
+		log::debug!(">>> Entering test_decimal_to_fraction_2()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_2()");
         assert_eq!(decimal_to_fraction(89.45), (1789, 20));
     }
 
     #[test]
     fn test_decimal_to_fraction_3() {
+		log::debug!(">>> Entering test_decimal_to_fraction_3()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_3()");
         assert_eq!(decimal_to_fraction(67.), (67, 1));
     }
 
     #[test]
     fn test_decimal_to_fraction_4() {
+		log::debug!(">>> Entering test_decimal_to_fraction_4()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_4()");
         assert_eq!(decimal_to_fraction(45.2), (226, 5));
     }
 
     #[test]
     fn test_decimal_to_fraction_5() {
+		log::debug!(">>> Entering test_decimal_to_fraction_5()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_5()");
         assert_eq!(decimal_to_fraction(1.5), (3, 2));
     }
 
     #[test]
     fn test_decimal_to_fraction_6() {
+		log::debug!(">>> Entering test_decimal_to_fraction_6()");
+		log::debug!("<<< Exiting test_decimal_to_fraction_6()");
         assert_eq!(decimal_to_fraction(6.25), (25, 4));
     }
 }

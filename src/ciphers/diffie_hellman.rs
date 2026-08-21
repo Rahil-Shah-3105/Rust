@@ -295,18 +295,23 @@ mod tests {
 
     #[test]
     fn verify_invalid_pub_key() {
+		log::debug!(">>> Entering verify_invalid_pub_key()");
         let diffie = DiffieHellman::new(Some(14));
+		log::debug!("<<< Exiting verify_invalid_pub_key()");
         assert!(!diffie.is_valid_public_key("0000"));
     }
 
     #[test]
     fn verify_valid_pub_key() {
+		log::debug!(">>> Entering verify_valid_pub_key()");
         let diffie = DiffieHellman::new(Some(14));
+		log::debug!("<<< Exiting verify_valid_pub_key()");
         assert!(diffie.is_valid_public_key("EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245"));
     }
 
     #[test]
     fn verify_invalid_pub_key_same_as_prime() {
+		log::debug!(">>> Entering verify_invalid_pub_key_same_as_prime()");
         let diffie = DiffieHellman::new(Some(14));
         assert!(!diffie.is_valid_public_key(
             "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1\
@@ -320,25 +325,34 @@ mod tests {
         E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9\
         DE2BCBF6955817183995497CEA956AE515D2261898FA0510\
         15728E5A8AACAA68FFFFFFFFFFFFFFFF"
+		log::debug!("<<< Exiting verify_invalid_pub_key_same_as_prime()");
         ));
     }
 
     #[test]
     fn verify_key_exchange() {
+		log::debug!(">>> Entering verify_key_exchange()");
         let mut alice = DiffieHellman::new(Some(16));
         let mut bob = DiffieHellman::new(Some(16));
 
         // Private key not used, showed for illustrative purpose
         let _alice_private = alice.get_private_key();
+		log::debug!("verify_key_exchange(): _alice_private → {}", _alice_private);
         let alice_public = alice.generate_public_key();
+		log::debug!("verify_key_exchange(): alice_public → {}", alice_public);
 
         // Private key not used, showed for illustrative purpose
         let _bob_private = bob.get_private_key();
+		log::debug!("verify_key_exchange(): _bob_private → {}", _bob_private);
         let bob_public = bob.generate_public_key();
+		log::debug!("verify_key_exchange(): bob_public → {}", bob_public);
 
         // generating shared key using the struct implemenations
         let alice_shared = alice.generate_shared_key(bob_public.as_str()).unwrap();
+		log::debug!("verify_key_exchange(): alice_shared → {}", alice_shared);
         let bob_shared = bob.generate_shared_key(alice_public.as_str()).unwrap();
+		log::debug!("verify_key_exchange(): bob_shared → {}", bob_shared);
+		log::debug!("<<< Exiting verify_key_exchange()");
         assert_eq!(alice_shared, bob_shared);
     }
 }

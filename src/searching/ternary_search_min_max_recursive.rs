@@ -52,6 +52,7 @@ mod tests {
 
     #[test]
     fn finds_max_value() {
+		log::debug!(">>> Entering finds_max_value()");
         let expected = 4.0;
         let f = |x: f32| -x * x - 2.0 * x + 3.0;
 
@@ -60,12 +61,15 @@ mod tests {
         let absolute_precision = 0.0000001;
 
         let result = ternary_search_max_rec(f, start, end, absolute_precision);
+		log::debug!("finds_max_value(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_max_value()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_min_value() {
+		log::debug!(">>> Entering finds_min_value()");
         let expected = 2.0;
         let f = |x: f32| x * x - 2.0 * x + 3.0;
 
@@ -74,12 +78,15 @@ mod tests {
         let absolute_precision = 0.0000001;
 
         let result = ternary_search_min_rec(f, start, end, absolute_precision);
+		log::debug!("finds_min_value(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_min_value()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_max_value_2() {
+		log::debug!(">>> Entering finds_max_value_2()");
         let expected = 7.25;
         let f = |x: f32| -x.powi(2) + 3.0 * x + 5.0;
 
@@ -88,12 +95,15 @@ mod tests {
         let absolute_precision = 0.000001;
 
         let result = ternary_search_max_rec(f, start, end, absolute_precision);
+		log::debug!("finds_max_value_2(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_max_value_2()");
         assert_eq!(result, expected);
     }
 
     #[test]
     fn finds_min_value_2() {
+		log::debug!(">>> Entering finds_min_value_2()");
         let expected = 2.75;
         let f = |x: f32| x.powi(2) + 3.0 * x + 5.0;
 
@@ -102,7 +112,9 @@ mod tests {
         let absolute_precision = 0.000001;
 
         let result = ternary_search_min_rec(f, start, end, absolute_precision);
+		log::debug!("finds_min_value_2(): result → {}", result);
 
+		log::debug!("<<< Exiting finds_min_value_2()");
         assert_eq!(result, expected);
     }
 }

@@ -91,14 +91,18 @@ mod tests {
 
     #[test]
     fn test_aho_corasick() {
+		log::debug!(">>> Entering test_aho_corasick()");
         let dict = ["abc", "abcd", "xyz", "acxy", "efg", "123", "678", "6543"];
         let ac = AhoCorasick::new(&dict);
         let res = ac.search("ababcxyzacxy12678acxy6543");
+		log::debug!("test_aho_corasick(): res → {:?}", res);
+		log::debug!("<<< Exiting test_aho_corasick()");
         assert_eq!(res, ["abc", "xyz", "acxy", "678", "acxy", "6543",]);
     }
 
     #[test]
     fn test_aho_corasick_with_utf8() {
+		log::debug!(">>> Entering test_aho_corasick_with_utf8()");
         let dict = [
             "abc",
             "中文",
@@ -114,6 +118,7 @@ mod tests {
         ];
         let ac = AhoCorasick::new(&dict);
         let res = ac.search("ababc中xyzacxy12678acxyハンバーガー6543中文");
+		log::debug!("test_aho_corasick_with_utf8(): res → {:?}", res);
         assert_eq!(
             res,
             [
@@ -127,6 +132,7 @@ mod tests {
                 "6543",
                 "中文"
             ]
+		log::debug!("<<< Exiting test_aho_corasick_with_utf8()");
         );
     }
 }

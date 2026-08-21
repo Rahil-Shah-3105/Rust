@@ -27,11 +27,13 @@ mod tests {
 
     #[test]
     fn test_kld_loss() {
+		log::debug!(">>> Entering test_kld_loss()");
         let test_vector_actual = vec![1.346112, 1.337432, 1.246655];
         let test_vector = vec![1.033836, 1.082015, 1.117323];
         assert_eq!(
             kld_loss(&test_vector_actual, &test_vector),
             0.7752789394328498
+		log::debug!("<<< Exiting test_kld_loss()");
         );
     }
 }

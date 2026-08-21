@@ -41,46 +41,58 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
+		log::debug!("<<< Exiting empty()");
         assert_eq!(vigenere("", "test"), "");
     }
 
     #[test]
     fn vigenere_base() {
+		log::debug!(">>> Entering vigenere_base()");
         assert_eq!(
             vigenere("LoremIpsumDolorSitAmet", "base"),
             "MojinIhwvmVsmojWjtSqft"
+		log::debug!("<<< Exiting vigenere_base()");
         );
     }
 
     #[test]
     fn vigenere_with_spaces() {
+		log::debug!(">>> Entering vigenere_with_spaces()");
         assert_eq!(
             vigenere(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "spaces"
             ),
             "Ddrgq ahhuo hgddr uml sbev, ggfheexwljr chahxsemfy tlkx."
+		log::debug!("<<< Exiting vigenere_with_spaces()");
         );
     }
 
     #[test]
     fn vigenere_unicode_and_numbers() {
+		log::debug!(">>> Entering vigenere_unicode_and_numbers()");
         assert_eq!(
             vigenere("1 Lorem ⏳ ipsum dolor sit amet Ѡ", "unicode"),
             "1 Fbzga ⏳ ltmhu fcosl fqv opin Ѡ"
+		log::debug!("<<< Exiting vigenere_unicode_and_numbers()");
         );
     }
 
     #[test]
     fn vigenere_unicode_key() {
+		log::debug!(">>> Entering vigenere_unicode_key()");
         assert_eq!(
             vigenere("Lorem ipsum dolor sit amet", "😉 key!"),
             "Vspoq gzwsw hmvsp cmr kqcd"
+		log::debug!("<<< Exiting vigenere_unicode_key()");
         );
     }
 
     #[test]
     fn vigenere_empty_key() {
+		log::debug!(">>> Entering vigenere_empty_key()");
+		log::debug!("<<< Exiting vigenere_empty_key()");
         assert_eq!(vigenere("Lorem ipsum", ""), "Lorem ipsum");
     }
 }

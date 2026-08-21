@@ -20,6 +20,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert!(prime_check(3));
         assert!(prime_check(7));
         assert!(prime_check(11));
@@ -28,6 +29,7 @@ mod tests {
         assert!(!prime_check(4));
         assert!(!prime_check(6));
         assert!(!prime_check(21));
+		log::debug!("<<< Exiting basic()");
         assert!(!prime_check(2004));
     }
 }

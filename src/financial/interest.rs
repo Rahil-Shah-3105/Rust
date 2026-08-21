@@ -109,6 +109,7 @@ mod tests {
 
     #[test]
     fn test_simple_interest() {
+		log::debug!(">>> Entering test_simple_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -140,11 +141,13 @@ mod tests {
         assert_eq!(
             simple_interest(5500.0, 0.01, 0.0),
             Err("days_between_payments must be > 0")
+		log::debug!("<<< Exiting test_simple_interest()");
         );
     }
 
     #[test]
     fn test_compound_interest() {
+		log::debug!(">>> Entering test_compound_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -175,11 +178,13 @@ mod tests {
         assert_eq!(
             compound_interest(10000.0, 0.06, -4.0),
             Err("number_of_compounding_periods must be > 0")
+		log::debug!("<<< Exiting test_compound_interest()");
         );
     }
 
     #[test]
     fn test_apr_interest() {
+		log::debug!(">>> Entering test_apr_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -206,6 +211,7 @@ mod tests {
         assert_eq!(
             apr_interest(10000.0, 0.06, -4.0),
             Err("number_of_years must be > 0")
+		log::debug!("<<< Exiting test_apr_interest()");
         );
     }
 }

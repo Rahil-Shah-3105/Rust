@@ -133,15 +133,19 @@ mod tests {
 
     /// Assert that every node's rank is within `epsilon` of `expected`.
     fn assert_ranks_close(ranks: &HashMap<String, f64>, expected: &[(&str, f64)], epsilon: f64) {
+		log::debug!(">>> Entering assert_ranks_close(ranks={:?},expected={:?},epsilon={})", ranks, expected, epsilon);
         for (node, exp) in expected {
             let got = ranks[*node]; // Indexing panics automatically if the node is missing
             assert!((got - exp).abs() < epsilon);
+		log::debug!("<<< Exiting assert_ranks_close(ranks={:?},expected={:?},epsilon={})", ranks, expected, epsilon);
         }
     }
 
     /// All ranks must sum to 1.0 (within tolerance).
     fn assert_sum_to_one(ranks: &HashMap<String, f64>, epsilon: f64) {
+		log::debug!(">>> Entering assert_sum_to_one(ranks={:?},epsilon={})", ranks, epsilon);
         let total: f64 = ranks.values().sum();
+		log::debug!("<<< Exiting assert_sum_to_one(ranks={:?},epsilon={})", ranks, epsilon);
         assert!((total - 1.0).abs() < epsilon);
     }
 
@@ -151,8 +155,10 @@ mod tests {
 
     #[test]
     fn test_empty_graph() {
+		log::debug!(">>> Entering test_empty_graph()");
         let graph: HashMap<String, Vec<String>> = HashMap::new();
         let ranks = page_rank(&graph, 0.85, 100, 1e-5);
+		log::debug!("<<< Exiting test_empty_graph()");
         assert!(ranks.is_empty());
     }
 
@@ -162,6 +168,7 @@ mod tests {
 
     #[test]
     fn test_single_node_self_loop() {
+		log::debug!(">>> Entering test_single_node_self_loop()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["A".to_string()]);
 
@@ -170,6 +177,7 @@ mod tests {
         assert_eq!(ranks.len(), 1);
         // With a single node the rank must be 1.0
         assert!((ranks["A"] - 1.0).abs() < 1e-5);
+		log::debug!("<<< Exiting test_single_node_self_loop()");
         assert_sum_to_one(&ranks, 1e-5);
     }
 
@@ -179,6 +187,7 @@ mod tests {
 
     #[test]
     fn test_single_dangling_node() {
+		log::debug!(">>> Entering test_single_dangling_node()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec![]);
 
@@ -186,6 +195,7 @@ mod tests {
 
         assert_eq!(ranks.len(), 1);
         assert!((ranks["A"] - 1.0).abs() < 1e-5);
+		log::debug!("<<< Exiting test_single_dangling_node()");
         assert_sum_to_one(&ranks, 1e-5);
     }
 
@@ -196,6 +206,7 @@ mod tests {
 
     #[test]
     fn test_circular_graph_symmetry() {
+		log::debug!(">>> Entering test_circular_graph_symmetry()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string()]);
         graph.insert("B".to_string(), vec!["C".to_string()]);
@@ -209,6 +220,7 @@ mod tests {
             &[("A", expected), ("B", expected), ("C", expected)],
             1e-4,
         );
+		log::debug!("<<< Exiting test_circular_graph_symmetry()");
         assert_sum_to_one(&ranks, 1e-4);
     }
 
@@ -219,6 +231,7 @@ mod tests {
 
     #[test]
     fn test_two_nodes_bidirectional() {
+		log::debug!(">>> Entering test_two_nodes_bidirectional()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string()]);
         graph.insert("B".to_string(), vec!["A".to_string()]);
@@ -227,6 +240,7 @@ mod tests {
 
         assert_eq!(ranks.len(), 2);
         assert_ranks_close(&ranks, &[("A", 0.5), ("B", 0.5)], 1e-4);
+		log::debug!("<<< Exiting test_two_nodes_bidirectional()");
         assert_sum_to_one(&ranks, 1e-4);
     }
 
@@ -238,6 +252,7 @@ mod tests {
 
     #[test]
     fn test_star_graph_hub_wins() {
+		log::debug!(">>> Entering test_star_graph_hub_wins()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["Hub".to_string()]);
         graph.insert("B".to_string(), vec!["Hub".to_string()]);
@@ -253,6 +268,7 @@ mod tests {
         let hub_rank = ranks["Hub"];
         for spoke in &["A", "B", "C"] {
             assert!(hub_rank > ranks[*spoke]);
+		log::debug!("<<< Exiting test_star_graph_hub_wins()");
         }
     }
 
@@ -264,6 +280,7 @@ mod tests {
 
     #[test]
     fn test_linear_chain_rank_order() {
+		log::debug!(">>> Entering test_linear_chain_rank_order()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string()]);
         graph.insert("B".to_string(), vec!["C".to_string()]);
@@ -276,6 +293,7 @@ mod tests {
         assert_sum_to_one(&ranks, 1e-4);
 
         // With PageRank's dangling-node redistribution D should accumulate most rank
+		log::debug!("<<< Exiting test_linear_chain_rank_order()");
         assert!(ranks["D"] > ranks["A"]);
     }
 
@@ -287,6 +305,7 @@ mod tests {
 
     #[test]
     fn test_disconnected_components() {
+		log::debug!(">>> Entering test_disconnected_components()");
         let mut graph = HashMap::new();
         // Component 1
         graph.insert("A".to_string(), vec!["B".to_string()]);
@@ -304,6 +323,7 @@ mod tests {
         // Sanity: no rank is zero or negative
         for &rank in ranks.values() {
             assert!(rank > 0.0);
+		log::debug!("<<< Exiting test_disconnected_components()");
         }
     }
 
@@ -328,6 +348,7 @@ mod tests {
 
     #[test]
     fn test_analytical_three_node() {
+		log::debug!(">>> Entering test_analytical_three_node()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string(), "C".to_string()]);
         graph.insert("B".to_string(), vec!["C".to_string()]);
@@ -345,6 +366,7 @@ mod tests {
 
         // Analytically solved values (d=0.85, N=3):
         // PR(A) = 0.3878, PR(B) = 0.2148, PR(C) = 0.3974
+		log::debug!("<<< Exiting test_analytical_three_node()");
         assert_ranks_close(&ranks, &[("A", 0.3878), ("B", 0.2148), ("C", 0.3974)], 5e-3);
     }
 
@@ -356,6 +378,7 @@ mod tests {
 
     #[test]
     fn test_all_pointing_to_sink_redistributes() {
+		log::debug!(">>> Entering test_all_pointing_to_sink_redistributes()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["D".to_string()]);
         graph.insert("B".to_string(), vec!["D".to_string()]);
@@ -374,6 +397,7 @@ mod tests {
 
         // A, B, C are symmetric → equal ranks
         assert!((ranks["A"] - ranks["B"]).abs() < 1e-4);
+		log::debug!("<<< Exiting test_all_pointing_to_sink_redistributes()");
         assert!((ranks["B"] - ranks["C"]).abs() < 1e-4);
     }
 
@@ -384,6 +408,7 @@ mod tests {
 
     #[test]
     fn test_damping_factor_zero_gives_uniform() {
+		log::debug!(">>> Entering test_damping_factor_zero_gives_uniform()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string()]);
         graph.insert("B".to_string(), vec!["C".to_string()]);
@@ -405,6 +430,7 @@ mod tests {
 
     #[test]
     fn test_integer_nodes() {
+		log::debug!(">>> Entering test_integer_nodes()");
         let mut graph: HashMap<i32, Vec<i32>> = HashMap::new();
         graph.insert(1, vec![2]);
         graph.insert(2, vec![3]);
@@ -417,6 +443,7 @@ mod tests {
         for i in 1..=3 {
             let rank = ranks[&i];
             assert!((rank - expected).abs() < 1e-4);
+		log::debug!("<<< Exiting test_integer_nodes()");
         }
     }
 
@@ -426,6 +453,7 @@ mod tests {
 
     #[test]
     fn test_convergence_within_iterations() {
+		log::debug!(">>> Entering test_convergence_within_iterations()");
         let mut graph = HashMap::new();
         graph.insert("A".to_string(), vec!["B".to_string(), "C".to_string()]);
         graph.insert("B".to_string(), vec!["C".to_string()]);
@@ -438,6 +466,7 @@ mod tests {
         for node in &["A", "B", "C"] {
             let diff = (ranks_full[*node] - ranks_few[*node]).abs();
             assert!(diff < 0.005);
+		log::debug!("<<< Exiting test_convergence_within_iterations()");
         }
     }
 
@@ -448,6 +477,7 @@ mod tests {
 
     #[test]
     fn test_implicit_destination_node_present() {
+		log::debug!(">>> Entering test_implicit_destination_node_present()");
         let mut graph = HashMap::new();
         // "B" and "C" never appear as keys
         graph.insert("A".to_string(), vec!["B".to_string(), "C".to_string()]);
@@ -457,6 +487,7 @@ mod tests {
         assert!(ranks.contains_key("A"));
         assert!(ranks.contains_key("B"));
         assert!(ranks.contains_key("C"));
+		log::debug!("<<< Exiting test_implicit_destination_node_present()");
         assert_sum_to_one(&ranks, 1e-4);
     }
 
@@ -468,6 +499,7 @@ mod tests {
 
     #[test]
     fn test_complete_graph_uniform_ranks() {
+		log::debug!(">>> Entering test_complete_graph_uniform_ranks()");
         let nodes = vec!["A", "B", "C", "D", "E"];
         let mut graph: HashMap<String, Vec<String>> = HashMap::new();
 
@@ -489,6 +521,7 @@ mod tests {
             &nodes.iter().map(|&n| (n, expected)).collect::<Vec<_>>(),
             1e-4,
         );
+		log::debug!("<<< Exiting test_complete_graph_uniform_ranks()");
         assert_sum_to_one(&ranks, 1e-4);
     }
 
@@ -500,6 +533,7 @@ mod tests {
     // -----------------------------------------------------------------------
     #[test]
     fn test_pure_duplicate_edges_same_as_single() {
+		log::debug!(">>> Entering test_pure_duplicate_edges_same_as_single()");
         let mut graph_single = HashMap::new();
         graph_single.insert("A".to_string(), vec!["B".to_string()]);
         graph_single.insert("B".to_string(), vec!["A".to_string()]);
@@ -514,6 +548,7 @@ mod tests {
         for node in &["A", "B"] {
             let diff = (ranks_single[*node] - ranks_dup[*node]).abs();
             assert!(diff < 1e-4);
+		log::debug!("<<< Exiting test_pure_duplicate_edges_same_as_single()");
         }
     }
 
@@ -524,6 +559,7 @@ mod tests {
     // -----------------------------------------------------------------------
     #[test]
     fn test_mixed_duplicate_and_distinct_edges() {
+		log::debug!(">>> Entering test_mixed_duplicate_and_distinct_edges()");
         let mut graph = HashMap::new();
         // A points to B twice and C once — B and C should receive equal rank
         graph.insert(
@@ -536,6 +572,7 @@ mod tests {
         let ranks = page_rank(&graph, 0.85, 100, 1e-6);
 
         assert_sum_to_one(&ranks, 1e-4);
+		log::debug!("<<< Exiting test_mixed_duplicate_and_distinct_edges()");
         assert!((ranks["B"] - ranks["C"]).abs() < 1e-4);
     }
 
@@ -544,6 +581,7 @@ mod tests {
     // -----------------------------------------------------------------------
     #[test]
     fn test_duplicate_self_loop_with_other_edge() {
+		log::debug!(">>> Entering test_duplicate_self_loop_with_other_edge()");
         let mut graph_dup = HashMap::new();
         graph_dup.insert(
             "A".to_string(),
@@ -561,6 +599,7 @@ mod tests {
         for node in &["A", "B"] {
             let diff = (ranks_dup[*node] - ranks_clean[*node]).abs();
             assert!(diff < 1e-4);
+		log::debug!("<<< Exiting test_duplicate_self_loop_with_other_edge()");
         }
     }
 }

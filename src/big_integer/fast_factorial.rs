@@ -66,6 +66,7 @@ mod tests {
 
     #[test]
     fn fact() {
+		log::debug!(">>> Entering fact()");
         assert_eq!(fast_factorial(0), BigUint::one());
         assert_eq!(fast_factorial(1), BigUint::one());
         assert_eq!(fast_factorial(2), factorial_bigmath(2));
@@ -82,6 +83,7 @@ mod tests {
         assert_eq!(fast_factorial(52), factorial_bigmath(52));
         assert_eq!(fast_factorial(100), factorial_bigmath(100));
         assert_eq!(fast_factorial(1000), factorial_bigmath(1000));
+		log::debug!("<<< Exiting fact()");
         assert_eq!(fast_factorial(5000), factorial_bigmath(5000));
     }
 }

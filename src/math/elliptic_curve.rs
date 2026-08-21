@@ -261,23 +261,30 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_char_2_panic() {
+		log::debug!(">>> Entering test_char_2_panic()");
+		log::debug!("<<< Exiting test_char_2_panic()");
         EllipticCurve::<PrimeField<2>, -1, 1>::infinity();
     }
 
     #[test]
     #[should_panic]
     fn test_char_3_panic() {
+		log::debug!(">>> Entering test_char_3_panic()");
+		log::debug!("<<< Exiting test_char_3_panic()");
         EllipticCurve::<PrimeField<2>, -1, 1>::infinity();
     }
 
     #[test]
     #[should_panic]
     fn test_singular_panic() {
+		log::debug!(">>> Entering test_singular_panic()");
+		log::debug!("<<< Exiting test_singular_panic()");
         EllipticCurve::<PrimeField<5>, 0, 0>::infinity();
     }
 
     #[test]
     fn e_5_1_0_group_table() {
+		log::debug!(">>> Entering e_5_1_0_group_table()");
         type F = PrimeField<5>;
         type E = EllipticCurve<F, 1, 0>;
 
@@ -304,12 +311,14 @@ mod tests {
         assert_eq!(d + a, c);
         assert_eq!(d + b, d);
         assert_eq!(d + c, a);
+		log::debug!("<<< Exiting e_5_1_0_group_table()");
         assert_eq!(d + d, b);
     }
 
     #[test]
     fn group_law() {
         fn test<const P: u64>() {
+			log::debug!(">>> Entering test()");
             type E<const P: u64> = EllipticCurve<PrimeField<P>, 1, 0>;
 
             let o = E::<P>::infinity();
@@ -331,6 +340,9 @@ mod tests {
                         assert_eq!((p + q) + s, p + (q + s));
                     }
                 }
+			log::debug!("<<< Exiting test()");
+			log::debug!(">>> Entering test(expected={})", expected);
+			log::debug!("<<< Exiting test(expected={})", expected);
             }
         }
         test::<5>();
@@ -362,6 +374,7 @@ mod tests {
     #[test]
     #[ignore = "slow test for measuring time"]
     fn cardinality_perf() {
+		log::debug!(">>> Entering cardinality_perf()");
         const P: u64 = 1000003;
         type E = EllipticCurve<PrimeField<P>, 1, 0>;
         const EXPECTED: usize = 1000004;
@@ -371,23 +384,27 @@ mod tests {
         println!("cardinality_counted_table    : {:?}", now.elapsed());
         let now = Instant::now();
         assert_eq!(E::cardinality_counted_legendre(), EXPECTED);
+		log::debug!("<<< Exiting cardinality_perf()");
         println!("cardinality_counted_legendre : {:?}", now.elapsed());
     }
 
     #[test]
     #[ignore = "slow test showing that cadinality is not yet feasible to compute for a large prime"]
     fn cardinality_large_prime() {
+		log::debug!(">>> Entering cardinality_large_prime()");
         const P: u64 = 2_u64.pow(63) - 25; // largest prime fitting into i64
         type E = EllipticCurve<PrimeField<P>, 1, 0>;
         const EXPECTED: usize = 9223372041295506260;
 
         let now = Instant::now();
         assert_eq!(E::cardinality(), EXPECTED);
+		log::debug!("<<< Exiting cardinality_large_prime()");
         println!("cardinality: {:?}", now.elapsed());
     }
 
     #[test]
     fn test_points() {
+		log::debug!(">>> Entering test_points()");
         type F = PrimeField<5>;
         type E = EllipticCurve<F, 1, 0>;
 
@@ -400,6 +417,7 @@ mod tests {
         ]
         .into_iter()
         .collect();
+		log::debug!("<<< Exiting test_points()");
         assert_eq!(points, expected);
     }
 }

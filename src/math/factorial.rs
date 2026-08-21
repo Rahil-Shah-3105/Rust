@@ -39,30 +39,36 @@ mod tests {
     // Test cases for the iterative factorial function
     #[test]
     fn test_factorial() {
+		log::debug!(">>> Entering test_factorial()");
         assert_eq!(factorial(0), 1);
         assert_eq!(factorial(1), 1);
         assert_eq!(factorial(6), 720);
         assert_eq!(factorial(10), 3628800);
+		log::debug!("<<< Exiting test_factorial()");
         assert_eq!(factorial(20), 2432902008176640000);
     }
 
     // Test cases for the recursive factorial function
     #[test]
     fn test_factorial_recursive() {
+		log::debug!(">>> Entering test_factorial_recursive()");
         assert_eq!(factorial_recursive(0), 1);
         assert_eq!(factorial_recursive(1), 1);
         assert_eq!(factorial_recursive(6), 720);
         assert_eq!(factorial_recursive(10), 3628800);
+		log::debug!("<<< Exiting test_factorial_recursive()");
         assert_eq!(factorial_recursive(20), 2432902008176640000);
     }
 
     #[test]
     fn basic_factorial() {
+		log::debug!(">>> Entering basic_factorial()");
         assert_eq!(factorial_bigmath(10), BigUint::from_str("3628800").unwrap());
         assert_eq!(
             factorial_bigmath(50),
             BigUint::from_str("30414093201713378043612608166064768844377641568960512000000000000")
                 .unwrap()
+		log::debug!("<<< Exiting basic_factorial()");
         );
     }
 }

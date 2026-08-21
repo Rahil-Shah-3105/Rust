@@ -22,11 +22,13 @@ mod tests {
 
     #[test]
     fn validity_check() {
+		log::debug!(">>> Entering validity_check()");
         assert_eq!(sequence(10).unwrap(), [10, 5, 16, 8, 4, 2, 1]);
         assert_eq!(
             sequence(15).unwrap(),
             [15, 46, 23, 70, 35, 106, 53, 160, 80, 40, 20, 10, 5, 16, 8, 4, 2, 1]
         );
+		log::debug!("<<< Exiting validity_check()");
         assert_eq!(sequence(0).unwrap_or_else(|| vec![0]), [0]);
     }
 }

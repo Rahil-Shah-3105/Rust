@@ -128,6 +128,7 @@ mod tests {
 
     #[test]
     fn test_union_find() {
+		log::debug!(">>> Entering test_union_find()");
         let mut uf = (0..10).collect::<UnionFind<_>>();
         assert_eq!(uf.find(&0), Some(0));
         assert_eq!(uf.find(&1), Some(1));
@@ -168,11 +169,13 @@ mod tests {
         assert_eq!(uf.count(), 1);
         assert!(uf.is_same_set(&0, &9));
 
+		log::debug!("<<< Exiting test_union_find()");
         assert_eq!(None, uf.union(&0, &11));
     }
 
     #[test]
     fn test_spanning_tree() {
+		log::debug!(">>> Entering test_spanning_tree()");
         let mut uf = UnionFind::from_iter(["A", "B", "C", "D", "E", "F", "G"]);
         uf.union(&"A", &"B");
         uf.union(&"B", &"C");
@@ -195,11 +198,13 @@ mod tests {
         assert!(!uf.is_same_set(&"B", &"F"));
         assert!(!uf.is_same_set(&"E", &"A"));
         assert!(!uf.is_same_set(&"E", &"G"));
+		log::debug!("<<< Exiting test_spanning_tree()");
         assert_eq!(uf.count(), 3);
     }
 
     #[test]
     fn test_with_capacity() {
+		log::debug!(">>> Entering test_with_capacity()");
         let mut uf: UnionFind<i32> = UnionFind::with_capacity(5);
         uf.insert(0);
         uf.insert(1);
@@ -223,6 +228,7 @@ mod tests {
         assert!(uf.is_same_set(&0, &3));
         assert_eq!(uf.count(), 2);
 
+		log::debug!("<<< Exiting test_with_capacity()");
         assert_eq!(None, uf.union(&0, &10));
     }
 }

@@ -144,6 +144,7 @@ mod tests {
 
     #[test]
     fn test_stable_matching_scenario_1() {
+		log::debug!(">>> Entering test_stable_matching_scenario_1()");
         let men_preferences = HashMap::from([
             (
                 "A".to_string(),
@@ -175,6 +176,7 @@ mod tests {
         ]);
 
         let matches = stable_matching(&men_preferences, &women_preferences);
+		log::debug!("test_stable_matching_scenario_1(): matches → {:?}", matches);
 
         let expected_matches1 = HashMap::from([
             ("A".to_string(), "Y".to_string()),
@@ -188,20 +190,25 @@ mod tests {
             ("C".to_string(), "Z".to_string()),
         ]);
 
+		log::debug!("<<< Exiting test_stable_matching_scenario_1()");
         assert!(matches == expected_matches1 || matches == expected_matches2);
     }
 
     #[test]
     fn test_stable_matching_empty() {
+		log::debug!(">>> Entering test_stable_matching_empty()");
         let men_preferences = HashMap::new();
         let women_preferences = HashMap::new();
 
         let matches = stable_matching(&men_preferences, &women_preferences);
+		log::debug!("test_stable_matching_empty(): matches → {:?}", matches);
+		log::debug!("<<< Exiting test_stable_matching_empty()");
         assert!(matches.is_empty());
     }
 
     #[test]
     fn test_stable_matching_duplicate_preferences() {
+		log::debug!(">>> Entering test_stable_matching_duplicate_preferences()");
         let men_preferences = HashMap::from([
             ("A".to_string(), vec!["X".to_string(), "X".to_string()]), // Man with duplicate preferences
             ("B".to_string(), vec!["Y".to_string()]),
@@ -213,26 +220,32 @@ mod tests {
         ]);
 
         let matches = stable_matching(&men_preferences, &women_preferences);
+		log::debug!("test_stable_matching_duplicate_preferences(): matches → {:?}", matches);
         let expected_matches = HashMap::from([
             ("A".to_string(), "X".to_string()),
             ("B".to_string(), "Y".to_string()),
         ]);
 
+		log::debug!("<<< Exiting test_stable_matching_duplicate_preferences()");
         assert_eq!(matches, expected_matches);
     }
 
     #[test]
     fn test_stable_matching_single_pair() {
+		log::debug!(">>> Entering test_stable_matching_single_pair()");
         let men_preferences = HashMap::from([("A".to_string(), vec!["X".to_string()])]);
         let women_preferences = HashMap::from([("X".to_string(), vec!["A".to_string()])]);
 
         let matches = stable_matching(&men_preferences, &women_preferences);
+		log::debug!("test_stable_matching_single_pair(): matches → {:?}", matches);
         let expected_matches = HashMap::from([("A".to_string(), "X".to_string())]);
 
+		log::debug!("<<< Exiting test_stable_matching_single_pair()");
         assert_eq!(matches, expected_matches);
     }
     #[test]
     fn test_woman_prefers_new_man() {
+		log::debug!(">>> Entering test_woman_prefers_new_man()");
         let men_preferences = HashMap::from([
             (
                 "A".to_string(),
@@ -264,6 +277,7 @@ mod tests {
         ]);
 
         let matches = stable_matching(&men_preferences, &women_preferences);
+		log::debug!("test_woman_prefers_new_man(): matches → {:?}", matches);
 
         let expected_matches = HashMap::from([
             ("A".to_string(), "Y".to_string()),
@@ -271,6 +285,7 @@ mod tests {
             ("C".to_string(), "Z".to_string()),
         ]);
 
+		log::debug!("<<< Exiting test_woman_prefers_new_man()");
         assert_eq!(matches, expected_matches);
     }
 }

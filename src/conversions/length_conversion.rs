@@ -59,6 +59,7 @@ mod length_conversion_tests {
 
     #[test]
     fn zero_to_zero() {
+		log::debug!(">>> Entering zero_to_zero()");
         let units = vec![
             Millimeter, Centimeter, Meter, Kilometer, Inch, Foot, Yard, Mile,
         ];
@@ -67,11 +68,13 @@ mod length_conversion_tests {
             for u2 in units.clone() {
                 assert_eq!(length_conversion(0f64, u1, u2), 0f64);
             }
+		log::debug!("<<< Exiting zero_to_zero()");
         }
     }
 
     #[test]
     fn length_of_one_meter() {
+		log::debug!(">>> Entering length_of_one_meter()");
         let meter_in_different_units = HashMap::from([
             (Millimeter, 1000f64),
             (Centimeter, 100f64),
@@ -89,6 +92,7 @@ mod length_conversion_tests {
                     ) < 0.0000001
                 );
             }
+		log::debug!("<<< Exiting length_of_one_meter()");
         }
     }
 }

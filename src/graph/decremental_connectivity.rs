@@ -172,6 +172,7 @@ mod tests {
     //        4   5   6
     #[test]
     fn construction_test() {
+		log::debug!(">>> Entering construction_test()");
         let mut adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -189,11 +190,13 @@ mod tests {
         // add a cycle to the tree
         adjacent[2].insert(4);
         adjacent[4].insert(2);
+		log::debug!("<<< Exiting construction_test()");
         assert!(super::DecrementalConnectivity::new(adjacent.clone()).is_err());
     }
     #[test]
     #[should_panic(expected = "2 -> 4 exists")]
     fn non_bidirectional_test() {
+		log::debug!(">>> Entering non_bidirectional_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -207,12 +210,14 @@ mod tests {
         ];
 
         // should panic now since our graph is not bidirectional
+		log::debug!("<<< Exiting non_bidirectional_test()");
         super::DecrementalConnectivity::new(adjacent).unwrap();
     }
 
     #[test]
     #[should_panic(expected = "delete called on the edge (2, 4)")]
     fn delete_panic_test() {
+		log::debug!(">>> Entering delete_panic_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -225,11 +230,13 @@ mod tests {
             HashSet::from([7]),
         ];
         let mut dec_con = super::DecrementalConnectivity::new(adjacent).unwrap();
+		log::debug!("<<< Exiting delete_panic_test()");
         dec_con.delete(2, 4);
     }
 
     #[test]
     fn query_test() {
+		log::debug!(">>> Entering query_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -262,6 +269,7 @@ mod tests {
 
         let mut dec_con3 = super::DecrementalConnectivity::new(adjacent).unwrap();
         dec_con3.delete(1, 4);
+		log::debug!("<<< Exiting query_test()");
         assert!(!dec_con3.connected(4, 1).unwrap());
     }
 }

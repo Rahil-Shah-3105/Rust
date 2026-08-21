@@ -69,14 +69,18 @@ mod tests {
     use super::*;
     use std::fmt::Write;
     fn get_tag_hex(tag: &[u8]) -> String {
+		log::debug!(">>> Entering get_tag_hex(tag={:?})", tag);
         let mut result = String::new();
         for &x in tag {
+			log::debug!("get_tag_hex(tag={:?}): result → {}", tag, result);
             write!(result, "{x:02x}").unwrap();
         }
+		log::debug!("<<< Exiting get_tag_hex(tag={:?})", tag);
         result
     }
     #[test]
     fn basic_tv1() {
+		log::debug!(">>> Entering basic_tv1()");
         let mut mac = Poly1305::default();
         let key: [u8; 32] = [
             0x85, 0xd6, 0xbe, 0x78, 0x57, 0x55, 0x6d, 0x33, 0x7f, 0x44, 0x52, 0xfe, 0x42, 0xd5,
@@ -90,9 +94,11 @@ mod tests {
         tmp_buffer[..2].copy_from_slice(b"up");
         mac.add_msg(&tmp_buffer, 2);
         let result = mac.get_tag();
+		log::debug!("basic_tv1(): result → {:?}", result);
         assert_eq!(
             get_tag_hex(result.as_slice()),
             "a8061dc1305136c6c22b8baf0c0127a9"
+		log::debug!("<<< Exiting basic_tv1()");
         );
     }
 }

@@ -99,8 +99,11 @@ mod tests {
 
     #[test]
     fn test_disjoint_set_union() {
+		log::debug!(">>> Entering test_disjoint_set_union()");
         let mut dsu = DisjointSetUnion::new(10);
 
+		let __log_start = std::time::Instant::now();
+		log::info!("test_disjoint_set_union(): update query executed in {} ms", __log_start.elapsed().as_millis());
         dsu.merge(1, 2);
         dsu.merge(2, 3);
         dsu.merge(1, 9);
@@ -143,6 +146,7 @@ mod tests {
         assert_eq!(dsu.find_set(10), dsu.find_set(6));
         assert_eq!(dsu.find_set(10), dsu.find_set(7));
         assert_eq!(dsu.find_set(10), dsu.find_set(8));
+		log::debug!("<<< Exiting test_disjoint_set_union()");
         assert_eq!(dsu.find_set(10), dsu.find_set(9));
     }
 }

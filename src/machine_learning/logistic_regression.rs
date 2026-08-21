@@ -49,6 +49,7 @@ mod test {
 
     #[test]
     fn test_logistic_regression_simple() {
+		log::debug!(">>> Entering test_logistic_regression_simple()");
         let data = vec![
             (vec![0.0], 0.0),
             (vec![1.0], 0.0),
@@ -59,15 +60,18 @@ mod test {
         ];
 
         let result = logistic_regression(data, 10000, 0.05);
+		log::debug!("test_logistic_regression_simple(): result → {:?}", result);
         assert!(result.is_some());
 
         let params = result.unwrap();
         assert!((params[0] + 17.65).abs() < 1.0);
+		log::debug!("<<< Exiting test_logistic_regression_simple()");
         assert!((params[1] - 7.13).abs() < 1.0);
     }
 
     #[test]
     fn test_logistic_regression_extreme_data() {
+		log::debug!(">>> Entering test_logistic_regression_extreme_data()");
         let data = vec![
             (vec![-100.0], 0.0),
             (vec![-10.0], 0.0),
@@ -77,16 +81,21 @@ mod test {
         ];
 
         let result = logistic_regression(data, 10000, 0.05);
+		log::debug!("test_logistic_regression_extreme_data(): result → {:?}", result);
         assert!(result.is_some());
 
         let params = result.unwrap();
         assert!((params[0] + 6.20).abs() < 1.0);
+		log::debug!("<<< Exiting test_logistic_regression_extreme_data()");
         assert!((params[1] - 5.5).abs() < 1.0);
     }
 
     #[test]
     fn test_logistic_regression_no_data() {
+		log::debug!(">>> Entering test_logistic_regression_no_data()");
         let result = logistic_regression(vec![], 5000, 0.1);
+		log::debug!("test_logistic_regression_no_data(): result → {:?}", result);
+    log::debug!("<<< Exiting test_logistic_regression_no_data()");
         assert_eq!(result, None);
     }
 }

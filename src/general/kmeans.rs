@@ -106,6 +106,7 @@ mod test {
 
     #[test]
     fn easy_univariate_clustering() {
+		log::debug!(">>> Entering easy_univariate_clustering()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1],
             vec![-1.2],
@@ -117,11 +118,14 @@ mod test {
             vec![1.4],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_univariate_clustering(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_univariate_clustering()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1]);
     }
 
     #[test]
     fn easy_univariate_clustering_odd_number_of_data() {
+		log::debug!(">>> Entering easy_univariate_clustering_odd_number_of_data()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1],
             vec![-1.2],
@@ -134,11 +138,14 @@ mod test {
             vec![1.5],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_univariate_clustering_odd_number_of_data(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_univariate_clustering_odd_number_of_data()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1, 1]);
     }
 
     #[test]
     fn easy_bivariate_clustering() {
+		log::debug!(">>> Entering easy_bivariate_clustering()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-1.1, 0.2],
             vec![-1.2, 0.3],
@@ -150,11 +157,14 @@ mod test {
             vec![1.4, -1.3],
         ];
         let clustering = kmeans(xs, 2);
+		log::debug!("easy_bivariate_clustering(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting easy_bivariate_clustering()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 1, 1, 1, 1]);
     }
 
     #[test]
     fn high_dims() {
+		log::debug!(">>> Entering high_dims()");
         let xs: Vec<Vec<f64>> = vec![
             vec![-2.7825343, -1.7604825, -5.5550113, -2.9752946, -2.7874138],
             vec![-2.9847919, -3.8209332, -2.1531757, -2.2710119, -2.3582877],
@@ -169,6 +179,8 @@ mod test {
         ];
 
         let clustering = kmeans(xs, 2);
+		log::debug!("high_dims(): clustering → {:?}", clustering);
+		log::debug!("<<< Exiting high_dims()");
         assert_eq!(clustering, vec![0, 0, 0, 0, 0, 1, 1, 1, 1, 1]);
     }
 }

@@ -18,27 +18,36 @@ mod tests {
 
     #[test]
     fn test_npv_basic() {
+		log::debug!(">>> Entering test_npv_basic()");
         let cash_flows = vec![-1000.0, 300.0, 400.0, -50.0];
         let rate = 0.10;
         let result = npv(&cash_flows, rate);
+		log::debug!("test_npv_basic(): result → {}", result);
         // Calculated value ≈ -434.25
+		log::debug!("<<< Exiting test_npv_basic()");
         assert!((result - (-434.25)).abs() < 0.05); // Allow small margin of error
     }
 
     #[test]
     fn test_npv_zero_rate() {
+		log::debug!(">>> Entering test_npv_zero_rate()");
         let cash_flows = vec![100.0, 200.0, -50.0];
         let rate = 0.0;
         let result = npv(&cash_flows, rate);
+		log::debug!("test_npv_zero_rate(): result → {}", result);
+		log::debug!("<<< Exiting test_npv_zero_rate()");
         assert!((result - 250.0).abs() < 0.05);
     }
 
     #[test]
     fn test_npv_empty() {
+		log::debug!(">>> Entering test_npv_empty()");
         // For empty cash flows: NPV should be 0
         let cash_flows: Vec<f64> = vec![];
         let rate = 0.05;
         let result = npv(&cash_flows, rate);
+		log::debug!("test_npv_empty(): result → {}", result);
+		log::debug!("<<< Exiting test_npv_empty()");
         assert_eq!(result, 0.0);
     }
 }

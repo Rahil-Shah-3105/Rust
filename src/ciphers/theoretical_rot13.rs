@@ -24,20 +24,28 @@ mod tests {
 
     #[test]
     fn test_single_letter() {
+		log::debug!(">>> Entering test_single_letter()");
+		log::debug!("<<< Exiting test_single_letter()");
         assert_eq!("n", theoretical_rot13("a"));
     }
     #[test]
     fn test_bunch_of_letters() {
+		log::debug!(">>> Entering test_bunch_of_letters()");
+		log::debug!("<<< Exiting test_bunch_of_letters()");
         assert_eq!("nop op", theoretical_rot13("abc bc"));
     }
 
     #[test]
     fn test_non_ascii() {
+		log::debug!(">>> Entering test_non_ascii()");
+		log::debug!("<<< Exiting test_non_ascii()");
         assert_eq!("😀ab", theoretical_rot13("😀no"));
     }
 
     #[test]
     fn test_twice() {
+		log::debug!(">>> Entering test_twice()");
+		log::debug!("<<< Exiting test_twice()");
         assert_eq!("abcd", theoretical_rot13(&theoretical_rot13("abcd")));
     }
 }

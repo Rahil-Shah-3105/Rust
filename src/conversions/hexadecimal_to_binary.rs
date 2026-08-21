@@ -40,28 +40,40 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
         let input = "";
         let expected = Ok("".to_string());
+		log::debug!("test_empty_string(): input → {}", input);
+    log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(hexadecimal_to_binary(input), expected);
     }
 
     #[test]
     fn test_hexadecimal() {
+		log::debug!(">>> Entering test_hexadecimal()");
         let input = "1a2";
         let expected = Ok("000110100010".to_string());
+		log::debug!("test_hexadecimal(): input → {}", input);
+    log::debug!("<<< Exiting test_hexadecimal()");
         assert_eq!(hexadecimal_to_binary(input), expected);
     }
     #[test]
     fn test_hexadecimal2() {
+		log::debug!(">>> Entering test_hexadecimal2()");
         let input = "1b3";
         let expected = Ok("000110110011".to_string());
+		log::debug!("test_hexadecimal2(): input → {}", input);
+    log::debug!("<<< Exiting test_hexadecimal2()");
         assert_eq!(hexadecimal_to_binary(input), expected);
     }
 
     #[test]
     fn test_invalid_hexadecimal() {
+		log::debug!(">>> Entering test_invalid_hexadecimal()");
         let input = "1g3";
         let expected = Err("Invalid".to_string());
+		log::debug!("test_invalid_hexadecimal(): input → {}", input);
+    log::debug!("<<< Exiting test_invalid_hexadecimal()");
         assert_eq!(hexadecimal_to_binary(input), expected);
     }
 }

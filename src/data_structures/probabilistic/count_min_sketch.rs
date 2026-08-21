@@ -161,6 +161,7 @@ mod tests {
 
     #[test]
     fn hash_functions_should_hash_differently() {
+		log::debug!(">>> Entering hash_functions_should_hash_differently()");
         let mut sketch: HashCountMinSketch<&str, 50, 50> = HashCountMinSketch::default(); // use a big DEPTH
         sketch.increment("something");
         // We want to check that our hash functions actually produce different results, so we'll store the indices where we encounter a count=1 in a set
@@ -175,11 +176,13 @@ mod tests {
             indices_of_ones.insert(ones[0]);
         }
         // Given the parameters (WIDTH = 50, DEPTH = 50) it's extremely unlikely that all hash functions hash to the same index
+		log::debug!("<<< Exiting hash_functions_should_hash_differently()");
         assert!(indices_of_ones.len() > 1); // but we want to avoid a bug where all hash functions would produce the same hash (or hash to the same index)
     }
 
     #[test]
     fn inspect_counts() {
+		log::debug!(">>> Entering inspect_counts()");
         let mut sketch: HashCountMinSketch<&str, 5, 7> = HashCountMinSketch::default();
         sketch.increment("test");
         // Inspect internal state:
@@ -198,6 +201,7 @@ mod tests {
         }
 
         // This one is actually deterministic
+		log::debug!("<<< Exiting inspect_counts()");
         assert_eq!(2, sketch.get_count("test"));
     }
 
@@ -212,20 +216,25 @@ mod tests {
 
     impl Arbitrary for TestItem {
         fn arbitrary(g: &mut Gen) -> Self {
+			log::debug!(">>> Entering arbitrary()");
             let str_len = u8::arbitrary(g) % MAX_STR_LEN;
             let mut str = String::with_capacity(str_len as usize);
             for _ in 0..str_len {
                 str.push(char::arbitrary(g));
             }
             let count = usize::arbitrary(g) % MAX_COUNT;
+			log::debug!("<<< Exiting arbitrary()");
             TestItem { item: str, count }
         }
     }
 
     #[quickcheck_macros::quickcheck]
     fn must_not_understimate_count(test_items: Vec<TestItem>) {
+		log::debug!(">>> Entering must_not_understimate_count(test_items={:?})", test_items);
         let test_items = test_items.into_iter().collect::<HashSet<_>>(); // remove duplicated (would lead to weird counts)
         let n = test_items.len();
+		log::debug!("must_not_understimate_count(test_items={:?}): n → {}", test_items, n);
+		log::debug!("must_not_understimate_count(test_items={:?}): test_items → {:?}", test_items, test_items);
         let mut sketch: HashCountMinSketch<String, 50, 10> = HashCountMinSketch::default();
         let mut exact_count = 0;
         for TestItem { item, count } in &test_items {
@@ -233,6 +242,7 @@ mod tests {
         }
         for TestItem { item, count } in test_items {
             let stored_count = sketch.get_count(item);
+			log::debug!("must_not_understimate_count(test_items={:?}): stored_count → {}", test_items, stored_count);
             assert!(stored_count >= count);
             if count == stored_count {
                 exact_count += 1;
@@ -242,6 +252,7 @@ mod tests {
             // if n is too short, the stat isn't really relevant
             let exact_ratio = exact_count as f64 / n as f64;
             assert!(exact_ratio > 0.7); // the proof is quite hard, but this should be OK
+		log::debug!("<<< Exiting must_not_understimate_count(test_items={:?})", test_items);
         }
     }
 }

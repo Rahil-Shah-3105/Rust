@@ -340,6 +340,7 @@ mod tests {
 
     #[test]
     fn test_linear_kernel_simple() {
+		log::debug!(">>> Entering test_linear_kernel_simple()");
         let observations = vec![
             array![0.0, 1.0],
             array![0.0, 2.0],
@@ -353,11 +354,13 @@ mod tests {
 
         assert_eq!(svc.predict(&array![0.0, 1.0]), 1.0);
         assert_eq!(svc.predict(&array![1.0, 1.0]), -1.0);
+		log::debug!("<<< Exiting test_linear_kernel_simple()");
         assert_eq!(svc.predict(&array![2.0, 2.0]), -1.0);
     }
 
     #[test]
     fn test_rbf_kernel() {
+		log::debug!(">>> Entering test_rbf_kernel()");
         let observations = vec![
             array![0.0, 0.0],
             array![1.0, 1.0],
@@ -371,45 +374,57 @@ mod tests {
 
         // The RBF kernel should handle this XOR-like pattern better than linear
         assert_eq!(svc.predict(&array![0.0, 0.0]), 1.0);
+		log::debug!("<<< Exiting test_rbf_kernel()");
         assert_eq!(svc.predict(&array![1.0, 1.0]), 1.0);
     }
 
     #[test]
     fn test_invalid_gamma() {
+		log::debug!(">>> Entering test_invalid_gamma()");
         let result = SVC::new(Kernel::Rbf { gamma: -1.0 }, 1.0);
         assert!(matches!(result, Err(SVCError::InvalidGamma)));
 
         let result = SVC::new(Kernel::Rbf { gamma: 0.0 }, 1.0);
+		log::debug!("<<< Exiting test_invalid_gamma()");
         assert!(matches!(result, Err(SVCError::InvalidGamma)));
     }
 
     #[test]
     fn test_invalid_regularization() {
+		log::debug!(">>> Entering test_invalid_regularization()");
         let result = SVC::new(Kernel::Linear, 0.0);
         assert!(matches!(result, Err(SVCError::InvalidRegularization)));
 
         let result = SVC::new(Kernel::Linear, -1.0);
+		log::debug!("<<< Exiting test_invalid_regularization()");
         assert!(matches!(result, Err(SVCError::InvalidRegularization)));
     }
 
     #[test]
     fn test_empty_data() {
+		log::debug!(">>> Entering test_empty_data()");
         let mut svc = SVC::new(Kernel::Linear, 1.0).unwrap();
         let result = svc.fit(&[], &Array1::zeros(0));
+		log::debug!("test_empty_data(): result → {:?}", result);
+		log::debug!("<<< Exiting test_empty_data()");
         assert!(matches!(result, Err(SVCError::EmptyData)));
     }
 
     #[test]
     fn test_mismatched_dimensions() {
+		log::debug!(">>> Entering test_mismatched_dimensions()");
         let mut svc = SVC::new(Kernel::Linear, 1.0).unwrap();
         let observations = vec![array![1.0, 2.0]];
         let classes = array![1.0, -1.0]; // Too many classes
         let result = svc.fit(&observations, &classes);
+		log::debug!("test_mismatched_dimensions(): result → {:?}", result);
+		log::debug!("<<< Exiting test_mismatched_dimensions()");
         assert!(matches!(result, Err(SVCError::MismatchedDimensions)));
     }
 
     #[test]
     fn test_support_vectors_count() {
+		log::debug!(">>> Entering test_support_vectors_count()");
         let observations = vec![
             array![0.0, 1.0],
             array![0.0, 2.0],
@@ -423,6 +438,7 @@ mod tests {
 
         // Should have at least some support vectors
         assert!(svc.n_support_vectors() > 0);
+		log::debug!("<<< Exiting test_support_vectors_count()");
         assert!(svc.n_support_vectors() <= observations.len());
     }
 }

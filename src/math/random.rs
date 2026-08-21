@@ -120,6 +120,7 @@ mod tests {
 
     #[test]
     fn no_birthday() {
+		log::debug!(">>> Entering no_birthday()");
         // If the distribution is not almost uniform, the probability of
         // birthday paradox increases. For n=2^32 and k=1e5, the probability
         // of not having a collision is about (1 - (k+1)/n) ^ (k/2) which is
@@ -138,6 +139,7 @@ mod tests {
         assert_eq!(pcg2.get_u32(), randoms[0]);
         randoms.sort_unstable();
         randoms.dedup();
+		log::debug!("<<< Exiting no_birthday()");
         assert_eq!(randoms.len(), numbers);
     }
 }

@@ -28,11 +28,13 @@ mod tests {
 
     #[test]
     fn test1() {
+		log::debug!(">>> Entering test1()");
         let mut arr1 = [3, 3, 3, 1, 2, 6, 5, 5, 5, 4, 1, 6, 3];
         pigeonhole_sort(&mut arr1);
         assert!(is_sorted(&arr1));
         let mut arr2 = [6, 5, 4, 3, 2, 1];
         pigeonhole_sort(&mut arr2);
+		log::debug!("<<< Exiting test1()");
         assert!(is_sorted(&arr2));
     }
 }

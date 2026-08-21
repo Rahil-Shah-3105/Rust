@@ -19,109 +19,142 @@ mod tests {
 
     #[test]
     fn test_simpsons_integration() {
+		log::debug!(">>> Entering test_simpsons_integration()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_simpsons_integration(): result → {}", result);
+		log::debug!("<<< Exiting test_simpsons_integration()");
         assert!((result - 1.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_error() {
+		log::debug!(">>> Entering test_error()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_error(): result → {}", result);
         let error = (1.0 / 3.0 - result).abs();
+		log::debug!("<<< Exiting test_error()");
         assert!(error < 1e-6);
     }
 
     #[test]
     fn test_convergence() {
+		log::debug!(">>> Entering test_convergence()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result1 = simpsons_integration(f, a, b, n);
+		log::debug!("test_convergence(): result1 → {}", result1);
         let result2 = simpsons_integration(f, a, b, 2 * n);
+		log::debug!("test_convergence(): result2 → {}", result2);
         let result3 = simpsons_integration(f, a, b, 4 * n);
+		log::debug!("test_convergence(): result3 → {}", result3);
         let result4 = simpsons_integration(f, a, b, 8 * n);
+		log::debug!("test_convergence(): result4 → {}", result4);
         assert!((result1 - result2).abs() < 1e-6);
         assert!((result2 - result3).abs() < 1e-6);
+		log::debug!("<<< Exiting test_convergence()");
         assert!((result3 - result4).abs() < 1e-6);
     }
 
     #[test]
     fn test_negative() {
+		log::debug!(">>> Entering test_negative()");
         let f = |x: f64| -x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_negative(): result → {}", result);
+		log::debug!("<<< Exiting test_negative()");
         assert!((result + 1.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_bound() {
+		log::debug!(">>> Entering test_non_zero_lower_bound()");
         let f = |x: f64| x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_non_zero_lower_bound(): result → {}", result);
+		log::debug!("<<< Exiting test_non_zero_lower_bound()");
         assert!((result - 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_upper_bound() {
+		log::debug!(">>> Entering test_non_zero_upper_bound()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_non_zero_upper_bound(): result → {}", result);
+		log::debug!("<<< Exiting test_non_zero_upper_bound()");
         assert!((result - 8.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_and_upper_bound() {
+		log::debug!(">>> Entering test_non_zero_lower_and_upper_bound()");
         let f = |x: f64| x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_non_zero_lower_and_upper_bound(): result → {}", result);
+		log::debug!("<<< Exiting test_non_zero_lower_and_upper_bound()");
         assert!((result - 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_and_upper_bound_negative() {
+		log::debug!(">>> Entering test_non_zero_lower_and_upper_bound_negative()");
         let f = |x: f64| -x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		log::debug!("test_non_zero_lower_and_upper_bound_negative(): result → {}", result);
+		log::debug!("<<< Exiting test_non_zero_lower_and_upper_bound_negative()");
         assert!((result + 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn parabola_curve_length() {
+		log::debug!(">>> Entering parabola_curve_length()");
         // Calculate the length of the curve f(x) = x^2 for -5 <= x <= 5
         // We should integrate sqrt(1 + (f'(x))^2)
         let function = |x: f64| -> f64 { (1.0 + 4.0 * x * x).sqrt() };
         let result = simpsons_integration(function, -5.0, 5.0, 1_000);
+		log::debug!("parabola_curve_length(): result → {}", result);
         let integrated = |x: f64| -> f64 { (x * function(x) / 2.0) + ((2.0 * x).asinh() / 4.0) };
         let expected = integrated(5.0) - integrated(-5.0);
+		log::debug!("<<< Exiting parabola_curve_length()");
         assert!((result - expected).abs() < 1e-9);
     }
 
     #[test]
     fn area_under_cosine() {
+		log::debug!(">>> Entering area_under_cosine()");
         use std::f64::consts::PI;
         // Calculate area under f(x) = cos(x) + 5 for -pi <= x <= pi
         // cosine should cancel out and the answer should be 2pi * 5
         let function = |x: f64| -> f64 { x.cos() + 5.0 };
         let result = simpsons_integration(function, -PI, PI, 1_000);
+		log::debug!("area_under_cosine(): result → {}", result);
         let expected = 2.0 * PI * 5.0;
+		log::debug!("<<< Exiting area_under_cosine()");
         assert!((result - expected).abs() < 1e-9);
     }
 }

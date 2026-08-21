@@ -48,6 +48,7 @@ mod tests {
 
     #[test]
     fn test_find_median() {
+		log::debug!(">>> Entering test_find_median()");
         let numbers1 = vec![1.0, 2.0, 2.0, 3.0, 4.0];
         assert_eq!(find_median(&numbers1), 2.0);
 
@@ -58,11 +59,13 @@ mod tests {
         assert_eq!(find_median(&numbers3), 1.0);
 
         let numbers4 = vec![1.1, 2.2, 2.0, 3.3, 4.4, 4.0];
+		log::debug!("<<< Exiting test_find_median()");
         assert_eq!(find_median(&numbers4), 2.75);
     }
 
     #[test]
     fn test_interquartile_range() {
+		log::debug!(">>> Entering test_interquartile_range()");
         let numbers1 = vec![4.0, 1.0, 2.0, 3.0, 2.0];
         assert_eq!(interquartile_range(&numbers1), 2.0);
 
@@ -73,13 +76,16 @@ mod tests {
         assert_eq!(interquartile_range(&numbers3), 17.2);
 
         let numbers4 = vec![0.0, 0.0, 0.0, 0.0, 0.0];
+		log::debug!("<<< Exiting test_interquartile_range()");
         assert_eq!(interquartile_range(&numbers4), 0.0);
     }
 
     #[test]
     #[should_panic(expected = "Error: The list is empty. Please provide a non-empty list.")]
     fn test_interquartile_range_empty_list() {
+		log::debug!(">>> Entering test_interquartile_range_empty_list()");
         let numbers: Vec<f64> = vec![];
+		log::debug!("<<< Exiting test_interquartile_range_empty_list()");
         interquartile_range(&numbers);
     }
 }

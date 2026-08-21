@@ -241,24 +241,29 @@ mod tests {
 
     #[test]
     fn test_invalid_matrix() {
+		log::debug!(">>> Entering test_invalid_matrix()");
         let result = panic::catch_unwind(|| matrix![
             [1, 0, 0, 4],
             [0, 1, 0],
             [0, 0, 1],
         ]);
+		log::debug!("<<< Exiting test_invalid_matrix()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_empty_matrix() {
+		log::debug!(">>> Entering test_empty_matrix()");
         let a: Matrix<i32> = matrix![];
 
         let result = panic::catch_unwind(|| a[[0, 0]]);
+		log::debug!("<<< Exiting test_empty_matrix()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_zero_matrix() {
+		log::debug!(">>> Entering test_zero_matrix()");
         let a: Matrix<f64> = Matrix::zero(3, 5);
 
         let z = matrix![
@@ -267,11 +272,13 @@ mod tests {
             [0.0, 0.0, 0.0, 0.0, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_zero_matrix()");
         assert_f64_eq!(a, z);
     }
 
     #[test]
     fn test_identity_matrix() {
+		log::debug!(">>> Entering test_identity_matrix()");
         let a: Matrix<f64> = Matrix::identity(5);
 
         let id = matrix![
@@ -282,11 +289,13 @@ mod tests {
             [0.0, 0.0, 0.0, 0.0, 1.0],
         ];
 
+		log::debug!("<<< Exiting test_identity_matrix()");
         assert_f64_eq!(a, id);
     }
 
     #[test]
     fn test_invalid_add() {
+		log::debug!(">>> Entering test_invalid_add()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -299,11 +308,13 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a + &err);
+		log::debug!("<<< Exiting test_invalid_add()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_add_i32() {
+		log::debug!(">>> Entering test_add_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -322,11 +333,13 @@ mod tests {
             [5, 0, 2],
         ];
 
+		log::debug!("<<< Exiting test_add_i32()");
         assert_eq!(&a + &b, add);
     }
 
     #[test]
     fn test_add_f64() {
+		log::debug!(">>> Entering test_add_f64()");
         let a = matrix![
             [1.0, 2.0, 1.0],
             [3.0, 2.0, 0.0],
@@ -345,11 +358,13 @@ mod tests {
             [5.0, 0.0, 2.0],
         ];
 
+		log::debug!("<<< Exiting test_add_f64()");
         assert_f64_eq!(&a + &b, add);
     }
 
     #[test]
     fn test_invalid_sub() {
+		log::debug!(">>> Entering test_invalid_sub()");
         let a = matrix![
             [2, 3],
             [10, 2],
@@ -362,11 +377,13 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a - &err);
+		log::debug!("<<< Exiting test_invalid_sub()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_subtract_i32() {
+		log::debug!(">>> Entering test_subtract_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -385,11 +402,13 @@ mod tests {
             [5, 0, 0],
         ];
 
+		log::debug!("<<< Exiting test_subtract_i32()");
         assert_eq!(&a - &b, sub);
     }
 
     #[test]
     fn test_subtract_f64() {
+		log::debug!(">>> Entering test_subtract_f64()");
         let a = matrix![
             [7.0, 2.0, 1.0],
             [0.0, 3.0, 2.0],
@@ -408,11 +427,13 @@ mod tests {
             [5.3, 6.6, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_subtract_f64()");
         assert_f64_eq!(&a - &b, sub);
     }
 
     #[test]
     fn test_invalid_mul() {
+		log::debug!(">>> Entering test_invalid_mul()");
         let a = matrix![
             [1, 2, 3],
             [4, 2, 6],
@@ -428,11 +449,13 @@ mod tests {
         ];
 
         let result = panic::catch_unwind(|| &a * &err);
+		log::debug!("<<< Exiting test_invalid_mul()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_mul_i32() {
+		log::debug!(">>> Entering test_mul_i32()");
         let a = matrix![
             [1, 2, 3],
             [4, 2, 6],
@@ -453,11 +476,13 @@ mod tests {
             [54, 62, 30, 16],
         ];
 
+		log::debug!("<<< Exiting test_mul_i32()");
         assert_eq!(&a * &b, mul);
     }
 
     #[test]
     fn test_mul_f64() {
+		log::debug!(">>> Entering test_mul_f64()");
         let a = matrix![
             [5.5, 2.9, 1.13, 9.0],
             [0.0, 3.0, 11.0, 17.2],
@@ -477,11 +502,13 @@ mod tests {
             [-22.236, 21.79, 67.78],
         ];
 
+		log::debug!("<<< Exiting test_mul_f64()");
         assert_f64_eq!(&a * &b, mul);
     }
 
     #[test]
     fn test_transpose_i32() {
+		log::debug!(">>> Entering test_transpose_i32()");
         let a = matrix![
             [1, 0, 1],
             [0, 2, 0],
@@ -494,11 +521,13 @@ mod tests {
             [1, 0, 1],
         ];
 
+		log::debug!("<<< Exiting test_transpose_i32()");
         assert_eq!(a.transpose(), t);
     }
 
     #[test]
     fn test_transpose_f64() {
+		log::debug!(">>> Entering test_transpose_f64()");
         let a = matrix![
             [3.0, 4.0, 2.0],
             [0.0, 1.0, 3.0],
@@ -511,11 +540,13 @@ mod tests {
             [2.0, 3.0, 1.0],
         ];
 
+		log::debug!("<<< Exiting test_transpose_f64()");
         assert_eq!(a.transpose(), t);
     }
 
     #[test]
     fn test_matrix_scalar_zero_mul() {
+		log::debug!(">>> Entering test_matrix_scalar_zero_mul()");
         let a = matrix![
             [3, 2, 2],
             [0, 2, 0],
@@ -526,11 +557,13 @@ mod tests {
 
         let scalar_mul = Matrix::zero(3, 3);
 
+		log::debug!("<<< Exiting test_matrix_scalar_zero_mul()");
         assert_eq!(scalar * &a, scalar_mul);
     }
 
     #[test]
     fn test_matrix_scalar_mul_i32() {
+		log::debug!(">>> Entering test_matrix_scalar_mul_i32()");
         let a = matrix![
             [3, 2, 2],
             [0, 2, 0],
@@ -545,11 +578,13 @@ mod tests {
             [15, 12, 3],
         ];
 
+		log::debug!("<<< Exiting test_matrix_scalar_mul_i32()");
         assert_eq!(scalar * &a, scalar_mul);
     }
 
     #[test]
     fn test_matrix_scalar_mul_f64() {
+		log::debug!(">>> Entering test_matrix_scalar_mul_f64()");
         let a = matrix![
             [3.2, 5.5, 9.2],
             [1.1, 0.0, 2.3],
@@ -564,6 +599,7 @@ mod tests {
             [0.45, 6.3, 0.0],
         ];
 
+		log::debug!("<<< Exiting test_matrix_scalar_mul_f64()");
         assert_f64_eq!(scalar * &a, scalar_mul);
     }
 }

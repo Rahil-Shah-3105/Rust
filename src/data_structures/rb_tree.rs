@@ -656,6 +656,7 @@ mod tests {
 
     #[test]
     fn delete_edge_case_null_pointer_guard() {
+		log::debug!(">>> Entering delete_edge_case_null_pointer_guard()");
         let mut tree = RBTree::<i8, i8>::new();
         tree.insert(4, 4);
         tree.insert(2, 2);
@@ -670,6 +671,7 @@ mod tests {
         tree.insert(8, 8);
         tree.delete(&1);
         tree.delete(&3);
+		log::debug!("<<< Exiting delete_edge_case_null_pointer_guard()");
         tree.delete(&-1);
     }
 }

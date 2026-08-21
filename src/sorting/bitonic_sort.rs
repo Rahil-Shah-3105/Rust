@@ -34,19 +34,23 @@ mod tests {
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         //descending
         let mut ve1 = vec![6, 5, 4, 3];
         let cloned = ve1.clone();
         bitonic_sort(&mut ve1, 0, 4, true);
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn ascending() {
+		log::debug!(">>> Entering ascending()");
         //pre-sorted
         let mut ve2 = vec![1, 2, 3, 4];
         let cloned = ve2.clone();
         bitonic_sort(&mut ve2, 0, 4, false);
+		log::debug!("<<< Exiting ascending()");
         assert!(is_descending_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
 }

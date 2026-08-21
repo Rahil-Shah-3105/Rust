@@ -19,11 +19,13 @@ mod tests {
 
     #[test]
     fn test() {
+		log::debug!(">>> Entering test()");
         const MOD: usize = 1000000007;
         assert_eq!(fast_power(2, 1, MOD), 2);
         assert_eq!(fast_power(2, 2, MOD), 4);
         assert_eq!(fast_power(2, 4, MOD), 16);
         assert_eq!(fast_power(3, 4, MOD), 81);
+		log::debug!("<<< Exiting test()");
         assert_eq!(fast_power(2, 100, MOD), 976371285);
     }
 }

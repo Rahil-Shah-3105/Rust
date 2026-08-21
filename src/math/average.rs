@@ -83,16 +83,19 @@ mod test {
     use super::*;
     #[test]
     fn median_test() {
+		log::debug!(">>> Entering median_test()");
         assert_eq!(median(vec![4, 53, 2, 1, 9, 0, 2, 3, 6]).unwrap(), 3);
         assert_eq!(median(vec![-9, -8, 0, 1, 2, 2, 3, 4, 6, 9, 53]).unwrap(), 2);
         assert_eq!(median(vec![2, 3]).unwrap(), 2);
         assert_eq!(median(vec![3.0, 2.0]).unwrap(), 2.5);
         assert_eq!(median(vec![1.0, 700.0, 5.0]).unwrap(), 5.0);
         assert!(median(Vec::<i32>::new()).is_none());
+		log::debug!("<<< Exiting median_test()");
         assert!(median(Vec::<f64>::new()).is_none());
     }
     #[test]
     fn mode_test() {
+		log::debug!(">>> Entering mode_test()");
         assert_eq!(
             mode(vec![4, 53, 2, 1, 9, 0, 2, 3, 6]).unwrap(),
             HashSet::from([2])
@@ -105,10 +108,12 @@ mod test {
         assert_eq!(mode(vec![1, 2, 2, 1]).unwrap(), HashSet::from([1, 2]));
         assert_eq!(mode(vec![1, 2, 2, 1, 3]).unwrap(), HashSet::from([1, 2]));
         assert_eq!(mode(vec![1]).unwrap(), HashSet::from([1]));
+		log::debug!("<<< Exiting mode_test()");
         assert!(mode(Vec::<i32>::new()).is_none());
     }
     #[test]
     fn mean_test() {
+		log::debug!(">>> Entering mean_test()");
         assert_eq!(mean(vec![2023.1112]).unwrap(), 2023.1112);
         assert_eq!(mean(vec![0.0, 1.0, 2.0, 3.0, 4.0]).unwrap(), 2.0);
         assert_eq!(
@@ -117,6 +122,7 @@ mod test {
         );
         assert_eq!(mean(vec![1, 2]).unwrap(), 1);
         assert!(mean(Vec::<f64>::new()).is_none());
+		log::debug!("<<< Exiting mean_test()");
         assert!(mean(Vec::<i32>::new()).is_none());
     }
 }

@@ -47,6 +47,7 @@ mod tests {
 
     #[test]
     fn test() {
+		log::debug!(">>> Entering test()");
         assert_eq!(maximal_square(&mut []), 0);
 
         let mut matrix = vec![vec![0, 1], vec![1, 0]];
@@ -61,6 +62,7 @@ mod tests {
         assert_eq!(maximal_square(&mut matrix), 4);
 
         let mut matrix = vec![vec![0]];
+		log::debug!("<<< Exiting test()");
         assert_eq!(maximal_square(&mut matrix), 0);
     }
 }

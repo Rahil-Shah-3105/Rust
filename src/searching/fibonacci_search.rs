@@ -45,24 +45,31 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let index = fibonacci_search(&"a", &[]);
+		log::debug!("<<< Exiting empty()");
         assert_eq!(index, None);
     }
 
     #[test]
     fn one_item() {
+		log::debug!(">>> Entering one_item()");
         let index = fibonacci_search(&"a", &["a"]);
+		log::debug!("<<< Exiting one_item()");
         assert_eq!(index, Some(0));
     }
 
     #[test]
     fn search_strings() {
+		log::debug!(">>> Entering search_strings()");
         let index = fibonacci_search(&"a", &["a", "b", "c", "d", "google", "zoo"]);
+		log::debug!("<<< Exiting search_strings()");
         assert_eq!(index, Some(0));
     }
 
     #[test]
     fn search_ints() {
+		log::debug!(">>> Entering search_ints()");
         let index = fibonacci_search(&4, &[1, 2, 3, 4]);
         assert_eq!(index, Some(3));
 
@@ -73,12 +80,15 @@ mod tests {
         assert_eq!(index, Some(1));
 
         let index = fibonacci_search(&1, &[1, 2, 3, 4]);
+		log::debug!("<<< Exiting search_ints()");
         assert_eq!(index, Some(0));
     }
 
     #[test]
     fn not_found() {
+		log::debug!(">>> Entering not_found()");
         let index = fibonacci_search(&5, &[1, 2, 3, 4]);
+		log::debug!("<<< Exiting not_found()");
         assert_eq!(index, None);
     }
 }

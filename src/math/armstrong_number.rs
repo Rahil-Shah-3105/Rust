@@ -23,22 +23,27 @@ mod tests {
 
     #[test]
     fn one_digit_armstrong_number() {
+		log::debug!(">>> Entering one_digit_armstrong_number()");
         assert!(is_armstrong_number(1))
     }
     #[test]
     fn two_digit_numbers_are_not_armstrong_numbers() {
+		log::debug!(">>> Entering two_digit_numbers_are_not_armstrong_numbers()");
         assert!(!is_armstrong_number(15))
     }
     #[test]
     fn three_digit_armstrong_number() {
+		log::debug!(">>> Entering three_digit_armstrong_number()");
         assert!(is_armstrong_number(153))
     }
     #[test]
     fn three_digit_non_armstrong_number() {
+		log::debug!(">>> Entering three_digit_non_armstrong_number()");
         assert!(!is_armstrong_number(105))
     }
     #[test]
     fn big_armstrong_number() {
+		log::debug!(">>> Entering big_armstrong_number()");
         assert!(is_armstrong_number(912985153))
     }
 }

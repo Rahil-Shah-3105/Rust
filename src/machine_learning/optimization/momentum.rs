@@ -55,6 +55,7 @@ mod test {
     #[test]
     fn test_momentum_optimized() {
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			log::debug!(">>> Entering derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2.0 * x).collect()
         }
 

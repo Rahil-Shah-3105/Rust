@@ -197,82 +197,112 @@ mod tests {
 
     #[test]
     fn test_indian_currency_standard() {
+		log::debug!(">>> Entering test_indian_currency_standard()");
         let denominations = vec![1, 2, 5, 10, 20, 50, 100, 500, 2000];
         let result = find_minimum_change(&denominations, 987);
+		log::debug!("test_indian_currency_standard(): result → {:?}", result);
         assert_eq!(result, vec![500, 100, 100, 100, 100, 50, 20, 10, 5, 2]);
+		log::debug!("<<< Exiting test_indian_currency_standard()");
         assert_eq!(result.len(), 10);
     }
 
     #[test]
     fn test_large_amount() {
+		log::debug!(">>> Entering test_large_amount()");
         let denominations = vec![1, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
         let result = find_minimum_change(&denominations, 18745);
+		log::debug!("test_large_amount(): result → {:?}", result);
         assert_eq!(
             result,
             vec![2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 500, 200, 20, 20, 5]
         );
+		log::debug!("<<< Exiting test_large_amount()");
         assert_eq!(result.iter().sum::<i32>(), 18745);
     }
 
     #[test]
     fn test_zero_value() {
+		log::debug!(">>> Entering test_zero_value()");
         let denominations = vec![1, 2, 5, 10, 20, 50, 100, 500, 2000];
         let result = find_minimum_change(&denominations, 0);
+		log::debug!("test_zero_value(): result → {:?}", result);
+		log::debug!("<<< Exiting test_zero_value()");
         assert_eq!(result, Vec::<i32>::new());
     }
 
     #[test]
     fn test_negative_value() {
+		log::debug!(">>> Entering test_negative_value()");
         let denominations = vec![1, 2, 5, 10, 20, 50, 100, 500, 2000];
         let result = find_minimum_change(&denominations, -98);
+		log::debug!("test_negative_value(): result → {:?}", result);
+		log::debug!("<<< Exiting test_negative_value()");
         assert_eq!(result, Vec::<i32>::new());
     }
 
     #[test]
     fn test_non_standard_denominations() {
+		log::debug!(">>> Entering test_non_standard_denominations()");
         let denominations = vec![1, 5, 100, 500, 1000];
         let result = find_minimum_change(&denominations, 456);
+		log::debug!("test_non_standard_denominations(): result → {:?}", result);
         assert_eq!(
             result,
             vec![100, 100, 100, 100, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1]
         );
+		log::debug!("<<< Exiting test_non_standard_denominations()");
         assert_eq!(result.iter().sum::<i32>(), 456);
     }
 
     #[test]
     fn test_single_denomination() {
+		log::debug!(">>> Entering test_single_denomination()");
         let denominations = vec![5];
         let result = find_minimum_change(&denominations, 25);
+		log::debug!("test_single_denomination(): result → {:?}", result);
+		log::debug!("<<< Exiting test_single_denomination()");
         assert_eq!(result, vec![5, 5, 5, 5, 5]);
     }
 
     #[test]
     fn test_exact_denomination() {
+		log::debug!(">>> Entering test_exact_denomination()");
         let denominations = vec![1, 5, 10, 25, 50, 100];
         let result = find_minimum_change(&denominations, 100);
+		log::debug!("test_exact_denomination(): result → {:?}", result);
+		log::debug!("<<< Exiting test_exact_denomination()");
         assert_eq!(result, vec![100]);
     }
 
     #[test]
     fn test_empty_denominations() {
+		log::debug!(">>> Entering test_empty_denominations()");
         let denominations: Vec<i32> = vec![];
         let result = find_minimum_change(&denominations, 100);
+		log::debug!("test_empty_denominations(): result → {:?}", result);
+		log::debug!("<<< Exiting test_empty_denominations()");
         assert_eq!(result, Vec::<i32>::new());
     }
 
     #[test]
     fn test_unsorted_denominations() {
+		log::debug!(">>> Entering test_unsorted_denominations()");
         let denominations = vec![100, 1, 50, 5, 20, 10, 2];
         let result = find_minimum_change(&denominations, 178);
+		log::debug!("test_unsorted_denominations(): result → {:?}", result);
         assert_eq!(result, vec![100, 50, 20, 5, 2, 1]);
+		log::debug!("<<< Exiting test_unsorted_denominations()");
         assert_eq!(result.iter().sum::<i32>(), 178);
     }
 
     #[test]
     fn test_usd_currency() {
+		log::debug!(">>> Entering test_usd_currency()");
         let denominations = vec![1, 5, 10, 25, 50, 100]; // cents
         let result = find_minimum_change(&denominations, 99);
+		log::debug!("test_usd_currency(): result → {:?}", result);
         assert_eq!(result, vec![50, 25, 10, 10, 1, 1, 1, 1]);
+		log::debug!("<<< Exiting test_usd_currency()");
         assert_eq!(result.len(), 8);
     }
 }

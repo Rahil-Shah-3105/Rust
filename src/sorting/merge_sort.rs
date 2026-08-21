@@ -68,6 +68,8 @@ mod tests {
             let mut res = vec![10, 8, 4, 3, 1, 9, 2, 7, 5, 6];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering basic()");
+			log::debug!("<<< Exiting basic()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -76,6 +78,8 @@ mod tests {
             let mut res = vec!["a", "bb", "d", "cc"];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering basic_string()");
+			log::debug!("<<< Exiting basic_string()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -84,6 +88,8 @@ mod tests {
             let mut res = Vec::<u8>::new();
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering empty()");
+			log::debug!("<<< Exiting empty()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -92,6 +98,8 @@ mod tests {
             let mut res = vec![1];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering one_element()");
+			log::debug!("<<< Exiting one_element()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -100,6 +108,8 @@ mod tests {
             let mut res = vec![1, 2, 3, 4];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering pre_sorted()");
+			log::debug!("<<< Exiting pre_sorted()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
 
@@ -108,6 +118,8 @@ mod tests {
             let mut res = vec![4, 3, 2, 1];
             let cloned = res.clone();
             top_down_merge_sort(&mut res);
+			log::debug!(">>> Entering reverse_sorted()");
+			log::debug!("<<< Exiting reverse_sorted()");
             assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
         }
     }

@@ -196,27 +196,35 @@ mod tests {
     use super::*;
 
     fn tonelli_shanks_residues(x: u64, odd_prime: u64) -> Option<(u64, u64)> {
+		log::debug!(">>> Entering tonelli_shanks_residues(x={},odd_prime={})", x, odd_prime);
         let x = tonelli_shanks(x as i64, odd_prime)?;
         let x2 = (-(x as i64)).rem_euclid(odd_prime as i64) as u64;
+		log::debug!("tonelli_shanks_residues(x={},odd_prime={}): x → {}", x, odd_prime, x);
+        log::debug!("<<< Exiting tonelli_shanks_residues(x={},odd_prime={})", x, odd_prime);
         Some(if x < x2 { (x, x2) } else { (x2, x) })
     }
 
     #[test]
     fn cipolla_small_numbers() {
+		log::debug!(">>> Entering cipolla_small_numbers()");
         assert_eq!(cipolla(1, 43, None), Some((1, 42)));
         assert_eq!(cipolla(2, 23, None), Some((5, 18)));
+		log::debug!("<<< Exiting cipolla_small_numbers()");
         assert_eq!(cipolla(17, 83, Some(42)), Some((10, 73)));
     }
 
     #[test]
     fn tonelli_shanks_small_numbers() {
+		log::debug!(">>> Entering tonelli_shanks_small_numbers()");
         assert_eq!(tonelli_shanks_residues(1, 43).unwrap(), (1, 42));
         assert_eq!(tonelli_shanks_residues(2, 23).unwrap(), (5, 18));
+		log::debug!("<<< Exiting tonelli_shanks_small_numbers()");
         assert_eq!(tonelli_shanks_residues(17, 83).unwrap(), (10, 73));
     }
 
     #[test]
     fn cipolla_random_numbers() {
+		log::debug!(">>> Entering cipolla_random_numbers()");
         assert_eq!(cipolla(392203, 852167, None), Some((413252, 438915)));
         assert_eq!(
             cipolla(379606557, 425172197, None),
@@ -233,11 +241,13 @@ mod tests {
         assert_eq!(
             cipolla(210205747, 625380647, Some(998244353)),
             Some((76810367, 548570280))
+		log::debug!("<<< Exiting cipolla_random_numbers()");
         );
     }
 
     #[test]
     fn tonelli_shanks_random_numbers() {
+		log::debug!(">>> Entering tonelli_shanks_random_numbers()");
         assert_eq!(
             tonelli_shanks_residues(392203, 852167),
             Some((413252, 438915))
@@ -257,12 +267,15 @@ mod tests {
         assert_eq!(
             tonelli_shanks_residues(210205747, 625380647),
             Some((76810367, 548570280))
+		log::debug!("<<< Exiting tonelli_shanks_random_numbers()");
         );
     }
 
     #[test]
     fn no_answer() {
+		log::debug!(">>> Entering no_answer()");
         assert_eq!(cipolla(650927, 852167, None), None);
+		log::debug!("<<< Exiting no_answer()");
         assert_eq!(tonelli_shanks(650927, 852167), None);
     }
 }

@@ -89,7 +89,10 @@ mod tests {
 
     #[test]
     fn test_suffix_array() {
+		log::debug!(">>> Entering test_suffix_array()");
         let a = generate_suffix_array("banana");
+		log::debug!("test_suffix_array(): a → {:?}", a);
+    log::debug!("<<< Exiting test_suffix_array()");
         assert_eq!(a, vec![5, 3, 1, 0, 4, 2]);
     }
 }

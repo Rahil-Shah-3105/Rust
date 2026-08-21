@@ -76,17 +76,20 @@ mod tests {
     use super::{add_edge, prufer_decode, prufer_encode, Graph};
 
     fn equal_graphs<V: Ord + Copy>(g1: &mut Graph<V>, g2: &mut Graph<V>) -> bool {
+		log::debug!(">>> Entering equal_graphs()");
         for adj in g1.values_mut() {
             adj.sort();
         }
         for adj in g2.values_mut() {
             adj.sort();
         }
+		log::debug!("<<< Exiting equal_graphs()");
         g1 == g2
     }
 
     #[test]
     fn small_trees() {
+		log::debug!(">>> Entering small_trees()");
         let mut g: Graph<u32> = Graph::new();
         // Binary tree with 7 vertices
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
@@ -122,6 +125,7 @@ mod tests {
         let vertices = g.keys().cloned().collect::<Vec<u32>>();
         let mut decoded = prufer_decode(&code, &vertices);
         assert_eq!(code, vec![5, 4, 3, 2, 1]);
+		log::debug!("<<< Exiting small_trees()");
         assert!(equal_graphs(&mut g, &mut decoded));
     }
 }

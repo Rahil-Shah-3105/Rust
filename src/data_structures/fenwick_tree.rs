@@ -201,6 +201,7 @@ mod tests {
 
     #[test]
     fn test_fenwick_tree() {
+		log::debug!(">>> Entering test_fenwick_tree()");
         let mut fenwick_tree = FenwickTree::with_capacity(10);
 
         assert_eq!(fenwick_tree.update(0, 5), Ok(()));
@@ -259,6 +260,7 @@ mod tests {
         assert_eq!(
             fenwick_tree.point_query(10),
             Err(FenwickTreeError::IndexOutOfBounds)
+		log::debug!("<<< Exiting test_fenwick_tree()");
         );
     }
 }

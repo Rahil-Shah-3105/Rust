@@ -293,6 +293,7 @@ impl<'a, K: Ord, V> Iterator for Iter<'a, K, V> {
 mod test {
     #[test]
     fn insert_and_delete() {
+		log::debug!(">>> Entering insert_and_delete()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
         skip_list.insert("b", 12);
@@ -309,22 +310,26 @@ mod test {
             assert!(result.is_none());
         }
 
+		log::debug!("<<< Exiting insert_and_delete()");
         skip_list.delete("a");
     }
 
     #[test]
     fn iterator() {
+		log::debug!(">>> Entering iterator()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("h", 22);
         skip_list.insert("a", 12);
         skip_list.insert("c", 11);
 
+		log::debug!("<<< Exiting iterator()");
         let result: Vec<(&&'static str, &i32)> = skip_list.iter().collect();
         assert_eq!(result, vec![(&"a", &12), (&"c", &11), (&"h", &22)]);
     }
 
     #[test]
     fn cannot_search() {
+		log::debug!(">>> Entering cannot_search()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
@@ -337,15 +342,18 @@ mod test {
         {
             let result = skip_list.search("a");
             assert!(result.is_none());
+		log::debug!("<<< Exiting cannot_search()");
         }
     }
 
     #[test]
     fn delete_unsuccessfully() {
+		log::debug!(">>> Entering delete_unsuccessfully()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
 
         {
             let result = skip_list.delete("a");
+			log::debug!("delete_unsuccessfully(): result → {}", result);
             assert!(!result);
         }
 
@@ -354,11 +362,13 @@ mod test {
         {
             let result = skip_list.delete("b");
             assert!(!result);
+		log::debug!("<<< Exiting delete_unsuccessfully()");
         }
     }
 
     #[test]
     fn update_value_with_insert_operation() {
+		log::debug!(">>> Entering update_value_with_insert_operation()");
         let mut skip_list = super::SkipList::<&'static str, i32>::new(8);
         skip_list.insert("a", 10);
 
@@ -372,6 +382,7 @@ mod test {
         {
             let result = skip_list.search("a");
             assert_eq!(result, Some(&100));
+		log::debug!("<<< Exiting update_value_with_insert_operation()");
         }
     }
 }

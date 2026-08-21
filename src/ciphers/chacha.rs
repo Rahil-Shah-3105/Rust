@@ -109,17 +109,20 @@ mod tests {
     use std::fmt::Write;
 
     fn output_hex(inp: &[u32; 16]) -> String {
+		log::debug!(">>> Entering output_hex(inp={:?})", inp);
         let mut res = String::new();
         res.reserve(512 / 4);
         for &x in inp {
             write!(&mut res, "{x:08x}").unwrap();
         }
+		log::debug!("<<< Exiting output_hex(inp={:?})", inp);
         res
     }
 
     #[test]
     // test vector 1
     fn basic_tv1() {
+		log::debug!(">>> Entering basic_tv1()");
         let mut inp = [0u32; 16];
         let mut out = [0u32; 16];
         inp[0] = C[0];
@@ -145,6 +148,7 @@ mod tests {
                 "e4e7f11015593bd11fdd0f50c47120a3c7f4d1c70368c0339aaa22044e6cd4c3",
                 "466482d209aa9f0705d7c214a2028bd9d19c12b5b94e16dee883d0cb4e3c50a2"
             )
+		log::debug!("<<< Exiting basic_tv1()");
         );
     }
 }

@@ -32,10 +32,12 @@ mod test {
     use super::*;
     #[test]
     fn rails_basic() {
+		log::debug!(">>> Entering rails_basic()");
         assert_eq!(rail_fence_encrypt("attack at once", 2), "atc toctaka ne");
         assert_eq!(rail_fence_decrypt("atc toctaka ne", 2), "attack at once");
 
         assert_eq!(rail_fence_encrypt("rust is cool", 3), "r cuti olsso");
+		log::debug!("<<< Exiting rails_basic()");
         assert_eq!(rail_fence_decrypt("r cuti olsso", 3), "rust is cool");
     }
 }

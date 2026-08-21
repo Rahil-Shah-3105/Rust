@@ -53,21 +53,25 @@ mod tests {
 
     #[test]
     fn random_array() {
+		log::debug!(">>> Entering random_array()");
         let mut arr = [1, 8, 3, 2, 7, 4, 6, 5];
         bogo_sort(&mut arr);
 
         for i in 0..arr.len() - 1 {
             assert!(arr[i] <= arr[i + 1]);
+		log::debug!("<<< Exiting random_array()");
         }
     }
 
     #[test]
     fn sorted_array() {
+		log::debug!(">>> Entering sorted_array()");
         let mut arr = [1, 2, 3, 4, 5, 6, 7, 8];
         bogo_sort(&mut arr);
 
         for i in 0..arr.len() - 1 {
             assert!(arr[i] <= arr[i + 1]);
+		log::debug!("<<< Exiting sorted_array()");
         }
     }
 }

@@ -18,6 +18,7 @@ mod tests {
     use crate::sorting::is_sorted;
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         let mut arr1 = [6, 5, 4, 3, 2, 1];
         let cloned = arr1;
         exchange_sort(&mut arr1);
@@ -33,6 +34,7 @@ mod tests {
         let mut arr3 = [213, 542, 90, -23412, -32, 324, -34, 3324, 54];
         let cloned = arr3;
         exchange_sort(&mut arr3);
+		log::debug!("<<< Exiting it_works()");
         assert!(is_sorted(&arr3) && have_same_elements(&arr3, &cloned));
     }
 }

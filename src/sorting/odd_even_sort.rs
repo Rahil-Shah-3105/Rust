@@ -32,33 +32,41 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let mut arr = vec![3, 5, 1, 2, 4, 6];
         let cloned = arr.clone();
         odd_even_sort(&mut arr);
+		log::debug!("<<< Exiting basic()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut arr = Vec::<i32>::new();
         let cloned = arr.clone();
         odd_even_sort(&mut arr);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let mut arr = vec![3];
         let cloned = arr.clone();
         odd_even_sort(&mut arr);
+		log::debug!("<<< Exiting one_element()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 
     #[test]
     fn pre_sorted() {
+		log::debug!(">>> Entering pre_sorted()");
         let mut arr = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         let cloned = arr.clone();
         odd_even_sort(&mut arr);
+		log::debug!("<<< Exiting pre_sorted()");
         assert!(is_sorted(&arr) && have_same_elements(&arr, &cloned));
     }
 }

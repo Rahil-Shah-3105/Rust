@@ -194,11 +194,13 @@ mod tests {
     const EPSILON: f64 = 1e-9;
 
     fn approx_eq(a: f64, b: f64, tolerance: f64) -> bool {
+		log::debug!(">>> Entering approx_eq(a={},b={},tolerance={})", a, b, tolerance);
         (a - b).abs() < tolerance
     }
 
     #[test]
     fn test_volume_conversions() {
+		log::debug!(">>> Entering test_volume_conversions()");
         // Metric conversions
         assert_eq!(
             convert_volume(4.0, VolumeUnit::CubicMeter, VolumeUnit::Liter),
@@ -458,11 +460,13 @@ mod tests {
             convert_volume(0.001, VolumeUnit::Milliliter, VolumeUnit::CubicMeter),
             1e-9,
             1e-12
+		log::debug!("<<< Exiting test_volume_conversions()");
         ));
     }
 
     #[test]
     fn test_round_trip_conversions() {
+		log::debug!(">>> Entering test_round_trip_conversions()");
         let volume = 5.0;
         let units = [
             VolumeUnit::CubicMeter,
@@ -478,17 +482,21 @@ mod tests {
         for from_unit in units.iter() {
             for to_unit in units.iter() {
                 let converted = convert_volume(volume, *from_unit, *to_unit);
+				log::debug!("test_round_trip_conversions(): converted → {}", converted);
                 let back = convert_volume(converted, *to_unit, *from_unit);
+				log::debug!("test_round_trip_conversions(): back → {}", back);
                 assert!(
                     approx_eq(back, volume, EPSILON * volume.abs().max(1.0)),
                     "Round trip failed: {from_unit:?} -> {to_unit:?} -> {from_unit:?}: {back} != {volume}"
                 );
             }
+		log::debug!("<<< Exiting test_round_trip_conversions()");
         }
     }
 
     #[test]
     fn test_same_unit_conversion() {
+		log::debug!(">>> Entering test_same_unit_conversion()");
         let volume = 42.0;
         for unit in [
             VolumeUnit::CubicMeter,
@@ -503,6 +511,7 @@ mod tests {
                 volume,
                 EPSILON
             ));
+		log::debug!("<<< Exiting test_same_unit_conversion()");
         }
     }
 }

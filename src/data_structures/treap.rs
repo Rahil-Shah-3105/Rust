@@ -220,6 +220,7 @@ impl<T: Ord> TreapNode<T> {
 
     #[cfg(test)]
     fn is_valid(&self) -> bool {
+		log::debug!(">>> Entering is_valid()");
         self.priority >= self.priority(Side::Left) && self.priority >= self.priority(Side::Right)
     }
 }
@@ -336,17 +337,21 @@ mod tests {
 
     #[test]
     fn sorted() {
+		log::debug!(">>> Entering sorted()");
         let tree: Treap<_> = (1..8).rev().collect();
+		log::debug!("<<< Exiting sorted()");
         assert!((1..8).eq(tree.iter().copied()));
     }
 
     #[test]
     fn valid() {
+		log::debug!(">>> Entering valid()");
         let mut tree: Treap<_> = (1..8).collect();
         assert!(is_valid(&tree));
         for x in 1..8 {
             tree.remove(&x);
             assert!(is_valid(&tree));
+		log::debug!("<<< Exiting valid()");
         }
     }
 }

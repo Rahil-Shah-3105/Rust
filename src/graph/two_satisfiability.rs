@@ -51,6 +51,7 @@ mod tests {
     use super::*;
 
     fn check_answer(expression: &[Condition], answers: &[bool]) -> bool {
+		log::debug!(">>> Entering check_answer(answers={:?})", answers);
         let mut ok = true;
         for &(c1, c2) in expression {
             let mut cv = false;
@@ -66,12 +67,15 @@ mod tests {
             }
             ok &= cv;
         }
+		log::debug!("<<< Exiting check_answer(answers={:?})", answers);
         ok
     }
     #[test]
     fn basic_test() {
+		log::debug!(">>> Entering basic_test()");
         let conds = vec![(1, 1), (2, 2)];
         let res = solve_two_satisfiability(&conds, 2);
+		log::debug!("basic_test(): res → {:?}", res);
         assert!(res.is_ok());
         assert!(check_answer(&conds, &res.unwrap()));
 
@@ -87,12 +91,14 @@ mod tests {
 
         let conds = vec![(-1, -1), (-2, -2), (1, 2)];
         let res = solve_two_satisfiability(&conds, 2);
+		log::debug!("<<< Exiting basic_test()");
         assert!(res.is_err());
     }
 
     #[test]
     #[ignore]
     fn big_test() {
+		log::debug!(">>> Entering big_test()");
         // We should spawn a new thread and set its stack size to something
         // big (256MB in this case), because doing DFS (for finding SCCs) is
         // a stack-intensive operation. 256MB should be enough for 3e5
@@ -107,10 +113,12 @@ mod tests {
                 }
                 conds.push((num_conds, num_conds));
                 let res = solve_two_satisfiability(&conds, num_conds as usize);
+				log::debug!("big_test(): res → {:?}", res);
                 assert!(res.is_ok());
                 assert!(check_answer(&conds, &res.unwrap()));
             })
             .unwrap();
+		log::debug!("<<< Exiting big_test()");
         handler.join().unwrap();
     }
 }

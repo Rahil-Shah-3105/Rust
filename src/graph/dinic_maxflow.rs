@@ -180,6 +180,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_graph() {
+		log::debug!(">>> Entering small_graph()");
         let mut flow: DinicMaxFlow<i32> = DinicMaxFlow::new(1, 6, 6);
         flow.add_edge(1, 2, 16);
         flow.add_edge(1, 4, 13);
@@ -208,6 +209,7 @@ mod tests {
         assert_eq!(sm_in[1], 0);
         assert_eq!(sm_out[1], max_flow);
         assert_eq!(sm_in[6], max_flow);
+		log::debug!("<<< Exiting small_graph()");
         assert_eq!(sm_out[6], 0);
     }
 }

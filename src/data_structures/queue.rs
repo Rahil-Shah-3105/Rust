@@ -67,6 +67,7 @@ mod tests {
 
     #[test]
     fn test_queue_functionality() {
+		log::debug!(">>> Entering test_queue_functionality()");
         let mut queue: Queue<usize> = Queue::default();
 
         assert!(queue.is_empty());
@@ -86,6 +87,7 @@ mod tests {
         queue.drain();
         assert!(queue.is_empty());
         assert_eq!(queue.len(), 0);
+		log::debug!("<<< Exiting test_queue_functionality()");
         assert_eq!(queue.dequeue(), None);
     }
 }

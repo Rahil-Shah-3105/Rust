@@ -143,6 +143,7 @@ mod tests {
 
     #[test]
     fn test_min_segments() {
+		log::debug!(">>> Entering test_min_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut min_seg_tree = SegmentTree::from_vec(&vec, min);
         assert_eq!(min_seg_tree.query(4..7), Ok(Some(-5)));
@@ -165,11 +166,13 @@ mod tests {
         assert_eq!(
             min_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		log::debug!("<<< Exiting test_min_segments()");
         );
     }
 
     #[test]
     fn test_max_segments() {
+		log::debug!(">>> Entering test_max_segments()");
         let vec = vec![1, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut max_seg_tree = SegmentTree::from_vec(&vec, max);
         assert_eq!(max_seg_tree.query(0..vec.len()), Ok(Some(15)));
@@ -192,11 +195,13 @@ mod tests {
         assert_eq!(
             max_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		log::debug!("<<< Exiting test_max_segments()");
         );
     }
 
     #[test]
     fn test_sum_segments() {
+		log::debug!(">>> Entering test_sum_segments()");
         let vec = vec![1, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut sum_seg_tree = SegmentTree::from_vec(&vec, |a, b| a + b);
         assert_eq!(sum_seg_tree.query(0..vec.len()), Ok(Some(38)));
@@ -219,6 +224,7 @@ mod tests {
         assert_eq!(
             sum_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		log::debug!("<<< Exiting test_sum_segments()");
         );
     }
 }

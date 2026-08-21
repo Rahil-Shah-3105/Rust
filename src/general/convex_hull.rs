@@ -70,32 +70,41 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
+		log::debug!("<<< Exiting empty()");
         assert_eq!(convex_hull_graham(&[]), vec![]);
     }
 
     #[test]
     fn not_enough_points() {
+		log::debug!(">>> Entering not_enough_points()");
         let list = vec![(0f64, 0f64)];
+		log::debug!("<<< Exiting not_enough_points()");
         assert_eq!(convex_hull_graham(&list), list);
     }
 
     #[test]
     fn not_enough_points1() {
+		log::debug!(">>> Entering not_enough_points1()");
         let list = vec![(2f64, 2f64), (1f64, 1f64), (0f64, 0f64)];
         let ans = vec![(0f64, 0f64), (1f64, 1f64), (2f64, 2f64)];
+		log::debug!("<<< Exiting not_enough_points1()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     fn not_enough_points2() {
+		log::debug!(">>> Entering not_enough_points2()");
         let list = vec![(2f64, 2f64), (1f64, 2f64), (0f64, 0f64)];
         let ans = vec![(0f64, 0f64), (2f64, 2f64), (1f64, 2f64)];
+		log::debug!("<<< Exiting not_enough_points2()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     // from https://codegolf.stackexchange.com/questions/11035/find-the-convex-hull-of-a-set-of-2d-points
     fn lots_of_points() {
+		log::debug!(">>> Entering lots_of_points()");
         let list = vec![
             (4.4, 14.),
             (6.7, 15.25),
@@ -127,12 +136,14 @@ mod tests {
             (5.3, 2.4),
         ];
 
+		log::debug!("<<< Exiting lots_of_points()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     // from https://codegolf.stackexchange.com/questions/11035/find-the-convex-hull-of-a-set-of-2d-points
     fn lots_of_points2() {
+		log::debug!(">>> Entering lots_of_points2()");
         let list = vec![
             (1., 0.),
             (1., 1.),
@@ -169,6 +180,7 @@ mod tests {
             (-0.553528, -0.967036),
         ];
 
+		log::debug!("<<< Exiting lots_of_points2()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 }

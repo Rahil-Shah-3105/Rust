@@ -88,13 +88,16 @@ mod tests {
 
     #[test]
     fn small_primes_list() {
+		log::debug!(">>> Entering small_primes_list()");
         let mut ls = LinearSieve::new();
         ls.prepare(25).unwrap();
+		log::debug!("<<< Exiting small_primes_list()");
         assert_eq!(ls.primes, vec![2, 3, 5, 7, 11, 13, 17, 19, 23]);
     }
 
     #[test]
     fn divisible_by_mpf() {
+		log::debug!(">>> Entering divisible_by_mpf()");
         let mut ls = LinearSieve::new();
         ls.prepare(1000).unwrap();
         for i in 2..=1000 {
@@ -104,15 +107,18 @@ mod tests {
                 // Number must be prime
                 assert!(ls.primes.binary_search(&i).is_ok());
             }
+		log::debug!("<<< Exiting divisible_by_mpf()");
         }
     }
 
     #[test]
     fn check_factorization() {
+		log::debug!(">>> Entering check_factorization()");
         let mut ls = LinearSieve::new();
         ls.prepare(1000).unwrap();
         for i in 1..=1000 {
             let factorization = ls.factorize(i).unwrap();
+			log::debug!("check_factorization(): factorization → {:?}", factorization);
             let mut product = 1usize;
             for (idx, p) in factorization.iter().enumerate() {
                 assert!(ls.primes.binary_search(p).is_ok());
@@ -122,13 +128,16 @@ mod tests {
                 }
             }
             assert_eq!(product, i);
+		log::debug!("<<< Exiting check_factorization()");
         }
     }
 
     #[test]
     fn check_number_of_primes() {
+		log::debug!(">>> Entering check_number_of_primes()");
         let mut ls = LinearSieve::new();
         ls.prepare(100_000).unwrap();
+		log::debug!("<<< Exiting check_number_of_primes()");
         assert_eq!(ls.primes.len(), 9592);
     }
 }

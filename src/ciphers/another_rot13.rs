@@ -16,19 +16,25 @@ mod tests {
 
     #[test]
     fn test_simple() {
+		log::debug!(">>> Entering test_simple()");
+		log::debug!("<<< Exiting test_simple()");
         assert_eq!(another_rot13("ABCzyx"), "NOPmlk");
     }
 
     #[test]
     fn test_every_alphabet_with_space() {
+		log::debug!(">>> Entering test_every_alphabet_with_space()");
         assert_eq!(
             another_rot13("The quick brown fox jumps over the lazy dog"),
             "Gur dhvpx oebja sbk whzcf bire gur ynml qbt"
+		log::debug!("<<< Exiting test_every_alphabet_with_space()");
         );
     }
 
     #[test]
     fn test_non_alphabet() {
+		log::debug!(">>> Entering test_non_alphabet()");
+		log::debug!("<<< Exiting test_non_alphabet()");
         assert_eq!(another_rot13("🎃 Jack-o'-lantern"), "🎃 Wnpx-b'-ynagrea");
     }
 }

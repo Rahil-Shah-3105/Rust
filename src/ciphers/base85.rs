@@ -167,36 +167,49 @@ mod tests {
 
     #[test]
     fn test_encode_empty() {
+		log::debug!(">>> Entering test_encode_empty()");
+		log::debug!("<<< Exiting test_encode_empty()");
         assert_eq!(base85_encode(b""), b"");
     }
 
     #[test]
     fn test_encode_12345() {
+		log::debug!(">>> Entering test_encode_12345()");
+		log::debug!("<<< Exiting test_encode_12345()");
         assert_eq!(base85_encode(b"12345"), b"0etOA2#");
     }
 
     #[test]
     fn test_encode_base85() {
+		log::debug!(">>> Entering test_encode_base85()");
+		log::debug!("<<< Exiting test_encode_base85()");
         assert_eq!(base85_encode(b"base 85"), b"@UX=h+?24");
     }
 
     #[test]
     fn test_decode_empty() {
+		log::debug!(">>> Entering test_decode_empty()");
+		log::debug!("<<< Exiting test_decode_empty()");
         assert_eq!(base85_decode(b""), b"");
     }
 
     #[test]
     fn test_decode_12345() {
+		log::debug!(">>> Entering test_decode_12345()");
+		log::debug!("<<< Exiting test_decode_12345()");
         assert_eq!(base85_decode(b"0etOA2#"), b"12345");
     }
 
     #[test]
     fn test_decode_base85() {
+		log::debug!(">>> Entering test_decode_base85()");
+		log::debug!("<<< Exiting test_decode_base85()");
         assert_eq!(base85_decode(b"@UX=h+?24"), b"base 85");
     }
 
     #[test]
     fn test_encode_decode_roundtrip() {
+		log::debug!(">>> Entering test_encode_decode_roundtrip()");
         let test_cases = vec![
             b"Hello, World!".to_vec(),
             b"The quick brown fox".to_vec(),
@@ -206,8 +219,11 @@ mod tests {
 
         for test_case in test_cases {
             let encoded = base85_encode(&test_case);
+			log::debug!("test_encode_decode_roundtrip(): encoded → {:?}", encoded);
             let decoded = base85_decode(&encoded);
+			log::debug!("test_encode_decode_roundtrip(): decoded → {:?}", decoded);
             assert_eq!(decoded, test_case);
+		log::debug!("<<< Exiting test_encode_decode_roundtrip()");
         }
     }
 }

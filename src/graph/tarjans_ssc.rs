@@ -78,6 +78,7 @@ mod tests {
 
     #[test]
     fn test_tarjan_scc() {
+		log::debug!(">>> Entering test_tarjan_scc()");
         // Test 1: A graph with multiple strongly connected components
         let n_vertices = 11;
         let edges = vec![
@@ -106,6 +107,7 @@ mod tests {
         }
 
         let components = tarjan_scc(&graph);
+		log::debug!("test_tarjan_scc(): components → {:?}", components);
         assert_eq!(
             components,
             vec![
@@ -168,6 +170,7 @@ mod tests {
         assert_eq!(
             components,
             vec![vec![5], vec![3], vec![4], vec![6], vec![2, 1, 0],]
+		log::debug!("<<< Exiting test_tarjan_scc()");
         );
     }
 }

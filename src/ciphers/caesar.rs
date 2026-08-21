@@ -90,6 +90,8 @@ mod tests {
 
     #[test]
     fn alphabet_length_should_be_26() {
+		log::debug!(">>> Entering alphabet_length_should_be_26()");
+		log::debug!("<<< Exiting alphabet_length_should_be_26()");
         assert_eq!(ALPHABET_LENGTH, 26);
     }
 

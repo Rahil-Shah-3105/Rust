@@ -75,6 +75,7 @@ mod test {
 
     #[test]
     fn test_k_means() {
+		log::debug!(">>> Entering test_k_means()");
         let mut data_points: Vec<(f64, f64)> = vec![];
         let n_points: usize = 1000;
 
@@ -85,6 +86,7 @@ mod test {
             data_points.push((x, y));
         }
 
+		log::debug!("<<< Exiting test_k_means()");
         println!("{:?}", k_means(data_points, 10, 100).unwrap_or_default());
     }
 }

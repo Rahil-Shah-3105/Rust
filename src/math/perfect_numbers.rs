@@ -29,6 +29,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert!(is_perfect_number(6));
         assert!(is_perfect_number(28));
         assert!(is_perfect_number(496));
@@ -42,6 +43,7 @@ mod tests {
         assert_eq!(perfect_numbers(10), vec![6]);
         assert_eq!(perfect_numbers(100), vec![6, 28]);
         assert_eq!(perfect_numbers(496), vec![6, 28, 496]);
+		log::debug!("<<< Exiting basic()");
         assert_eq!(perfect_numbers(1000), vec![6, 28, 496]);
     }
 }

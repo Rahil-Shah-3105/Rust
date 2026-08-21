@@ -28,8 +28,10 @@ mod tests {
 
     #[test]
     fn test_mse_loss() {
+		log::debug!(">>> Entering test_mse_loss()");
         let predicted_values: Vec<f64> = vec![1.0, 2.0, 3.0, 4.0];
         let actual_values: Vec<f64> = vec![1.0, 3.0, 3.5, 4.5];
+		log::debug!("<<< Exiting test_mse_loss()");
         assert_eq!(mse_loss(&predicted_values, &actual_values), 0.375);
     }
 }

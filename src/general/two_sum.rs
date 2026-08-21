@@ -50,6 +50,7 @@ mod test {
 
     #[test]
     fn test() {
+		log::debug!(">>> Entering test()");
         let nums = vec![2, 7, 11, 15];
         assert_eq!(two_sum(nums, 9), Some((1, 0)));
 
@@ -60,6 +61,7 @@ mod test {
         assert_eq!(two_sum(nums, 6), Some((1, 0)));
 
         let nums = vec![2, 7, 11, 15];
+		log::debug!("<<< Exiting test()");
         assert_eq!(two_sum(nums, 16), None);
     }
 }

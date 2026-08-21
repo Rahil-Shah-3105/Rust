@@ -49,45 +49,58 @@ mod tests {
 
     #[test]
     fn identical_images_returns_infinity() {
+		log::debug!(">>> Entering identical_images_returns_infinity()");
         let img = vec![100u8, 150, 200, 50, 75, 25];
+		log::debug!("<<< Exiting identical_images_returns_infinity()");
         assert_eq!(peak_signal_to_noise_ratio(&img, &img), f64::INFINITY);
     }
 
     #[test]
     fn single_pixel_off_by_one() {
+		log::debug!(">>> Entering single_pixel_off_by_one()");
         // original: [0], compressed: [1]  →  MSE = 1.0  →  PSNR = 20·log10(255) ≈ 48.13 dB
         let original = vec![0u8];
         let compressed = vec![1u8];
         let psnr = peak_signal_to_noise_ratio(&original, &compressed);
+		log::debug!("single_pixel_off_by_one(): psnr → {}", psnr);
         let expected = 20.0 * 255.0_f64.log10();
+		log::debug!("<<< Exiting single_pixel_off_by_one()");
         assert!((psnr - expected).abs() < 1e-6, "got {psnr}");
     }
 
     #[test]
     fn uniform_noise() {
+		log::debug!(">>> Entering uniform_noise()");
         // original all-zero, compressed all-10  →  MSE = 100  →  PSNR = 20·log10(255/10) ≈ 28.13 dB
         let original = vec![0u8; 16];
         let compressed = vec![10u8; 16];
         let psnr = peak_signal_to_noise_ratio(&original, &compressed);
+		log::debug!("uniform_noise(): psnr → {}", psnr);
         let expected = 20.0 * (PIXEL_MAX / 10.0).log10();
+		log::debug!("<<< Exiting uniform_noise()");
         assert!((psnr - expected).abs() < 1e-6, "got {psnr}");
     }
 
     #[test]
     fn known_psnr_value() {
+		log::debug!(">>> Entering known_psnr_value()");
         // 4 pixels: diffs = [15, 15, 15, 15]  →  MSE = 225  →  PSNR ≈ 24.61 dB
         let original = vec![0u8, 0, 0, 0];
         let compressed = vec![15u8, 15, 15, 15];
         let psnr = peak_signal_to_noise_ratio(&original, &compressed);
+		log::debug!("known_psnr_value(): psnr → {}", psnr);
         let expected = 20.0 * (PIXEL_MAX / 15.0).log10();
+		log::debug!("<<< Exiting known_psnr_value()");
         assert!((psnr - expected).abs() < 1e-6, "got {psnr}");
     }
 
     #[test]
     #[should_panic(expected = "same number of pixels")]
     fn mismatched_lengths_panics() {
+		log::debug!(">>> Entering mismatched_lengths_panics()");
         let original = vec![0u8; 4];
         let compressed = vec![0u8; 8];
+		log::debug!("<<< Exiting mismatched_lengths_panics()");
         peak_signal_to_noise_ratio(&original, &compressed);
     }
 }

@@ -81,61 +81,79 @@ mod tests {
 
     #[test]
     fn mixed_lists() {
+		log::debug!(">>> Entering mixed_lists()");
         assert_eq!(
             smallest_range(&[&[4, 10, 15, 24, 26], &[0, 9, 12, 20], &[5, 18, 22, 30]]),
             Some([20, 24])
+		log::debug!("<<< Exiting mixed_lists()");
         );
     }
 
     #[test]
     fn identical_lists() {
+		log::debug!(">>> Entering identical_lists()");
         assert_eq!(
             smallest_range(&[&[1, 2, 3], &[1, 2, 3], &[1, 2, 3]]),
             Some([1, 1])
+		log::debug!("<<< Exiting identical_lists()");
         );
     }
 
     #[test]
     fn negative_and_positive() {
+		log::debug!(">>> Entering negative_and_positive()");
         assert_eq!(
             smallest_range(&[&[-3, -2, -1], &[0, 0, 0], &[1, 2, 3]]),
             Some([-1, 1])
+		log::debug!("<<< Exiting negative_and_positive()");
         );
     }
 
     #[test]
     fn non_overlapping() {
+		log::debug!(">>> Entering non_overlapping()");
         assert_eq!(
             smallest_range(&[&[1, 2, 3], &[4, 5, 6], &[7, 8, 9]]),
             Some([3, 7])
+		log::debug!("<<< Exiting non_overlapping()");
         );
     }
 
     #[test]
     fn all_zeros() {
+		log::debug!(">>> Entering all_zeros()");
         assert_eq!(
             smallest_range(&[&[0, 0, 0], &[0, 0, 0], &[0, 0, 0]]),
             Some([0, 0])
+		log::debug!("<<< Exiting all_zeros()");
         );
     }
 
     #[test]
     fn empty_lists() {
+		log::debug!(">>> Entering empty_lists()");
+		log::debug!("<<< Exiting empty_lists()");
         assert_eq!(smallest_range(&[&[], &[], &[]]), None);
     }
 
     #[test]
     fn single_elements() {
+		log::debug!(">>> Entering single_elements()");
+		log::debug!("<<< Exiting single_elements()");
         assert_eq!(smallest_range(&[&[5], &[3], &[9]]), Some([3, 9]));
     }
 
     #[test]
     fn single_list() {
+		log::debug!(">>> Entering single_list()");
+		log::debug!("<<< Exiting single_list()");
         assert_eq!(smallest_range(&[&[1, 2, 3]]), Some([1, 1]));
     }
 
     #[test]
     fn one_empty_among_non_empty() {
+		log::debug!(">>> Entering one_empty_among_non_empty()");
+		log::debug!("<<< Exiting one_empty_among_non_empty()");
         assert_eq!(smallest_range(&[&[1, 2], &[], &[3, 4]]), None);
     }
 }

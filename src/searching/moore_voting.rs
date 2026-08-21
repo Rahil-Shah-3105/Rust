@@ -153,10 +153,12 @@ mod tests {
 
     #[test]
     fn test_moore_voting() {
+		log::debug!(">>> Entering test_moore_voting()");
         let arr1: Vec<i32> = vec![9, 1, 8, 1, 1];
         assert_eq!(moore_voting_2pass(&arr1), Some(&1));
         assert_eq!(moore_voting_it(arr1), Some(1));
         let arr2: Vec<i32> = vec![1, 2, 3, 4];
+		log::debug!("<<< Exiting test_moore_voting()");
         assert_eq!(moore_voting_2pass(&arr2), None);
     }
 }

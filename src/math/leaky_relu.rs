@@ -37,11 +37,13 @@ mod tests {
 
     #[test]
     fn test_leaky_relu() {
+		log::debug!(">>> Entering test_leaky_relu()");
         let test_vector = vec![-10., 2., -3., 4., -5., 10., 0.05];
         let alpha = 0.01;
         assert_eq!(
             leaky_relu(&test_vector, alpha),
             vec![-0.1, 2.0, -0.03, 4.0, -0.05, 10.0, 0.05]
+		log::debug!("<<< Exiting test_leaky_relu()");
         );
     }
 }

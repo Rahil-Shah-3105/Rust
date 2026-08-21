@@ -58,10 +58,12 @@ pub fn kruskal(mut edges: Vec<Edge>, num_vertices: usize) -> Option<(usize, Vec<
         }
 
         // Attempt to merge the sets containing the edge’s vertices
+		let __log_start = std::time::Instant::now();
         if dsu.merge(edge.source, edge.destination) != usize::MAX {
             mst_cost += edge.cost;
             mst_edges.push(edge);
         }
+	log::info!("kruskal(edges,num_vertices)={:?},{}: update query executed in {} ms", edges, num_vertices, __log_start.elapsed().as_millis());
     }
 
     // Return MST if it includes exactly num_vertices - 1 edges, otherwise None for disconnected graphs

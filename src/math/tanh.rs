@@ -25,10 +25,12 @@ mod tests {
 
     #[test]
     fn test_tanh() {
+		log::debug!(">>> Entering test_tanh()");
         let mut test = Vec::from([1.0, 0.5, -1.0, 0.0, 0.3]);
         assert_eq!(
             tanh(&mut test),
             &mut Vec::<f32>::from([0.76159406, 0.4621172, -0.7615941, 0.0, 0.29131258,])
+		log::debug!("<<< Exiting test_tanh()");
         );
     }
 }

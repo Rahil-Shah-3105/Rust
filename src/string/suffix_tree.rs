@@ -98,6 +98,7 @@ mod tests {
 
     #[test]
     fn test_suffix_tree() {
+		log::debug!(">>> Entering test_suffix_tree()");
         let suf_tree = SuffixTree::new("banana$");
         assert_eq!(
             suf_tree.nodes,
@@ -147,6 +148,7 @@ mod tests {
                     ch: vec![]
                 }
             ]
+		log::debug!("<<< Exiting test_suffix_tree()");
         );
     }
 }

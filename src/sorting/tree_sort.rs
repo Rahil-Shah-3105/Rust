@@ -79,36 +79,46 @@ mod tests {
 
     #[test]
     fn test_empty_array() {
+		log::debug!(">>> Entering test_empty_array()");
         let mut arr: Vec<i32> = vec![];
         tree_sort(&mut arr);
+		log::debug!("<<< Exiting test_empty_array()");
         assert_eq!(arr, vec![]);
     }
 
     #[test]
     fn test_single_element() {
+		log::debug!(">>> Entering test_single_element()");
         let mut arr = vec![8];
         tree_sort(&mut arr);
+		log::debug!("<<< Exiting test_single_element()");
         assert_eq!(arr, vec![8]);
     }
 
     #[test]
     fn test_already_sorted() {
+		log::debug!(">>> Entering test_already_sorted()");
         let mut arr = vec![1, 2, 3, 4, 5];
         tree_sort(&mut arr);
+		log::debug!("<<< Exiting test_already_sorted()");
         assert_eq!(arr, vec![1, 2, 3, 4, 5]);
     }
 
     #[test]
     fn test_reverse_sorted() {
+		log::debug!(">>> Entering test_reverse_sorted()");
         let mut arr = vec![5, 4, 3, 2, 1];
         tree_sort(&mut arr);
+		log::debug!("<<< Exiting test_reverse_sorted()");
         assert_eq!(arr, vec![1, 2, 3, 4, 5]);
     }
 
     #[test]
     fn test_random() {
+		log::debug!(">>> Entering test_random()");
         let mut arr = vec![9, 6, 10, 11, 2, 19];
         tree_sort(&mut arr);
+		log::debug!("<<< Exiting test_random()");
         assert_eq!(arr, vec![2, 6, 9, 10, 11, 19]);
     }
 }

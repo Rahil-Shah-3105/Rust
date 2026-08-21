@@ -246,12 +246,15 @@ mod tests {
 
     #[test]
     fn test_empty_heap() {
+		log::debug!(">>> Entering test_empty_heap()");
         let mut heap: Heap<i32> = Heap::new_max();
+		log::debug!("<<< Exiting test_empty_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_min_heap() {
+		log::debug!(">>> Entering test_min_heap()");
         let mut heap = Heap::new_min();
         heap.add(4);
         heap.add(2);
@@ -264,11 +267,13 @@ mod tests {
         heap.add(1);
         assert_eq!(heap.pop(), Some(1));
         assert_eq!(heap.pop(), Some(11));
+		log::debug!("<<< Exiting test_min_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_max_heap() {
+		log::debug!(">>> Entering test_max_heap()");
         let mut heap = Heap::new_max();
         heap.add(4);
         heap.add(2);
@@ -281,11 +286,13 @@ mod tests {
         heap.add(1);
         assert_eq!(heap.pop(), Some(2));
         assert_eq!(heap.pop(), Some(1));
+		log::debug!("<<< Exiting test_max_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_iter_heap() {
+		log::debug!(">>> Entering test_iter_heap()");
         let mut heap = Heap::new_min();
         heap.add(4);
         heap.add(2);
@@ -304,11 +311,13 @@ mod tests {
         assert_eq!(heap.pop(), Some(4));
         assert_eq!(heap.pop(), Some(9));
         assert_eq!(heap.pop(), Some(11));
+		log::debug!("<<< Exiting test_iter_heap()");
         assert_eq!(heap.pop(), None);
     }
 
     #[test]
     fn test_from_vec_min() {
+		log::debug!(">>> Entering test_from_vec_min()");
         let vec = vec![3, 1, 4, 1, 5, 9, 2, 6, 5];
         let mut heap = Heap::from_vec_min(vec);
         assert_eq!(heap.len(), 9);
@@ -316,11 +325,13 @@ mod tests {
         assert_eq!(heap.pop(), Some(1));
         assert_eq!(heap.pop(), Some(2));
         heap.add(0);
+		log::debug!("<<< Exiting test_from_vec_min()");
         assert_eq!(heap.pop(), Some(0));
     }
 
     #[test]
     fn test_from_vec_max() {
+		log::debug!(">>> Entering test_from_vec_max()");
         let vec = vec![3, 1, 4, 1, 5, 9, 2, 6, 5];
         let mut heap = Heap::from_vec_max(vec);
         assert_eq!(heap.len(), 9);
@@ -328,6 +339,7 @@ mod tests {
         assert_eq!(heap.pop(), Some(6));
         assert_eq!(heap.pop(), Some(5));
         heap.add(10);
+		log::debug!("<<< Exiting test_from_vec_max()");
         assert_eq!(heap.pop(), Some(10));
     }
 }

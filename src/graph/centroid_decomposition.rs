@@ -110,13 +110,16 @@ mod tests {
         math::PCG32,
     };
     fn calculate_height(v: usize, heights: &mut [usize], parents: &mut [usize]) -> usize {
+		log::debug!(">>> Entering calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         if heights[v] == 0 {
             heights[v] = calculate_height(parents[v], heights, parents) + 1;
         }
+		log::debug!("<<< Exiting calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         heights[v]
     }
     #[test]
     fn single_path() {
+		log::debug!(">>> Entering single_path()");
         let len = 16;
         let mut adj: Vec<Vec<usize>> = vec![vec![]; len];
         adj[1].push(2);
@@ -132,11 +135,13 @@ mod tests {
         assert_eq!(
             cd.decomposition,
             vec![0, 2, 4, 2, 8, 6, 4, 6, 0, 10, 12, 10, 8, 14, 12, 14]
+		log::debug!("<<< Exiting single_path()");
         );
     }
     #[test]
     #[ignore]
     fn random_tree_height() {
+		log::debug!(">>> Entering random_tree_height()");
         // Do not run this test in debug mode! It takes > 30s to run without
         // optimizations!
         let n = 1e6 as usize;
@@ -153,7 +158,9 @@ mod tests {
         heights[0] = 1;
         for i in 1..=n {
             let h = calculate_height(i, &mut heights, &mut cd.decomposition);
+			log::debug!("random_tree_height(): h → {}", h);
             assert!(h <= max_height);
+		log::debug!("<<< Exiting random_tree_height()");
         }
     }
 }

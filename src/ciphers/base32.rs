@@ -134,88 +134,118 @@ mod tests {
 
     #[test]
     fn test_encode_hello_world() {
+		log::debug!(">>> Entering test_encode_hello_world()");
+		log::debug!("<<< Exiting test_encode_hello_world()");
         assert_eq!(base32_encode(b"Hello World!"), b"JBSWY3DPEBLW64TMMQQQ====");
     }
 
     #[test]
     fn test_encode_numbers() {
+		log::debug!(">>> Entering test_encode_numbers()");
+		log::debug!("<<< Exiting test_encode_numbers()");
         assert_eq!(base32_encode(b"123456"), b"GEZDGNBVGY======");
     }
 
     #[test]
     fn test_encode_long_string() {
+		log::debug!(">>> Entering test_encode_long_string()");
         assert_eq!(
             base32_encode(b"some long complex string"),
             b"ONXW2ZJANRXW4ZZAMNXW24DMMV4CA43UOJUW4ZY="
+		log::debug!("<<< Exiting test_encode_long_string()");
         );
     }
 
     #[test]
     fn test_encode_empty() {
+		log::debug!(">>> Entering test_encode_empty()");
+		log::debug!("<<< Exiting test_encode_empty()");
         assert_eq!(base32_encode(b""), b"");
     }
 
     #[test]
     fn test_encode_single_char() {
+		log::debug!(">>> Entering test_encode_single_char()");
+		log::debug!("<<< Exiting test_encode_single_char()");
         assert_eq!(base32_encode(b"A"), b"IE======");
     }
 
     #[test]
     fn test_decode_hello_world() {
+		log::debug!(">>> Entering test_decode_hello_world()");
         assert_eq!(
             base32_decode(b"JBSWY3DPEBLW64TMMQQQ====").unwrap(),
             b"Hello World!"
+		log::debug!("<<< Exiting test_decode_hello_world()");
         );
     }
 
     #[test]
     fn test_decode_numbers() {
+		log::debug!(">>> Entering test_decode_numbers()");
+		log::debug!("<<< Exiting test_decode_numbers()");
         assert_eq!(base32_decode(b"GEZDGNBVGY======").unwrap(), b"123456");
     }
 
     #[test]
     fn test_decode_long_string() {
+		log::debug!(">>> Entering test_decode_long_string()");
         assert_eq!(
             base32_decode(b"ONXW2ZJANRXW4ZZAMNXW24DMMV4CA43UOJUW4ZY=").unwrap(),
             b"some long complex string"
+		log::debug!("<<< Exiting test_decode_long_string()");
         );
     }
 
     #[test]
     fn test_decode_empty() {
+		log::debug!(">>> Entering test_decode_empty()");
+		log::debug!("<<< Exiting test_decode_empty()");
         assert_eq!(base32_decode(b"").unwrap(), b"");
     }
 
     #[test]
     fn test_decode_single_char() {
+		log::debug!(">>> Entering test_decode_single_char()");
+		log::debug!("<<< Exiting test_decode_single_char()");
         assert_eq!(base32_decode(b"IE======").unwrap(), b"A");
     }
 
     #[test]
     fn test_decode_without_padding() {
+		log::debug!(">>> Entering test_decode_without_padding()");
         assert_eq!(
             base32_decode(b"JBSWY3DPEBLW64TMMQQQ").unwrap(),
             b"Hello World!"
+		log::debug!("<<< Exiting test_decode_without_padding()");
         );
     }
 
     #[test]
     fn test_decode_invalid_character() {
+		log::debug!(">>> Entering test_decode_invalid_character()");
         let result = base32_decode(b"INVALID!@#$");
         assert!(result.is_err());
+		log::debug!("test_decode_invalid_character(): result → {:?}", result);
+		log::debug!("<<< Exiting test_decode_invalid_character()");
         assert!(result.unwrap_err().contains("Invalid base32 character"));
     }
 
     #[test]
     fn test_roundtrip_hello() {
+		log::debug!(">>> Entering test_roundtrip_hello()");
         let original = b"Hello";
         let encoded = base32_encode(original);
+		log::debug!("test_roundtrip_hello(): encoded → {:?}", encoded);
         let decoded = base32_decode(&encoded).unwrap();
+		log::debug!("test_roundtrip_hello(): decoded → {:?}", decoded);
+		log::debug!("<<< Exiting test_roundtrip_hello()");
         assert_eq!(decoded, original);
     }
 
     #[test]
     fn test_roundtrip_various_strings() {
+		log::debug!(">>> Entering test_roundtrip_various_strings()");
         let test_cases = vec![
             b"a" as &[u8],
             b"ab",
@@ -229,32 +259,44 @@ mod tests {
 
         for original in test_cases {
             let encoded = base32_encode(original);
+			log::debug!("test_roundtrip_various_strings(): encoded → {:?}", encoded);
             let decoded = base32_decode(&encoded).unwrap();
+			log::debug!("test_roundtrip_various_strings(): decoded → {:?}", decoded);
             assert_eq!(decoded, original, "Failed for: {original:?}");
+		log::debug!("<<< Exiting test_roundtrip_various_strings()");
         }
     }
 
     #[test]
     fn test_all_charset_characters() {
+		log::debug!(">>> Entering test_all_charset_characters()");
         // Test that all characters in the charset can be encoded/decoded
         for i in 0..32 {
             let data = vec![i * 8]; // Arbitrary byte values
             let encoded = base32_encode(&data);
+			log::debug!("test_all_charset_characters(): encoded → {:?}", encoded);
             let decoded = base32_decode(&encoded).unwrap();
+			log::debug!("test_all_charset_characters(): decoded → {:?}", decoded);
             assert_eq!(decoded, data);
+		log::debug!("<<< Exiting test_all_charset_characters()");
         }
     }
 
     #[test]
     fn test_binary_data() {
+		log::debug!(">>> Entering test_binary_data()");
         let binary_data = vec![0x00, 0x01, 0x02, 0xFF, 0xFE, 0xFD];
         let encoded = base32_encode(&binary_data);
+		log::debug!("test_binary_data(): encoded → {:?}", encoded);
         let decoded = base32_decode(&encoded).unwrap();
+		log::debug!("test_binary_data(): decoded → {:?}", decoded);
+		log::debug!("<<< Exiting test_binary_data()");
         assert_eq!(decoded, binary_data);
     }
 
     #[test]
     fn test_padding_variations() {
+		log::debug!(">>> Entering test_padding_variations()");
         // Test different amounts of padding
         let test_cases: Vec<(&[u8], &[u8])> = vec![
             (b"f", b"MY======"),
@@ -267,9 +309,12 @@ mod tests {
 
         for (input, expected) in test_cases {
             let encoded = base32_encode(input);
+			log::debug!("test_padding_variations(): encoded → {:?}", encoded);
             assert_eq!(encoded, expected, "Encoding failed for: {input:?}");
             let decoded = base32_decode(&encoded).unwrap();
+			log::debug!("test_padding_variations(): decoded → {:?}", decoded);
             assert_eq!(decoded, input, "Roundtrip failed for: {input:?}");
+		log::debug!("<<< Exiting test_padding_variations()");
         }
     }
 }

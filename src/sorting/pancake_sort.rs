@@ -30,31 +30,41 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let res = pancake_sort(&mut [6, 5, -8, 3, 2, 3]);
+		log::debug!("<<< Exiting basic()");
         assert_eq!(res, vec![-8, 2, 3, 3, 5, 6]);
     }
 
     #[test]
     fn already_sorted() {
+		log::debug!(">>> Entering already_sorted()");
         let res = pancake_sort(&mut ["a", "b", "c"]);
+		log::debug!("<<< Exiting already_sorted()");
         assert_eq!(res, vec!["a", "b", "c"]);
     }
 
     #[test]
     fn odd_number_of_elements() {
+		log::debug!(">>> Entering odd_number_of_elements()");
         let res = pancake_sort(&mut ["d", "a", "c", "e", "b"]);
+		log::debug!("<<< Exiting odd_number_of_elements()");
         assert_eq!(res, vec!["a", "b", "c", "d", "e"]);
     }
 
     #[test]
     fn one_element() {
+		log::debug!(">>> Entering one_element()");
         let res = pancake_sort(&mut [3]);
+		log::debug!("<<< Exiting one_element()");
         assert_eq!(res, vec![3]);
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let res = pancake_sort(&mut [] as &mut [u8]);
+		log::debug!("<<< Exiting empty()");
         assert_eq!(res, vec![]);
     }
 }

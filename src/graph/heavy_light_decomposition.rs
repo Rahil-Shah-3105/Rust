@@ -107,7 +107,9 @@ mod tests {
             }
         }
         fn next(&mut self) -> u32 {
+			log::debug!(">>> Entering next()");
             self.state =
+				log::debug!("<<< Exiting next()");
                 (self.multiplier as u64 * self.state as u64 + self.increment as u64) as u32;
             self.state
         }
@@ -134,11 +136,13 @@ mod tests {
                 break;
             }
         }
+		log::debug!("<<< Exiting get_num_paths(v={},parent={:?})", v, parent);
         (ans, height)
     }
 
     #[test]
     fn single_path() {
+		log::debug!(">>> Entering single_path()");
         let mut adj = vec![vec![], vec![2], vec![3], vec![4], vec![5], vec![6], vec![]];
         let mut hld = HeavyLightDecomposition::new(6);
         hld.decompose(1, &adj);
@@ -151,11 +155,13 @@ mod tests {
         hld.decompose(3, &adj);
         assert_eq!(hld.head, vec![0, 2, 2, 3, 3, 3, 3]);
         assert_eq!(hld.position, vec![0, 6, 5, 1, 2, 3, 4]);
+		log::debug!("<<< Exiting single_path()");
         assert_eq!(hld.big_child, vec![0, 0, 1, 4, 5, 6, 0]);
     }
 
     #[test]
     fn random_tree() {
+		log::debug!(">>> Entering random_tree()");
         // Let it have 1e4 vertices. It should finish under 100ms even with
         // 1e5 vertices
         let n = 1e4 as usize;
@@ -187,6 +193,7 @@ mod tests {
         for l in leaves {
             let (p, _h) = get_num_paths(&hld, l, &parent);
             assert!(p <= threshold);
+		log::debug!("<<< Exiting random_tree()");
         }
     }
 }

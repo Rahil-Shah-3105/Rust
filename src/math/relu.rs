@@ -25,10 +25,12 @@ mod tests {
 
     #[test]
     fn test_relu() {
+		log::debug!(">>> Entering test_relu()");
         let mut test: Vec<f32> = Vec::from([1.0, 0.5, -1.0, 0.0, 0.3]);
         assert_eq!(
             relu(&mut test),
             &mut Vec::<f32>::from([1.0, 0.5, 0.0, 0.0, 0.3])
+		log::debug!("<<< Exiting test_relu()");
         );
     }
 }

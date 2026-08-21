@@ -80,11 +80,14 @@ mod tests {
 
     #[test]
     fn get_longest_palindrome_by_manacher() {
+		log::debug!(">>> Entering get_longest_palindrome_by_manacher()");
         assert_eq!(manacher("babad".to_string()), "aba".to_string());
         assert_eq!(manacher("cbbd".to_string()), "bb".to_string());
         assert_eq!(manacher("a".to_string()), "a".to_string());
 
         let ac_ans = manacher("ac".to_string());
+		log::debug!("get_longest_palindrome_by_manacher(): ac_ans → {}", ac_ans);
+		log::debug!("<<< Exiting get_longest_palindrome_by_manacher()");
         assert!(ac_ans == *"a" || ac_ans == *"c");
     }
 }

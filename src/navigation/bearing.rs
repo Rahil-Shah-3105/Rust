@@ -24,6 +24,7 @@ mod tests {
 
     #[test]
     fn testing() {
+		log::debug!(">>> Entering testing()");
         assert_eq!(
             format!(
                 "{:.0}º",
@@ -35,6 +36,7 @@ mod tests {
                 )
             ),
             "336º"
+		log::debug!("<<< Exiting testing()");
         );
     }
 }

@@ -20,7 +20,9 @@ mod tests {
 
     #[test]
     fn converting_decimal_to_binary() {
+		log::debug!(">>> Entering converting_decimal_to_binary()");
         assert_eq!(decimal_to_binary(542), "1000011110");
+		log::debug!("<<< Exiting converting_decimal_to_binary()");
         assert_eq!(decimal_to_binary(92), "1011100");
     }
 }

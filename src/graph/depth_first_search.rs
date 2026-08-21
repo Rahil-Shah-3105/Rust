@@ -90,6 +90,7 @@ mod tests {
 
     #[test]
     fn find_1_fail() {
+		log::debug!(">>> Entering find_1_fail()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
 
@@ -104,11 +105,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             None
+		log::debug!("<<< Exiting find_1_fail()");
         );
     }
 
     #[test]
     fn find_1_sucess() {
+		log::debug!(">>> Entering find_1_sucess()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
 
@@ -125,11 +128,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_1_sucess()");
         );
     }
 
     #[test]
     fn find_2_sucess() {
+		log::debug!(">>> Entering find_2_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -156,11 +161,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_2_sucess()");
         );
     }
 
     #[test]
     fn find_3_sucess() {
+		log::debug!(">>> Entering find_3_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -187,6 +194,7 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		log::debug!("<<< Exiting find_3_sucess()");
         );
     }
 }

@@ -20,10 +20,12 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         assert_eq!(gcd(&[1, 2, 3, 4, 5]), 1);
         assert_eq!(gcd(&[2, 4, 6, 8, 10]), 2);
         assert_eq!(gcd(&[3, 6, 9, 12, 15]), 3);
         assert_eq!(gcd(&[10]), 10);
+		log::debug!("<<< Exiting it_works()");
         assert_eq!(gcd(&[21, 110]), 1);
     }
 }

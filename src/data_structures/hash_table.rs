@@ -72,12 +72,14 @@ mod tests {
 
     impl Hashable for TestKey {
         fn hash(&self) -> usize {
+			log::debug!(">>> Entering hash()");
             self.0
         }
     }
 
     #[test]
     fn test_insert_and_search() {
+		log::debug!(">>> Entering test_insert_and_search()");
         let mut hash_table = HashTable::new();
         let key = TestKey(1);
         let value = TestKey(10);
@@ -85,11 +87,13 @@ mod tests {
         hash_table.insert(key, value);
         let result = hash_table.search(TestKey(1));
 
+		log::debug!("<<< Exiting test_insert_and_search()");
         assert_eq!(result, Some(&TestKey(10)));
     }
 
     #[test]
     fn test_resize() {
+		log::debug!(">>> Entering test_resize()");
         let mut hash_table = HashTable::new();
         let initial_capacity = hash_table.elements.capacity();
 
@@ -97,11 +101,13 @@ mod tests {
             hash_table.insert(TestKey(i), TestKey(i + 10));
         }
 
+		log::debug!("<<< Exiting test_resize()");
         assert!(hash_table.elements.capacity() > initial_capacity);
     }
 
     #[test]
     fn test_search_nonexistent() {
+		log::debug!(">>> Entering test_search_nonexistent()");
         let mut hash_table = HashTable::new();
         let key = TestKey(1);
         let value = TestKey(10);
@@ -109,11 +115,13 @@ mod tests {
         hash_table.insert(key, value);
         let result = hash_table.search(TestKey(2));
 
+		log::debug!("<<< Exiting test_search_nonexistent()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_multiple_inserts_and_searches() {
+		log::debug!(">>> Entering test_multiple_inserts_and_searches()");
         let mut hash_table = HashTable::new();
         for i in 0..10 {
             hash_table.insert(TestKey(i), TestKey(i + 100));
@@ -122,24 +130,29 @@ mod tests {
         for i in 0..10 {
             let result = hash_table.search(TestKey(i));
             assert_eq!(result, Some(&TestKey(i + 100)));
+		log::debug!("<<< Exiting test_multiple_inserts_and_searches()");
         }
     }
 
     #[test]
     fn test_not_overwrite_existing_key() {
+		log::debug!(">>> Entering test_not_overwrite_existing_key()");
         let mut hash_table = HashTable::new();
         hash_table.insert(TestKey(1), TestKey(100));
         hash_table.insert(TestKey(1), TestKey(200));
 
         let result = hash_table.search(TestKey(1));
+		log::debug!("<<< Exiting test_not_overwrite_existing_key()");
         assert_eq!(result, Some(&TestKey(100)));
     }
 
     #[test]
     fn test_empty_search() {
+		log::debug!(">>> Entering test_empty_search()");
         let hash_table: HashTable<TestKey, TestKey> = HashTable::new();
         let result = hash_table.search(TestKey(1));
 
+		log::debug!("<<< Exiting test_empty_search()");
         assert_eq!(result, None);
     }
 }

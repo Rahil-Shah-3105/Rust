@@ -32,9 +32,11 @@ mod tests {
 
     #[test]
     fn perfect_numbers_till_n() {
+		log::debug!(">>> Entering perfect_numbers_till_n()");
         let n = 335564540;
         assert_eq!(generate_perfect_numbers(n), [6, 28, 496, 8128, 33550336]);
         assert_eq!(generate_perfect_numbers(40), [6, 28]);
+		log::debug!("<<< Exiting perfect_numbers_till_n()");
         assert_eq!(generate_perfect_numbers(0), []);
     }
 }

@@ -327,6 +327,7 @@ mod tests {
 
     /// Returns `true` if all nodes in the tree are balanced.
     fn is_balanced<T: Ord>(tree: &AVLTree<T>) -> bool {
+		log::debug!(">>> Entering is_balanced()");
         tree.node_iter()
             .all(|n| (-1..=1).contains(&n.balance_factor()))
     }
@@ -364,17 +365,21 @@ mod tests {
 
     #[test]
     fn sorted() {
+		log::debug!(">>> Entering sorted()");
         let tree: AVLTree<_> = (1..8).rev().collect();
+		log::debug!("<<< Exiting sorted()");
         assert!((1..8).eq(tree.iter().copied()));
     }
 
     #[test]
     fn balanced() {
+		log::debug!(">>> Entering balanced()");
         let mut tree: AVLTree<_> = (1..8).collect();
         assert!(is_balanced(&tree));
         for x in 1..8 {
             tree.remove(&x);
             assert!(is_balanced(&tree));
+		log::debug!("<<< Exiting balanced()");
         }
     }
 }

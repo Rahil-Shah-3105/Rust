@@ -22,12 +22,16 @@ mod tests {
 
     #[test]
     fn test_sylvester() {
+		log::debug!(">>> Entering test_sylvester()");
+		log::debug!("<<< Exiting test_sylvester()");
         assert_eq!(sylvester(8), 113423713055421844361000443_i128);
     }
 
     #[test]
     #[should_panic(expected = "The input value of [n=-1] has to be > 0")]
     fn test_sylvester_negative() {
+		log::debug!(">>> Entering test_sylvester_negative()");
+		log::debug!("<<< Exiting test_sylvester_negative()");
         sylvester(-1);
     }
 }

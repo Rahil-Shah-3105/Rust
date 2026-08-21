@@ -87,6 +87,7 @@ mod tests {
     use super::Point;
 
     fn test_graham(convex_hull: Vec<Point>, others: Vec<Point>) {
+		log::debug!(">>> Entering test_graham()");
         let mut points = convex_hull.clone();
         points.append(&mut others.clone());
         let graham = graham_scan(points);
@@ -95,53 +96,65 @@ mod tests {
         }
         for point in others {
             assert!(!graham.contains(&point));
+		log::debug!("<<< Exiting test_graham()");
         }
     }
 
     #[test]
     fn too_few_points() {
+		log::debug!(">>> Entering too_few_points()");
         test_graham(vec![], vec![]);
+		log::debug!("<<< Exiting too_few_points()");
         test_graham(vec![], vec![Point::new(0.0, 0.0)]);
     }
 
     #[test]
     fn duplicate_point() {
+		log::debug!(">>> Entering duplicate_point()");
         let p = Point::new(0.0, 0.0);
+		log::debug!("<<< Exiting duplicate_point()");
         test_graham(vec![], vec![p.clone(), p.clone(), p.clone(), p.clone(), p]);
     }
 
     #[test]
     fn points_same_line() {
+		log::debug!(">>> Entering points_same_line()");
         let p1 = Point::new(1.0, 0.0);
         let p2 = Point::new(2.0, 0.0);
         let p3 = Point::new(3.0, 0.0);
         let p4 = Point::new(4.0, 0.0);
         let p5 = Point::new(5.0, 0.0);
         // let p6 = Point::new(1.0, 1.0);
+		log::debug!("<<< Exiting points_same_line()");
         test_graham(vec![], vec![p1, p2, p3, p4, p5]);
     }
 
     #[test]
     fn triangle() {
+		log::debug!(">>> Entering triangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
         let points = vec![p1, p2, p3];
+		log::debug!("<<< Exiting triangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn rectangle() {
+		log::debug!(">>> Entering rectangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let points = vec![p1, p2, p3, p4];
+		log::debug!("<<< Exiting rectangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn triangle_with_points_in_middle() {
+		log::debug!(">>> Entering triangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
@@ -151,11 +164,13 @@ mod tests {
         let p7 = Point::new(1.5, 1.9);
         let hull = vec![p1, p2, p3];
         let others = vec![p4, p5, p6, p7];
+		log::debug!("<<< Exiting triangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_in_middle() {
+		log::debug!(">>> Entering rectangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -167,11 +182,13 @@ mod tests {
         let p9 = Point::new(1.4, 1.9);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8, p9];
+		log::debug!("<<< Exiting rectangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn star() {
+		log::debug!(">>> Entering star()");
         // A single stroke star shape (kind of). Only the tips(p1-5) are part of the convex hull. The
         // other points would create angles >180 degrees if they were part of the polygon.
         let p1 = Point::new(-5.0, 6.0);
@@ -186,11 +203,13 @@ mod tests {
         let p10 = Point::new(-6.0, 1.0);
         let hull = vec![p1, p2, p3, p4, p5];
         let others = vec![p6, p7, p8, p9, p10];
+		log::debug!("<<< Exiting star()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_on_same_line() {
+		log::debug!(">>> Entering rectangle_with_points_on_same_line()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -201,6 +220,7 @@ mod tests {
         let p8 = Point::new(1.5, 2.0);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8];
+		log::debug!("<<< Exiting rectangle_with_points_on_same_line()");
         test_graham(hull, others);
     }
 }

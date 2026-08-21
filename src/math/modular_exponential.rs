@@ -89,24 +89,29 @@ mod tests {
 
     #[test]
     fn test_modular_exponential_positive() {
+		log::debug!(">>> Entering test_modular_exponential_positive()");
         assert_eq!(modular_exponential(2, 3, 5), 3); // 2^3 % 5 = 8 % 5 = 3
         assert_eq!(modular_exponential(7, 2, 13), 10); // 7^2 % 13 = 49 % 13 = 10
         assert_eq!(modular_exponential(5, 5, 31), 25); // 5^5 % 31 = 3125 % 31 = 25
         assert_eq!(modular_exponential(10, 8, 11), 1); // 10^8 % 11 = 100000000 % 11 = 1
+		log::debug!("<<< Exiting test_modular_exponential_positive()");
         assert_eq!(modular_exponential(123, 45, 67), 62); // 123^45 % 67
     }
 
     #[test]
     fn test_modular_inverse() {
+		log::debug!(">>> Entering test_modular_inverse()");
         assert_eq!(mod_inverse(7, 13), 2); // Inverse of 7 mod 13 is 2
         assert_eq!(mod_inverse(5, 31), 25); // Inverse of 5 mod 31 is 25
         assert_eq!(mod_inverse(10, 11), 10); // Inverse of 10 mod 1 is 10
         assert_eq!(mod_inverse(123, 67), 6); // Inverse of 123 mod 67 is 6
+		log::debug!("<<< Exiting test_modular_inverse()");
         assert_eq!(mod_inverse(9, 17), 2); // Inverse of 9 mod 17 is 2
     }
 
     #[test]
     fn test_modular_exponential_negative() {
+		log::debug!(">>> Entering test_modular_exponential_negative()");
         assert_eq!(
             modular_exponential(7, -2, 13),
             mod_inverse(7, 13).pow(2) % 13
@@ -122,15 +127,18 @@ mod tests {
         assert_eq!(
             modular_exponential(123, -5, 67),
             mod_inverse(123, 67).pow(5) % 67
+		log::debug!("<<< Exiting test_modular_exponential_negative()");
         ); // Inverse of 123 mod 67 is calculated via the function
     }
 
     #[test]
     fn test_modular_exponential_edge_cases() {
+		log::debug!(">>> Entering test_modular_exponential_edge_cases()");
         assert_eq!(modular_exponential(0, 0, 1), 0); // 0^0 % 1 should be 0 as the modulus is 1
         assert_eq!(modular_exponential(0, 10, 1), 0); // 0^n % 1 should be 0 for any n
         assert_eq!(modular_exponential(10, 0, 1), 0); // n^0 % 1 should be 0 for any n
         assert_eq!(modular_exponential(1, 1, 1), 0); // 1^1 % 1 should be 0
+		log::debug!("<<< Exiting test_modular_exponential_edge_cases()");
         assert_eq!(modular_exponential(-1, 2, 1), 0); // (-1)^2 % 1 should be 0
     }
 }

@@ -274,14 +274,18 @@ mod tests {
 
     #[test]
     fn test_token_display() {
+		log::debug!(">>> Entering test_token_display()");
         let token = Token::new(1, 2, 'c');
+		log::debug!("<<< Exiting test_token_display()");
         assert_eq!(token.to_string(), "(1, 2, c)");
     }
 
     #[test]
     fn test_compress_ababcbababaa() {
+		log::debug!(">>> Entering test_compress_ababcbababaa()");
         let compressor = LZ77Compressor::new(13, 6);
         let compressed = compressor.compress("ababcbababaa");
+		log::debug!("test_compress_ababcbababaa(): compressed → {:?}", compressed);
 
         let expected = vec![
             Token::new(0, 0, 'a'),
@@ -291,13 +295,16 @@ mod tests {
             Token::new(2, 2, 'a'),
         ];
 
+		log::debug!("<<< Exiting test_compress_ababcbababaa()");
         assert_eq!(compressed, expected);
     }
 
     #[test]
     fn test_compress_aacaacabcabaaac() {
+		log::debug!(">>> Entering test_compress_aacaacabcabaaac()");
         let compressor = LZ77Compressor::new(13, 6);
         let compressed = compressor.compress("aacaacabcabaaac");
+		log::debug!("test_compress_aacaacabcabaaac(): compressed → {:?}", compressed);
 
         let expected = vec![
             Token::new(0, 0, 'a'),
@@ -307,11 +314,13 @@ mod tests {
             Token::new(1, 2, 'c'),
         ];
 
+		log::debug!("<<< Exiting test_compress_aacaacabcabaaac()");
         assert_eq!(compressed, expected);
     }
 
     #[test]
     fn test_decompress_cabracadabrarrarrad() {
+		log::debug!(">>> Entering test_decompress_cabracadabrarrarrad()");
         let compressor = LZ77Compressor::new(13, 6);
         let tokens = vec![
             Token::new(0, 0, 'c'),
@@ -325,11 +334,14 @@ mod tests {
         ];
 
         let decompressed = compressor.decompress(&tokens);
+		log::debug!("test_decompress_cabracadabrarrarrad(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_decompress_cabracadabrarrarrad()");
         assert_eq!(decompressed, "cabracadabrarrarrad");
     }
 
     #[test]
     fn test_decompress_ababcbababaa() {
+		log::debug!(">>> Entering test_decompress_ababcbababaa()");
         let compressor = LZ77Compressor::new(13, 6);
         let tokens = vec![
             Token::new(0, 0, 'a'),
@@ -340,11 +352,14 @@ mod tests {
         ];
 
         let decompressed = compressor.decompress(&tokens);
+		log::debug!("test_decompress_ababcbababaa(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_decompress_ababcbababaa()");
         assert_eq!(decompressed, "ababcbababaa");
     }
 
     #[test]
     fn test_decompress_aacaacabcabaaac() {
+		log::debug!(">>> Entering test_decompress_aacaacabcabaaac()");
         let compressor = LZ77Compressor::new(13, 6);
         let tokens = vec![
             Token::new(0, 0, 'a'),
@@ -355,11 +370,14 @@ mod tests {
         ];
 
         let decompressed = compressor.decompress(&tokens);
+		log::debug!("test_decompress_aacaacabcabaaac(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_decompress_aacaacabcabaaac()");
         assert_eq!(decompressed, "aacaacabcabaaac");
     }
 
     #[test]
     fn test_round_trip_compression() {
+		log::debug!(">>> Entering test_round_trip_compression()");
         let compressor = LZ77Compressor::new(13, 6);
         let texts = vec![
             "cabracadabrarrarrad",
@@ -372,55 +390,79 @@ mod tests {
 
         for text in texts {
             let compressed = compressor.compress(text);
+			log::debug!("test_round_trip_compression(): compressed → {:?}", compressed);
             let decompressed = compressor.decompress(&compressed);
+			log::debug!("test_round_trip_compression(): decompressed → {}", decompressed);
             assert_eq!(text, decompressed, "Round trip failed for text: {text}");
+		log::debug!("<<< Exiting test_round_trip_compression()");
         }
     }
 
     #[test]
     fn test_empty_search_buffer() {
+		log::debug!(">>> Entering test_empty_search_buffer()");
         let compressor = LZ77Compressor::new(13, 6);
         let token = compressor.find_encoding_token("abc", "");
+		log::warn!("test_empty_search_buffer(): token → {}", token);
+		log::debug!("<<< Exiting test_empty_search_buffer()");
         assert_eq!(token, Token::new(0, 0, 'a'));
     }
 
     #[test]
     #[should_panic(expected = "Cannot encode empty text")]
     fn test_empty_text_panics() {
+		log::debug!(">>> Entering test_empty_text_panics()");
         let compressor = LZ77Compressor::new(13, 6);
+		log::debug!("<<< Exiting test_empty_text_panics()");
         compressor.find_encoding_token("", "xyz");
     }
 
     #[test]
     fn test_default_compressor() {
+		log::debug!(">>> Entering test_default_compressor()");
         let compressor = LZ77Compressor::default();
         let text = "test";
+		log::debug!("test_default_compressor(): text → {}", text);
         let compressed = compressor.compress(text);
+		log::debug!("test_default_compressor(): compressed → {:?}", compressed);
         let decompressed = compressor.decompress(&compressed);
+		log::debug!("test_default_compressor(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_default_compressor()");
         assert_eq!(text, decompressed);
     }
 
     #[test]
     #[should_panic(expected = "lookahead_buffer_size must be less than window_size")]
     fn test_invalid_buffer_sizes() {
+		log::debug!(">>> Entering test_invalid_buffer_sizes()");
+		log::debug!("<<< Exiting test_invalid_buffer_sizes()");
         LZ77Compressor::new(10, 10);
     }
 
     #[test]
     fn test_single_character() {
+		log::debug!(">>> Entering test_single_character()");
         let compressor = LZ77Compressor::new(13, 6);
         let compressed = compressor.compress("a");
+		log::debug!("test_single_character(): compressed → {:?}", compressed);
         assert_eq!(compressed, vec![Token::new(0, 0, 'a')]);
         let decompressed = compressor.decompress(&compressed);
+		log::debug!("test_single_character(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_single_character()");
         assert_eq!(decompressed, "a");
     }
 
     #[test]
     fn test_repeated_pattern() {
+		log::debug!(">>> Entering test_repeated_pattern()");
         let compressor = LZ77Compressor::new(13, 6);
         let text = "abababab";
+		log::debug!("test_repeated_pattern(): text → {}", text);
         let compressed = compressor.compress(text);
+		log::debug!("test_repeated_pattern(): compressed → {:?}", compressed);
         let decompressed = compressor.decompress(&compressed);
+		log::debug!("test_repeated_pattern(): decompressed → {}", decompressed);
+		log::debug!("<<< Exiting test_repeated_pattern()");
         assert_eq!(text, decompressed);
     }
 }

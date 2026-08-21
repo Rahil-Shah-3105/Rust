@@ -22,14 +22,18 @@ mod tests {
 
     #[test]
     fn test_treynor_ratio() {
+		log::debug!(">>> Entering test_treynor_ratio()");
         // for portfolio_return = 0.10, risk_free_rate = 0.05, beta = 1.5
         // expected result: (0.10 - 0.05) / 1.5 = 0.033333...
+		log::debug!("<<< Exiting test_treynor_ratio()");
         assert!((treynor_ratio(0.10, 0.05, 1.50) - 0.03333).abs() < 0.01);
     }
 
     #[test]
     fn test_treynor_ratio_empty_beta() {
+		log::debug!(">>> Entering test_treynor_ratio_empty_beta()");
         // test for zero beta (undefined ratio)
+		log::debug!("<<< Exiting test_treynor_ratio_empty_beta()");
         assert!(treynor_ratio(0.10, 0.05, 0.00).is_nan());
     }
 }

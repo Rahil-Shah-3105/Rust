@@ -31,33 +31,41 @@ mod test {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         let mut vec = vec![3, 5, 6, 3, 1, 4];
         let cloned = vec.clone();
         stooge_sort(&mut vec);
+		log::debug!("<<< Exiting basic()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut vec: Vec<i32> = vec![];
         let cloned = vec.clone();
         stooge_sort(&mut vec);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn reverse() {
+		log::debug!(">>> Entering reverse()");
         let mut vec = vec![6, 5, 4, 3, 2, 1];
         let cloned = vec.clone();
         stooge_sort(&mut vec);
+		log::debug!("<<< Exiting reverse()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn already_sorted() {
+		log::debug!(">>> Entering already_sorted()");
         let mut vec = vec![1, 2, 3, 4, 5, 6];
         let cloned = vec.clone();
         stooge_sort(&mut vec);
+		log::debug!("<<< Exiting already_sorted()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 }

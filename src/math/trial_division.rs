@@ -46,6 +46,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         assert_eq!(trial_division(0), vec![]);
         assert_eq!(trial_division(1), vec![]);
         assert_eq!(trial_division(9), vec!(3, 3));
@@ -54,6 +55,7 @@ mod tests {
         assert_eq!(trial_division(11), vec!(11));
         assert_eq!(trial_division(33), vec!(3, 11));
         assert_eq!(trial_division(2003), vec!(2003));
+		log::debug!("<<< Exiting basic()");
         assert_eq!(trial_division(100001), vec!(11, 9091));
     }
 }

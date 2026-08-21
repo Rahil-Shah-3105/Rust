@@ -43,35 +43,47 @@ mod test {
 
     #[test]
     fn test_basic() {
+		log::debug!(">>> Entering test_basic()");
         assert_eq!(subarray_sum_equals_k(&[1, 1, 1], 2), 2);
+		log::debug!("<<< Exiting test_basic()");
         assert_eq!(subarray_sum_equals_k(&[1, 2, 3], 3), 2);
     }
 
     #[test]
     fn test_single_element() {
+		log::debug!(">>> Entering test_single_element()");
         assert_eq!(subarray_sum_equals_k(&[1], 1), 1);
+		log::debug!("<<< Exiting test_single_element()");
         assert_eq!(subarray_sum_equals_k(&[1], 0), 0);
     }
 
     #[test]
     fn test_empty() {
+		log::debug!(">>> Entering test_empty()");
         assert_eq!(subarray_sum_equals_k(&[], 0), 0);
+		log::debug!("<<< Exiting test_empty()");
         assert_eq!(subarray_sum_equals_k(&[], 5), 0);
     }
 
     #[test]
     fn test_negative_numbers() {
+		log::debug!(">>> Entering test_negative_numbers()");
         assert_eq!(subarray_sum_equals_k(&[-1, -1, 1], 0), 1);
+		log::debug!("<<< Exiting test_negative_numbers()");
         assert_eq!(subarray_sum_equals_k(&[1, -1, 0], 0), 3);
     }
 
     #[test]
     fn test_no_match() {
+		log::debug!(">>> Entering test_no_match()");
+		log::debug!("<<< Exiting test_no_match()");
         assert_eq!(subarray_sum_equals_k(&[1, 2, 3], 10), 0);
     }
 
     #[test]
     fn test_multiple_matches() {
+		log::debug!(">>> Entering test_multiple_matches()");
+		log::debug!("<<< Exiting test_multiple_matches()");
         assert_eq!(subarray_sum_equals_k(&[1, 0, 1, 0, 1], 1), 8);
     }
 }

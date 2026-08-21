@@ -45,6 +45,7 @@ mod test {
     #[test]
     fn test_gradient_descent_optimized() {
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			log::debug!(">>> Entering derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2. * x).collect()
         }
 

@@ -12,10 +12,12 @@ mod tests {
 
     #[test]
     fn hanoi_simple() {
+		log::debug!(">>> Entering hanoi_simple()");
         let correct_solution: Vec<(i32, i32)> =
             vec![(1, 3), (1, 2), (3, 2), (1, 3), (2, 1), (2, 3), (1, 3)];
         let mut our_solution: Vec<(i32, i32)> = Vec::new();
         hanoi(3, 1, 3, 2, &mut our_solution);
+		log::debug!("<<< Exiting hanoi_simple()");
         assert_eq!(correct_solution, our_solution);
     }
 }

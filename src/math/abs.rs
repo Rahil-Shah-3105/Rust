@@ -18,21 +18,29 @@ mod test {
 
     #[test]
     fn test_negative_number_i32() {
+		log::debug!(">>> Entering test_negative_number_i32()");
+		log::debug!("<<< Exiting test_negative_number_i32()");
         assert_eq!(69, abs(-69));
     }
 
     #[test]
     fn test_negative_number_f64() {
+		log::debug!(">>> Entering test_negative_number_f64()");
+		log::debug!("<<< Exiting test_negative_number_f64()");
         assert_eq!(69.69, abs(-69.69));
     }
 
     #[test]
     fn zero() {
+		log::debug!(">>> Entering zero()");
+		log::debug!("<<< Exiting zero()");
         assert_eq!(0.0, abs(0.0));
     }
 
     #[test]
     fn positive_number() {
+		log::debug!(">>> Entering positive_number()");
+		log::debug!("<<< Exiting positive_number()");
         assert_eq!(69.69, abs(69.69));
     }
 }

@@ -120,6 +120,7 @@ mod test_undirected_graph {
     use super::UndirectedGraph;
     #[test]
     fn test_add_edge() {
+		log::debug!(">>> Entering test_add_edge()");
         let mut graph = UndirectedGraph::new();
 
         graph.add_edge(("a", "b", 5));
@@ -136,11 +137,13 @@ mod test_undirected_graph {
         ];
         for edge in expected_edges.iter() {
             assert!(graph.edges().contains(edge));
+		log::debug!("<<< Exiting test_add_edge()");
         }
     }
 
     #[test]
     fn test_neighbours() {
+		log::debug!(">>> Entering test_neighbours()");
         let mut graph = UndirectedGraph::new();
 
         graph.add_edge(("a", "b", 5));
@@ -150,6 +153,7 @@ mod test_undirected_graph {
         assert_eq!(
             graph.neighbours("a").unwrap(),
             &vec![(String::from("b"), 5), (String::from("c"), 7)]
+		log::debug!("<<< Exiting test_neighbours()");
         );
     }
 }
@@ -161,6 +165,7 @@ mod test_directed_graph {
 
     #[test]
     fn test_add_node() {
+		log::debug!(">>> Entering test_add_node()");
         let mut graph = DirectedGraph::new();
         graph.add_node("a");
         graph.add_node("b");
@@ -171,6 +176,7 @@ mod test_directed_graph {
                 .iter()
                 .cloned()
                 .collect()
+		log::debug!("<<< Exiting test_add_node()");
         );
     }
 
@@ -208,6 +214,7 @@ mod test_directed_graph {
 
     #[test]
     fn test_contains() {
+		log::debug!(">>> Entering test_contains()");
         let mut graph = DirectedGraph::new();
         graph.add_node("a");
         graph.add_node("b");
@@ -215,6 +222,7 @@ mod test_directed_graph {
         assert!(graph.contains("a"));
         assert!(graph.contains("b"));
         assert!(graph.contains("c"));
+		log::debug!("<<< Exiting test_contains()");
         assert!(!graph.contains("d"));
     }
 }

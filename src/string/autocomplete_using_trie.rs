@@ -99,12 +99,14 @@ mod tests {
 
     #[test]
     fn test_autocomplete() {
+		log::debug!(">>> Entering test_autocomplete()");
         let words = vec!["apple", "orange", "oregano"];
 
         let mut auto_complete = Autocomplete::new();
         auto_complete.insert_words(&words);
 
         let prefix = "app";
+		log::debug!("test_autocomplete(): prefix → {}", prefix);
         let mut auto_completed_words = auto_complete.find_words(prefix);
 
         let mut apple = vec!["apple"];
@@ -120,6 +122,7 @@ mod tests {
         prefix_or.sort();
 
         auto_completed_words.sort();
+		log::debug!("<<< Exiting test_autocomplete()");
         assert_eq!(auto_completed_words, prefix_or);
     }
 }

@@ -188,6 +188,7 @@ mod tests {
 
     #[test]
     fn encryption() {
+		log::debug!(">>> Entering encryption()");
         assert_eq!(
             transposition(
                 false,
@@ -257,11 +258,13 @@ mod tests {
         assert_eq!(
             transposition(false, "WE ARE DISCOVERED. FLEE AT ONCE.", "ZEBRAS STRIPE"),
             "CAEEN SOIAE DRLEF WEDRE EVTOC"
+		log::debug!("<<< Exiting double_encryption()");
         );
     }
 
     #[test]
     fn double_decryption() {
+		log::debug!(">>> Entering double_decryption()");
         assert_eq!(
             transposition(
                 true,
@@ -283,6 +286,7 @@ mod tests {
         assert_eq!(
             transposition(true, "CAEEN SOIAE DRLEF WEDRE EVTOC", "ZEBRAS STRIPE"),
             "WEAREDISCOVEREDFLEEATONCE"
+		log::debug!("<<< Exiting double_decryption()");
         );
     }
 }

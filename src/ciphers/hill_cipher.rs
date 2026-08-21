@@ -288,89 +288,114 @@ mod tests {
 
     #[test]
     fn test_encrypt() {
+		log::debug!(">>> Entering test_encrypt()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         assert_eq!(cipher.encrypt("testing hill cipher"), "WHXYJOLM9C6XT085LL");
+		log::debug!("<<< Exiting test_encrypt()");
         assert_eq!(cipher.encrypt("hello"), "85FF00");
     }
 
     #[test]
     fn test_decrypt() {
+		log::debug!(">>> Entering test_decrypt()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         assert_eq!(cipher.decrypt("WHXYJOLM9C6XT085LL"), "TESTINGHILLCIPHERR");
+		log::debug!("<<< Exiting test_decrypt()");
         assert_eq!(cipher.decrypt("85FF00"), "HELLOO");
     }
 
     #[test]
     fn test_encrypt_decrypt_roundtrip() {
+		log::debug!(">>> Entering test_encrypt_decrypt_roundtrip()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         let original = "HELLO WORLD";
+		log::debug!("test_encrypt_decrypt_roundtrip(): original → {}", original);
         let encrypted = cipher.encrypt(original);
+		log::debug!("test_encrypt_decrypt_roundtrip(): encrypted → {}", encrypted);
         let decrypted = cipher.decrypt(&encrypted);
+		log::debug!("test_encrypt_decrypt_roundtrip(): decrypted → {}", decrypted);
 
         // Note: decrypted might have padding
+		log::debug!("<<< Exiting test_encrypt_decrypt_roundtrip()");
         assert!(decrypted.starts_with("HELLOWORLD"));
     }
 
     #[test]
     fn test_process_text() {
+		log::debug!(">>> Entering test_process_text()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         assert_eq!(
             cipher.process_text("Testing Hill Cipher"),
             "TESTINGHILLCIPHERR"
         );
+		log::debug!("<<< Exiting test_process_text()");
         assert_eq!(cipher.process_text("hello"), "HELLOO");
     }
 
     #[test]
     fn test_replace_letter() {
+		log::debug!(">>> Entering test_replace_letter()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         assert_eq!(cipher.replace_letter('T'), Some(19));
         assert_eq!(cipher.replace_letter('0'), Some(26));
+		log::debug!("<<< Exiting test_replace_letter()");
         assert_eq!(cipher.replace_letter('A'), Some(0));
     }
 
     #[test]
     fn test_replace_digit() {
+		log::debug!(">>> Entering test_replace_digit()");
         let key = vec![vec![2, 5], vec![1, 6]];
         let cipher = HillCipher::new(key).unwrap();
         assert_eq!(cipher.replace_digit(19), 'T');
         assert_eq!(cipher.replace_digit(26), '0');
+		log::debug!("<<< Exiting test_replace_digit()");
         assert_eq!(cipher.replace_digit(0), 'A');
     }
 
     #[test]
     fn test_invalid_determinant() {
+		log::debug!(">>> Entering test_invalid_determinant()");
         // Matrix with determinant not coprime with 36
         let key = vec![vec![2, 4], vec![1, 2]]; // det = 0
+		log::debug!("<<< Exiting test_invalid_determinant()");
         assert!(HillCipher::new(key).is_err());
     }
 
     #[test]
     fn test_3x3_matrix() {
+		log::debug!(">>> Entering test_3x3_matrix()");
         // Matrix with determinant = 1 (coprime with 36)
         let key = vec![vec![1, 2, 3], vec![0, 1, 4], vec![5, 6, 0]];
         let cipher = HillCipher::new(key).unwrap();
         let encrypted = cipher.encrypt("ACT");
+		log::debug!("test_3x3_matrix(): encrypted → {}", encrypted);
         let decrypted = cipher.decrypt(&encrypted);
+		log::debug!("test_3x3_matrix(): decrypted → {}", decrypted);
+		log::debug!("<<< Exiting test_3x3_matrix()");
         assert_eq!(decrypted, "ACT");
     }
 
     #[test]
     fn test_gcd() {
+		log::debug!(">>> Entering test_gcd()");
         assert_eq!(HillCipher::gcd(48, 18), 6);
         assert_eq!(HillCipher::gcd(7, 36), 1);
+		log::debug!("<<< Exiting test_gcd()");
         assert_eq!(HillCipher::gcd(12, 36), 12);
     }
 
     #[test]
     fn test_mod_inverse() {
+		log::debug!(">>> Entering test_mod_inverse()");
         assert_eq!(HillCipher::mod_inverse(7, 36), Some(31));
         assert_eq!(HillCipher::mod_inverse(1, 36), Some(1));
+		log::debug!("<<< Exiting test_mod_inverse()");
         assert_eq!(HillCipher::mod_inverse(2, 36), None); // 2 and 36 are not coprime
     }
 }

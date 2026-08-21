@@ -127,6 +127,7 @@ mod tests {
 
     #[test]
     fn test_adam_init_default_values() {
+		log::debug!(">>> Entering test_adam_init_default_values()");
         let optimizer = Adam::new(None, None, None, None, 1);
 
         assert_eq!(optimizer.learning_rate, 0.001);
@@ -135,11 +136,13 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.0);
         assert_eq!(optimizer.m, vec![0.0; 1]);
         assert_eq!(optimizer.v, vec![0.0; 1]);
+		log::debug!("<<< Exiting test_adam_init_default_values()");
         assert_eq!(optimizer.t, 0);
     }
 
     #[test]
     fn test_adam_init_custom_lr_value() {
+		log::debug!(">>> Entering test_adam_init_custom_lr_value()");
         let optimizer = Adam::new(Some(0.9), None, None, None, 2);
 
         assert_eq!(optimizer.learning_rate, 0.9);
@@ -148,11 +151,13 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.0);
         assert_eq!(optimizer.m, vec![0.0; 2]);
         assert_eq!(optimizer.v, vec![0.0; 2]);
+		log::debug!("<<< Exiting test_adam_init_custom_lr_value()");
         assert_eq!(optimizer.t, 0);
     }
 
     #[test]
     fn test_adam_init_custom_betas_value() {
+		log::debug!(">>> Entering test_adam_init_custom_betas_value()");
         let optimizer = Adam::new(None, Some((0.8, 0.899)), None, None, 3);
 
         assert_eq!(optimizer.learning_rate, 0.001);
@@ -161,11 +166,13 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.0);
         assert_eq!(optimizer.m, vec![0.0; 3]);
         assert_eq!(optimizer.v, vec![0.0; 3]);
+		log::debug!("<<< Exiting test_adam_init_custom_betas_value()");
         assert_eq!(optimizer.t, 0);
     }
 
     #[test]
     fn test_adam_init_custom_epsilon_value() {
+		log::debug!(">>> Entering test_adam_init_custom_epsilon_value()");
         let optimizer = Adam::new(None, None, Some(1e-10), None, 4);
 
         assert_eq!(optimizer.learning_rate, 0.001);
@@ -174,11 +181,13 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.0);
         assert_eq!(optimizer.m, vec![0.0; 4]);
         assert_eq!(optimizer.v, vec![0.0; 4]);
+		log::debug!("<<< Exiting test_adam_init_custom_epsilon_value()");
         assert_eq!(optimizer.t, 0);
     }
 
     #[test]
     fn test_adam_init_custom_weight_decay_value() {
+		log::debug!(">>> Entering test_adam_init_custom_weight_decay_value()");
         let optimizer = Adam::new(None, None, None, Some(0.1), 3);
 
         assert_eq!(optimizer.learning_rate, 0.001);
@@ -187,11 +196,13 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.1);
         assert_eq!(optimizer.m, vec![0.0; 3]);
         assert_eq!(optimizer.v, vec![0.0; 3]);
+		log::debug!("<<< Exiting test_adam_init_custom_weight_decay_value()");
         assert_eq!(optimizer.t, 0);
     }
 
     #[test]
     fn test_adam_init_all_custom_values() {
+		log::debug!(">>> Entering test_adam_init_all_custom_values()");
         let optimizer = Adam::new(Some(1.0), Some((0.001, 0.099)), Some(1e-1), Some(0.05), 5);
 
         assert_eq!(optimizer.learning_rate, 1.0);
@@ -200,6 +211,7 @@ mod tests {
         assert_eq!(optimizer.weight_decay, 0.05);
         assert_eq!(optimizer.m, vec![0.0; 5]);
         assert_eq!(optimizer.v, vec![0.0; 5]);
+		log::debug!("<<< Exiting test_adam_init_all_custom_values()");
         assert_eq!(optimizer.t, 0);
     }
 
@@ -207,11 +219,13 @@ mod tests {
 
     #[test]
     fn test_adam_step_default_params() {
+		log::debug!(">>> Entering test_adam_step_default_params()");
         let gradients = vec![-1.0, 2.0, -3.0, 4.0, -5.0, 6.0, -7.0, 8.0];
         let params = vec![0.0; 8];
 
         let mut optimizer = Adam::new(None, None, None, None, 8);
         let updated_params = optimizer.step(&gradients, &params);
+		log::debug!("test_adam_step_default_params(): updated_params → {:?}", updated_params);
 
         assert_eq!(
             updated_params,
@@ -225,16 +239,19 @@ mod tests {
                 0.0009999999985714286,
                 -0.00099999999875
             ]
+		log::debug!("<<< Exiting test_adam_step_default_params()");
         );
     }
 
     #[test]
     fn test_adam_step_custom_params() {
+		log::debug!(">>> Entering test_adam_step_custom_params()");
         let gradients = vec![9.0, -8.0, 7.0, -6.0, 5.0, -4.0, 3.0, -2.0, 1.0];
         let params = vec![0.0; 9];
 
         let mut optimizer = Adam::new(Some(0.005), Some((0.5, 0.599)), Some(1e-5), None, 9);
         let updated_params = optimizer.step(&gradients, &params);
+		log::debug!("test_adam_step_custom_params(): updated_params → {:?}", updated_params);
 
         assert_eq!(
             updated_params,
@@ -249,17 +266,21 @@ mod tests {
                 0.004999975000124999,
                 -0.0049999500004999945
             ]
+		log::debug!("<<< Exiting test_adam_step_custom_params()");
         );
     }
 
     #[test]
     fn test_adam_step_empty_gradients_array() {
+		log::debug!(">>> Entering test_adam_step_empty_gradients_array()");
         let gradients: Vec<f64> = vec![];
         let params: Vec<f64> = vec![];
 
         let mut optimizer = Adam::new(None, None, None, None, 0);
         let updated_params = optimizer.step(&gradients, &params);
+		log::debug!("test_adam_step_empty_gradients_array(): updated_params → {:?}", updated_params);
 
+		log::debug!("<<< Exiting test_adam_step_empty_gradients_array()");
         assert_eq!(updated_params, vec![]);
     }
 
@@ -267,6 +288,7 @@ mod tests {
 
     #[test]
     fn test_adamw_step_nonzero_params_applies_decay() {
+		log::debug!(">>> Entering test_adamw_step_nonzero_params_applies_decay()");
         // When params are non-zero and weight_decay > 0.0, the decay term must pull
         // every parameter strictly closer to zero than the plain adaptive step would.
         // Comparing against a no-decay run avoids replicating the internal floating
@@ -276,9 +298,11 @@ mod tests {
 
         let mut with_decay = Adam::new(None, None, None, Some(0.01), 3);
         let decayed = with_decay.step(&gradients, &params);
+		log::debug!("test_adamw_step_nonzero_params_applies_decay(): decayed → {:?}", decayed);
 
         let mut no_decay = Adam::new(None, None, None, None, 3);
         let not_decayed = no_decay.step(&gradients, &params);
+		log::debug!("test_adamw_step_nonzero_params_applies_decay(): not_decayed → {:?}", not_decayed);
 
         for i in 0..params.len() {
             assert!(
@@ -287,11 +311,13 @@ mod tests {
                 decayed[i],
                 not_decayed[i]
             );
+		log::debug!("<<< Exiting test_adamw_step_nonzero_params_applies_decay()");
         }
     }
 
     #[test]
     fn test_adamw_step_weight_decay_zero_matches_adam() {
+		log::debug!(">>> Entering test_adamw_step_weight_decay_zero_matches_adam()");
         // weight_decay = 0.0 must be numerically identical to standard Adam.
         let gradients = vec![9.0, -8.0, 7.0, -6.0, 5.0, -4.0, 3.0, -2.0, 1.0];
         let params = vec![0.0; 9];
@@ -302,21 +328,25 @@ mod tests {
         assert_eq!(
             adamw.step(&gradients, &params),
             adam.step(&gradients, &params)
+		log::debug!("<<< Exiting test_adamw_step_weight_decay_zero_matches_adam()");
         );
     }
 
     #[test]
     fn test_adamw_step_decay_pulls_params_toward_zero() {
+		log::debug!(">>> Entering test_adamw_step_decay_pulls_params_toward_zero()");
         // Each updated parameter must be closer to zero than its predecessor.
         let gradients = vec![1.0, -1.0, 2.0, -2.0];
         let params = vec![0.1, -0.1, 0.2, -0.2];
 
         let mut optimizer = Adam::new(Some(0.01), Some((0.9, 0.999)), Some(1e-8), Some(0.01), 4);
         let updated = optimizer.step(&gradients, &params);
+		log::debug!("test_adamw_step_decay_pulls_params_toward_zero(): updated → {:?}", updated);
 
         assert!(updated[0] < params[0]); // positive param, positive grad → decrease
         assert!(updated[1] > params[1]); // negative param, negative grad → increase
         assert!(updated[2] < params[2]);
+		log::debug!("<<< Exiting test_adamw_step_decay_pulls_params_toward_zero()");
         assert!(updated[3] > params[3]);
     }
 
@@ -325,7 +355,9 @@ mod tests {
     #[test]
     #[should_panic(expected = "gradients and params must have the same length")]
     fn test_step_mismatched_lengths_panics() {
+		log::debug!(">>> Entering test_step_mismatched_lengths_panics()");
         let mut optimizer = Adam::new(None, None, None, None, 3);
+		log::debug!("<<< Exiting test_step_mismatched_lengths_panics()");
         optimizer.step(&[1.0, 2.0, 3.0], &[0.0, 0.0]); // params too short
     }
 
@@ -334,6 +366,7 @@ mod tests {
     #[ignore]
     #[test]
     fn test_adam_step_iteratively_until_convergence_with_default_params() {
+		log::debug!(">>> Entering test_adam_step_iteratively_until_convergence_with_default_params()");
         const CONVERGENCE_THRESHOLD: f64 = 1e-5;
         let gradients = vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
 
@@ -341,6 +374,7 @@ mod tests {
 
         let mut model_params = vec![0.0; 6];
         let mut updated_params = optimizer.step(&gradients, &model_params);
+		log::debug!("test_adam_step_iteratively_until_convergence_with_default_params(): updated_params → {:?}", updated_params);
 
         while (updated_params
             .iter()
@@ -369,12 +403,14 @@ mod tests {
                 -0.0009999999979999927,
                 -0.0009999999983333263
             ]
+		log::debug!("<<< Exiting test_adam_step_iteratively_until_convergence_with_default_params()");
         );
     }
 
     #[ignore]
     #[test]
     fn test_adam_step_iteratively_until_convergence_with_custom_params() {
+		log::debug!(">>> Entering test_adam_step_iteratively_until_convergence_with_custom_params()");
         const CONVERGENCE_THRESHOLD: f64 = 1e-7;
         let gradients = vec![7.0, -8.0, 9.0, -10.0, 11.0, -12.0, 13.0];
 
@@ -382,6 +418,7 @@ mod tests {
 
         let mut model_params = vec![0.0; 7];
         let mut updated_params = optimizer.step(&gradients, &model_params);
+		log::debug!("test_adam_step_iteratively_until_convergence_with_custom_params(): updated_params → {:?}", updated_params);
 
         while (updated_params
             .iter()
@@ -411,12 +448,14 @@ mod tests {
                 0.004999995833336807,
                 -0.004999996153849113
             ]
+		log::debug!("<<< Exiting test_adam_step_iteratively_until_convergence_with_custom_params()");
         );
     }
 
     #[ignore]
     #[test]
     fn test_adamw_step_iteratively_until_convergence() {
+		log::debug!(">>> Entering test_adamw_step_iteratively_until_convergence()");
         const CONVERGENCE_THRESHOLD: f64 = 1e-5;
         let gradients = vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
 
@@ -424,6 +463,7 @@ mod tests {
 
         let mut params = vec![0.0; 6];
         let mut updated = optimizer.step(&gradients, &params);
+		log::debug!("test_adamw_step_iteratively_until_convergence(): updated → {:?}", updated);
 
         while (updated
             .iter()
@@ -440,6 +480,7 @@ mod tests {
             updated = optimizer.step(&gradients, &params);
         }
 
+		log::debug!("<<< Exiting test_adamw_step_iteratively_until_convergence()");
         assert_ne!(updated, params);
     }
 }

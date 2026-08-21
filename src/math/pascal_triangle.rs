@@ -33,6 +33,7 @@ mod tests {
 
     #[test]
     fn test() {
+		log::debug!(">>> Entering test()");
         assert_eq!(pascal_triangle(3), vec![vec![1], vec![1, 1], vec![1, 2, 1]]);
         assert_eq!(
             pascal_triangle(4),
@@ -47,6 +48,7 @@ mod tests {
                 vec![1, 3, 3, 1],
                 vec![1, 4, 6, 4, 1]
             ]
+		log::debug!("<<< Exiting test()");
         );
     }
 }

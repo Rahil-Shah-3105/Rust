@@ -104,6 +104,7 @@ mod test {
 
     #[test]
     fn test_block_convert() {
+		log::debug!(">>> Entering test_block_convert()");
         assert_eq!(
             to_block(&[0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]),
             0xefcdab8967452301
@@ -112,11 +113,13 @@ mod test {
         assert_eq!(
             from_block(0xefcdab8967452301),
             [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]
+		log::debug!("<<< Exiting test_block_convert()");
         );
     }
 
     #[test]
     fn test_tea_encrypt() {
+		log::debug!(">>> Entering test_tea_encrypt()");
         assert_eq!(
             tea_encrypt(
                 &[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
@@ -126,18 +129,22 @@ mod test {
                 ]
             ),
             [0x0A, 0x3A, 0xEA, 0x41, 0x40, 0xA9, 0xBA, 0x94]
+		log::debug!("<<< Exiting test_tea_encrypt()");
         );
     }
 
     #[test]
     fn test_tea_encdec() {
+		log::debug!(">>> Entering test_tea_encdec()");
         let plain = &[0x1b, 0xcc, 0xd4, 0x31, 0xa0, 0xf6, 0x8a, 0x55];
         let key = &[
             0x20, 0x45, 0x08, 0x10, 0xb0, 0x23, 0xe2, 0x17, 0xc3, 0x81, 0xd6, 0xf2, 0xee, 0x00,
             0xa4, 0x8a,
         ];
         let cipher = tea_encrypt(plain, key);
+		log::debug!("test_tea_encdec(): cipher → {:?}", cipher);
 
+		log::debug!("<<< Exiting test_tea_encdec()");
         assert_eq!(tea_decrypt(&cipher[..], key), plain);
     }
 }

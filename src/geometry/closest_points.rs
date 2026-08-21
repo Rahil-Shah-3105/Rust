@@ -118,6 +118,7 @@ mod tests {
     use super::Point;
 
     fn eq(p1: Option<(Point, Point)>, p2: Option<(Point, Point)>) -> bool {
+		log::debug!(">>> Entering eq()");
         match (p1, p2) {
             (None, None) => true,
             (Some((p1, p2)), Some((p3, p4))) => (p1 == p3 && p2 == p4) || (p1 == p4 && p2 == p3),
@@ -138,36 +139,45 @@ mod tests {
 
     #[test]
     fn zero_points() {
+		log::debug!(">>> Entering zero_points()");
         let vals: [Point; 0] = [];
+		log::debug!("<<< Exiting zero_points()");
         assert_display!(closest_points(&vals), None::<(Point, Point)>);
     }
 
     #[test]
     fn one_points() {
+		log::debug!(">>> Entering one_points()");
         let vals = [Point::new(0., 0.)];
+		log::debug!("<<< Exiting one_points()");
         assert_display!(closest_points(&vals), None::<(Point, Point)>);
     }
 
     #[test]
     fn two_points() {
+		log::debug!(">>> Entering two_points()");
         let vals = [Point::new(0., 0.), Point::new(1., 1.)];
         assert_display!(
             closest_points(&vals),
             Some((vals[0].clone(), vals[1].clone()))
+		log::debug!("<<< Exiting two_points()");
         );
     }
 
     #[test]
     fn three_points() {
+		log::debug!(">>> Entering three_points()");
         let vals = [Point::new(0., 0.), Point::new(1., 1.), Point::new(3., 3.)];
         assert_display!(
             closest_points(&vals),
             Some((vals[0].clone(), vals[1].clone()))
+		log::debug!("<<< Exiting three_points()");
         );
     }
 
     #[test]
     fn list_1() {
+		log::debug!(">>> Entering list_1()");
         let vals = [
             Point::new(0., 0.),
             Point::new(2., 1.),
@@ -184,11 +194,13 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(2., 1.), Point::new(2., 3.)))
+		log::debug!("<<< Exiting list_1()");
         );
     }
 
     #[test]
     fn list_2() {
+		log::debug!(">>> Entering list_2()");
         let vals = [
             Point::new(1., 3.),
             Point::new(4., 6.),
@@ -215,11 +227,13 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(4., 14.), Point::new(4., 15.)))
+		log::debug!("<<< Exiting list_2()");
         );
     }
 
     #[test]
     fn vertical_points() {
+		log::debug!(">>> Entering vertical_points()");
         let vals = [
             Point::new(0., 0.),
             Point::new(0., 50.),
@@ -239,6 +253,7 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(0., 40.), Point::new(0., 42.)))
+		log::debug!("<<< Exiting vertical_points()");
         );
     }
 }

@@ -170,6 +170,7 @@ pub fn inverse_fast_fourier_transform(
 mod tests {
     use super::*;
     fn almost_equal(a: f64, b: f64, epsilon: f64) -> bool {
+		log::debug!(">>> Entering almost_equal(a={},b={},epsilon={})", a, b, epsilon);
         (a - b).abs() < epsilon
     }
 
@@ -177,48 +178,63 @@ mod tests {
 
     #[test]
     fn small_polynomial_returns_self() {
+		log::debug!(">>> Entering small_polynomial_returns_self()");
         let polynomial = vec![1.0f64, 1.0, 0.0, 2.5];
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("small_polynomial_returns_self(): permutation → {:?}", permutation);
         let fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("small_polynomial_returns_self(): fft → {:?}", fft);
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("small_polynomial_returns_self(): ifft → {:?}", ifft);
         for (x, y) in ifft.iter().zip(polynomial.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		log::debug!("<<< Exiting small_polynomial_returns_self()");
         }
     }
 
     #[test]
     fn square_small_polynomial() {
+		log::debug!(">>> Entering square_small_polynomial()");
         let mut polynomial = vec![1.0f64, 1.0, 0.0, 2.0];
         polynomial.append(&mut vec![0.0; 4]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("square_small_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("square_small_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("square_small_polynomial(): ifft → {:?}", ifft);
         let expected = [1.0, 2.0, 1.0, 4.0, 4.0, 0.0, 4.0, 0.0, 0.0];
         for (x, y) in ifft.iter().zip(expected.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		log::debug!("<<< Exiting square_small_polynomial()");
         }
     }
 
     #[test]
     #[ignore]
     fn square_big_polynomial() {
+		log::debug!(">>> Entering square_big_polynomial()");
         // This test case takes ~1050ms on my machine in unoptimized mode,
         // but it takes ~70ms in release mode.
         let n = 1 << 17; // ~100_000
         let mut polynomial = vec![1.0f64; n];
         polynomial.append(&mut vec![0.0f64; n]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		log::debug!("square_big_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		log::debug!("square_big_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		log::debug!("square_big_polynomial(): ifft → {:?}", ifft);
         let expected = (0..((n << 1) - 1)).map(|i| std::cmp::min(i + 1, (n << 1) - 1 - i) as f64);
         for (&x, y) in ifft.iter().zip(expected) {
             assert!(almost_equal(x, y, EPSILON));
+		log::debug!("<<< Exiting square_big_polynomial()");
         }
     }
 }

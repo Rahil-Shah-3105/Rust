@@ -239,6 +239,7 @@ mod test {
 
     #[test]
     fn test_search() {
+		log::debug!(">>> Entering test_search()");
         let tree = prequel_memes_tree();
         assert!(tree.search(&"hello there"));
         assert!(tree.search(&"you are a bold one"));
@@ -249,11 +250,13 @@ mod test {
             !tree.search(&"but i was going to tosche station to pick up some power converters",)
         );
         assert!(!tree.search(&"only a sith deals in absolutes"));
+		log::debug!("<<< Exiting test_search()");
         assert!(!tree.search(&"you underestimate my power"));
     }
 
     #[test]
     fn test_maximum_and_minimum() {
+		log::debug!(">>> Entering test_maximum_and_minimum()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.maximum().unwrap(), "your move");
         assert_eq!(
@@ -271,11 +274,13 @@ mod test {
         assert_eq!(*tree2.maximum().unwrap(), 0);
         tree2.insert(5);
         assert_eq!(*tree2.minimum().unwrap(), -5);
+		log::debug!("<<< Exiting test_maximum_and_minimum()");
         assert_eq!(*tree2.maximum().unwrap(), 5);
     }
 
     #[test]
     fn test_floor_and_ceil() {
+		log::debug!(">>> Entering test_floor_and_ceil()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.floor(&"hello there").unwrap(), "hello there");
         assert_eq!(
@@ -315,11 +320,13 @@ mod test {
             *tree.ceil(&"you underestimate my power").unwrap(),
             "your move"
         );
+		log::debug!("<<< Exiting test_floor_and_ceil()");
         assert!(tree.ceil(&"your new empire").is_none());
     }
 
     #[test]
     fn test_iterator() {
+		log::debug!(">>> Entering test_iterator()");
         let tree = prequel_memes_tree();
         let mut iter = tree.iter();
         assert_eq!(
@@ -333,6 +340,7 @@ mod test {
         assert_eq!(iter.next().unwrap(), &"you fool");
         assert_eq!(iter.next().unwrap(), &"your move");
         assert_eq!(iter.next(), None);
+		log::debug!("<<< Exiting test_iterator()");
         assert_eq!(iter.next(), None);
     }
 }

@@ -12,9 +12,11 @@ mod tests {
 
     #[test]
     fn test0() {
+		log::debug!(">>> Entering test0()");
         assert_eq!(0, square_pyramidal_number(0));
         assert_eq!(1, square_pyramidal_number(1));
         assert_eq!(5, square_pyramidal_number(2));
+		log::debug!("<<< Exiting test0()");
         assert_eq!(14, square_pyramidal_number(3));
     }
 }

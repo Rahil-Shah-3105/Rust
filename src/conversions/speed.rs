@@ -95,6 +95,7 @@ mod tests {
 
     #[test]
     fn test_speed_conversion() {
+		log::debug!(">>> Entering test_speed_conversion()");
         assert_eq!(
             convert_speed(
                 100.0,
@@ -214,17 +215,20 @@ mod tests {
                 SpeedUnit::KilometersPerHour
             ),
             100.0
+		log::debug!("<<< Exiting test_speed_conversion()");
         );
     }
 
     #[test]
     fn test_display() {
+		log::debug!(">>> Entering test_display()");
         assert_eq!(SpeedUnit::KilometersPerHour.to_string(), "km/h");
         assert_eq!(SpeedUnit::MetersPerSecond.to_string(), "m/s");
         assert_eq!(SpeedUnit::MilesPerHour.to_string(), "mph");
         assert_eq!(SpeedUnit::Knot.to_string(), "knot");
         assert_eq!(SpeedUnit::FeetPerSecond.to_string(), "ft/s");
         assert_eq!(SpeedUnit::Mach.to_string(), "Mach");
+		log::debug!("<<< Exiting test_display()");
         assert_eq!(SpeedUnit::SpeedOfLight.to_string(), "c");
     }
 }

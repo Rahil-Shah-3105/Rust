@@ -28,23 +28,27 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         // Need to be careful about large exponents. It is easy to hit overflows.
         assert_eq!(binary_exponentiation(2, 3), 8);
         assert_eq!(binary_exponentiation(4, 12), 16777216);
         assert_eq!(binary_exponentiation(6, 12), 2176782336);
         assert_eq!(binary_exponentiation(10, 4), 10000);
         assert_eq!(binary_exponentiation(20, 3), 8000);
+		log::debug!("<<< Exiting basic()");
         assert_eq!(binary_exponentiation(3, 21), 10460353203);
     }
 
     #[test]
     fn up_to_ten() {
+		log::debug!(">>> Entering up_to_ten()");
         // Compute all powers from up to ten, using the standard library as the source of truth.
         for i in 0..10 {
             for j in 0..10 {
                 println!("{i}, {j}");
                 assert_eq!(binary_exponentiation(i, j), u64::pow(i, j))
             }
+		log::debug!("<<< Exiting up_to_ten()");
         }
     }
 }

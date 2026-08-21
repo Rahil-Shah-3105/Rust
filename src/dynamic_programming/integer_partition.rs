@@ -75,43 +75,57 @@ mod tests {
 
     #[test]
     fn test_partition_5() {
+		log::debug!(">>> Entering test_partition_5()");
+		log::debug!("<<< Exiting test_partition_5()");
         assert_eq!(partition(5), 7);
     }
 
     #[test]
     fn test_partition_7() {
+		log::debug!(">>> Entering test_partition_7()");
+		log::debug!("<<< Exiting test_partition_7()");
         assert_eq!(partition(7), 15);
     }
 
     #[test]
     #[allow(clippy::large_stack_arrays)]
     fn test_partition_100() {
+		log::debug!(">>> Entering test_partition_100()");
+		log::debug!("<<< Exiting test_partition_100()");
         assert_eq!(partition(100), 190569292);
     }
 
     #[test]
     #[allow(clippy::large_stack_arrays)]
     fn test_partition_1000() {
+		log::debug!(">>> Entering test_partition_1000()");
+		log::debug!("<<< Exiting test_partition_1000()");
         assert_eq!(partition(1000), 24061467864032622473692149727991);
     }
 
     #[test]
     #[should_panic(expected = "Input must be a positive integer greater than 0")]
     fn test_partition_negative() {
+		log::debug!(">>> Entering test_partition_negative()");
+		log::debug!("<<< Exiting test_partition_negative()");
         partition(-7);
     }
 
     #[test]
     #[should_panic(expected = "Input must be a positive integer greater than 0")]
     fn test_partition_zero() {
+		log::debug!(">>> Entering test_partition_zero()");
+		log::debug!("<<< Exiting test_partition_zero()");
         partition(0);
     }
 
     #[test]
     fn test_partition_small_values() {
+		log::debug!(">>> Entering test_partition_small_values()");
         assert_eq!(partition(1), 1);
         assert_eq!(partition(2), 2);
         assert_eq!(partition(3), 3);
+		log::debug!("<<< Exiting test_partition_small_values()");
         assert_eq!(partition(4), 5);
     }
 }

@@ -107,13 +107,16 @@ pub mod tests {
 
     #[test]
     fn test_choose_zero() {
+		log::debug!(">>> Entering test_choose_zero()");
         for i in 1..100 {
             assert_eq!(n_choose_r(i, 0), One::one());
+		log::debug!("<<< Exiting test_choose_zero()");
         }
     }
 
     #[test]
     fn test_combination() {
+		log::debug!(">>> Entering test_combination()");
         let five_choose_1 = BigUint::from(5u32);
         assert_eq!(n_choose_r(5, 1), five_choose_1);
         assert_eq!(n_choose_r(5, 4), five_choose_1);
@@ -124,11 +127,13 @@ pub mod tests {
 
         let fourty_two_choose_thirty = BigUint::from_str("11058116888").unwrap();
         assert_eq!(n_choose_r(42, 30), fourty_two_choose_thirty);
+		log::debug!("<<< Exiting test_combination()");
         assert_eq!(n_choose_r(42, 12), fourty_two_choose_thirty);
     }
 
     #[test]
     fn test_bell_numbers() {
+		log::debug!(">>> Entering test_bell_numbers()");
         let bell_one = BigUint::from(1u32);
         assert_eq!(bell_number(1), bell_one);
 
@@ -142,6 +147,7 @@ pub mod tests {
         assert_eq!(bell_number(6), bell_six);
 
         let bell_twenty_six = BigUint::from_str("49631246523618756274").unwrap();
+		log::debug!("<<< Exiting test_bell_numbers()");
         assert_eq!(bell_number(26), bell_twenty_six);
     }
 }

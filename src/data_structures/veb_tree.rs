@@ -238,6 +238,7 @@ mod test {
     use rand::{rngs::StdRng, RngExt, SeedableRng};
 
     fn test_veb_tree(size: u32, mut elements: Vec<u32>, exclude: Vec<u32>) {
+		log::debug!(">>> Entering test_veb_tree(size={},elements={:?},exclude={:?})", size, elements, exclude);
         // Insert elements
         let mut tree = VebTree::new(size);
         for element in elements.iter() {
@@ -261,21 +262,27 @@ mod test {
         for i in 1..elements.len() {
             assert_eq!(tree.succ(elements[i - 1]), Some(elements[i]));
             assert_eq!(tree.pred(elements[i]), Some(elements[i - 1]));
+		log::debug!("<<< Exiting test_veb_tree(size={},elements={:?},exclude={:?})", size, elements, exclude);
         }
     }
 
     #[test]
     fn test_empty() {
+		log::debug!(">>> Entering test_empty()");
+		log::debug!("<<< Exiting test_empty()");
         test_veb_tree(16, Vec::new(), (0..16).collect());
     }
 
     #[test]
     fn test_single() {
+		log::debug!(">>> Entering test_single()");
+		log::debug!("<<< Exiting test_single()");
         test_veb_tree(16, Vec::from([5]), (0..16).filter(|x| *x != 5).collect());
     }
 
     #[test]
     fn test_two() {
+		log::debug!(">>> Entering test_two()");
         test_veb_tree(
             16,
             Vec::from([4, 9]),
@@ -285,6 +292,7 @@ mod test {
 
     #[test]
     fn test_repeat_insert() {
+		log::debug!(">>> Entering test_repeat_insert()");
         let mut tree = VebTree::new(16);
         for _ in 0..5 {
             tree.insert(10);
@@ -293,50 +301,65 @@ mod test {
         let elements: Vec<u32> = (0..16).filter(|x| *x != 10).collect();
         for element in elements {
             assert!(!tree.search(element));
+		log::debug!("<<< Exiting test_repeat_insert()");
         }
     }
 
     #[test]
     fn test_linear() {
+		log::debug!(">>> Entering test_linear()");
+		log::debug!("<<< Exiting test_linear()");
         test_veb_tree(16, (0..10).collect(), (10..16).collect());
     }
 
     fn test_full(size: u32) {
+		log::debug!(">>> Entering test_full(size={})", size);
+		log::debug!("<<< Exiting test_full(size={})", size);
         test_veb_tree(size, (0..size).collect(), Vec::new());
     }
 
     #[test]
     fn test_full_small() {
+		log::debug!(">>> Entering test_full_small()");
         test_full(8);
         test_full(10);
         test_full(16);
         test_full(20);
+		log::debug!("<<< Exiting test_full_small()");
         test_full(32);
     }
 
     #[test]
     fn test_full_256() {
+		log::debug!(">>> Entering test_full_256()");
+		log::debug!("<<< Exiting test_full_256()");
         test_full(256);
     }
 
     #[test]
     fn test_10_256() {
+		log::debug!(">>> Entering test_10_256()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..10).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_10_256()");
         test_veb_tree(256, elements, Vec::new());
     }
 
     #[test]
     fn test_100_256() {
+		log::debug!(">>> Entering test_100_256()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..100).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_100_256()");
         test_veb_tree(256, elements, Vec::new());
     }
 
     #[test]
     fn test_100_300() {
+		log::debug!(">>> Entering test_100_300()");
         let mut rng = StdRng::seed_from_u64(0);
         let elements: Vec<u32> = (0..100).map(|_| rng.random_range(0..255)).collect();
+		log::debug!("<<< Exiting test_100_300()");
         test_veb_tree(300, elements, Vec::new());
     }
 }

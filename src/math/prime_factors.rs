@@ -26,11 +26,13 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         assert_eq!(prime_factors(0), vec![]);
         assert_eq!(prime_factors(1), vec![]);
         assert_eq!(prime_factors(11), vec![11]);
         assert_eq!(prime_factors(25), vec![5, 5]);
         assert_eq!(prime_factors(33), vec![3, 11]);
+		log::debug!("<<< Exiting it_works()");
         assert_eq!(prime_factors(2560), vec![2, 2, 2, 2, 2, 2, 2, 2, 2, 5]);
     }
 }

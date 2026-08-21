@@ -116,9 +116,11 @@ mod tests {
 
     #[test]
     fn min_run_length_returns_correct_value() {
+		log::debug!(">>> Entering min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(0), 0);
         assert_eq!(compute_min_run_length(10), 10);
         assert_eq!(compute_min_run_length(33), 17);
+		log::debug!("<<< Exiting min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(64), 16);
     }
 

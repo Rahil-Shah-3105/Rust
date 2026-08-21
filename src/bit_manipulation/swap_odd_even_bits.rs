@@ -42,6 +42,7 @@ mod tests {
 
     #[test]
     fn test_swap_odd_even_bits() {
+		log::debug!(">>> Entering test_swap_odd_even_bits()");
         assert_eq!(swap_odd_even_bits(0), 0);
         assert_eq!(swap_odd_even_bits(1), 2);
         assert_eq!(swap_odd_even_bits(2), 1);
@@ -50,23 +51,28 @@ mod tests {
         assert_eq!(swap_odd_even_bits(5), 10);
         assert_eq!(swap_odd_even_bits(6), 9);
         assert_eq!(swap_odd_even_bits(23), 43);
+		log::debug!("<<< Exiting test_swap_odd_even_bits()");
         assert_eq!(swap_odd_even_bits(24), 36);
     }
 
     #[test]
     fn test_edge_cases() {
+		log::debug!(">>> Entering test_edge_cases()");
         // All bits set
         assert_eq!(swap_odd_even_bits(0xFFFFFFFF), 0xFFFFFFFF);
 
         // Alternating patterns
         assert_eq!(swap_odd_even_bits(0xAAAAAAAA), 0x55555555);
+		log::debug!("<<< Exiting test_edge_cases()");
         assert_eq!(swap_odd_even_bits(0x55555555), 0xAAAAAAAA);
     }
 
     #[test]
     fn test_power_of_two() {
+		log::debug!(">>> Entering test_power_of_two()");
         assert_eq!(swap_odd_even_bits(16), 32);
         assert_eq!(swap_odd_even_bits(32), 16);
+		log::debug!("<<< Exiting test_power_of_two()");
         assert_eq!(swap_odd_even_bits(64), 128);
     }
 }

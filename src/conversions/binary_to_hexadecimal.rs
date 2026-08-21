@@ -78,29 +78,45 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
         let input = "";
         let expected = "Invalid Input";
+		log::debug!("test_empty_string(): expected → {}", expected);
+		log::debug!("test_empty_string(): input → {}", input);
+    log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_invalid_binary() {
+		log::debug!(">>> Entering test_invalid_binary()");
         let input = "a";
         let expected = "Invalid Input";
+		log::debug!("test_invalid_binary(): expected → {}", expected);
+		log::debug!("test_invalid_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_invalid_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_binary() {
+		log::debug!(">>> Entering test_binary()");
         let input = "00110110";
         let expected = "0x36";
+		log::debug!("test_binary(): expected → {}", expected);
+		log::debug!("test_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 
     #[test]
     fn test_padded_binary() {
+		log::debug!(">>> Entering test_padded_binary()");
         let input = " 1010   ";
         let expected = "0xa";
+		log::debug!("test_padded_binary(): expected → {}", expected);
+		log::debug!("test_padded_binary(): input → {}", input);
+    log::debug!("<<< Exiting test_padded_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
 }

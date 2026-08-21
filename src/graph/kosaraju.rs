@@ -69,6 +69,7 @@ mod tests {
 
     #[test]
     fn test_kosaraju_single_sccs() {
+		log::debug!(">>> Entering test_kosaraju_single_sccs()");
         let vertices = 5;
         let mut graph = Graph::new(vertices);
 
@@ -80,12 +81,15 @@ mod tests {
         graph.add_edge(4, 2);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_single_sccs(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 1);
+		log::debug!("<<< Exiting test_kosaraju_single_sccs()");
         assert!(sccs.contains(&vec![0, 3, 2, 1, 4]));
     }
 
     #[test]
     fn test_kosaraju_multiple_sccs() {
+		log::debug!(">>> Entering test_kosaraju_multiple_sccs()");
         let vertices = 8;
         let mut graph = Graph::new(vertices);
 
@@ -102,15 +106,18 @@ mod tests {
         graph.add_edge(6, 4);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_multiple_sccs(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 4);
         assert!(sccs.contains(&vec![0, 1, 2]));
         assert!(sccs.contains(&vec![3]));
         assert!(sccs.contains(&vec![4, 6, 5]));
+		log::debug!("<<< Exiting test_kosaraju_multiple_sccs()");
         assert!(sccs.contains(&vec![7]));
     }
 
     #[test]
     fn test_kosaraju_multiple_sccs1() {
+		log::debug!(">>> Entering test_kosaraju_multiple_sccs1()");
         let vertices = 8;
         let mut graph = Graph::new(vertices);
         graph.add_edge(0, 2);
@@ -124,14 +131,17 @@ mod tests {
         graph.add_edge(7, 6);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_multiple_sccs1(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 3);
         assert!(sccs.contains(&vec![0]));
         assert!(sccs.contains(&vec![1]));
+		log::debug!("<<< Exiting test_kosaraju_multiple_sccs1()");
         assert!(sccs.contains(&vec![2, 5, 6, 7, 4, 3]));
     }
 
     #[test]
     fn test_kosaraju_no_scc() {
+		log::debug!(">>> Entering test_kosaraju_no_scc()");
         let vertices = 4;
         let mut graph = Graph::new(vertices);
 
@@ -140,18 +150,23 @@ mod tests {
         graph.add_edge(2, 3);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_no_scc(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 4);
         for (i, _) in sccs.iter().enumerate().take(vertices) {
             assert_eq!(sccs[i], vec![i]);
+		log::debug!("<<< Exiting test_kosaraju_no_scc()");
         }
     }
 
     #[test]
     fn test_kosaraju_empty_graph() {
+		log::debug!(">>> Entering test_kosaraju_empty_graph()");
         let vertices = 0;
         let graph = Graph::new(vertices);
 
         let sccs = kosaraju(&graph);
+		log::debug!("test_kosaraju_empty_graph(): sccs → {:?}", sccs);
+		log::debug!("<<< Exiting test_kosaraju_empty_graph()");
         assert_eq!(sccs.len(), 0);
     }
 }

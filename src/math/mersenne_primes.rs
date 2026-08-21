@@ -27,13 +27,17 @@ mod tests {
 
     #[test]
     fn validity_check() {
+		log::debug!(">>> Entering validity_check()");
         assert!(is_mersenne_prime(3));
         assert!(is_mersenne_prime(13));
+		log::debug!("<<< Exiting validity_check()");
         assert!(!is_mersenne_prime(32));
     }
 
     #[allow(dead_code)]
     fn generation_check() {
+		log::debug!(">>> Entering generation_check()");
+		log::debug!("<<< Exiting generation_check()");
         assert_eq!(get_mersenne_primes(30), [2, 3, 5, 7, 13, 17, 19]);
     }
 }

@@ -267,23 +267,29 @@ mod tests {
 
     #[test]
     fn test_city_distance() {
+		log::debug!(">>> Entering test_city_distance()");
         let city1 = City { x: 0.0, y: 0.0 };
         let city2 = City { x: 3.0, y: 4.0 };
+		log::debug!("<<< Exiting test_city_distance()");
         assert!((city1.distance_to(&city2) - 5.0).abs() < 1e-10);
     }
 
     #[test]
     fn test_city_distance_negative() {
+		log::debug!(">>> Entering test_city_distance_negative()");
         let city1 = City { x: 0.0, y: 0.0 };
         let city2 = City { x: -3.0, y: -4.0 };
+		log::debug!("<<< Exiting test_city_distance_negative()");
         assert!((city1.distance_to(&city2) - 5.0).abs() < 1e-10);
     }
 
     #[test]
     fn test_aco_simple() {
+		log::debug!(">>> Entering test_aco_simple()");
         let cities = vec![(0.0, 0.0), (2.0, 2.0)];
 
         let result = ant_colony_optimization(cities, 5, 5, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_aco_simple(): result → {:?}", result);
 
         assert!(result.is_some());
         let (route, distance) = result.unwrap();
@@ -293,11 +299,13 @@ mod tests {
 
         // Expected distance: 2 * sqrt(8) ≈ 5.656854
         let expected_distance = 2.0 * (8.0_f64).sqrt();
+		log::debug!("<<< Exiting test_aco_simple()");
         assert!((distance - expected_distance).abs() < 0.001);
     }
 
     #[test]
     fn test_aco_larger_problem() {
+		log::debug!(">>> Entering test_aco_larger_problem()");
         let cities = vec![
             (0.0, 0.0),
             (0.0, 5.0),
@@ -310,6 +318,7 @@ mod tests {
         ];
 
         let result = ant_colony_optimization(cities.clone(), 10, 20, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_aco_larger_problem(): result → {:?}", result);
 
         assert!(result.is_some());
         let (route, distance) = result.unwrap();
@@ -328,61 +337,80 @@ mod tests {
 
         // Distance should be reasonable (not infinity)
         assert!(distance > 0.0);
+		log::debug!("<<< Exiting test_aco_larger_problem()");
         assert!(distance < f64::INFINITY);
     }
 
     #[test]
     fn test_aco_empty_cities() {
+		log::debug!(">>> Entering test_aco_empty_cities()");
         let cities: Vec<(f64, f64)> = Vec::new();
         let result = ant_colony_optimization(cities, 10, 20, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_aco_empty_cities(): result → {:?}", result);
+		log::debug!("<<< Exiting test_aco_empty_cities()");
         assert!(result.is_none());
     }
 
     #[test]
     fn test_aco_single_city() {
+		log::debug!(">>> Entering test_aco_single_city()");
         let cities = vec![(0.0, 0.0)];
         let result = ant_colony_optimization(cities, 10, 20, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_aco_single_city(): result → {:?}", result);
 
         assert!(result.is_some());
         let (route, distance) = result.unwrap();
         assert_eq!(route, vec![0, 0]);
+		log::debug!("<<< Exiting test_aco_single_city()");
         assert!((distance - 0.0).abs() < 1e-10);
     }
 
     #[test]
     fn test_default_parameters() {
+		log::debug!(">>> Entering test_default_parameters()");
         let cities = vec![(0.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
         let result = ant_colony_optimization(cities, 10, 20, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_default_parameters(): result → {:?}", result);
+		log::debug!("<<< Exiting test_default_parameters()");
         assert!(result.is_some());
     }
 
     #[test]
     fn test_zero_ants() {
+		log::debug!(">>> Entering test_zero_ants()");
         // Test with zero ants - should return None as no solutions are constructed
         let cities = vec![(0.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
         let result = ant_colony_optimization(cities, 0, 20, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_zero_ants(): result → {:?}", result);
+		log::debug!("<<< Exiting test_zero_ants()");
         assert!(result.is_none());
     }
 
     #[test]
     fn test_zero_iterations() {
+		log::debug!(">>> Entering test_zero_iterations()");
         // Test with zero iterations - should return None as no solutions are found
         let cities = vec![(0.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
         let result = ant_colony_optimization(cities, 10, 0, 0.7, 1.0, 5.0, 10.0);
+		log::debug!("test_zero_iterations(): result → {:?}", result);
+		log::debug!("<<< Exiting test_zero_iterations()");
         assert!(result.is_none());
     }
 
     #[test]
     fn test_extreme_parameters() {
+		log::debug!(">>> Entering test_extreme_parameters()");
         // Test with extreme beta value and many iterations to potentially trigger
         // the rounding fallback in select_next_city
         let cities = vec![(0.0, 0.0), (1.0, 0.0), (2.0, 0.0), (3.0, 0.0), (4.0, 0.0)];
         // Very high beta makes distance dominate, low alpha reduces pheromone influence
         // This creates extreme probability distributions that may trigger rounding edge cases
         let result = ant_colony_optimization(cities, 50, 100, 0.5, 0.1, 100.0, 10.0);
+		log::debug!("test_extreme_parameters(): result → {:?}", result);
         assert!(result.is_some());
         let (route, _) = result.unwrap();
         // Should still produce valid route
+		log::debug!("<<< Exiting test_extreme_parameters()");
         assert_eq!(route.len(), 6); // 5 cities + return to start
     }
 }

@@ -53,6 +53,8 @@ mod tests {
     use super::*;
     #[test]
     fn my_test() {
+		log::debug!(">>> Entering my_test()");
+		log::debug!("<<< Exiting my_test()");
         assert_eq!(nthprime(100), 541u64);
     }
 }

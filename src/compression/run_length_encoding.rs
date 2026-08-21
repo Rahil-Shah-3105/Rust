@@ -31,18 +31,23 @@ mod test {
 
     #[test]
     fn test_run_length_decode() {
+		log::debug!(">>> Entering test_run_length_decode()");
         let res = run_length_decode(&[('A', 0)]);
         assert_eq!(res, "");
+		log::debug!("test_run_length_decode(): res → {}", res);
         let res = run_length_decode(&[('B', 1)]);
         assert_eq!(res, "B");
         let res = run_length_decode(&[('A', 5), ('z', 3), ('B', 1)]);
+		log::debug!("<<< Exiting test_run_length_decode()");
         assert_eq!(res, "AAAAAzzzB");
     }
 
     #[test]
     fn test_run_length_encode() {
+		log::debug!(">>> Entering test_run_length_encode()");
         let res = run_length_encode("");
         assert_eq!(res, []);
+		log::debug!("test_run_length_encode(): res → {:?}", res);
 
         let res = run_length_encode("A");
         assert_eq!(res, [('A', 1)]);
@@ -69,6 +74,7 @@ mod test {
                 ('d', 1),
                 ('s', 1)
             ]
+		log::debug!("<<< Exiting test_run_length_encode()");
         );
     }
 }

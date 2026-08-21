@@ -44,11 +44,13 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+		log::debug!(">>> Entering it_works()");
         assert_eq!(zellers_congruence_algorithm(25, 1, 2013, false), "6");
         assert_eq!(zellers_congruence_algorithm(25, 1, 2013, true), "Friday");
         assert_eq!(zellers_congruence_algorithm(16, 4, 2022, false), "0");
         assert_eq!(zellers_congruence_algorithm(16, 4, 2022, true), "Saturday");
         assert_eq!(zellers_congruence_algorithm(14, 12, 1978, false), "5");
+		log::debug!("<<< Exiting it_works()");
         assert_eq!(zellers_congruence_algorithm(15, 6, 2021, false), "3");
     }
 }

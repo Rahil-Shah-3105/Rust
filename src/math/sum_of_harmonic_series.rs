@@ -31,10 +31,12 @@ mod tests {
 
     #[test]
     fn test_sum_of_harmonic_progression() {
+		log::debug!(">>> Entering test_sum_of_harmonic_progression()");
         assert_eq!(sum_of_harmonic_progression(1.0 / 2.0, 2.0, 2), 0.75);
         assert_eq!(
             sum_of_harmonic_progression(1.0 / 5.0, 5.0, 5),
             0.45666666666666667
+		log::debug!("<<< Exiting test_sum_of_harmonic_progression()");
         );
     }
 }

@@ -16,21 +16,29 @@ mod test {
 
     #[test]
     fn test_single_letter() {
+		log::debug!(">>> Entering test_single_letter()");
+		log::debug!("<<< Exiting test_single_letter()");
         assert_eq!("N", rot13("A"));
     }
 
     #[test]
     fn test_bunch_of_letters() {
+		log::debug!(">>> Entering test_bunch_of_letters()");
+		log::debug!("<<< Exiting test_bunch_of_letters()");
         assert_eq!("NOP", rot13("ABC"));
     }
 
     #[test]
     fn test_non_ascii() {
+		log::debug!(">>> Entering test_non_ascii()");
+		log::debug!("<<< Exiting test_non_ascii()");
         assert_eq!("😀NO", rot13("😀AB"));
     }
 
     #[test]
     fn test_twice() {
+		log::debug!(">>> Entering test_twice()");
+		log::debug!("<<< Exiting test_twice()");
         assert_eq!("ABCD", rot13(&rot13("ABCD")));
     }
 }

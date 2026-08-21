@@ -15,6 +15,7 @@ mod tests {
     use super::*;
 
     fn math_fn(x: f64) -> f64 {
+		log::debug!(">>> Entering math_fn(x={})", x);
         x.cos() - (x * x * x)
     }
     fn math_fnd(x: f64) -> f64 {
@@ -22,6 +23,8 @@ mod tests {
     }
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
+		log::debug!("<<< Exiting basic()");
         assert_eq!(find_root(math_fn, math_fnd, 0.5, 6), 0.8654740331016144);
     }
 }

@@ -86,18 +86,23 @@ mod tests {
 
     #[test]
     fn test_zero() {
+		log::debug!(">>> Entering test_zero()");
         // 0 is considered a power of 2 by the algorithm (2^(-∞) interpretation)
+		log::debug!("<<< Exiting test_zero()");
         assert!(is_power_of_two(0).unwrap());
     }
 
     #[test]
     fn test_one() {
+		log::debug!(">>> Entering test_one()");
         // 1 = 2^0
+		log::debug!("<<< Exiting test_one()");
         assert!(is_power_of_two(1).unwrap());
     }
 
     #[test]
     fn test_powers_of_two() {
+		log::debug!(">>> Entering test_powers_of_two()");
         assert!(is_power_of_two(2).unwrap()); // 2^1
         assert!(is_power_of_two(4).unwrap()); // 2^2
         assert!(is_power_of_two(8).unwrap()); // 2^3
@@ -113,11 +118,13 @@ mod tests {
         assert!(is_power_of_two(8192).unwrap()); // 2^13
         assert!(is_power_of_two(16384).unwrap()); // 2^14
         assert!(is_power_of_two(32768).unwrap()); // 2^15
+		log::debug!("<<< Exiting test_powers_of_two()");
         assert!(is_power_of_two(65536).unwrap()); // 2^16
     }
 
     #[test]
     fn test_non_powers_of_two() {
+		log::debug!(">>> Entering test_non_powers_of_two()");
         assert!(!is_power_of_two(3).unwrap());
         assert!(!is_power_of_two(5).unwrap());
         assert!(!is_power_of_two(6).unwrap());
@@ -130,27 +137,33 @@ mod tests {
         assert!(!is_power_of_two(14).unwrap());
         assert!(!is_power_of_two(15).unwrap());
         assert!(!is_power_of_two(17).unwrap());
+		log::debug!("<<< Exiting test_non_powers_of_two()");
         assert!(!is_power_of_two(18).unwrap());
     }
 
     #[test]
     fn test_specific_non_powers() {
+		log::debug!(">>> Entering test_specific_non_powers()");
         assert!(!is_power_of_two(6).unwrap());
         assert!(!is_power_of_two(17).unwrap());
         assert!(!is_power_of_two(100).unwrap());
+		log::debug!("<<< Exiting test_specific_non_powers()");
         assert!(!is_power_of_two(1000).unwrap());
     }
 
     #[test]
     fn test_large_powers_of_two() {
+		log::debug!(">>> Entering test_large_powers_of_two()");
         assert!(is_power_of_two(131072).unwrap()); // 2^17
         assert!(is_power_of_two(262144).unwrap()); // 2^18
         assert!(is_power_of_two(524288).unwrap()); // 2^19
+		log::debug!("<<< Exiting test_large_powers_of_two()");
         assert!(is_power_of_two(1048576).unwrap()); // 2^20
     }
 
     #[test]
     fn test_numbers_near_powers_of_two() {
+		log::debug!(">>> Entering test_numbers_near_powers_of_two()");
         // One less than powers of 2
         assert!(!is_power_of_two(3).unwrap()); // 2^2 - 1
         assert!(!is_power_of_two(7).unwrap()); // 2^3 - 1
@@ -167,27 +180,34 @@ mod tests {
         assert!(!is_power_of_two(17).unwrap()); // 2^4 + 1
         assert!(!is_power_of_two(33).unwrap()); // 2^5 + 1
         assert!(!is_power_of_two(65).unwrap()); // 2^6 + 1
+		log::debug!("<<< Exiting test_numbers_near_powers_of_two()");
         assert!(!is_power_of_two(129).unwrap()); // 2^7 + 1
     }
 
     #[test]
     fn test_negative_number_returns_error() {
+		log::debug!(">>> Entering test_negative_number_returns_error()");
         let result = is_power_of_two(-1);
         assert!(result.is_err());
+		log::debug!("test_negative_number_returns_error(): result → {:?}", result);
+		log::debug!("<<< Exiting test_negative_number_returns_error()");
         assert_eq!(result.unwrap_err(), "number must not be negative");
     }
 
     #[test]
     fn test_multiple_negative_numbers() {
+		log::debug!(">>> Entering test_multiple_negative_numbers()");
         assert!(is_power_of_two(-1).is_err());
         assert!(is_power_of_two(-2).is_err());
         assert!(is_power_of_two(-4).is_err());
         assert!(is_power_of_two(-8).is_err());
+		log::debug!("<<< Exiting test_multiple_negative_numbers()");
         assert!(is_power_of_two(-100).is_err());
     }
 
     #[test]
     fn test_all_powers_of_two_up_to_30() {
+		log::debug!(">>> Entering test_all_powers_of_two_up_to_30()");
         // Test 2^0 through 2^30
         for i in 0..=30 {
             let power = 1u32 << i; // 2^i
@@ -195,11 +215,13 @@ mod tests {
                 is_power_of_two(power as i32).unwrap(),
                 "2^{i} = {power} should be a power of 2"
             );
+		log::debug!("<<< Exiting test_all_powers_of_two_up_to_30()");
         }
     }
 
     #[test]
     fn test_range_verification() {
+		log::debug!(">>> Entering test_range_verification()");
         // Test that between consecutive powers of 2, only the powers return true
         for i in 1..10 {
             let power = 1 << i; // 2^i
@@ -213,11 +235,13 @@ mod tests {
                     "{num} should not be a power of 2"
                 );
             }
+		log::debug!("<<< Exiting test_range_verification()");
         }
     }
 
     #[test]
     fn test_bit_manipulation_correctness() {
+		log::debug!(">>> Entering test_bit_manipulation_correctness()");
         // Verify the bit manipulation logic for specific examples
         // For 8: 1000 & 0111 = 0000 ✓
         assert_eq!(8 & 7, 0);
@@ -229,12 +253,15 @@ mod tests {
 
         // For 6: 110 & 101 = 100 ✗
         assert_ne!(6 & 5, 0);
+		log::debug!("<<< Exiting test_bit_manipulation_correctness()");
         assert!(!is_power_of_two(6).unwrap());
     }
 
     #[test]
     fn test_edge_case_max_i32_power_of_two() {
+		log::debug!(">>> Entering test_edge_case_max_i32_power_of_two()");
         // Largest power of 2 that fits in i32: 2^30 = 1073741824
+		log::debug!("<<< Exiting test_edge_case_max_i32_power_of_two()");
         assert!(is_power_of_two(1073741824).unwrap());
     }
 }

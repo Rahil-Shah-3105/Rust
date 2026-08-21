@@ -34,17 +34,21 @@ mod tests {
 
     #[test]
     fn test_octal_to_hexadecimal() {
+		log::debug!(">>> Entering test_octal_to_hexadecimal()");
         assert_eq!(octal_to_hexadecimal("12"), Ok("A".to_string()));
         assert_eq!(octal_to_hexadecimal("377"), Ok("FF".to_string()));
         assert_eq!(octal_to_hexadecimal("144"), Ok("64".to_string()));
+		log::debug!("<<< Exiting test_octal_to_hexadecimal()");
         assert_eq!(octal_to_hexadecimal("0"), Ok("0".to_string()));
     }
 
     #[test]
     fn test_invalid_input() {
+		log::debug!(">>> Entering test_invalid_input()");
         assert_eq!(octal_to_hexadecimal(""), Err("Empty string"));
         assert_eq!(octal_to_hexadecimal("8"), Err("Invalid octal string"));
         assert_eq!(octal_to_hexadecimal("9"), Err("Invalid octal string"));
+		log::debug!("<<< Exiting test_invalid_input()");
         assert_eq!(octal_to_hexadecimal("ABC"), Err("Invalid octal string"));
     }
 }

@@ -253,11 +253,13 @@ mod tests {
     const EPSILON: f64 = 1e-3; // Increased tolerance for floating point comparisons
 
     fn approx_eq(a: f64, b: f64) -> bool {
+		log::debug!(">>> Entering approx_eq(a={},b={})", a, b);
         (a - b).abs() < EPSILON
     }
 
     #[test]
     fn test_pressure_conversions() {
+		log::debug!(">>> Entering test_pressure_conversions()");
         // Test basic conversions from Python original (using strings)
         assert!(approx_eq(
             convert_pressure(4.0, "atm", "pascal").unwrap(),
@@ -337,7 +339,9 @@ mod tests {
         // Test roundtrip conversion
         let original = 100.0;
         let converted = convert_pressure(original, "psi", "kpa").unwrap();
+		log::debug!("test_pressure_conversions(): converted → {}", converted);
         let back = convert_pressure(converted, "kpa", "psi").unwrap();
+		log::debug!("test_pressure_conversions(): back → {}", back);
         assert!(approx_eq(original, back));
 
         // Test manometric units
@@ -378,26 +382,32 @@ mod tests {
 
         // Test hectopascal equals millibar
         let hpa_to_pa = convert_pressure(1.0, "hpa", "pa").unwrap();
+		log::debug!("test_pressure_conversions(): hpa_to_pa → {}", hpa_to_pa);
         let mbar_to_pa = convert_pressure(1.0, "mbar", "pa").unwrap();
+		log::debug!("test_pressure_conversions(): mbar_to_pa → {}", mbar_to_pa);
         assert!(approx_eq(hpa_to_pa, mbar_to_pa));
 
         // Test barad conversion
         assert!(approx_eq(convert_pressure(1.0, "ba", "pa").unwrap(), 0.1));
 
         // Test pieze conversion
+		log::debug!("<<< Exiting test_pressure_conversions()");
         assert!(approx_eq(convert_pressure(1.0, "pz", "kpa").unwrap(), 1.0));
     }
 
     #[test]
     fn test_additional_coverage() {
+		log::debug!(">>> Entering test_additional_coverage()");
         // Test String (owned) conversion
         let unit_string = String::from("kPa");
+		log::debug!("test_additional_coverage(): unit_string → {}", unit_string);
         assert_eq!(
             unit_string.into_pressure_unit().unwrap(),
             PressureUnit::Kilopascal
         );
 
         let invalid_string = String::from("invalid");
+		log::debug!("test_additional_coverage(): invalid_string → {}", invalid_string);
         assert!(invalid_string.into_pressure_unit().is_err());
 
         // Test Display implementation for all units
@@ -470,6 +480,7 @@ mod tests {
         assert!(approx_eq(
             convert_pressure(1.0, "inh2o", "pa").unwrap(),
             249.088_908_333
+		log::debug!("<<< Exiting test_additional_coverage()");
         ));
     }
 }

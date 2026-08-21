@@ -62,9 +62,11 @@ mod tests {
 
     #[test]
     fn calculate_grundy_number_test() {
+		log::debug!(">>> Entering calculate_grundy_number_test()");
         let mut grundy_numbers: Vec<i64> = vec![-1; 7];
         let possible_moves: Vec<i64> = vec![1, 4];
         calculate_grundy_number(6, &mut grundy_numbers, &possible_moves);
+		log::debug!("<<< Exiting calculate_grundy_number_test()");
         assert_eq!(grundy_numbers, [0, 1, 0, 1, 2, 0, 1]);
     }
 }

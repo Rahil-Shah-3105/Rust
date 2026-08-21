@@ -68,42 +68,59 @@ mod tests {
 
     #[test]
     fn test_rhumb_distance() {
+		log::debug!(">>> Entering test_rhumb_distance()");
         let distance = rhumb_dist(28.5416, 77.2006, 28.5457, 77.1928);
+		log::debug!("test_rhumb_distance(): distance → {}", distance);
+    log::debug!("<<< Exiting test_rhumb_distance()");
         assert!(distance > 700.00 && distance < 1000.0);
     }
 
     #[test]
     fn test_rhumb_bearing() {
+		log::debug!(">>> Entering test_rhumb_bearing()");
         let bearing = rhumb_bearing(28.5416, 77.2006, 28.5457, 77.1928);
+		log::debug!("test_rhumb_bearing(): bearing → {}", bearing);
+    log::debug!("<<< Exiting test_rhumb_bearing()");
         assert!((bearing - 300.0).abs() < 5.0);
     }
 
     #[test]
     fn test_rhumb_destination_point() {
+		log::debug!(">>> Entering test_rhumb_destination_point()");
         let (lat, lng) = rhumb_destination(28.5457, 77.1928, 1000.00, 305.0);
         assert!((lat - 28.550).abs() < 0.010);
+		log::debug!("<<< Exiting test_rhumb_destination_point()");
         assert!((lng - 77.1851).abs() < 0.010);
     }
     // edge cases
 
     #[test]
     fn test_rhumb_distance_cross_antimeridian() {
+		log::debug!(">>> Entering test_rhumb_distance_cross_antimeridian()");
         // Test when del_lambda > PI (line 12)
         let distance = rhumb_dist(0.0, 170.0, 0.0, -170.0);
+		log::debug!("test_rhumb_distance_cross_antimeridian(): distance → {}", distance);
+		log::debug!("<<< Exiting test_rhumb_distance_cross_antimeridian()");
         assert!(distance > 0.0);
     }
 
     #[test]
     fn test_rhumb_distance_cross_antimeridian_negative() {
+		log::debug!(">>> Entering test_rhumb_distance_cross_antimeridian_negative()");
         // Test when del_lambda < -PI (line 14)
         let distance = rhumb_dist(0.0, -170.0, 0.0, 170.0);
+		log::debug!("test_rhumb_distance_cross_antimeridian_negative(): distance → {}", distance);
+		log::debug!("<<< Exiting test_rhumb_distance_cross_antimeridian_negative()");
         assert!(distance > 0.0);
     }
 
     #[test]
     fn test_rhumb_distance_to_equator() {
+		log::debug!(">>> Entering test_rhumb_distance_to_equator()");
         // Test when del_psi is near zero (line 21 - the else branch)
         let distance = rhumb_dist(0.0, 0.0, 0.0, 1.0);
+		log::debug!("test_rhumb_distance_to_equator(): distance → {}", distance);
+		log::debug!("<<< Exiting test_rhumb_distance_to_equator()");
         assert!(distance > 0.0);
     }
 }

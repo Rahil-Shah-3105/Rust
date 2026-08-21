@@ -126,8 +126,12 @@ mod tests {
 
     #[test]
     fn encrypt_only_letters() {
+		log::debug!(">>> Entering encrypt_only_letters()");
         let message = "Hello Morse";
         let cipher = encode(message);
+		log::debug!("encrypt_only_letters(): cipher → {}", cipher);
+        log::debug!("encrypt_only_letters(): message → {}", message);
+        log::debug!("<<< Exiting encrypt_only_letters()");
         assert_eq!(
             cipher,
             ".... . .-.. .-.. --- / -- --- .-. ... .".to_string()
@@ -136,8 +140,12 @@ mod tests {
 
     #[test]
     fn encrypt_letters_and_special_characters() {
+		log::debug!(">>> Entering encrypt_letters_and_special_characters()");
         let message = "What's a great day!";
         let cipher = encode(message);
+		log::debug!("encrypt_letters_and_special_characters(): cipher → {}", cipher);
+        log::debug!("encrypt_letters_and_special_characters(): message → {}", message);
+        log::debug!("<<< Exiting encrypt_letters_and_special_characters()");
         assert_eq!(
             cipher,
             ".-- .... .- - .----. ... / .- / --. .-. . .- - / -.. .- -.-- -.-.--".to_string()
@@ -146,8 +154,12 @@ mod tests {
 
     #[test]
     fn encrypt_message_with_unsupported_character() {
+		log::debug!(">>> Entering encrypt_message_with_unsupported_character()");
         let message = "Error?? {}";
         let cipher = encode(message);
+		log::debug!("encrypt_message_with_unsupported_character(): cipher → {}", cipher);
+        log::debug!("encrypt_message_with_unsupported_character(): message → {}", message);
+        log::debug!("<<< Exiting encrypt_message_with_unsupported_character()");
         assert_eq!(
             cipher,
             ". .-. .-. --- .-. ..--.. ..--.. / ........ ........".to_string()
@@ -156,33 +168,44 @@ mod tests {
 
     #[test]
     fn decrypt_valid_morsecode_with_spaces() {
+		log::debug!(">>> Entering decrypt_valid_morsecode_with_spaces()");
         let expected = "Hello Morse! How's it goin, \"eh\"?"
             .to_string()
             .to_uppercase();
         let encypted = encode(&expected);
+		log::debug!("decrypt_valid_morsecode_with_spaces(): encypted → {}", encypted);
         let result = decode(&encypted).unwrap();
+		log::debug!("decrypt_valid_morsecode_with_spaces(): result → {}", result);
 
+		log::debug!("<<< Exiting decrypt_valid_morsecode_with_spaces()");
         assert_eq!(expected, result);
     }
 
     #[test]
     fn decrypt_valid_character_set_invalid_morsecode() {
+		log::debug!(">>> Entering decrypt_valid_character_set_invalid_morsecode()");
         let expected = format!(
             "{_UNKNOWN_MORSE_CHARACTER}{_UNKNOWN_MORSE_CHARACTER}{_UNKNOWN_MORSE_CHARACTER}{_UNKNOWN_MORSE_CHARACTER} {_UNKNOWN_MORSE_CHARACTER}",
         );
 
         let encypted = ".-.-.--.-.-. --------. ..---.-.-. .-.-.--.-.-. / .-.-.--.-.-.".to_string();
+		log::debug!("decrypt_valid_character_set_invalid_morsecode(): encypted → {}", encypted);
         let result = decode(&encypted).unwrap();
+		log::debug!("decrypt_valid_character_set_invalid_morsecode(): result → {}", result);
 
+		log::debug!("<<< Exiting decrypt_valid_character_set_invalid_morsecode()");
         assert_eq!(expected, result);
     }
 
     #[test]
     fn decrypt_invalid_morsecode_with_spaces() {
+		log::debug!(">>> Entering decrypt_invalid_morsecode_with_spaces()");
         let encypted = "1... . .-.. .-.. --- / -- --- .-. ... .";
         let result = decode(encypted).map_err(|e| e.kind());
         let expected = Err(io::ErrorKind::InvalidData);
 
+		log::debug!("decrypt_invalid_morsecode_with_spaces(): encypted → {}", encypted);
+		log::debug!("<<< Exiting decrypt_invalid_morsecode_with_spaces()");
         assert_eq!(expected, result);
     }
 }

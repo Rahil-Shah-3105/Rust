@@ -201,10 +201,12 @@ mod test {
     use super::*;
 
     fn check_is_proper_factor(number: u64, factor: u64) -> bool {
+		log::debug!(">>> Entering check_is_proper_factor(number={},factor={})", number, factor);
         factor > 1 && factor < number && number.is_multiple_of(factor)
     }
 
     fn check_factorization(number: u64, factors: &[u64]) -> bool {
+		log::debug!(">>> Entering check_factorization(number={},factors={:?})", number, factors);
         let bases = vec![2u64, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
         let mut prod = 1_u64;
         let mut prime_check = 0_u64;
@@ -212,11 +214,13 @@ mod test {
             prod *= *p;
             prime_check |= miller_rabin(*p, &bases);
         }
+		log::debug!("<<< Exiting check_factorization(number={},factors={:?})", number, factors);
         prime_check == 0 && prod == number
     }
 
     #[test]
     fn one_factor() {
+		log::debug!(">>> Entering one_factor()");
         // a few small cases
         let mut sieve = LinearSieve::new();
         sieve.prepare(1e5 as usize).unwrap();
@@ -224,6 +228,7 @@ mod test {
         let mut seed = 314159_u32; // first digits of pi; nothing up my sleeve
         for num in numbers {
             let factor = pollard_rho_get_one_factor(num, &mut seed, true);
+			log::debug!("one_factor(): factor → {}", factor);
             assert!(check_is_proper_factor(num, factor));
             let factor = pollard_rho_get_one_factor(num, &mut seed, false);
             assert!(check_is_proper_factor(num, factor));
@@ -244,10 +249,12 @@ mod test {
                 num,
                 &pollard_rho_factorize(num, &mut seed, &sieve.primes, &sieve.minimum_prime_factor)
             ));
+		log::debug!("<<< Exiting one_factor()");
         }
     }
     #[test]
     fn big_numbers() {
+		log::debug!(">>> Entering big_numbers()");
         // Bigger cases:
         // Each of these numbers is a product of two 31 bit primes
         // This shouldn't take more than a 10ms per number on a modern PC
@@ -274,6 +281,7 @@ mod test {
                 num,
                 &pollard_rho_factorize(num, &mut seed, &[], &[])
             ));
+		log::debug!("<<< Exiting big_numbers()");
         }
     }
 }

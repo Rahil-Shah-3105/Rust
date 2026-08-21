@@ -243,6 +243,8 @@ mod tests {
                     generated.insert(x);
                 }
                 assert_eq!(generated, expected);
+			log::debug!(">>> Entering test()");
+			log::debug!("<<< Exiting test()");
             }
         }
         test::<5>();
@@ -258,10 +260,12 @@ mod tests {
 
     #[test]
     fn large_prime_field() {
+		log::debug!(">>> Entering large_prime_field()");
         const P: u64 = 2_u64.pow(63) - 25; // largest prime fitting into i64
         type F = PrimeField<P>;
         let x = F::from(P as i64 - 1);
         let y = x.inverse();
+		log::debug!("<<< Exiting large_prime_field()");
         assert_eq!(x * y, F::ONE);
     }
 
@@ -296,6 +300,7 @@ mod tests {
 
     #[test]
     fn test_mod_inverse() {
+		log::debug!(">>> Entering test_mod_inverse()");
         assert_eq!(mod_inverse(-6, 7), 1);
         assert_eq!(mod_inverse(-5, 7), -3);
         assert_eq!(mod_inverse(-4, 7), -2);
@@ -307,6 +312,7 @@ mod tests {
         assert_eq!(mod_inverse(3, 7), -2);
         assert_eq!(mod_inverse(4, 7), 2);
         assert_eq!(mod_inverse(5, 7), 3);
+		log::debug!("<<< Exiting test_mod_inverse()");
         assert_eq!(mod_inverse(6, 7), -1);
     }
 

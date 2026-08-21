@@ -193,6 +193,7 @@ mod tests {
 
     #[test]
     fn test_sine() {
+		log::debug!(">>> Entering test_sine()");
         let sine_id = TrigFuncType::Sine;
         sine_id.verify(0.0, 0.0, true);
         sine_id.verify(-PI, 0.0, true);
@@ -202,23 +203,29 @@ mod tests {
         sine_id.verify(0, 0.0, false);
         sine_id.verify(-180, 0.0, false);
         sine_id.verify(-180 / 2, -1.0, false);
+		log::debug!("<<< Exiting test_sine()");
         sine_id.verify(0.5, 0.00872654, false);
     }
 
     #[test]
     fn test_sine_bad_arg() {
+		log::debug!(">>> Entering test_sine_bad_arg()");
         assert!(sine(f64::NEG_INFINITY, 1e-1).is_nan());
+		log::debug!("<<< Exiting test_sine_bad_arg()");
         assert!(sine_no_radian_arg(f64::NAN, 1e-1).is_nan());
     }
 
     #[test]
     fn test_cosine_bad_arg() {
+		log::debug!(">>> Entering test_cosine_bad_arg()");
         assert!(cosine(f64::INFINITY, 1e-1).is_nan());
+		log::debug!("<<< Exiting test_cosine_bad_arg()");
         assert!(cosine_no_radian_arg(f64::NAN, 1e-1).is_nan());
     }
 
     #[test]
     fn test_cosine() {
+		log::debug!(">>> Entering test_cosine()");
         let cosine_id = TrigFuncType::Cosine;
         cosine_id.verify(0, 1., true);
         cosine_id.verify(0, 1., false);
@@ -227,37 +234,46 @@ mod tests {
         cosine_id.verify(360, 1., false);
         cosine_id.verify(2. * PI, 1., true);
         cosine_id.verify(15. * PI / 2., 0.0, true);
+		log::debug!("<<< Exiting test_cosine()");
         cosine_id.verify(-855, -1. / f64::sqrt(2.), false);
     }
 
     #[test]
     fn test_tan_bad_arg() {
+		log::debug!(">>> Entering test_tan_bad_arg()");
         assert!(tan(PI / 2., TOL).is_nan());
+		log::debug!("<<< Exiting test_tan_bad_arg()");
         assert!(tan(3. * PI / 2., TOL).is_nan());
     }
 
     #[test]
     fn test_tan() {
+		log::debug!(">>> Entering test_tan()");
         let tan_id = TrigFuncType::Tan;
         tan_id.verify(PI / 4., 1f64, true);
         tan_id.verify(45, 1f64, false);
         tan_id.verify(PI, 0f64, true);
         tan_id.verify(180 + 45, 1f64, false);
         tan_id.verify(60 - 2 * 180, 1.7320508075, false);
+		log::debug!("<<< Exiting test_tan()");
         tan_id.verify(30 + 180 - 180, 0.57735026919, false);
     }
 
     #[test]
     fn test_cotan_bad_arg() {
+		log::debug!(">>> Entering test_cotan_bad_arg()");
         assert!(cotan(tan(PI / 2., TOL), TOL).is_nan());
+		log::debug!("<<< Exiting test_cotan_bad_arg()");
         assert!(!cotan(0, TOL).is_finite());
     }
 
     #[test]
     fn test_cotan() {
+		log::debug!(">>> Entering test_cotan()");
         let cotan_id = TrigFuncType::Cotan;
         cotan_id.verify(PI / 4., 1f64, true);
         cotan_id.verify(90 + 10 * 180, 0f64, false);
+		log::debug!("<<< Exiting test_cotan()");
         cotan_id.verify(30 - 5 * 180, f64::sqrt(3.), false);
     }
 }

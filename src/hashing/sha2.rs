@@ -326,6 +326,7 @@ mod tests {
 
     #[test]
     fn test_constants() {
+		log::debug!(">>> Entering test_constants()");
         let mut ls = LinearSieve::new();
         ls.prepare(311).unwrap();
         assert_eq!(64, ls.primes.len());
@@ -350,6 +351,7 @@ mod tests {
             let h_ref = ((bits & ((1u64 << float_len) - 1))
                 >> (float_len - constant_len + 1023 - exp)) as u32;
             assert_eq!(h, h_ref, "H256_INIT[{pos}] mismatch");
+		log::debug!("<<< Exiting test_constants()");
         }
     }
 

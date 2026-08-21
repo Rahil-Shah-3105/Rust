@@ -28,11 +28,13 @@ mod tests {
 
     #[test]
     fn test_hinge_loss() {
+		log::debug!(">>> Entering test_hinge_loss()");
         let predicted_values: Vec<f64> = vec![-1.0, 1.0, 1.0];
         let actual_values: Vec<f64> = vec![-1.0, -1.0, 1.0];
         assert_eq!(
             hng_loss(&predicted_values, &actual_values),
             0.6666666666666666
+		log::debug!("<<< Exiting test_hinge_loss()");
         );
     }
 }

@@ -39,22 +39,31 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
         let input = "";
         let expected = Err("Empty");
+		log::debug!("test_empty_string(): input → {}", input);
+    log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(octal_to_binary(input), expected);
     }
 
     #[test]
     fn test_invalid_octal() {
+		log::debug!(">>> Entering test_invalid_octal()");
         let input = "89";
         let expected = Err("Non-octal Value");
+		log::debug!("test_invalid_octal(): input → {}", input);
+    log::debug!("<<< Exiting test_invalid_octal()");
         assert_eq!(octal_to_binary(input), expected);
     }
 
     #[test]
     fn test_valid_octal() {
+		log::debug!(">>> Entering test_valid_octal()");
         let input = "123";
         let expected = Ok("001010011".to_string());
+		log::debug!("test_valid_octal(): input → {}", input);
+    log::debug!("<<< Exiting test_valid_octal()");
         assert_eq!(octal_to_binary(input), expected);
     }
 }

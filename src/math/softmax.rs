@@ -41,6 +41,7 @@ mod tests {
 
     #[test]
     fn test_softmax() {
+		log::debug!(">>> Entering test_softmax()");
         let test = vec![9.0, 0.5, -3.0, 0.0, 3.0];
         assert_eq!(
             softmax(test),
@@ -51,6 +52,7 @@ mod tests {
                 0.00012306382,
                 0.0024718025
             ]
+		log::debug!("<<< Exiting test_softmax()");
         );
     }
 }

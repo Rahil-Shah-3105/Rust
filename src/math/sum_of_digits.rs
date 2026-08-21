@@ -60,26 +60,34 @@ mod tests {
 
         #[test]
         fn zero() {
+			log::debug!(">>> Entering zero()");
+			log::debug!("<<< Exiting zero()");
             assert_eq!(0, sum_digits(0));
         }
         #[test]
         fn positive_number() {
+			log::debug!(">>> Entering positive_number()");
             assert_eq!(1, sum_digits(1));
             assert_eq!(10, sum_digits(1234));
             assert_eq!(14, sum_digits(42161));
+			log::debug!("<<< Exiting positive_number()");
             assert_eq!(6, sum_digits(500010));
         }
         #[test]
         fn negative_number() {
+			log::debug!(">>> Entering negative_number()");
             assert_eq!(1, sum_digits(-1));
             assert_eq!(12, sum_digits(-246));
             assert_eq!(2, sum_digits(-11));
             assert_eq!(14, sum_digits(-42161));
+			log::debug!("<<< Exiting negative_number()");
             assert_eq!(6, sum_digits(-500010));
         }
         #[test]
         fn trailing_zeros() {
+			log::debug!(">>> Entering trailing_zeros()");
             assert_eq!(1, sum_digits(1000000000));
+			log::debug!("<<< Exiting trailing_zeros()");
             assert_eq!(3, sum_digits(300));
         }
     }

@@ -467,6 +467,7 @@ mod tests {
 
     #[test]
     fn test_aes_128() {
+		log::debug!(">>> Entering test_aes_128()");
         let plain: [u8; 16] = [
             0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37,
             0x07, 0x34,
@@ -482,11 +483,13 @@ mod tests {
         let encrypted = aes_encrypt(&plain, AesKey::AesKey128(key));
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey128(key));
+		log::debug!("<<< Exiting test_aes_128()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_aes_192() {
+		log::debug!(">>> Entering test_aes_192()");
         let plain: [u8; 16] = [
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
             0xee, 0xff,
@@ -502,11 +505,13 @@ mod tests {
         let encrypted = aes_encrypt(&plain, AesKey::AesKey192(key));
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey192(key));
+		log::debug!("<<< Exiting test_aes_192()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_aes_256() {
+		log::debug!(">>> Entering test_aes_256()");
         let plain: [u8; 16] = [
             0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
             0xee, 0xff,
@@ -523,13 +528,16 @@ mod tests {
         let encrypted = aes_encrypt(&plain, AesKey::AesKey256(key));
         assert_eq!(cipher, encrypted[..]);
         let decrypted = aes_decrypt(&encrypted, AesKey::AesKey256(key));
+		log::debug!("<<< Exiting test_aes_256()");
         assert_eq!(plain, decrypted[..]);
     }
 
     #[test]
     fn test_str() {
+		log::debug!(">>> Entering test_str()");
         let str = "Hello, cipher world!";
         let plain = str.as_bytes();
+		log::debug!("test_str(): str → {}", str);
         let key = [
             0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf,
             0x4f, 0x3c,
@@ -539,6 +547,7 @@ mod tests {
         assert_eq!(
             str,
             String::from_utf8(decrypted).unwrap().trim_end_matches('\0')
+		log::debug!("<<< Exiting test_str()");
         );
     }
 }

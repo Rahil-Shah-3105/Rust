@@ -36,8 +36,10 @@ mod tests {
 
     #[test]
     fn test_huber_loss() {
+		log::debug!(">>> Entering test_huber_loss()");
         let test_vector_actual = vec![1.0, 2.0, 3.0, 4.0, 5.0];
         let test_vector = vec![5.0, 7.0, 9.0, 11.0, 13.0];
+		log::debug!("<<< Exiting test_huber_loss()");
         assert_eq!(huber_loss(&test_vector_actual, &test_vector, 1.0), 27.5);
     }
 }

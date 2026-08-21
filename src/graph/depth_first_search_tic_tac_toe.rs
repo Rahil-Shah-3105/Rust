@@ -325,16 +325,20 @@ mod test {
 
     #[test]
     fn win_state_check() {
+		log::debug!(">>> Entering win_state_check()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerX;
         let responses = minimax(Players::PlayerO, &board);
+		log::debug!("win_state_check(): responses → {:?}", responses);
+		log::debug!("<<< Exiting win_state_check()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn win_state_check2() {
+		log::debug!(">>> Entering win_state_check2()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerO;
@@ -342,44 +346,53 @@ mod test {
         board[1][1] = Players::PlayerO;
         board[2][1] = Players::PlayerO;
         let responses = minimax(Players::PlayerO, &board);
+		log::debug!("win_state_check2(): responses → {:?}", responses);
+		log::debug!("<<< Exiting win_state_check2()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn block_win_move() {
+		log::debug!(">>> Entering block_win_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[1][2] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("block_win_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 2, y: 0 }],
                 side: Players::PlayerX
             })
+		log::debug!("<<< Exiting block_win_move()");
         );
     }
 
     #[test]
     fn block_move() {
+		log::debug!(">>> Entering block_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
         board[2][0] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("block_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 1, y: 1 }],
                 side: Players::Blank
             })
+		log::debug!("<<< Exiting block_move()");
         );
     }
 
     #[test]
     fn expected_loss() {
+		log::debug!(">>> Entering expected_loss()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
@@ -387,6 +400,7 @@ mod test {
         board[2][0] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		log::debug!("expected_loss(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
@@ -398,6 +412,7 @@ mod test {
                 ],
                 side: Players::PlayerO
             })
+		log::debug!("<<< Exiting expected_loss()");
         );
     }
 }

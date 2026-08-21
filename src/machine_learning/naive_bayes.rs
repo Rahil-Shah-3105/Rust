@@ -167,6 +167,7 @@ mod tests {
 
     #[test]
     fn test_naive_bayes_simple_classification() {
+		log::debug!(">>> Entering test_naive_bayes_simple_classification()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -179,16 +180,19 @@ mod tests {
         // Test point closer to class 0
         let test_point = vec![1.05, 1.05];
         let result = naive_bayes(training_data.clone(), test_point);
+		log::debug!("test_naive_bayes_simple_classification(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         // Test point closer to class 1
         let test_point = vec![5.05, 5.05];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("<<< Exiting test_naive_bayes_simple_classification()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_naive_bayes_one_dimensional() {
+		log::debug!(">>> Entering test_naive_bayes_one_dimensional()");
         let training_data = vec![
             (vec![1.0], 0.0),
             (vec![1.1], 0.0),
@@ -200,50 +204,65 @@ mod tests {
 
         let test_point = vec![1.15];
         let result = naive_bayes(training_data.clone(), test_point);
+		log::debug!("test_naive_bayes_one_dimensional(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let test_point = vec![5.15];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("<<< Exiting test_naive_bayes_one_dimensional()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_naive_bayes_empty_training_data() {
+		log::debug!(">>> Entering test_naive_bayes_empty_training_data()");
         let training_data = vec![];
         let test_point = vec![1.0, 2.0];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("test_naive_bayes_empty_training_data(): result → {:?}", result);
+		log::debug!("<<< Exiting test_naive_bayes_empty_training_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_empty_test_point() {
+		log::debug!(">>> Entering test_naive_bayes_empty_test_point()");
         let training_data = vec![(vec![1.0, 2.0], 0.0)];
         let test_point = vec![];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("test_naive_bayes_empty_test_point(): result → {:?}", result);
+		log::debug!("<<< Exiting test_naive_bayes_empty_test_point()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_dimension_mismatch() {
+		log::debug!(">>> Entering test_naive_bayes_dimension_mismatch()");
         let training_data = vec![(vec![1.0, 2.0], 0.0), (vec![3.0, 4.0], 1.0)];
         let test_point = vec![1.0]; // Wrong dimension
         let result = naive_bayes(training_data, test_point);
+		log::debug!("test_naive_bayes_dimension_mismatch(): result → {:?}", result);
+		log::debug!("<<< Exiting test_naive_bayes_dimension_mismatch()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_inconsistent_feature_dimensions() {
+		log::debug!(">>> Entering test_naive_bayes_inconsistent_feature_dimensions()");
         let training_data = vec![
             (vec![1.0, 2.0], 0.0),
             (vec![3.0], 1.0), // Different dimension
         ];
         let test_point = vec![1.0, 2.0];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("test_naive_bayes_inconsistent_feature_dimensions(): result → {:?}", result);
+		log::debug!("<<< Exiting test_naive_bayes_inconsistent_feature_dimensions()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_multiple_classes() {
+		log::debug!(">>> Entering test_naive_bayes_multiple_classes()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -255,6 +274,7 @@ mod tests {
 
         let test_point = vec![1.05, 1.05];
         let result = naive_bayes(training_data.clone(), test_point);
+		log::debug!("test_naive_bayes_multiple_classes(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let test_point = vec![5.05, 5.05];
@@ -263,11 +283,13 @@ mod tests {
 
         let test_point = vec![9.05, 9.05];
         let result = naive_bayes(training_data, test_point);
+		log::debug!("<<< Exiting test_naive_bayes_multiple_classes()");
         assert_eq!(result, Some(2.0));
     }
 
     #[test]
     fn test_train_and_predict_separately() {
+		log::debug!(">>> Entering test_train_and_predict_separately()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -283,6 +305,8 @@ mod tests {
 
         let test_point = vec![1.05, 1.05];
         let result = predict_naive_bayes(&model, &test_point);
+		log::debug!("test_train_and_predict_separately(): result → {:?}", result);
+		log::debug!("<<< Exiting test_train_and_predict_separately()");
         assert_eq!(result, Some(0.0));
     }
 }

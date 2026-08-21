@@ -201,12 +201,14 @@ mod tests {
     // Verifies that the sponge-like multi-block path is exercised correctly.
     #[test]
     fn sha1_million_a() {
+		log::debug!(">>> Entering sha1_million_a()");
         let input = vec![b'a'; 1_000_000];
         let digest = sha1(&input);
         let expected: [u8; DIGEST_BYTES] = [
             0x34, 0xaa, 0x97, 0x3c, 0xd4, 0xc4, 0xda, 0xa4, 0xf6, 0x1e, 0xeb, 0x2b, 0xdb, 0xad,
             0x27, 0x31, 0x65, 0x34, 0x01, 0x6f,
         ];
+		log::debug!("<<< Exiting sha1_million_a()");
         assert_eq!(digest, expected);
     }
 }

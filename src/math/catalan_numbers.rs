@@ -36,8 +36,10 @@ mod tests {
 
     #[test]
     fn test_catalan() {
+		log::debug!(">>> Entering test_catalan()");
         let catalan = init_catalan();
 
+		log::debug!("test_catalan(): catalan → {:?}", catalan);
         // Test case 1: Catalan number for n = 0
         assert_eq!(catalan[0], 1);
 
@@ -54,6 +56,7 @@ mod tests {
         assert_eq!(catalan[15], 9694845);
 
         // Print a success message if all tests pass
+		log::debug!("<<< Exiting test_catalan()");
         println!("All tests passed!");
     }
 }

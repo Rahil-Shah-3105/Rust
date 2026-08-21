@@ -122,6 +122,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		log::debug!(">>> Entering basic()");
         // these bases make miller rabin deterministic for any number < 2 ^ 64
         // can use smaller number of bases for deterministic performance for numbers < 2 ^ 32
 
@@ -154,11 +155,13 @@ mod tests {
         // 1950202127 * 2058609037 = 4014703722618821699
         assert_ne!(miller_rabin(4014703722618821699, &DEFAULT_BASES), 0);
         // 1679076769 * 2076341633 = 3486337000477823777
+		log::debug!("<<< Exiting basic()");
         assert_ne!(miller_rabin(3486337000477823777, &DEFAULT_BASES), 0);
     }
 
     #[test]
     fn big_basic() {
+		log::debug!(">>> Entering big_basic()");
         assert_eq!(big_miller_rabin(&BigUint::from(3u32), &DEFAULT_BASES), 0);
         assert_eq!(big_miller_rabin(&BigUint::from(7u32), &DEFAULT_BASES), 0);
         assert_eq!(big_miller_rabin(&BigUint::from(11u32), &DEFAULT_BASES), 0);
@@ -206,12 +209,14 @@ mod tests {
         assert_ne!(
             big_miller_rabin(&BigUint::from(3486337000477823777u64), &DEFAULT_BASES),
             0
+		log::debug!("<<< Exiting big_basic()");
         );
     }
 
     #[test]
     #[ignore]
     fn big_primes() {
+		log::debug!(">>> Entering big_primes()");
         let p1 =
             BigUint::parse_bytes(b"4764862697132131451620315518348229845593592794669", 10).unwrap();
         assert_eq!(big_miller_rabin(&p1, &DEFAULT_BASES), 0);
@@ -232,6 +237,7 @@ mod tests {
 
         // RSA-2048
         let n2 = BigUint::parse_bytes(b"4l91lq4a2sgekpv8ukx1gxsk7mfeks46haggorlkazm0oufxwijid6q6v44u5me3kz3ne6yczp4fcvo62oej72oe7pjjtyxgid5b8xdz1e8daafspbzcy1hd8i4urjh9hm0tyylsgqsss3jn372d6fmykpw4bb9cr1ngxnncsbod3kg49o7owzqnsci5pwqt8bch0t60gq0st2gyx7ii3mzhb1pp1yvjyor35hwvok1sxj3ih46rpd27li8y5yli3mgdttcn65k3szfa6rbcnbgkojqjjq72gar6raslnh6sjd2fy7yj3bwo43obvbg3ws8y28kpol3okb5b3fld03sq1kgrj2fugiaxgplva6x5ssilqq4g0b21xy2kiou3sqsgonmqx55v", 36).unwrap();
+		log::debug!("<<< Exiting big_primes()");
         assert_ne!(big_miller_rabin(&n2, &DEFAULT_BASES), 0);
     }
 }

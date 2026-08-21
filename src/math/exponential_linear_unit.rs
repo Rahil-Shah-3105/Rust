@@ -42,6 +42,7 @@ mod tests {
 
     #[test]
     fn test_exponential_linear_unit() {
+		log::debug!(">>> Entering test_exponential_linear_unit()");
         let test_vector = vec![-10., 2., -3., 4., -5., 10., 0.05];
         let alpha = 0.01;
         assert_eq!(
@@ -55,6 +56,7 @@ mod tests {
                 10.0,
                 0.05
             ]
+		log::debug!("<<< Exiting test_exponential_linear_unit()");
         );
     }
 }

@@ -44,6 +44,7 @@ mod tests {
     }
     impl MexTests {
         fn new() -> Self {
+			log::debug!(">>> Entering new()");
             Self {
                 test_arrays: vec![
                     vec![-1, 0, 1, 2, 3],
@@ -60,20 +61,26 @@ mod tests {
             }
         }
         fn test_function(&self, f: fn(&[i64]) -> i64) {
+			log::debug!(">>> Entering test_function()");
             for (nums, output) in self.test_arrays.iter().zip(self.outputs.iter()) {
                 assert_eq!(f(nums), *output);
+			log::debug!("<<< Exiting test_function()");
             }
         }
     }
     #[test]
     fn test_mex_using_set() {
+		log::debug!(">>> Entering test_mex_using_set()");
         let tests = MexTests::new();
         mex_using_set(&[1, 23, 3]);
+		log::debug!("<<< Exiting test_mex_using_set()");
         tests.test_function(mex_using_set);
     }
     #[test]
     fn test_mex_using_sort() {
+		log::debug!(">>> Entering test_mex_using_sort()");
         let tests = MexTests::new();
+		log::debug!("<<< Exiting test_mex_using_sort()");
         tests.test_function(mex_using_sort);
     }
 }

@@ -40,15 +40,18 @@ mod tests {
 
     #[test]
     fn small_numbers() {
+		log::debug!(">>> Entering small_numbers()");
         assert_eq!(baby_step_giant_step(5, 3, 11), Some(2));
         assert_eq!(baby_step_giant_step(3, 83, 100), Some(9));
         assert_eq!(baby_step_giant_step(9, 1, 61), Some(5));
         assert_eq!(baby_step_giant_step(5, 1, 67), Some(22));
+		log::debug!("<<< Exiting small_numbers()");
         assert_eq!(baby_step_giant_step(7, 1, 45), Some(12));
     }
 
     #[test]
     fn primitive_root_tests() {
+		log::debug!(">>> Entering primitive_root_tests()");
         assert_eq!(
             baby_step_giant_step(3, 311401496, 998244353),
             Some(178105253)
@@ -56,11 +59,13 @@ mod tests {
         assert_eq!(
             baby_step_giant_step(5, 324637211, 1000000007),
             Some(976653449)
+		log::debug!("<<< Exiting primitive_root_tests()");
         );
     }
 
     #[test]
     fn random_numbers() {
+		log::debug!(">>> Entering random_numbers()");
         assert_eq!(baby_step_giant_step(174857, 48604, 150991), Some(177));
         assert_eq!(baby_step_giant_step(912103, 53821, 75401), Some(2644));
         assert_eq!(baby_step_giant_step(448447, 365819, 671851), Some(23242));
@@ -71,13 +76,16 @@ mod tests {
         assert_eq!(
             baby_step_giant_step(176908456, 23538399, 142357679),
             Some(14215560)
+		log::debug!("<<< Exiting random_numbers()");
         );
     }
 
     #[test]
     fn no_solution() {
+		log::debug!(">>> Entering no_solution()");
         assert!(baby_step_giant_step(7, 6, 45).is_none());
         assert!(baby_step_giant_step(23, 15, 85).is_none());
+		log::debug!("<<< Exiting no_solution()");
         assert!(baby_step_giant_step(2, 1, 84).is_none());
     }
 }

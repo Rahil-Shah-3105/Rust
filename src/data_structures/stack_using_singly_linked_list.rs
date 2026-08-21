@@ -169,6 +169,7 @@ mod test_stack {
 
     #[test]
     fn basics() {
+		log::debug!(">>> Entering basics()");
         let mut list = Stack::new();
         assert_eq!(list.pop(), Err("Stack is empty"));
 
@@ -190,6 +191,7 @@ mod test_stack {
         assert_eq!(list.pop(), Ok(1));
         assert_eq!(list.pop(), Err("Stack is empty"));
 
+		log::debug!("<<< Exiting basics()");
         assert!(list.is_empty());
     }
 
@@ -215,6 +217,7 @@ mod test_stack {
 
     #[test]
     fn into_iter() {
+		log::debug!(">>> Entering into_iter()");
         let mut list = Stack::new();
         list.push(1);
         list.push(2);
@@ -224,6 +227,7 @@ mod test_stack {
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(1));
+		log::debug!("<<< Exiting into_iter()");
         assert_eq!(iter.next(), None);
     }
 

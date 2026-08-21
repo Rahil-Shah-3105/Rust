@@ -68,8 +68,10 @@ mod tests {
 
     #[test]
     fn test_jaro_winkler_distance() {
+		log::debug!(">>> Entering test_jaro_winkler_distance()");
         let a = jaro_winkler_distance("hello", "world");
         assert_eq!(a, 0.4666666666666666);
+		log::debug!("test_jaro_winkler_distance(): a → {}", a);
         let a = jaro_winkler_distance("martha", "marhta");
         assert_eq!(a, 0.9611111111111111);
         let a = jaro_winkler_distance("martha", "marhat");
@@ -79,6 +81,7 @@ mod tests {
         let a = jaro_winkler_distance("test", "");
         assert_eq!(a, 0.0);
         let a = jaro_winkler_distance("hello world", "HeLLo W0rlD");
+		log::debug!("<<< Exiting test_jaro_winkler_distance()");
         assert_eq!(a, 0.6363636363636364);
     }
 }

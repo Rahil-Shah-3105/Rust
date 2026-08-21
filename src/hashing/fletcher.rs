@@ -47,31 +47,41 @@ mod tests {
 
     #[test]
     fn test_hello_world() {
+		log::debug!(">>> Entering test_hello_world()");
+		log::debug!("<<< Exiting test_hello_world()");
         assert_eq!(fletcher("hello world"), 6752);
     }
 
     #[test]
     fn test_long_word() {
+		log::debug!(">>> Entering test_long_word()");
+		log::debug!("<<< Exiting test_long_word()");
         assert_eq!(fletcher("onethousandfourhundredthirtyfour"), 28347);
     }
 
     #[test]
     fn test_pangram() {
+		log::debug!(">>> Entering test_pangram()");
         assert_eq!(
             fletcher("The quick brown fox jumps over the lazy dog."),
             5655
+		log::debug!("<<< Exiting test_pangram()");
         );
     }
 
     #[test]
     fn test_empty_string() {
+		log::debug!(">>> Entering test_empty_string()");
+		log::debug!("<<< Exiting test_empty_string()");
         assert_eq!(fletcher(""), 0);
     }
 
     #[test]
     fn test_single_char() {
+		log::debug!(">>> Entering test_single_char()");
         // 'A' = 65; sum1 = 65 % 255 = 65, sum2 = 65 % 255 = 65
         // result = (65 << 8) | 65 = 16705
+		log::debug!("<<< Exiting test_single_char()");
         assert_eq!(fletcher("A"), 16705);
     }
 }

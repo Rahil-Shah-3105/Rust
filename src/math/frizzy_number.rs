@@ -38,6 +38,7 @@ mod tests {
 
     #[test]
     fn test_get_nth_frizzy() {
+		log::debug!(">>> Entering test_get_nth_frizzy()");
         // Test case 1: base = 3, n = 4
         // 3^2 + 3^0 = 9
         assert_eq!(get_nth_frizzy(3, 4), 9.0);
@@ -56,6 +57,7 @@ mod tests {
 
         // Test case 5: base = 6, n = 1
         // 6^0 = 1
+		log::debug!("<<< Exiting test_get_nth_frizzy()");
         assert_eq!(get_nth_frizzy(6, 1), 1.0);
     }
 }

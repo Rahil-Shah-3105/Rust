@@ -155,6 +155,7 @@ impl LowestCommonAncestorOffline {
             let set = self.dsu.find_set(vertex);
             self.dsu_parent[set] = ((vertex as u64) << 1) | (self.dsu_parent[set] & 1);
         }
+		log::info!("calculate_answers(vertex,parent,adj,answers)={},{},{:?},{:?}: update query executed in {} ms", vertex, parent, adj, answers, __log_start.elapsed().as_millis());
         self.dsu_parent[vertex] |= 0b1;
         for &query in self.queries[vertex].iter() {
             if self.dsu_parent[query.other] & 1 != 0 {
@@ -178,6 +179,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_binary_tree() {
+		log::debug!(">>> Entering small_binary_tree()");
         let num_verts = 127;
         let mut tree: Vec<Vec<usize>> = vec![vec![]; num_verts + 1];
         for i in 1..=num_verts >> 1 {
@@ -206,6 +208,7 @@ mod tests {
         }
         let mut offline_answers = offline.answer_queries(1, &tree);
         offline_answers.sort_unstable_by_key(|a| a.query_id);
+		log::debug!("<<< Exiting small_binary_tree()");
         assert_eq!(offline_answers, online_answers);
     }
 }

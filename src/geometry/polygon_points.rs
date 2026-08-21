@@ -49,36 +49,48 @@ mod tests {
 
     #[test]
     fn test_calculate_cross() {
+		log::debug!(">>> Entering test_calculate_cross()");
+		log::debug!("<<< Exiting test_calculate_cross()");
         assert_eq!(cross(1, 2, 3, 4), 4 - 3 * 2);
     }
 
     #[test]
     fn test_polygon_3_coordinates() {
+		log::debug!(">>> Entering test_polygon_3_coordinates()");
         let pts = vec![(0, 0), (0, 3), (4, 0)];
+		log::debug!("<<< Exiting test_polygon_3_coordinates()");
         assert_eq!(polygon_area(&pts), 6);
     }
 
     #[test]
     fn test_polygon_4_coordinates() {
+		log::debug!(">>> Entering test_polygon_4_coordinates()");
         let pts = vec![(0, 0), (0, 2), (2, 2), (2, 0)];
+		log::debug!("<<< Exiting test_polygon_4_coordinates()");
         assert_eq!(polygon_area(&pts), 4);
     }
 
     #[test]
     fn test_gcd_multiple_of_common_factor() {
+		log::debug!(">>> Entering test_gcd_multiple_of_common_factor()");
+		log::debug!("<<< Exiting test_gcd_multiple_of_common_factor()");
         assert_eq!(gcd(14, 28), 14);
     }
 
     #[test]
     fn test_boundary() {
+		log::debug!(">>> Entering test_boundary()");
         let pts = vec![(0, 0), (0, 3), (0, 4), (2, 2)];
+		log::debug!("<<< Exiting test_boundary()");
         assert_eq!(boundary(&pts), 8);
     }
 
     #[test]
     fn test_lattice_points() {
+		log::debug!(">>> Entering test_lattice_points()");
         let pts = vec![(1, 1), (5, 1), (5, 4)];
         let result = lattice_points(&pts);
+		log::debug!("<<< Exiting test_lattice_points()");
         assert_eq!(result, 3);
     }
 }

@@ -42,25 +42,31 @@ mod tests {
 
     #[test]
     fn empty() {
+		log::debug!(">>> Entering empty()");
         let mut a: [u64; 0] = [];
         let cloned = a;
         radix_sort(&mut a);
+		log::debug!("<<< Exiting empty()");
         assert!(is_sorted(&a) && have_same_elements(&a, &cloned));
     }
 
     #[test]
     fn descending() {
+		log::debug!(">>> Entering descending()");
         let mut v = vec![201, 127, 64, 37, 24, 4, 1];
         let cloned = v.clone();
         radix_sort(&mut v);
+		log::debug!("<<< Exiting descending()");
         assert!(is_sorted(&v) && have_same_elements(&v, &cloned));
     }
 
     #[test]
     fn ascending() {
+		log::debug!(">>> Entering ascending()");
         let mut v = vec![1, 4, 24, 37, 64, 127, 201];
         let cloned = v.clone();
         radix_sort(&mut v);
+		log::debug!("<<< Exiting ascending()");
         assert!(is_sorted(&v) && have_same_elements(&v, &cloned));
     }
 }

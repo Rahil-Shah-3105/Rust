@@ -108,26 +108,31 @@ mod tests {
 
     #[test]
     fn acyclic() {
+		log::debug!(">>> Entering acyclic()");
         let mut sccs = StronglyConnectedComponents::new(5);
         let adj = vec![vec![], vec![2, 4], vec![3, 4], vec![5], vec![5], vec![]];
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 5, 4, 2, 3, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 5, 4]);
+		log::debug!("<<< Exiting acyclic()");
         assert_eq!(sccs.num_components, 5);
     }
 
     #[test]
     fn cycle() {
+		log::debug!(">>> Entering cycle()");
         let mut sccs = StronglyConnectedComponents::new(4);
         let adj = vec![vec![], vec![2], vec![3], vec![4], vec![1]];
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 1, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4]);
+		log::debug!("<<< Exiting cycle()");
         assert_eq!(sccs.num_components, 1);
     }
 
     #[test]
     fn dumbbell() {
+		log::debug!(">>> Entering dumbbell()");
         let mut sccs = StronglyConnectedComponents::new(6);
         let adj = vec![
             vec![],
@@ -141,11 +146,13 @@ mod tests {
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 2, 2, 2, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4, 5, 6]);
+		log::debug!("<<< Exiting dumbbell()");
         assert_eq!(sccs.num_components, 2);
     }
 
     #[test]
     fn connected_dumbbell() {
+		log::debug!(">>> Entering connected_dumbbell()");
         let mut sccs = StronglyConnectedComponents::new(6);
         let adj = vec![
             vec![],
@@ -159,6 +166,7 @@ mod tests {
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 1, 1, 1, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4, 5, 6]);
+		log::debug!("<<< Exiting connected_dumbbell()");
         assert_eq!(sccs.num_components, 1);
     }
 }

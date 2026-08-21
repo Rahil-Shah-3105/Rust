@@ -30,14 +30,17 @@ mod tests {
     use super::*;
     #[test]
     fn test_npv_sensitivity() {
+		log::debug!(">>> Entering test_npv_sensitivity()");
         let cashflows = [-1000.00, 400.00, 400.00, 400.00];
         let rates = [0.05, 0.1, 0.2];
         let expected = [89.30, -5.26, -157.41];
         let out = npv_sensitivity(&cashflows, &rates);
+		log::debug!("test_npv_sensitivity(): out → {:?}", out);
         assert_eq!(out.len(), 3);
         // value check
         for (o, e) in out.iter().zip(expected.iter()) {
             assert!((o - e).abs() < 0.1);
+		log::debug!("<<< Exiting test_npv_sensitivity()");
         }
     }
 }

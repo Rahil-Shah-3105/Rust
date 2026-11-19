@@ -42,6 +42,7 @@ pub struct BwtResult {
 /// ```
 pub fn all_rotations(s: &str) -> Vec<String> {
 	eprintln!("[ERROR] >>> Entering all_rotations(s={})", s);
+	eprintln!("[WARN] <<< Exiting all_rotations(s={})", s);
     (0..s.len())
         .map(|i| format!("{}{}", &s[i..], &s[..i]))
         .collect()
@@ -163,8 +164,8 @@ mod tests {
             vec![
                 "^BANANA|", "BANANA|^", "ANANA|^B", "NANA|^BA", "ANA|^BAN", "NA|^BANA", "A|^BANAN",
                 "|^BANANA"
-            ]
 		eprintln!("[WARN] <<< Exiting test_all_rotations_banana()");
+            ]
         );
     }
 
@@ -232,8 +233,8 @@ mod tests {
     #[test]
     fn test_reverse_bwt_banana() {
 		eprintln!("[ERROR] >>> Entering test_reverse_bwt_banana()");
-        let original = reverse_bwt("BNN^AAA", 6);
 		eprintln!("[ERROR] test_reverse_bwt_banana(): original → {}", original);
+        let original = reverse_bwt("BNN^AAA", 6);
     eprintln!("[WARN] <<< Exiting test_reverse_bwt_banana()");
         assert_eq!(original, "^BANANA");
     }
@@ -241,8 +242,8 @@ mod tests {
     #[test]
     fn test_reverse_bwt_casa() {
 		eprintln!("[ERROR] >>> Entering test_reverse_bwt_casa()");
-        let original = reverse_bwt("aaaadss_c__aa", 3);
 		eprintln!("[ERROR] test_reverse_bwt_casa(): original → {}", original);
+        let original = reverse_bwt("aaaadss_c__aa", 3);
     eprintln!("[WARN] <<< Exiting test_reverse_bwt_casa()");
         assert_eq!(original, "a_asa_da_casa");
     }
@@ -250,8 +251,8 @@ mod tests {
     #[test]
     fn test_reverse_bwt_panama() {
 		eprintln!("[ERROR] >>> Entering test_reverse_bwt_panama()");
-        let original = reverse_bwt("mnpbnnaaaaaa", 11);
 		eprintln!("[ERROR] test_reverse_bwt_panama(): original → {}", original);
+        let original = reverse_bwt("mnpbnnaaaaaa", 11);
     eprintln!("[WARN] <<< Exiting test_reverse_bwt_panama()");
         assert_eq!(original, "panamabanana");
     }
@@ -289,8 +290,8 @@ mod tests {
 			eprintln!("[ERROR] test_bwt_roundtrip(): result → {:?}", result);
             let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
 			eprintln!("[ERROR] test_bwt_roundtrip(): recovered → {}", recovered);
-            assert_eq!(recovered, s, "Roundtrip failed for '{s}'");
 		eprintln!("[WARN] <<< Exiting test_bwt_roundtrip()");
+            assert_eq!(recovered, s, "Roundtrip failed for '{s}'");
         }
     }
 

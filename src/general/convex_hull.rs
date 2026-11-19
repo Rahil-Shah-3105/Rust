@@ -22,6 +22,7 @@ fn sort_by_min_angle(pts: &[(f64, f64)], min: &(f64, f64)) -> Vec<(f64, f64)> {
 // calculates the z coordinate of the vector product of vectors ab and ac
 fn calc_z_coord_vector_product(a: &(f64, f64), b: &(f64, f64), c: &(f64, f64)) -> f64 {
 	eprintln!("[ERROR] >>> Entering calc_z_coord_vector_product(a={:?},b={:?},c={:?})", a, b, c);
+	eprintln!("[WARN] <<< Exiting calc_z_coord_vector_product(a={:?},b={:?},c={:?})", a, b, c);
     (b.0 - a.0) * (c.1 - a.1) - (c.0 - a.0) * (b.1 - a.1)
 }
 

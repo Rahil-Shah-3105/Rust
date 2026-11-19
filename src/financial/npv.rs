@@ -4,6 +4,7 @@
 
 pub fn npv(cash_flows: &[f64], rate: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering npv(cash_flows={:?},rate={})", cash_flows, rate);
+	eprintln!("[WARN] <<< Exiting npv(cash_flows={:?},rate={})", cash_flows, rate);
     cash_flows
         .iter()
         .enumerate()

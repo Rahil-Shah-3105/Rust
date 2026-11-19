@@ -61,6 +61,7 @@ impl Token {
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         write!(f, "({}, {}, {})", self.offset, self.length, self.indicator)
     }
 }
@@ -280,6 +281,7 @@ impl Default for LZ77Compressor {
     /// Creates a default LZ77Compressor with window_size=13 and lookahead_buffer_size=6.
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new(13, 6)
     }
 }
@@ -409,8 +411,8 @@ mod tests {
 			eprintln!("[ERROR] test_round_trip_compression(): compressed → {:?}", compressed);
             let decompressed = compressor.decompress(&compressed);
 			eprintln!("[ERROR] test_round_trip_compression(): decompressed → {}", decompressed);
-            assert_eq!(text, decompressed, "Round trip failed for text: {text}");
 		eprintln!("[WARN] <<< Exiting test_round_trip_compression()");
+            assert_eq!(text, decompressed, "Round trip failed for text: {text}");
         }
     }
 

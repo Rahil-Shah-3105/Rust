@@ -18,6 +18,7 @@ impl Edge {
     /// Creates a new edge with the specified source, destination, and cost.
     pub fn new(source: usize, destination: usize, cost: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new(source={},destination={},cost={})", source, destination, cost);
+		eprintln!("[WARN] <<< Exiting new(source={},destination={},cost={})", source, destination, cost);
         Self {
             source,
             destination,
@@ -63,8 +64,8 @@ pub fn kruskal(mut edges: Vec<Edge>, num_vertices: usize) -> Option<(usize, Vec<
 		let __log_start = std::time::Instant::now();
         if dsu.merge(edge.source, edge.destination) != usize::MAX {
             mst_cost += edge.cost;
-            mst_edges.push(edge);
 		eprintln!("[ERROR] kruskal(edges,num_vertices)={:?},{}: update query executed in {} ms", edges, num_vertices, __log_start.elapsed().as_millis());
+            mst_edges.push(edge);
         }
     }
 

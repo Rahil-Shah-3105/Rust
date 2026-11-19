@@ -76,6 +76,7 @@ impl<T> Stack<T> {
 
     pub fn peek_mut(&mut self) -> Option<&mut T> {
 		eprintln!("[ERROR] >>> Entering peek_mut()");
+		eprintln!("[WARN] <<< Exiting peek_mut()");
         match self.head.as_mut() {
             None => None,
             Some(node) => Some(&mut node.elem),
@@ -84,6 +85,7 @@ impl<T> Stack<T> {
 
     pub fn into_iter_for_stack(self) -> IntoIter<T> {
 		eprintln!("[ERROR] >>> Entering into_iter_for_stack()");
+		eprintln!("[WARN] <<< Exiting into_iter_for_stack()");
         IntoIter(self)
     }
     pub fn iter(&self) -> Iter<'_, T> {
@@ -102,6 +104,7 @@ impl<T> Stack<T> {
 impl<T> Default for Stack<T> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -125,8 +128,8 @@ impl<T> Drop for Stack<T> {
             cur_link = boxed_node.next.take();
             // boxed_node goes out of scope and gets dropped here;
             // but its Node's `next` field has been set to None
-            // so no unbound recursion occurs.
 		eprintln!("[WARN] <<< Exiting drop()");
+            // so no unbound recursion occurs.
         }
     }
 }

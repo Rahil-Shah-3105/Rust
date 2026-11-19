@@ -96,6 +96,7 @@ pub fn md5(input: &[u8]) -> [u8; 16] {
 /// Convenience helper: returns the MD5 digest as a lowercase hex string.
 pub fn md5_hex(input: &[u8]) -> String {
 	eprintln!("[ERROR] >>> Entering md5_hex(input={:?})", input);
+	eprintln!("[WARN] <<< Exiting md5_hex(input={:?})", input);
     md5(input)
         .iter()
         .fold(String::with_capacity(32), |mut s, b| {
@@ -129,8 +130,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering test_rfc_message()");
         assert_eq!(
             md5_hex(b"message digest"),
-            "f96b697d7cb7938d525a2f31aaf161d0"
 		eprintln!("[WARN] <<< Exiting test_rfc_message()");
+            "f96b697d7cb7938d525a2f31aaf161d0"
         );
     }
 
@@ -139,8 +140,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering test_alphabet()");
         assert_eq!(
             md5_hex(b"abcdefghijklmnopqrstuvwxyz"),
-            "c3fcd3d76192e4007dfb496cca67e13b"
 		eprintln!("[WARN] <<< Exiting test_alphabet()");
+            "c3fcd3d76192e4007dfb496cca67e13b"
         );
     }
 
@@ -149,8 +150,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering test_alphanumeric()");
         assert_eq!(
             md5_hex(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"),
-            "d174ab98d277d9f5a5611c2c9f419d9f"
 		eprintln!("[WARN] <<< Exiting test_alphanumeric()");
+            "d174ab98d277d9f5a5611c2c9f419d9f"
         );
     }
 
@@ -161,8 +162,8 @@ mod tests {
             md5_hex(
                 b"12345678901234567890123456789012345678901234567890123456789012345678901234567890"
             ),
-            "57edf4a22be3c955ac49da2e2107b67a"
 		eprintln!("[WARN] <<< Exiting test_digits_repeated()");
+            "57edf4a22be3c955ac49da2e2107b67a"
         );
     }
 

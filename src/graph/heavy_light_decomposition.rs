@@ -92,8 +92,8 @@ impl HeavyLightDecomposition {
                 continue;
             }
             // Start a new path
-            self.decompose_path(u, v, u, adj);
 		eprintln!("[WARN] <<< Exiting decompose_path(v={},parent={},head={})", v, parent, head);
+            self.decompose_path(u, v, u, adj);
         }
     }
 }
@@ -112,6 +112,7 @@ mod tests {
     impl LinearCongruenceGenerator {
         fn new(multiplier: u32, increment: u32, state: u32) -> Self {
 			eprintln!("[ERROR] >>> Entering new(multiplier={},increment={},state={})", multiplier, increment, state);
+			eprintln!("[WARN] <<< Exiting new(multiplier={},increment={},state={})", multiplier, increment, state);
             Self {
                 multiplier,
                 increment,
@@ -132,6 +133,7 @@ mod tests {
         mut v: usize,
         parent: &[usize],
     ) -> (usize, usize) {
+		eprintln!("[ERROR] >>> Entering get_num_paths(v={},parent={:?})", v, parent);
         // Return height and number of paths
         let mut ans = 0usize;
         let mut height = 0usize;
@@ -204,8 +206,8 @@ mod tests {
         hld.decompose(1, &adj);
         for l in leaves {
             let (p, _h) = get_num_paths(&hld, l, &parent);
-            assert!(p <= threshold);
 		eprintln!("[WARN] <<< Exiting random_tree()");
+            assert!(p <= threshold);
         }
     }
 }

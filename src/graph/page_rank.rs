@@ -136,8 +136,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering assert_ranks_close(ranks={:?},expected={:?},epsilon={})", ranks, expected, epsilon);
         for (node, exp) in expected {
             let got = ranks[*node]; // Indexing panics automatically if the node is missing
-            assert!((got - exp).abs() < epsilon);
 		eprintln!("[WARN] <<< Exiting assert_ranks_close(ranks={:?},expected={:?},epsilon={})", ranks, expected, epsilon);
+            assert!((got - exp).abs() < epsilon);
         }
     }
 
@@ -267,8 +267,8 @@ mod tests {
         // Hub must have strictly higher rank than any spoke
         let hub_rank = ranks["Hub"];
         for spoke in &["A", "B", "C"] {
-            assert!(hub_rank > ranks[*spoke]);
 		eprintln!("[WARN] <<< Exiting test_star_graph_hub_wins()");
+            assert!(hub_rank > ranks[*spoke]);
         }
     }
 
@@ -322,8 +322,8 @@ mod tests {
 
         // Sanity: no rank is zero or negative
         for &rank in ranks.values() {
-            assert!(rank > 0.0);
 		eprintln!("[WARN] <<< Exiting test_disconnected_components()");
+            assert!(rank > 0.0);
         }
     }
 
@@ -442,8 +442,8 @@ mod tests {
         let expected = 1.0 / 3.0;
         for i in 1..=3 {
             let rank = ranks[&i];
-            assert!((rank - expected).abs() < 1e-4);
 		eprintln!("[WARN] <<< Exiting test_integer_nodes()");
+            assert!((rank - expected).abs() < 1e-4);
         }
     }
 
@@ -465,8 +465,8 @@ mod tests {
 
         for node in &["A", "B", "C"] {
             let diff = (ranks_full[*node] - ranks_few[*node]).abs();
-            assert!(diff < 0.005);
 		eprintln!("[WARN] <<< Exiting test_convergence_within_iterations()");
+            assert!(diff < 0.005);
         }
     }
 
@@ -547,8 +547,8 @@ mod tests {
 
         for node in &["A", "B"] {
             let diff = (ranks_single[*node] - ranks_dup[*node]).abs();
-            assert!(diff < 1e-4);
 		eprintln!("[WARN] <<< Exiting test_pure_duplicate_edges_same_as_single()");
+            assert!(diff < 1e-4);
         }
     }
 
@@ -598,8 +598,8 @@ mod tests {
 
         for node in &["A", "B"] {
             let diff = (ranks_dup[*node] - ranks_clean[*node]).abs();
-            assert!(diff < 1e-4);
 		eprintln!("[WARN] <<< Exiting test_duplicate_self_loop_with_other_edge()");
+            assert!(diff < 1e-4);
         }
     }
 }

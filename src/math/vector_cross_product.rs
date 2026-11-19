@@ -22,6 +22,7 @@ pub fn cross_product(vec1: [f64; 3], vec2: [f64; 3]) -> [f64; 3] {
 /// Function to calculate the magnitude of a vector
 pub fn vector_magnitude(vec: [f64; 3]) -> f64 {
 	eprintln!("[ERROR] >>> Entering vector_magnitude(vec={:?})", vec);
+	eprintln!("[WARN] <<< Exiting vector_magnitude(vec={:?})", vec);
     (vec[0].powi(2) + vec[1].powi(2) + vec[2].powi(2)).sqrt()
 }
 

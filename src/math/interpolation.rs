@@ -5,6 +5,7 @@
 /// point0 and point1 are a tuple containing x and y values we want to interpolate between
 pub fn linear_interpolation(x: f64, point0: (f64, f64), point1: (f64, f64)) -> f64 {
 	eprintln!("[ERROR] >>> Entering linear_interpolation(x={},point0={:?},point1={:?})", x, point0, point1);
+	eprintln!("[WARN] <<< Exiting linear_interpolation(x={},point0={:?},point1={:?})", x, point0, point1);
     point0.1 + (x - point0.0) * (point1.1 - point0.1) / (point1.0 - point0.0)
 }
 
@@ -69,8 +70,8 @@ mod tests {
         assert_eq!(y2, x2);
         assert_eq!(
             linear_interpolation(x1, point1, point2),
-            linear_interpolation(x1, point2, point1)
 		eprintln!("[WARN] <<< Exiting test_linear_intepolation()");
+            linear_interpolation(x1, point2, point1)
         );
     }
 
@@ -92,8 +93,8 @@ mod tests {
         );
         assert_eq!(
             lagrange_polynomial_interpolation(2.5, &defined_points),
-            6.25
 		eprintln!("[WARN] <<< Exiting test_lagrange_polynomial_interpolation()");
+            6.25
         );
     }
 }

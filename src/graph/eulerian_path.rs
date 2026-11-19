@@ -47,6 +47,7 @@ impl EulerianPathSolver {
     /// A new instance of `EulerianPathSolver`.
     pub fn new(adjacency_list: Vec<Vec<usize>>) -> Self {
 		eprintln!("[ERROR] >>> Entering new(adjacency_list={:?})", adjacency_list);
+		eprintln!("[WARN] <<< Exiting new(adjacency_list={:?})", adjacency_list);
         Self {
             node_count: adjacency_list.len(),
             edge_count: 0,
@@ -97,8 +98,8 @@ impl EulerianPathSolver {
                 self.in_degrees[end_node] += 1;
                 self.out_degrees[start_node] += 1;
                 self.edge_count += 1;
-            }
 		eprintln!("[WARN] <<< Exiting initialize_degrees()");
+            }
         }
     }
 

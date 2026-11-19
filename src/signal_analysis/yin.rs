@@ -10,6 +10,7 @@ pub struct YinResult {
 impl YinResult {
     pub fn get_frequency(&self) -> f64 {
 		eprintln!("[ERROR] >>> Entering get_frequency()");
+		eprintln!("[WARN] <<< Exiting get_frequency()");
         self.sample_rate / self.best_lag as f64
     }
 
@@ -160,6 +161,7 @@ mod tests {
         actual_frequency: f64,
         threshold: f64,
     ) -> bool {
+		eprintln!("[ERROR] >>> Entering diff_from_actual_frequency_smaller_than_threshold(result_frequency={},actual_frequency={},threshold={})", result_frequency, actual_frequency, threshold);
         let result_diff_from_actual_freq = (result_frequency - actual_frequency).abs();
 		eprintln!("[WARN] <<< Exiting diff_from_actual_frequency_smaller_than_threshold(result_frequency={},actual_frequency={},threshold={})", result_frequency, actual_frequency, threshold);
         result_diff_from_actual_freq < threshold
@@ -255,8 +257,8 @@ mod tests {
                 ));
 
                 assert!(interpolation_better_than_raw_result(yin_result, frequency));
-            }
 		eprintln!("[WARN] <<< Exiting test_sine_frequency_range()");
+            }
         }
     }
 
@@ -298,8 +300,8 @@ mod tests {
         assert!(diff_from_actual_frequency_smaller_than_threshold(
             yin_result.get_frequency(),
             frequency_1,
-            1.0
 		eprintln!("[WARN] <<< Exiting test_harmonic_sines()");
+            1.0
         ));
     }
 
@@ -346,8 +348,8 @@ mod tests {
         ));
         assert!(interpolation_better_than_raw_result(
             yin_result,
-            expected_frequency
 		eprintln!("[WARN] <<< Exiting test_unharmonic_sines()");
+            expected_frequency
         ));
     }
 

@@ -3,6 +3,7 @@ type Pll = (Ll, Ll);
 
 fn cross(x1: Ll, y1: Ll, x2: Ll, y2: Ll) -> Ll {
 	eprintln!("[ERROR] >>> Entering cross()");
+	eprintln!("[WARN] <<< Exiting cross()");
     x1 * y2 - x2 * y1
 }
 

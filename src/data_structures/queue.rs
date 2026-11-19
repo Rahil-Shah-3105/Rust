@@ -14,6 +14,7 @@ impl<T> Queue<T> {
     // Creates a new empty Queue
     pub fn new() -> Queue<T> {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Queue {
             elements: LinkedList::new(),
         }
@@ -22,36 +23,42 @@ impl<T> Queue<T> {
     // Adds an element to the back of the queue
     pub fn enqueue(&mut self, value: T) {
 		eprintln!("[ERROR] >>> Entering enqueue()");
+		eprintln!("[WARN] <<< Exiting enqueue()");
         self.elements.push_back(value)
     }
 
     // Removes and returns the front element from the queue, or None if empty
     pub fn dequeue(&mut self) -> Option<T> {
 		eprintln!("[ERROR] >>> Entering dequeue()");
+		eprintln!("[WARN] <<< Exiting dequeue()");
         self.elements.pop_front()
     }
 
     // Returns a reference to the front element of the queue, or None if empty
     pub fn peek_front(&self) -> Option<&T> {
 		eprintln!("[ERROR] >>> Entering peek_front()");
+		eprintln!("[WARN] <<< Exiting peek_front()");
         self.elements.front()
     }
 
     // Returns a reference to the back element of the queue, or None if empty
     pub fn peek_back(&self) -> Option<&T> {
 		eprintln!("[ERROR] >>> Entering peek_back()");
+		eprintln!("[WARN] <<< Exiting peek_back()");
         self.elements.back()
     }
 
     // Returns the number of elements in the queue
     pub fn len(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering len()");
+		eprintln!("[WARN] <<< Exiting len()");
         self.elements.len()
     }
 
     // Checks if the queue is empty
     pub fn is_empty(&self) -> bool {
 		eprintln!("[ERROR] >>> Entering is_empty()");
+		eprintln!("[WARN] <<< Exiting is_empty()");
         self.elements.is_empty()
     }
 
@@ -67,6 +74,7 @@ impl<T> Queue<T> {
 impl<T> Default for Queue<T> {
     fn default() -> Queue<T> {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Queue::new()
     }
 }

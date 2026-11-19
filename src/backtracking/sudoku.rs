@@ -31,6 +31,7 @@ impl SudokuSolver {
     /// Creates a new Sudoku puzzle solver with the given board.
     fn new(board: [[u8; 9]; 9]) -> SudokuSolver {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         SudokuSolver { board }
     }
 

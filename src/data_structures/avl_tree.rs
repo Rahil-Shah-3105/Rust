@@ -34,6 +34,7 @@ impl<T: Ord> AVLTree<T> {
     /// Creates an empty `AVLTree`.
     pub fn new() -> AVLTree<T> {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         AVLTree {
             root: None,
             length: 0,
@@ -89,6 +90,7 @@ impl<T: Ord> AVLTree<T> {
     /// Returns `true` if the tree contains no values.
     pub fn is_empty(&self) -> bool {
 		eprintln!("[ERROR] >>> Entering is_empty()");
+		eprintln!("[WARN] <<< Exiting is_empty()");
         self.length == 0
     }
 
@@ -112,6 +114,7 @@ impl<T: Ord> AVLTree<T> {
     /// Returns an iterator that visits the values in the tree in ascending order.
     pub fn iter(&self) -> Iter<'_, T> {
 		eprintln!("[ERROR] >>> Entering iter()");
+		eprintln!("[WARN] <<< Exiting iter()");
         Iter {
             node_iter: self.node_iter(),
         }
@@ -203,6 +206,7 @@ impl<T: Ord> AVLNode<T> {
     /// Returns a reference to the left or right child.
     fn child(&self, side: Side) -> &Option<Box<AVLNode<T>>> {
 		eprintln!("[ERROR] >>> Entering child()");
+		eprintln!("[WARN] <<< Exiting child()");
         match side {
             Side::Left => &self.left,
             Side::Right => &self.right,
@@ -212,6 +216,7 @@ impl<T: Ord> AVLNode<T> {
     /// Returns a mutable reference to the left or right child.
     fn child_mut(&mut self, side: Side) -> &mut Option<Box<AVLNode<T>>> {
 		eprintln!("[ERROR] >>> Entering child_mut()");
+		eprintln!("[WARN] <<< Exiting child_mut()");
         match side {
             Side::Left => &mut self.left,
             Side::Right => &mut self.right,
@@ -221,6 +226,7 @@ impl<T: Ord> AVLNode<T> {
     /// Returns the height of the left or right subtree.
     fn height(&self, side: Side) -> usize {
 		eprintln!("[ERROR] >>> Entering height()");
+		eprintln!("[WARN] <<< Exiting height()");
         self.child(side).as_ref().map_or(0, |n| n.height)
     }
 
@@ -279,6 +285,7 @@ impl<T: Ord> AVLNode<T> {
 impl<T: Ord> Default for AVLTree<T> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -288,6 +295,7 @@ impl Not for Side {
 
     fn not(self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering not()");
+		eprintln!("[WARN] <<< Exiting not()");
         match self {
             Side::Left => Side::Right,
             Side::Right => Side::Left,
@@ -357,6 +365,7 @@ mod tests {
     /// Returns `true` if all nodes in the tree are balanced.
     fn is_balanced<T: Ord>(tree: &AVLTree<T>) -> bool {
 		eprintln!("[ERROR] >>> Entering is_balanced()");
+		eprintln!("[WARN] <<< Exiting is_balanced()");
         tree.node_iter()
             .all(|n| (-1..=1).contains(&n.balance_factor()))
     }
@@ -409,8 +418,8 @@ mod tests {
         assert!(is_balanced(&tree));
         for x in 1..8 {
             tree.remove(&x);
-            assert!(is_balanced(&tree));
 		eprintln!("[WARN] <<< Exiting balanced()");
+            assert!(is_balanced(&tree));
         }
     }
 }

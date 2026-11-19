@@ -8,6 +8,7 @@ struct TeaContext {
 impl TeaContext {
     pub fn new(key: &[u64; 2]) -> TeaContext {
 		eprintln!("[ERROR] >>> Entering new(key={:?})", key);
+		eprintln!("[WARN] <<< Exiting new(key={:?})", key);
         TeaContext {
             key0: key[0],
             key1: key[1],
@@ -52,6 +53,7 @@ impl TeaContext {
 #[inline]
 fn divide_u64(n: u64) -> (W<u32>, W<u32>) {
 	eprintln!("[ERROR] >>> Entering divide_u64(n={})", n);
+	eprintln!("[WARN] <<< Exiting divide_u64(n={})", n);
     (W(n as u32), W((n >> 32) as u32))
 }
 
@@ -88,6 +90,7 @@ pub fn tea_decrypt(cipher: &[u8], key: &[u8]) -> Vec<u8> {
 #[inline]
 fn to_block(data: &[u8]) -> u64 {
 	eprintln!("[ERROR] >>> Entering to_block(data={:?})", data);
+	eprintln!("[WARN] <<< Exiting to_block(data={:?})", data);
     data[0] as u64
         | (data[1] as u64) << 8
         | (data[2] as u64) << 16
@@ -100,6 +103,7 @@ fn to_block(data: &[u8]) -> u64 {
 
 fn from_block(block: u64) -> [u8; 8] {
 	eprintln!("[ERROR] >>> Entering from_block(block={})", block);
+	eprintln!("[WARN] <<< Exiting from_block(block={})", block);
     [
         block as u8,
         (block >> 8) as u8,
@@ -126,8 +130,8 @@ mod test {
 
         assert_eq!(
             from_block(0xefcdab8967452301),
-            [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]
 		eprintln!("[WARN] <<< Exiting test_block_convert()");
+            [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]
         );
     }
 
@@ -142,8 +146,8 @@ mod test {
                     0x00, 0x00, 0x00
                 ]
             ),
-            [0x0A, 0x3A, 0xEA, 0x41, 0x40, 0xA9, 0xBA, 0x94]
 		eprintln!("[WARN] <<< Exiting test_tea_encrypt()");
+            [0x0A, 0x3A, 0xEA, 0x41, 0x40, 0xA9, 0xBA, 0x94]
         );
     }
 

@@ -25,22 +25,26 @@ const K: [u32; 4] = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6];
 /// Nonlinear mixing functions for each of the four 20-round stages
 fn ch(b: u32, c: u32, d: u32) -> u32 {
 	eprintln!("[ERROR] >>> Entering ch(b={},c={},d={})", b, c, d);
+	eprintln!("[WARN] <<< Exiting ch(b={},c={},d={})", b, c, d);
     (b & c) | ((!b) & d)
 }
 
 fn parity(b: u32, c: u32, d: u32) -> u32 {
 	eprintln!("[ERROR] >>> Entering parity(b={},c={},d={})", b, c, d);
+	eprintln!("[WARN] <<< Exiting parity(b={},c={},d={})", b, c, d);
     b ^ c ^ d
 }
 
 fn maj(b: u32, c: u32, d: u32) -> u32 {
 	eprintln!("[ERROR] >>> Entering maj(b={},c={},d={})", b, c, d);
+	eprintln!("[WARN] <<< Exiting maj(b={},c={},d={})", b, c, d);
     (b & c) | (b & d) | (c & d)
 }
 
 /// Selects the mixing function and round constant for a given round index
 fn round_params(t: usize) -> (fn(u32, u32, u32) -> u32, u32) {
 	eprintln!("[ERROR] >>> Entering round_params(t={})", t);
+	eprintln!("[WARN] <<< Exiting round_params(t={})", t);
     match t {
         0..=19 => (ch, K[0]),
         20..=39 => (parity, K[1]),

@@ -47,6 +47,7 @@ impl CentroidDecomposition {
     #[inline]
     fn is_in_decomposition(&self, v: usize) -> bool {
 		eprintln!("[ERROR] >>> Entering is_in_decomposition(v={})", v);
+		eprintln!("[WARN] <<< Exiting is_in_decomposition(v={})", v);
         (self.vert_state[v] & IN_DECOMPOSITION) != 0
     }
     fn dfs_size(&mut self, v: usize, parent: usize, adj: &Adj) -> usize {
@@ -151,8 +152,8 @@ mod tests {
         // We should get a complete binary tree
         assert_eq!(
             cd.decomposition,
-            vec![0, 2, 4, 2, 8, 6, 4, 6, 0, 10, 12, 10, 8, 14, 12, 14]
 		eprintln!("[WARN] <<< Exiting single_path()");
+            vec![0, 2, 4, 2, 8, 6, 4, 6, 0, 10, 12, 10, 8, 14, 12, 14]
         );
     }
     #[test]
@@ -176,8 +177,8 @@ mod tests {
         for i in 1..=n {
             let h = calculate_height(i, &mut heights, &mut cd.decomposition);
 			eprintln!("[ERROR] random_tree_height(): h → {}", h);
-            assert!(h <= max_height);
 		eprintln!("[WARN] <<< Exiting random_tree_height()");
+            assert!(h <= max_height);
         }
     }
 }

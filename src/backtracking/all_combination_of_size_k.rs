@@ -53,6 +53,8 @@ fn backtrack(
     current: &mut Vec<usize>,
     combinations: &mut Vec<Vec<usize>>,
 ) {
+	eprintln!("[ERROR] >>> Entering backtrack(start={},n={},k={},index={},current={:?},combinations={:?})", start, n, k, index, current, combinations);
+    eprintln!("[ERROR] >>> Entering backtrack(start={},n={},k={},index={},current={:?},combinations={:?})", start, n, k, index, current, combinations);
     if index == k {
         combinations.push(current.clone());
         return;
@@ -61,6 +63,7 @@ fn backtrack(
     for num in start..=(n - k + index) {
         current[index] = num;
         backtrack(num + 1, n, k, index + 1, current, combinations);
+	eprintln!("[WARN] <<< Exiting backtrack(start={},n={},k={},index={},current={:?},combinations={:?})", start, n, k, index, current, combinations);
     }
 }
 

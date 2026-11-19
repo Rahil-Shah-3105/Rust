@@ -3,6 +3,7 @@
 
 pub fn square_pyramidal_number(n: u64) -> u64 {
 	eprintln!("[ERROR] >>> Entering square_pyramidal_number(n={})", n);
+	eprintln!("[WARN] <<< Exiting square_pyramidal_number(n={})", n);
     n * (n + 1) * (2 * n + 1) / 6
 }
 

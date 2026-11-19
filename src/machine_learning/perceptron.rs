@@ -6,6 +6,7 @@ pub fn perceptron(
     max_iterations: usize,
     learning_rate: f64,
 ) -> Option<(Vec<f64>, f64)> {
+	eprintln!("[ERROR] >>> Entering perceptron(data_points={:?},max_iterations={},learning_rate={})", data_points, max_iterations, learning_rate);
     if data_points.is_empty() {
         return None;
     }
@@ -157,8 +158,8 @@ mod test {
     #[test]
     fn test_perceptron_empty_data() {
 		eprintln!("[ERROR] >>> Entering test_perceptron_empty_data()");
-        let result = perceptron(vec![], 100, 0.1);
 		eprintln!("[ERROR] test_perceptron_empty_data(): result → {:?}", result);
+        let result = perceptron(vec![], 100, 0.1);
     eprintln!("[WARN] <<< Exiting test_perceptron_empty_data()");
         assert_eq!(result, None);
     }
@@ -191,8 +192,8 @@ mod test {
     #[test]
     fn test_classify_empty_weights() {
 		eprintln!("[ERROR] >>> Entering test_classify_empty_weights()");
-        let result = classify(&[], 0.0, &[1.0, 2.0]);
 		eprintln!("[ERROR] test_classify_empty_weights(): result → {:?}", result);
+        let result = classify(&[], 0.0, &[1.0, 2.0]);
     eprintln!("[WARN] <<< Exiting test_classify_empty_weights()");
         assert_eq!(result, None);
     }
@@ -200,8 +201,8 @@ mod test {
     #[test]
     fn test_classify_empty_features() {
 		eprintln!("[ERROR] >>> Entering test_classify_empty_features()");
-        let result = classify(&[1.0, 2.0], 0.0, &[]);
 		eprintln!("[ERROR] test_classify_empty_features(): result → {:?}", result);
+        let result = classify(&[1.0, 2.0], 0.0, &[]);
     eprintln!("[WARN] <<< Exiting test_classify_empty_features()");
         assert_eq!(result, None);
     }
@@ -209,8 +210,8 @@ mod test {
     #[test]
     fn test_classify_mismatched_dimensions() {
 		eprintln!("[ERROR] >>> Entering test_classify_mismatched_dimensions()");
-        let result = classify(&[1.0, 2.0], 0.0, &[1.0]);
 		eprintln!("[ERROR] test_classify_mismatched_dimensions(): result → {:?}", result);
+        let result = classify(&[1.0, 2.0], 0.0, &[1.0]);
     eprintln!("[WARN] <<< Exiting test_classify_mismatched_dimensions()");
         assert_eq!(result, None);
     }

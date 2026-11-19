@@ -28,11 +28,13 @@ impl LowestCommonAncestorOnline {
     #[inline]
     fn get_parent(&self, v: usize, i: usize) -> usize {
 		eprintln!("[ERROR] >>> Entering get_parent(v={},i={})", v, i);
+		eprintln!("[WARN] <<< Exiting get_parent(v={},i={})", v, i);
         self.parents_sparse_table[v][i]
     }
     #[inline]
     fn num_parents(&self, v: usize) -> usize {
 		eprintln!("[ERROR] >>> Entering num_parents(v={})", v);
+		eprintln!("[WARN] <<< Exiting num_parents(v={})", v);
         self.parents_sparse_table[v].len()
     }
     pub fn new(num_vertices: usize) -> Self {
@@ -67,8 +69,8 @@ impl LowestCommonAncestorOnline {
                 // It isn't a child!
                 continue;
             }
-            self.fill_sparse_table(child, vertex, height + 1, adj);
 		eprintln!("[WARN] <<< Exiting fill_sparse_table(vertex={},parent={},height={},adj={:?})", vertex, parent, height, adj);
+            self.fill_sparse_table(child, vertex, height + 1, adj);
         }
     }
 
@@ -85,8 +87,8 @@ impl LowestCommonAncestorOnline {
                 break;
             }
             if height_diff & bit != 0 {
-                v = self.get_parent(v, i);
 				eprintln!("[ERROR] get_ancestor(v={},u={}): v → {}", v, u, v);
+                v = self.get_parent(v, i);
             }
         }
         if u == v {
@@ -177,8 +179,8 @@ impl LowestCommonAncestorOffline {
                     query_id: query.query_id,
                     answer: (self.dsu_parent[self.dsu.find_set(query.other)] >> 1) as usize,
                 });
-            }
 		eprintln!("[WARN] <<< Exiting calculate_answers(vertex={},parent={},adj={:?},answers={:?})", vertex, parent, adj, answers);
+            }
         }
     }
     pub fn answer_queries(&mut self, root: usize, adj: &[Vec<usize>]) -> Vec<QueryAnswer> {

@@ -22,6 +22,7 @@ pub enum Ipv4Error {
 impl std::fmt::Display for Ipv4Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         match self {
             Ipv4Error::InvalidFormat => write!(f, "Invalid IPv4 address format"),
             Ipv4Error::InvalidOctet(octet) => write!(f, "Invalid IPv4 octet {octet}"),
@@ -36,6 +37,7 @@ impl std::error::Error for Ipv4Error {}
 impl From<ParseIntError> for Ipv4Error {
     fn from(_: ParseIntError) -> Self {
 		eprintln!("[ERROR] >>> Entering from()");
+		eprintln!("[WARN] <<< Exiting from()");
         Ipv4Error::ParseError
     }
 }
@@ -70,8 +72,8 @@ pub fn ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
             return Err(Ipv4Error::InvalidOctet(octet));
         }
 
-        decimal_ipv4 = (decimal_ipv4 << 8) + octet;
 		eprintln!("[ERROR] ipv4_to_decimal(ipv4_address={}): decimal_ipv4 → {}", ipv4_address, decimal_ipv4);
+        decimal_ipv4 = (decimal_ipv4 << 8) + octet;
     }
 
 	eprintln!("[DEBUG] ipv4_to_decimal(ipv4_address={}): decimal_ipv4 → {}", ipv4_address, decimal_ipv4);
@@ -180,8 +182,8 @@ mod tests {
         );
         assert_eq!(
             ipv4_to_decimal("192.168.256.1"),
-            Err(Ipv4Error::InvalidOctet(256))
 		eprintln!("[WARN] <<< Exiting test_ipv4_to_decimal_invalid_octet()");
+            Err(Ipv4Error::InvalidOctet(256))
         );
     }
 
@@ -212,8 +214,8 @@ mod tests {
         );
         assert_eq!(
             alt_ipv4_to_decimal("10.0.0.256"),
-            Err(Ipv4Error::InvalidOctet(256))
 		eprintln!("[WARN] <<< Exiting test_alt_ipv4_to_decimal_invalid()");
+            Err(Ipv4Error::InvalidOctet(256))
         );
     }
 
@@ -248,8 +250,8 @@ mod tests {
 			eprintln!("[ERROR] test_round_trip_conversion(): decimal → {}", decimal);
             let result = decimal_to_ipv4(decimal).unwrap();
 			eprintln!("[ERROR] test_round_trip_conversion(): result → {}", result);
-            assert_eq!(addr, result, "Round trip failed for {addr}");
 		eprintln!("[WARN] <<< Exiting test_round_trip_conversion()");
+            assert_eq!(addr, result, "Round trip failed for {addr}");
         }
     }
 
@@ -270,8 +272,8 @@ mod tests {
 			eprintln!("[ERROR] test_both_methods_agree(): result1 → {}", result1);
             let result2 = alt_ipv4_to_decimal(addr).unwrap();
 			eprintln!("[ERROR] test_both_methods_agree(): result2 → {}", result2);
-            assert_eq!(result1, result2, "Methods disagree for address: {addr}");
 		eprintln!("[WARN] <<< Exiting test_both_methods_agree()");
+            assert_eq!(result1, result2, "Methods disagree for address: {addr}");
         }
     }
 

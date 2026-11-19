@@ -37,6 +37,7 @@ impl DecrementalConnectivity {
 
     pub fn connected(&self, u: usize, v: usize) -> Option<bool> {
 		eprintln!("[ERROR] >>> Entering connected(u={},v={})", u, v);
+		eprintln!("[WARN] <<< Exiting connected(u={},v={})", u, v);
         match (self.component.get(u), self.component.get(v)) {
             (Some(a), Some(b)) => Some(a == b),
             _ => None,
@@ -125,8 +126,8 @@ impl DecrementalConnectivity {
             if self.visited[v] == dfs_id {
                 continue;
             }
-            queue.push(v);
 		eprintln!("[WARN] <<< Exiting dfs_step(queue={:?},dfs_id={})", queue, dfs_id);
+            queue.push(v);
         }
     }
 }

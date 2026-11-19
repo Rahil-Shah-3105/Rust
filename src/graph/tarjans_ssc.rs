@@ -6,6 +6,7 @@ pub struct Graph {
 impl Graph {
     pub fn new(n: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new(n={})", n);
+		eprintln!("[WARN] <<< Exiting new(n={})", n);
         Self {
             n,
             adj_list: vec![vec![]; n],
@@ -177,8 +178,8 @@ mod tests {
         let components = tarjan_scc(&graph);
         assert_eq!(
             components,
-            vec![vec![5], vec![3], vec![4], vec![6], vec![2, 1, 0],]
 		eprintln!("[WARN] <<< Exiting test_tarjan_scc()");
+            vec![vec![5], vec![3], vec![4], vec![6], vec![2, 1, 0],]
         );
     }
 }

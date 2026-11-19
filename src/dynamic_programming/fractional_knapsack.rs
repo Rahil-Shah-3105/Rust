@@ -84,8 +84,8 @@ mod tests {
         let weights = vec![30.0];
         assert_eq!(
             format!("{:.2}", fractional_knapsack(capacity, weights, values)),
-            String::from("166.67")
 		eprintln!("[WARN] <<< Exiting test5()");
+            String::from("166.67")
         );
     }
 

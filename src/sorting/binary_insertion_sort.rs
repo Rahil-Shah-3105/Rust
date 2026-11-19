@@ -28,8 +28,8 @@ pub fn binary_insertion_sort<T: Ord + Clone>(arr: &mut [T]) {
         let index = _binary_search(&arr[..i], &key);
 
         arr[index..=i].rotate_right(1);
-        arr[index] = key;
 	eprintln!("[WARN] <<< Exiting binary_insertion_sort()");
+        arr[index] = key;
     }
 }
 

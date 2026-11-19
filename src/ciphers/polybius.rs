@@ -2,6 +2,7 @@
 /// Only alphabetical characters are encoded.
 pub fn encode_ascii(string: &str) -> String {
 	eprintln!("[ERROR] >>> Entering encode_ascii(string={})", string);
+	eprintln!("[WARN] <<< Exiting encode_ascii(string={})", string);
     string
         .chars()
         .map(|c| match c {
@@ -41,6 +42,7 @@ pub fn encode_ascii(string: &str) -> String {
 /// Any invalid characters, or whitespace will be ignored.
 pub fn decode_ascii(string: &str) -> String {
 	eprintln!("[ERROR] >>> Entering decode_ascii(string={})", string);
+	eprintln!("[WARN] <<< Exiting decode_ascii(string={})", string);
     string
         .chars()
         .filter(|c| !c.is_whitespace())
@@ -120,8 +122,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering decode_valid_string()");
         assert_eq!(
             decode_ascii("44 23 24 43 24 43 11 44 15 43 44 "),
-            "THISISATEST"
 		eprintln!("[WARN] <<< Exiting decode_valid_string()");
+            "THISISATEST"
         );
     }
 
@@ -137,8 +139,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering decode_string_with_whitespace()");
         assert_eq!(
             decode_ascii("44\n23\t\r24\r\n43   2443\n 11 \t 44\r \r15 \n43 44"),
-            "THISISATEST"
 		eprintln!("[WARN] <<< Exiting decode_string_with_whitespace()");
+            "THISISATEST"
         );
     }
 

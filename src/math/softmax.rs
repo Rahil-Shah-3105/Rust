@@ -52,8 +52,8 @@ mod tests {
                 6.126987e-6,
                 0.00012306382,
                 0.0024718025
-            ]
 		eprintln!("[WARN] <<< Exiting test_softmax()");
+            ]
         );
     }
 }

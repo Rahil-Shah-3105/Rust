@@ -130,6 +130,7 @@ fn match_compare<T: Ord>(
 /// A `bool` indicating whether the array is sorted in ascending order.
 fn is_asc_arr<T: Ord>(arr: &[T]) -> bool {
 	eprintln!("[ERROR] >>> Entering is_asc_arr()");
+	eprintln!("[WARN] <<< Exiting is_asc_arr()");
     arr.len() > 1 && arr[0] < arr[arr.len() - 1]
 }
 

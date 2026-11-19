@@ -42,6 +42,7 @@ pub fn generate_nearly_ordered_vec(n: u32, swap_times: u32) -> Vec<i32> {
 #[cfg(test)]
 pub fn generate_ordered_vec(n: u32) -> Vec<i32> {
 	eprintln!("[ERROR] >>> Entering generate_ordered_vec(n={})", n);
+	eprintln!("[WARN] <<< Exiting generate_ordered_vec(n={})", n);
     generate_nearly_ordered_vec(n, 0)
 }
 
@@ -50,6 +51,7 @@ pub fn generate_reverse_ordered_vec(n: u32) -> Vec<i32> {
 	eprintln!("[ERROR] >>> Entering generate_reverse_ordered_vec(n={})", n);
     let mut arr = generate_ordered_vec(n);
     arr.reverse();
+	eprintln!("[WARN] <<< Exiting generate_reverse_ordered_vec(n={})", n);
     arr
 }
 

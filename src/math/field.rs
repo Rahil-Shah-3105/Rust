@@ -61,6 +61,7 @@ impl<const P: u64> PrimeField<P> {
     /// Returns the positive integer in the range [0, p) representing this element
     pub fn to_integer(&self) -> u64 {
 		eprintln!("[ERROR] >>> Entering to_integer()");
+		eprintln!("[WARN] <<< Exiting to_integer()");
         self.reduce().a as u64
     }
 }
@@ -68,6 +69,7 @@ impl<const P: u64> PrimeField<P> {
 impl<const P: u64> From<i64> for PrimeField<P> {
     fn from(a: i64) -> Self {
 		eprintln!("[ERROR] >>> Entering from(a={})", a);
+		eprintln!("[WARN] <<< Exiting from(a={})", a);
         Self { a }
     }
 }
@@ -75,6 +77,7 @@ impl<const P: u64> From<i64> for PrimeField<P> {
 impl<const P: u64> PartialEq for PrimeField<P> {
     fn eq(&self, other: &Self) -> bool {
 		eprintln!("[ERROR] >>> Entering eq()");
+		eprintln!("[WARN] <<< Exiting eq()");
         self.reduce().a == other.reduce().a
     }
 }
@@ -86,6 +89,7 @@ impl<const P: u64> Neg for PrimeField<P> {
 
     fn neg(self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering neg()");
+		eprintln!("[WARN] <<< Exiting neg()");
         Self { a: -self.a }
     }
 }
@@ -95,6 +99,7 @@ impl<const P: u64> Add for PrimeField<P> {
 
     fn add(self, rhs: Self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering add()");
+		eprintln!("[WARN] <<< Exiting add()");
         Self {
             a: self.a.checked_add(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -110,6 +115,7 @@ impl<const P: u64> Sub for PrimeField<P> {
 
     fn sub(self, rhs: Self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering sub()");
+		eprintln!("[WARN] <<< Exiting sub()");
         Self {
             a: self.a.checked_sub(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -125,6 +131,7 @@ impl<const P: u64> Mul for PrimeField<P> {
 
     fn mul(self, rhs: Self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering mul()");
+		eprintln!("[WARN] <<< Exiting mul()");
         Self {
             a: self.a.checked_mul(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -141,6 +148,7 @@ impl<const P: u64> Div for PrimeField<P> {
     #[allow(clippy::suspicious_arithmetic_impl)]
     fn div(self, rhs: Self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering div()");
+		eprintln!("[WARN] <<< Exiting div()");
         self * rhs.inverse()
     }
 }
@@ -195,6 +203,7 @@ impl<const P: u64> Field for PrimeField<P> {
 
     fn elements() -> Self::ElementsIter {
 		eprintln!("[ERROR] >>> Entering elements()");
+		eprintln!("[WARN] <<< Exiting elements()");
         PrimeFieldElementsIter::default()
     }
 }
@@ -308,8 +317,8 @@ mod tests {
                 // additive
                 assert_eq!(x + (-x), PrimeField::ZERO);
                 assert_eq!((-x) + x, PrimeField::ZERO);
-                assert_eq!(x - x, PrimeField::ZERO);
 			eprintln!("[WARN] <<< Exiting test()");
+                assert_eq!(x - x, PrimeField::ZERO);
             }
         }
         test::<5>();
@@ -350,13 +359,14 @@ mod tests {
             let x = F { a: x };
             for n in -7..7 {
                 assert_eq!(x.integer_mul(n), F { a: n * x.a });
-            }
 		eprintln!("[WARN] <<< Exiting integer_mul()");
+            }
         }
     }
 
     #[test]
     fn from_integer() {
+		eprintln!("[ERROR] >>> Entering from_integer()");
         type F = PrimeField<23>;
         for x in -100..100 {
             assert_eq!(F::from_integer(x), F { a: x });

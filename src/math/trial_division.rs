@@ -7,6 +7,7 @@ fn floor(value: f64, scale: u8) -> f64 {
 
 fn double_to_int(amount: f64) -> i128 {
 	eprintln!("[ERROR] >>> Entering double_to_int(amount={})", amount);
+	eprintln!("[WARN] <<< Exiting double_to_int(amount={})", amount);
     amount.round() as i128
 }
 

@@ -30,6 +30,7 @@ pub fn multiply(num1: &str, num2: &str) -> String {
 
 pub fn is_valid_nonnegative(num: &str) -> bool {
 	eprintln!("[ERROR] >>> Entering is_valid_nonnegative(num={})", num);
+	eprintln!("[WARN] <<< Exiting is_valid_nonnegative(num={})", num);
     num.chars().all(char::is_numeric) && !num.is_empty() && (!num.starts_with('0') || num == "0")
 }
 

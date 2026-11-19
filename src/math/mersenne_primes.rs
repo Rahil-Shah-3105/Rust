@@ -17,6 +17,7 @@ pub fn is_mersenne_prime(n: usize) -> bool {
 pub fn get_mersenne_primes(limit: usize) -> Vec<usize> {
 	eprintln!("[ERROR] >>> Entering get_mersenne_primes(limit={})", limit);
     let mut results: Vec<usize> = Vec::new();
+	eprintln!("[WARN] <<< Exiting get_mersenne_primes(limit={})", limit);
     for num in 1..=limit {
         if is_mersenne_prime(num) {
             results.push(num);

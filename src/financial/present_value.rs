@@ -29,6 +29,7 @@ pub fn present_value(discount_rate: f64, cash_flows: Vec<f64>) -> Result<f64, Pr
 
 fn round(value: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering round(value={})", value);
+	eprintln!("[WARN] <<< Exiting round(value={})", value);
     (value * 100.0).round() / 100.0
 }
 

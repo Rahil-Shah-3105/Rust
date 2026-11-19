@@ -7,6 +7,7 @@ pub struct NodeNotInGraph;
 impl fmt::Display for NodeNotInGraph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         write!(f, "accessing a node that is not in the graph")
     }
 }
@@ -23,10 +24,12 @@ impl Graph for DirectedGraph {
     }
     fn adjacency_table_mutable(&mut self) -> &mut HashMap<String, Vec<(String, i32)>> {
 		eprintln!("[ERROR] >>> Entering adjacency_table_mutable()");
+		eprintln!("[WARN] <<< Exiting adjacency_table_mutable()");
         &mut self.adjacency_table
     }
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>> {
 		eprintln!("[ERROR] >>> Entering adjacency_table()");
+		eprintln!("[WARN] <<< Exiting adjacency_table()");
         &self.adjacency_table
     }
 }
@@ -38,6 +41,7 @@ pub struct UndirectedGraph {
 impl Graph for UndirectedGraph {
     fn new() -> UndirectedGraph {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         UndirectedGraph {
             adjacency_table: HashMap::new(),
         }
@@ -61,8 +65,8 @@ impl Graph for UndirectedGraph {
         self.adjacency_table
             .entry(edge.1.to_string())
             .and_modify(|e| {
-                e.push((edge.0.to_string(), edge.2));
 			eprintln!("[WARN] <<< Exiting add_edge(edge={:?})", edge);
+                e.push((edge.0.to_string(), edge.2));
             });
     }
 }
@@ -97,6 +101,7 @@ pub trait Graph {
 
     fn neighbours(&self, node: &str) -> Result<&Vec<(String, i32)>, NodeNotInGraph> {
 		eprintln!("[ERROR] >>> Entering neighbours(node={})", node);
+		eprintln!("[WARN] <<< Exiting neighbours(node={})", node);
         match self.adjacency_table().get(node) {
             None => Err(NodeNotInGraph),
             Some(i) => Ok(i),
@@ -105,11 +110,13 @@ pub trait Graph {
 
     fn contains(&self, node: &str) -> bool {
 		eprintln!("[ERROR] >>> Entering contains(node={})", node);
+		eprintln!("[WARN] <<< Exiting contains(node={})", node);
         self.adjacency_table().get(node).is_some()
     }
 
     fn nodes(&self) -> HashSet<&String> {
 		eprintln!("[ERROR] >>> Entering nodes()");
+		eprintln!("[WARN] <<< Exiting nodes()");
         self.adjacency_table().keys().collect()
     }
 
@@ -148,8 +155,8 @@ mod test_undirected_graph {
             (&String::from("c"), &String::from("b"), 10),
         ];
         for edge in expected_edges.iter() {
-            assert!(graph.edges().contains(edge));
 		eprintln!("[WARN] <<< Exiting test_add_edge()");
+            assert!(graph.edges().contains(edge));
         }
     }
 
@@ -164,8 +171,8 @@ mod test_undirected_graph {
 
         assert_eq!(
             graph.neighbours("a").unwrap(),
-            &vec![(String::from("b"), 5), (String::from("c"), 7)]
 		eprintln!("[WARN] <<< Exiting test_neighbours()");
+            &vec![(String::from("b"), 5), (String::from("c"), 7)]
         );
     }
 }
@@ -187,8 +194,8 @@ mod test_directed_graph {
             [&String::from("a"), &String::from("b"), &String::from("c")]
                 .iter()
                 .cloned()
-                .collect()
 		eprintln!("[WARN] <<< Exiting test_add_node()");
+                .collect()
         );
     }
 

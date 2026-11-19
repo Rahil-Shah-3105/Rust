@@ -10,6 +10,7 @@ pub fn find_root(f: fn(f64) -> f64, fd: fn(f64) -> f64, guess: f64, iterations: 
 
 pub fn iteration(f: fn(f64) -> f64, fd: fn(f64) -> f64, guess: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering iteration()");
+	eprintln!("[WARN] <<< Exiting iteration()");
     guess - f(guess) / fd(guess)
 }
 
@@ -19,6 +20,7 @@ mod tests {
 
     fn math_fn(x: f64) -> f64 {
 		eprintln!("[ERROR] >>> Entering math_fn(x={})", x);
+		eprintln!("[WARN] <<< Exiting math_fn(x={})", x);
         x.cos() - (x * x * x)
     }
     fn math_fnd(x: f64) -> f64 {

@@ -56,6 +56,7 @@ impl IntoWeightUnit for &str {
 impl IntoWeightUnit for String {
     fn into_weight_unit(self) -> Result<WeightUnit, String> {
 		eprintln!("[ERROR] >>> Entering into_weight_unit()");
+		eprintln!("[WARN] <<< Exiting into_weight_unit()");
         WeightUnit::from_str(&self)
     }
 }
@@ -147,6 +148,7 @@ impl WeightUnit {
     /// Get the conversion factor to convert this unit to kilograms
     fn to_kilogram_factor(self) -> f64 {
 		eprintln!("[ERROR] >>> Entering to_kilogram_factor()");
+		eprintln!("[WARN] <<< Exiting to_kilogram_factor()");
         match self {
             // Large metric units
             Self::Gigatonne => 1e12,
@@ -189,6 +191,7 @@ impl WeightUnit {
     /// Get all supported units as strings
     pub fn supported_units() -> Vec<&'static str> {
 		eprintln!("[ERROR] >>> Entering supported_units()");
+		eprintln!("[WARN] <<< Exiting supported_units()");
         vec![
             "gigatonne",
             "megatonne",
@@ -383,8 +386,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "kilogram", "atomic-mass-unit").unwrap(),
-            6.022_140_762e26
 		eprintln!("[WARN] <<< Exiting test_kilogram_conversions()");
+            6.022_140_762e26
         ));
     }
 
@@ -420,8 +423,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "megatonne", "gram").unwrap(),
-            1e12
 		eprintln!("[WARN] <<< Exiting test_large_metric_conversions()");
+            1e12
         ));
     }
 
@@ -444,8 +447,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(3.0, "gram", "pound").unwrap(),
-            0.006_613_867_8
 		eprintln!("[WARN] <<< Exiting test_gram_conversions()");
+            0.006_613_867_8
         ));
     }
 
@@ -467,8 +470,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "milligram", "carat").unwrap(),
-            0.005
 		eprintln!("[WARN] <<< Exiting test_milligram_conversions()");
+            0.005
         ));
     }
 
@@ -514,8 +517,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "picogram", "kilogram").unwrap(),
-            1e-15
 		eprintln!("[WARN] <<< Exiting test_small_metric_conversions()");
+            1e-15
         ));
     }
 
@@ -541,8 +544,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(3.0, "metric-ton", "pound").unwrap(),
-            6_613.867_865
 		eprintln!("[WARN] <<< Exiting test_metric_ton_conversions()");
+            6_613.867_865
         ));
     }
 
@@ -568,8 +571,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "long-ton", "short-ton").unwrap(),
-            1.12
 		eprintln!("[WARN] <<< Exiting test_long_ton_conversions()");
+            1.12
         ));
     }
 
@@ -609,8 +612,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(4.0, "quarter", "hundredweight").unwrap(),
-            1.0
 		eprintln!("[WARN] <<< Exiting test_imperial_large_units()");
+            1.0
         ));
     }
 
@@ -636,8 +639,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(2.0, "short-ton", "pound").unwrap(),
-            4_000.0
 		eprintln!("[WARN] <<< Exiting test_short_ton_conversions()");
+            4_000.0
         ));
     }
 
@@ -667,8 +670,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "pound", "carat").unwrap(),
-            2_267.961_85
 		eprintln!("[WARN] <<< Exiting test_pound_conversions()");
+            2_267.961_85
         ));
     }
 
@@ -690,8 +693,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "stone", "ounce").unwrap(),
-            224.0
 		eprintln!("[WARN] <<< Exiting test_stone_conversions()");
+            224.0
         ));
     }
 
@@ -717,8 +720,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(1.0, "ounce", "carat").unwrap(),
-            141.747_615_625
 		eprintln!("[WARN] <<< Exiting test_ounce_conversions()");
+            141.747_615_625
         ));
     }
 
@@ -754,8 +757,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(7000.0, "grain", "pound").unwrap(),
-            1.0
 		eprintln!("[WARN] <<< Exiting test_small_imperial_units()");
+            1.0
         ));
     }
 
@@ -777,8 +780,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(4.0, "carat", "carat").unwrap(),
-            4.0
 		eprintln!("[WARN] <<< Exiting test_carat_conversions()");
+            4.0
         ));
     }
 
@@ -840,8 +843,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(240.0, "pennyweight", "troy-pound").unwrap(),
-            1.0
 		eprintln!("[WARN] <<< Exiting test_troy_weight_system()");
+            1.0
         ));
     }
 
@@ -855,8 +858,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(2.0, "atomic-mass-unit", "atomic-mass-unit").unwrap(),
-            2.0
 		eprintln!("[WARN] <<< Exiting test_atomic_mass_unit_conversions()");
+            2.0
         ));
     }
 
@@ -870,8 +873,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(100.0, WeightUnit::Pound, WeightUnit::Kilogram).unwrap(),
-            45.359_237
 		eprintln!("[WARN] <<< Exiting test_using_enums()");
+            45.359_237
         ));
     }
 
@@ -885,8 +888,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_weight(16.0, "ounce", WeightUnit::Pound).unwrap(),
-            1.0
 		eprintln!("[WARN] <<< Exiting test_mixed_usage()");
+            1.0
         ));
     }
 

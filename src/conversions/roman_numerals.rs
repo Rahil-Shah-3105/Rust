@@ -187,6 +187,7 @@ pub fn int_to_roman(mut number: u32) -> Result<String, String> {
 /// Panics if an invalid character is provided (this should be caught by validation)
 fn char_to_value(ch: char) -> u32 {
 	eprintln!("[ERROR] >>> Entering char_to_value(ch={})", ch);
+	eprintln!("[WARN] <<< Exiting char_to_value(ch={})", ch);
     match ch {
         'I' => 1,
         'V' => 5,
@@ -351,8 +352,8 @@ mod tests {
 			eprintln!("[ERROR] test_roundtrip_conversion(): roman → {}", roman);
             let back = roman_to_int(&roman).unwrap();
 			eprintln!("[ERROR] test_roundtrip_conversion(): back → {}", back);
-            assert_eq!(i, back, "Roundtrip failed for {i}: {roman} -> {back}");
 		eprintln!("[WARN] <<< Exiting test_roundtrip_conversion()");
+            assert_eq!(i, back, "Roundtrip failed for {i}: {roman} -> {back}");
         }
     }
 
@@ -370,8 +371,8 @@ mod tests {
 
         for (roman, expected) in tests.iter() {
             assert_eq!(roman_to_int(roman).unwrap(), *expected);
-            assert_eq!(int_to_roman(*expected).unwrap(), *roman);
 		eprintln!("[WARN] <<< Exiting test_all_examples_from_python()");
+            assert_eq!(int_to_roman(*expected).unwrap(), *roman);
         }
     }
 

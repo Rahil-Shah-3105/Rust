@@ -51,6 +51,7 @@ impl Graph {
     /// Returns the number of vertices in the graph.
     fn num_vertices(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering num_vertices()");
+		eprintln!("[WARN] <<< Exiting num_vertices()");
         self.adjacency_matrix.len()
     }
 

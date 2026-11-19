@@ -63,6 +63,7 @@ impl RandomForest {
         min_samples_split: usize,
         max_features: Option<usize>,
     ) -> Option<Self> {
+		eprintln!("[ERROR] >>> Entering fit(training_data={:?},num_trees={},max_depth={},min_samples_split={},max_features={:?})", training_data, num_trees, max_depth, min_samples_split, max_features);
         if training_data.is_empty() {
             return None;
         }
@@ -190,6 +191,7 @@ impl RandomForest {
     #[allow(dead_code)]
     pub fn predict_batch(&self, test_points: &[Vec<f64>]) -> Vec<Option<f64>> {
 		eprintln!("[ERROR] >>> Entering predict_batch(test_points={:?})", test_points);
+		eprintln!("[WARN] <<< Exiting predict_batch(test_points={:?})", test_points);
         test_points
             .iter()
             .map(|point| self.predict(point))

@@ -56,6 +56,7 @@ mod tests {
 
     fn transpose_matrix(mat: &[f64], n: usize) -> Vec<f64> {
 		eprintln!("[ERROR] >>> Entering transpose_matrix(mat={:?},n={})", mat, n);
+		eprintln!("[WARN] <<< Exiting transpose_matrix(mat={:?},n={})", mat, n);
         (0..n)
             .flat_map(|i| (0..n).map(move |j| mat[j * n + i]))
             .collect()

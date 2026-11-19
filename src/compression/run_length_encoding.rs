@@ -77,8 +77,8 @@ mod test {
                 ('n', 1),
                 ('d', 1),
                 ('s', 1)
-            ]
 		eprintln!("[WARN] <<< Exiting test_run_length_encode()");
+            ]
         );
     }
 }

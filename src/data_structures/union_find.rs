@@ -22,6 +22,7 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
     /// Creates an empty Union-Find structure with a specified capacity.
     pub fn with_capacity(capacity: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering with_capacity(capacity={})", capacity);
+		eprintln!("[WARN] <<< Exiting with_capacity(capacity={})", capacity);
         Self {
             parent_links: Vec::with_capacity(capacity),
             sizes: Vec::with_capacity(capacity),
@@ -45,6 +46,7 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
     /// Returns the root index of the set containing the given value, or `None` if it doesn't exist.
     pub fn find(&mut self, value: &T) -> Option<usize> {
 		eprintln!("[ERROR] >>> Entering find()");
+		eprintln!("[WARN] <<< Exiting find()");
         self.payloads
             .get(value)
             .copied()
@@ -102,12 +104,14 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
     /// Checks if two items belong to the same set.
     pub fn is_same_set(&mut self, first_item: &T, sec_item: &T) -> bool {
 		eprintln!("[ERROR] >>> Entering is_same_set()");
+		eprintln!("[WARN] <<< Exiting is_same_set()");
         matches!((self.find(first_item), self.find(sec_item)), (Some(first_root), Some(sec_root)) if first_root == sec_root)
     }
 
     /// Returns the number of disjoint sets.
     pub fn count(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering count()");
+		eprintln!("[WARN] <<< Exiting count()");
         self.count
     }
 }
@@ -115,6 +119,7 @@ impl<T: Debug + Eq + Hash> UnionFind<T> {
 impl<T: Debug + Eq + Hash> Default for UnionFind<T> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self {
             parent_links: Vec::default(),
             sizes: Vec::default(),

@@ -31,6 +31,7 @@ impl IntoPressureUnit for &str {
 impl IntoPressureUnit for String {
     fn into_pressure_unit(self) -> Result<PressureUnit, String> {
 		eprintln!("[ERROR] >>> Entering into_pressure_unit()");
+		eprintln!("[WARN] <<< Exiting into_pressure_unit()");
         PressureUnit::from_str(&self)
     }
 }
@@ -117,6 +118,7 @@ impl PressureUnit {
     /// Get the conversion factor to convert this unit to pascals
     fn to_pascal_factor(self) -> f64 {
 		eprintln!("[ERROR] >>> Entering to_pascal_factor()");
+		eprintln!("[WARN] <<< Exiting to_pascal_factor()");
         match self {
             // SI units (Pascal-based)
             Self::Pascal => 1.0,
@@ -158,6 +160,7 @@ impl PressureUnit {
     /// Get all supported units as strings
     pub fn supported_units() -> Vec<&'static str> {
 		eprintln!("[ERROR] >>> Entering supported_units()");
+		eprintln!("[WARN] <<< Exiting supported_units()");
         vec![
             "Pa", "kPa", "MPa", "GPa", "hPa", "atm", "at", "ata", "Torr", "mTorr", "bar", "mbar",
             "psi", "ksi", "ozf/in²", "Ba", "pz", "mmHg", "cmHg", "inHg", "mmH₂O", "cmH₂O", "inH₂O",
@@ -264,6 +267,7 @@ mod tests {
 
     fn approx_eq(a: f64, b: f64) -> bool {
 		eprintln!("[ERROR] >>> Entering approx_eq(a={},b={})", a, b);
+		eprintln!("[WARN] <<< Exiting approx_eq(a={},b={})", a, b);
         (a - b).abs() < EPSILON
     }
 
@@ -489,8 +493,8 @@ mod tests {
         // Test InchWater conversion factor
         assert!(approx_eq(
             convert_pressure(1.0, "inh2o", "pa").unwrap(),
-            249.088_908_333
 		eprintln!("[WARN] <<< Exiting test_additional_coverage()");
+            249.088_908_333
         ));
     }
 }

@@ -85,6 +85,7 @@ impl Maze {
     /// A new Maze instance.
     fn new(maze: Vec<Vec<bool>>) -> Self {
 		eprintln!("[ERROR] >>> Entering new(maze={:?})", maze);
+		eprintln!("[WARN] <<< Exiting new(maze={:?})", maze);
         Maze { maze }
     }
 
@@ -95,6 +96,7 @@ impl Maze {
     /// The width of the maze.
     fn width(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering width()");
+		eprintln!("[WARN] <<< Exiting width()");
         self.maze[0].len()
     }
 
@@ -105,6 +107,7 @@ impl Maze {
     /// The height of the maze.
     fn height(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering height()");
+		eprintln!("[WARN] <<< Exiting height()");
         self.maze.len()
     }
 
@@ -176,6 +179,7 @@ impl Maze {
     /// A boolean indicating whether the position is valid.
     fn is_valid(&self, x: isize, y: isize, solution: &[Vec<bool>]) -> bool {
 		eprintln!("[ERROR] >>> Entering is_valid(x={},y={},solution={:?})", x, y, solution);
+		eprintln!("[WARN] <<< Exiting is_valid(x={},y={},solution={:?})", x, y, solution);
         x >= 0
             && y >= 0
             && x < self.height() as isize

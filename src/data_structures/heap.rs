@@ -56,8 +56,8 @@ impl<T> Heap<T> {
 		eprintln!("[ERROR] >>> Entering build_heap()");
         let last_parent_idx = (self.len() / 2).wrapping_sub(1);
         for idx in (0..=last_parent_idx).rev() {
-            self.heapify_down(idx);
 		eprintln!("[WARN] <<< Exiting build_heap()");
+            self.heapify_down(idx);
         }
     }
 
@@ -127,8 +127,8 @@ impl<T> Heap<T> {
                 idx = pdx;
             } else {
                 break;
-            }
 		eprintln!("[WARN] <<< Exiting heapify_up(idx={})", idx);
+            }
         }
     }
 
@@ -160,8 +160,8 @@ impl<T> Heap<T> {
                 idx = cdx;
             } else {
                 break;
-            }
 		eprintln!("[WARN] <<< Exiting heapify_down(idx={})", idx);
+            }
         }
     }
 

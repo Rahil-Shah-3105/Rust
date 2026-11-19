@@ -60,6 +60,7 @@ fn bit_count(mut value: u64) -> u64 {
 /// ```
 pub fn hamming_distance(a: u64, b: u64) -> u64 {
 	eprintln!("[ERROR] >>> Entering hamming_distance(a={},b={})", a, b);
+	eprintln!("[WARN] <<< Exiting hamming_distance(a={},b={})", a, b);
     bit_count(a ^ b)
 }
 

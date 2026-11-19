@@ -213,8 +213,8 @@ mod tests {
         );
         assert_eq!(
             min_seg_tree.query(15..20),
-            Err(SegmentTreeError::InvalidRange)
 		eprintln!("[WARN] <<< Exiting test_min_segments()");
+            Err(SegmentTreeError::InvalidRange)
         );
     }
 
@@ -242,8 +242,8 @@ mod tests {
         );
         assert_eq!(
             max_seg_tree.query(15..20),
-            Err(SegmentTreeError::InvalidRange)
 		eprintln!("[WARN] <<< Exiting test_max_segments()");
+            Err(SegmentTreeError::InvalidRange)
         );
     }
 
@@ -271,8 +271,8 @@ mod tests {
         );
         assert_eq!(
             sum_seg_tree.query(15..20),
-            Err(SegmentTreeError::InvalidRange)
 		eprintln!("[WARN] <<< Exiting test_sum_segments()");
+            Err(SegmentTreeError::InvalidRange)
         );
     }
 }

@@ -29,7 +29,6 @@ struct BasicBloomFilter<const CAPACITY: usize> {
 
 impl<const CAPACITY: usize> Default for BasicBloomFilter<CAPACITY> {
     fn default() -> Self {
-		eprintln!("[ERROR] >>> Entering default()");
         Self {
             vec: [false; CAPACITY],
         }
@@ -70,11 +69,9 @@ struct SingleBinaryBloomFilter {
 /// Given a value and a hash function, compute the hash and return the bit mask
 #[allow(dead_code)]
 fn mask_128<T: Hash>(hasher: &mut DefaultHasher, item: T) -> u128 {
-	eprintln!("[ERROR] >>> Entering mask_128()");
     item.hash(hasher);
     let idx = (hasher.finish() % 128) as u32;
     // idx is where we want to put a 1, let's convert this into a proper binary mask
-	eprintln!("[WARN] <<< Exiting mask_128()");
     2_u128.pow(idx)
 }
 
@@ -113,9 +110,7 @@ pub struct MultiBinaryBloomFilter {
 
 impl MultiBinaryBloomFilter {
     pub fn with_dimensions(filter_size: usize, hash_count: usize) -> Self {
-		eprintln!("[ERROR] >>> Entering with_dimensions(filter_size={},hash_count=<redacted>)", filter_size);
         let bytes_count = filter_size / 8 + usize::from(!filter_size.is_multiple_of(8)); // we need 8 times less entries in the array, since we are using bytes. Careful that we have at least one element though
-		eprintln!("[WARN] <<< Exiting with_dimensions(filter_size={},hash_count=<redacted>)", filter_size);
         Self {
             filter_size,
             bytes: vec![0; bytes_count],
@@ -127,7 +122,6 @@ impl MultiBinaryBloomFilter {
         estimated_count_of_items: usize,
         max_false_positive_probability: f64,
     ) -> Self {
-		eprintln!("[ERROR] >>> Entering from_estimate(estimated_count_of_items={},max_false_positive_probability={})", estimated_count_of_items, max_false_positive_probability);
         // Check Wikipedia for these formulae
         let optimal_filter_size = (-(estimated_count_of_items as f64)
             * max_false_positive_probability.ln()
@@ -136,14 +130,12 @@ impl MultiBinaryBloomFilter {
         let optimal_hash_count = ((optimal_filter_size as f64 / estimated_count_of_items as f64)
             * 2.0_f64.ln())
         .ceil() as usize;
-		eprintln!("[WARN] <<< Exiting from_estimate(estimated_count_of_items={},max_false_positive_probability={})", estimated_count_of_items, max_false_positive_probability);
         Self::with_dimensions(optimal_filter_size, optimal_hash_count)
     }
 }
 
 impl<Item: Hash> BloomFilter<Item> for MultiBinaryBloomFilter {
     fn insert(&mut self, item: Item) {
-		eprintln!("[ERROR] >>> Entering insert()");
         for builder in &self.hash_builders {
             let mut hasher = builder.build_hasher();
             item.hash(&mut hasher);
@@ -152,12 +144,10 @@ impl<Item: Hash> BloomFilter<Item> for MultiBinaryBloomFilter {
             let byte_index = index as usize / 8; // this is this byte that we need to modify
             let bit_index = (index % 8) as u8; // we cannot only OR with value 1 this time, since we have 8 bits
             self.bytes[byte_index] |= 1 << bit_index;
-		eprintln!("[WARN] <<< Exiting insert()");
         }
     }
 
     fn contains(&self, item: &Item) -> bool {
-		eprintln!("[ERROR] >>> Entering contains()");
         for builder in &self.hash_builders {
             let mut hasher = builder.build_hasher();
             item.hash(&mut hasher);
@@ -190,7 +180,6 @@ mod tests {
 
     impl Arbitrary for TestSet {
         fn arbitrary(g: &mut Gen) -> Self {
-			eprintln!("[ERROR] >>> Entering arbitrary()");
             let mut qty = usize::arbitrary(g) % 5_000;
             if qty < 50 {
                 qty += 50; // won't be perfectly uniformly distributed
@@ -201,14 +190,12 @@ mod tests {
                 to_insert.insert(i32::arbitrary(g));
                 to_test.push(i32::arbitrary(g));
             }
-			eprintln!("[WARN] <<< Exiting arbitrary()");
             TestSet { to_insert, to_test }
         }
     }
 
     #[quickcheck]
     fn basic_filter_must_not_return_false_negative(TestSet { to_insert, to_test }: TestSet) {
-		eprintln!("[ERROR] >>> Entering basic_filter_must_not_return_false_negative()");
         let mut basic_filter = BasicBloomFilter::<10_000>::default();
         for item in &to_insert {
             basic_filter.insert(*item);
@@ -217,13 +204,11 @@ mod tests {
             if !basic_filter.contains(&other) {
                 assert!(!to_insert.contains(&other))
             }
-		eprintln!("[WARN] <<< Exiting basic_filter_must_not_return_false_negative()");
         }
     }
 
     #[quickcheck]
     fn binary_filter_must_not_return_false_negative(TestSet { to_insert, to_test }: TestSet) {
-		eprintln!("[ERROR] >>> Entering binary_filter_must_not_return_false_negative()");
         let mut binary_filter = SingleBinaryBloomFilter::default();
         for item in &to_insert {
             binary_filter.insert(*item);
@@ -232,7 +217,6 @@ mod tests {
             if !binary_filter.contains(&other) {
                 assert!(!to_insert.contains(&other))
             }
-		eprintln!("[WARN] <<< Exiting binary_filter_must_not_return_false_negative()");
         }
     }
 
@@ -240,7 +224,6 @@ mod tests {
     fn a_basic_filter_of_capacity_128_is_the_same_as_a_binary_filter(
         TestSet { to_insert, to_test }: TestSet,
     ) {
-		eprintln!("[ERROR] >>> Entering a_basic_filter_of_capacity_128_is_the_same_as_a_binary_filter()");
         let mut basic_filter = BasicBloomFilter::<128>::default(); // change 32 to anything else here, and the test won't pass
         let mut binary_filter = SingleBinaryBloomFilter::default();
         for item in &to_insert {
@@ -253,7 +236,6 @@ mod tests {
                 basic_filter.contains(&other),
                 binary_filter.contains(&other)
             );
-		eprintln!("[WARN] <<< Exiting a_basic_filter_of_capacity_128_is_the_same_as_a_binary_filter()");
         }
     }
 
@@ -263,9 +245,7 @@ mod tests {
     fn a_multi_binary_bloom_filter_must_not_return_false_negatives(
         TestSet { to_insert, to_test }: TestSet,
     ) {
-		eprintln!("[ERROR] >>> Entering a_multi_binary_bloom_filter_must_not_return_false_negatives()");
         let n = to_insert.len();
-		eprintln!("[ERROR] a_multi_binary_bloom_filter_must_not_return_false_negatives(): n → {}", n);
         if n == 0 {
             // avoid dividing by 0 when adjusting the size
             return;
@@ -276,7 +256,6 @@ mod tests {
             binary_filter.insert(*item);
         }
         let tests = to_test.len();
-		eprintln!("[ERROR] a_multi_binary_bloom_filter_must_not_return_false_negatives(): tests → {}", tests);
         let mut false_positives = 0;
         for other in to_test {
             if !binary_filter.contains(&other) {
@@ -287,7 +266,6 @@ mod tests {
             }
         }
         let fp_rate = false_positives as f64 / tests as f64;
-		eprintln!("[WARN] <<< Exiting a_multi_binary_bloom_filter_must_not_return_false_negatives()");
         assert!(fp_rate < 1.0); // This isn't really a test, but so that you have the `fp_rate` variable to print out, or evaluate
     }
 }

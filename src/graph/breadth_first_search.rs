@@ -63,6 +63,7 @@ pub struct Graph {
 impl Graph {
     pub fn new(nodes: Vec<Node>, edges: Vec<Edge>) -> Self {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Graph { nodes, edges }
     }
 }
@@ -76,11 +77,13 @@ impl From<u32> for Node {
 impl Node {
     pub fn value(&self) -> u32 {
 		eprintln!("[ERROR] >>> Entering value()");
+		eprintln!("[WARN] <<< Exiting value()");
         self.0
     }
 
     pub fn neighbors(&self, graph: &Graph) -> Vec<Node> {
 		eprintln!("[ERROR] >>> Entering neighbors()");
+		eprintln!("[WARN] <<< Exiting neighbors()");
         graph
             .edges
             .iter()
@@ -93,6 +96,7 @@ impl Node {
 impl From<(u32, u32)> for Edge {
     fn from(item: (u32, u32)) -> Self {
 		eprintln!("[ERROR] >>> Entering from(item={:?})", item);
+		eprintln!("[WARN] <<< Exiting from(item={:?})", item);
         Edge(item.0, item.1)
     }
 }
@@ -132,8 +136,8 @@ mod tests {
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
-            None
 		eprintln!("[WARN] <<< Exiting breadth_first_search_graph1_when_node_not_found_returns_none()");
+            None
         );
     }
 
@@ -148,8 +152,8 @@ mod tests {
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
-            Some(expected_path)
 		eprintln!("[WARN] <<< Exiting breadth_first_search_graph1_when_target_8_should_evaluate_all_nodes_first()");
+            Some(expected_path)
         );
     }
 
@@ -197,8 +201,8 @@ mod tests {
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
-            None
 		eprintln!("[WARN] <<< Exiting breadth_first_search_graph2_when_no_path_to_node_returns_none()");
+            None
         );
     }
 
@@ -213,8 +217,8 @@ mod tests {
 
         assert_eq!(
             breadth_first_search(&graph, root.into(), target.into()),
-            Some(expected_path)
 		eprintln!("[WARN] <<< Exiting breadth_first_search_graph2_should_find_path_from_4_to_1()");
+            Some(expected_path)
         );
     }
 }

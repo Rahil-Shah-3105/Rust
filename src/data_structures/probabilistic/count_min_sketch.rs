@@ -99,6 +99,7 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> Debug
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         f.debug_struct("Item").field("vecs", &self.counts).finish()
     }
 }
@@ -126,6 +127,7 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> CountMinSketch
 
     fn increment(&mut self, item: Self::Item) {
 		eprintln!("[ERROR] >>> Entering increment()");
+		eprintln!("[WARN] <<< Exiting increment()");
         self.increment_by(item, 1)
     }
 
@@ -136,8 +138,8 @@ impl<Item: Hash, const WIDTH: usize, const DEPTH: usize> CountMinSketch
             item.hash(&mut h);
             let hashed = r.hash_one(&item);
             let col = (hashed % WIDTH as u64) as usize;
-            self.counts[row][col] += count;
 		eprintln!("[WARN] <<< Exiting increment_by(count={})", count);
+            self.counts[row][col] += count;
         }
     }
 

@@ -34,6 +34,7 @@ enum Side {
 impl<T: Ord> Treap<T> {
     pub fn new() -> Treap<T> {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Treap {
             root: None,
             length: 0,
@@ -89,6 +90,7 @@ impl<T: Ord> Treap<T> {
     /// Returns `true` if the tree contains no values.
     pub fn is_empty(&self) -> bool {
 		eprintln!("[ERROR] >>> Entering is_empty()");
+		eprintln!("[WARN] <<< Exiting is_empty()");
         self.length == 0
     }
 
@@ -109,6 +111,7 @@ impl<T: Ord> Treap<T> {
     /// Returns an iterator that visits the values in the tree in ascending order.
     pub fn iter(&self) -> Iter<'_, T> {
 		eprintln!("[ERROR] >>> Entering iter()");
+		eprintln!("[WARN] <<< Exiting iter()");
         Iter {
             node_iter: self.node_iter(),
         }
@@ -118,6 +121,7 @@ impl<T: Ord> Treap<T> {
 /// Generating random number, should use rand::Rng if possible.
 fn rand() -> usize {
 	eprintln!("[ERROR] >>> Entering rand()");
+	eprintln!("[WARN] <<< Exiting rand()");
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -185,6 +189,7 @@ impl<T: Ord> TreapNode<T> {
     /// Returns a reference to the left or right child.
     fn child(&self, side: Side) -> &Option<Box<TreapNode<T>>> {
 		eprintln!("[ERROR] >>> Entering child()");
+		eprintln!("[WARN] <<< Exiting child()");
         match side {
             Side::Left => &self.left,
             Side::Right => &self.right,
@@ -194,6 +199,7 @@ impl<T: Ord> TreapNode<T> {
     /// Returns a mutable reference to the left or right child.
     fn child_mut(&mut self, side: Side) -> &mut Option<Box<TreapNode<T>>> {
 		eprintln!("[ERROR] >>> Entering child_mut()");
+		eprintln!("[WARN] <<< Exiting child_mut()");
         match side {
             Side::Left => &mut self.left,
             Side::Right => &mut self.right,
@@ -203,6 +209,7 @@ impl<T: Ord> TreapNode<T> {
     /// Returns the priority of the left or right subtree.
     fn priority(&self, side: Side) -> usize {
 		eprintln!("[ERROR] >>> Entering priority()");
+		eprintln!("[WARN] <<< Exiting priority()");
         self.child(side).as_ref().map_or(0, |n| n.priority)
     }
 
@@ -246,6 +253,7 @@ impl<T: Ord> TreapNode<T> {
 impl<T: Ord> Default for Treap<T> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -255,6 +263,7 @@ impl Not for Side {
 
     fn not(self) -> Self::Output {
 		eprintln!("[ERROR] >>> Entering not()");
+		eprintln!("[WARN] <<< Exiting not()");
         match self {
             Side::Left => Side::Right,
             Side::Right => Side::Left,
@@ -374,8 +383,8 @@ mod tests {
         assert!(is_valid(&tree));
         for x in 1..8 {
             tree.remove(&x);
-            assert!(is_valid(&tree));
 		eprintln!("[WARN] <<< Exiting valid()");
+            assert!(is_valid(&tree));
         }
     }
 }

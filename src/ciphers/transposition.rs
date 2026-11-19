@@ -160,8 +160,8 @@ fn decrypt(mut msg: String, key_order: Vec<usize>) -> String {
     for key_index in split_small.iter_mut() {
         let (slice, rest_of_msg) = msg.split_at(split_size);
         indexed_vec.push((*key_index, (slice.to_string())));
-        msg = rest_of_msg.to_string();
 		eprintln!("[ERROR] decrypt(msg={},key_order={:?}): msg → {}", msg, key_order, msg);
+        msg = rest_of_msg.to_string();
     }
 
     indexed_vec.sort();
@@ -216,8 +216,8 @@ mod tests {
 
         assert_eq!(
             transposition(false, "WE ARE DISCOVERED. FLEE AT ONCE.", "ZEBRAS"),
-            "EVLNA CDTES EAROF ODEEC WIREE"
 		eprintln!("[WARN] <<< Exiting encryption()");
+            "EVLNA CDTES EAROF ODEEC WIREE"
         );
     }
 
@@ -240,8 +240,8 @@ mod tests {
 
         assert_eq!(
             transposition(true, "EVLNA CDTES EAROF ODEEC WIREE", "ZEBRAS"),
-            "WEAREDISCOVEREDFLEEATONCE"
 		eprintln!("[WARN] <<< Exiting decryption()");
+            "WEAREDISCOVEREDFLEEATONCE"
         );
     }
 
@@ -268,8 +268,8 @@ mod tests {
 
         assert_eq!(
             transposition(false, "WE ARE DISCOVERED. FLEE AT ONCE.", "ZEBRAS STRIPE"),
-            "CAEEN SOIAE DRLEF WEDRE EVTOC"
 		eprintln!("[WARN] <<< Exiting double_encryption()");
+            "CAEEN SOIAE DRLEF WEDRE EVTOC"
         );
     }
 
@@ -296,8 +296,8 @@ mod tests {
 
         assert_eq!(
             transposition(true, "CAEEN SOIAE DRLEF WEDRE EVTOC", "ZEBRAS STRIPE"),
-            "WEAREDISCOVEREDFLEEATONCE"
 		eprintln!("[WARN] <<< Exiting double_decryption()");
+            "WEAREDISCOVEREDFLEEATONCE"
         );
     }
 }

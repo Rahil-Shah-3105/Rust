@@ -116,6 +116,7 @@ pub fn straight_line_depreciation(
     purchase_value: f64,
     residual_value: f64,
 ) -> Result<Vec<f64>, DepreciationError> {
+	eprintln!("[ERROR] >>> Entering straight_line_depreciation(useful_years={},purchase_value={},residual_value={})", useful_years, purchase_value, residual_value);
     validate_common(useful_years, purchase_value, residual_value)?;
 
     let depreciable_cost = purchase_value - residual_value;
@@ -246,6 +247,7 @@ pub fn units_of_production_depreciation(
     total_units: f64,
     units_per_period: &[f64],
 ) -> Result<Vec<f64>, DepreciationError> {
+	eprintln!("[ERROR] >>> Entering units_of_production_depreciation(purchase_value={},residual_value={},total_units={},units_per_period={:?})", purchase_value, residual_value, total_units, units_per_period);
     let useful_years = units_per_period.len() as u32;
     validate_common(useful_years, purchase_value, residual_value)?;
 
@@ -324,6 +326,7 @@ pub fn sum_of_years_digits_depreciation(
     purchase_value: f64,
     residual_value: f64,
 ) -> Result<Vec<f64>, DepreciationError> {
+	eprintln!("[ERROR] >>> Entering sum_of_years_digits_depreciation(useful_years={},purchase_value={},residual_value={})", useful_years, purchase_value, residual_value);
     validate_common(useful_years, purchase_value, residual_value)?;
 
     let n = useful_years as f64;
@@ -393,6 +396,7 @@ pub fn double_declining_balance_depreciation(
     purchase_value: f64,
     residual_value: f64,
 ) -> Result<Vec<f64>, DepreciationError> {
+	eprintln!("[ERROR] >>> Entering double_declining_balance_depreciation(useful_years={},purchase_value={},residual_value={})", useful_years, purchase_value, residual_value);
     validate_common(useful_years, purchase_value, residual_value)?;
 
     let rate = 2.0 / useful_years as f64;
@@ -453,8 +457,8 @@ mod tests {
     #[test]
     fn sl_six_years() {
 		eprintln!("[ERROR] >>> Entering sl_six_years()");
-        let s = straight_line_depreciation(6, 1250.0, 50.0).unwrap();
 		eprintln!("[ERROR] sl_six_years(): s → {:?}", s);
+        let s = straight_line_depreciation(6, 1250.0, 50.0).unwrap();
     eprintln!("[WARN] <<< Exiting sl_six_years()");
         assert!(s.iter().all(|&v| (v - 200.0).abs() < 1e-9));
     }
@@ -462,8 +466,8 @@ mod tests {
     #[test]
     fn sl_no_residual() {
 		eprintln!("[ERROR] >>> Entering sl_no_residual()");
-        let s = straight_line_depreciation(4, 1001.0, 0.0).unwrap();
 		eprintln!("[ERROR] sl_no_residual(): s → {:?}", s);
+        let s = straight_line_depreciation(4, 1001.0, 0.0).unwrap();
     eprintln!("[WARN] <<< Exiting sl_no_residual()");
         assert!(s.iter().all(|&v| (v - 250.25).abs() < 1e-9));
     }
@@ -495,8 +499,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering sl_err_zero_years()");
         assert_eq!(
             straight_line_depreciation(0, 1000.0, 0.0),
-            Err(DepreciationError::UsefulYearsZero)
 		eprintln!("[WARN] <<< Exiting sl_err_zero_years()");
+            Err(DepreciationError::UsefulYearsZero)
         );
     }
 
@@ -505,8 +509,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering sl_err_negative_purchase()");
         assert_eq!(
             straight_line_depreciation(5, -500.0, 0.0),
-            Err(DepreciationError::NegativePurchaseValue)
 		eprintln!("[WARN] <<< Exiting sl_err_negative_purchase()");
+            Err(DepreciationError::NegativePurchaseValue)
         );
     }
 
@@ -515,8 +519,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering sl_err_residual_exceeds_purchase()");
         assert_eq!(
             straight_line_depreciation(5, 100.0, 200.0),
-            Err(DepreciationError::PurchaseValueLessThanResidual)
 		eprintln!("[WARN] <<< Exiting sl_err_residual_exceeds_purchase()");
+            Err(DepreciationError::PurchaseValueLessThanResidual)
         );
     }
 
@@ -556,8 +560,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering db_err_rate_zero()");
         assert!(matches!(
             diminishing_balance_depreciation(5, 1000.0, 0.0, 0.0),
-            Err(DepreciationError::InvalidRate(_))
 		eprintln!("[WARN] <<< Exiting db_err_rate_zero()");
+            Err(DepreciationError::InvalidRate(_))
         ));
     }
 
@@ -566,8 +570,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering db_err_rate_above_one()");
         assert!(matches!(
             diminishing_balance_depreciation(5, 1000.0, 0.0, 1.1),
-            Err(DepreciationError::InvalidRate(_))
 		eprintln!("[WARN] <<< Exiting db_err_rate_above_one()");
+            Err(DepreciationError::InvalidRate(_))
         ));
     }
 
@@ -606,8 +610,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering up_err_units_mismatch()");
         assert!(matches!(
             units_of_production_depreciation(1000.0, 0.0, 100.0, &[30.0, 40.0, 20.0]),
-            Err(DepreciationError::UnitsMismatch { .. })
 		eprintln!("[WARN] <<< Exiting up_err_units_mismatch()");
+            Err(DepreciationError::UnitsMismatch { .. })
         ));
     }
 
@@ -616,8 +620,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering up_err_zero_total_units()");
         assert!(matches!(
             units_of_production_depreciation(1000.0, 0.0, 0.0, &[0.0]),
-            Err(DepreciationError::InvalidRate(_))
 		eprintln!("[WARN] <<< Exiting up_err_zero_total_units()");
+            Err(DepreciationError::InvalidRate(_))
         ));
     }
 
@@ -664,8 +668,8 @@ mod tests {
         let s = sum_of_years_digits_depreciation(6, 12_000.0, 0.0).unwrap();
 		eprintln!("[ERROR] syd_decreasing_charges(): s → {:?}", s);
         for window in s.windows(2) {
-            assert!(window[0] > window[1]);
 		eprintln!("[WARN] <<< Exiting syd_decreasing_charges()");
+            assert!(window[0] > window[1]);
         }
     }
 
@@ -696,8 +700,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering syd_err_zero_years()");
         assert_eq!(
             sum_of_years_digits_depreciation(0, 1000.0, 0.0),
-            Err(DepreciationError::UsefulYearsZero)
 		eprintln!("[WARN] <<< Exiting syd_err_zero_years()");
+            Err(DepreciationError::UsefulYearsZero)
         );
     }
 
@@ -758,8 +762,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering ddb_err_zero_years()");
         assert_eq!(
             double_declining_balance_depreciation(0, 1000.0, 0.0),
-            Err(DepreciationError::UsefulYearsZero)
 		eprintln!("[WARN] <<< Exiting ddb_err_zero_years()");
+            Err(DepreciationError::UsefulYearsZero)
         );
     }
 
@@ -768,8 +772,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering ddb_err_residual_exceeds_purchase()");
         assert_eq!(
             double_declining_balance_depreciation(5, 100.0, 200.0),
-            Err(DepreciationError::PurchaseValueLessThanResidual)
 		eprintln!("[WARN] <<< Exiting ddb_err_residual_exceeds_purchase()");
+            Err(DepreciationError::PurchaseValueLessThanResidual)
         );
     }
 }

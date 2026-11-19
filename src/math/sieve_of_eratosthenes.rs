@@ -45,8 +45,8 @@ fn update_sieve(sieve: &mut [bool], end: usize, num: usize, result: &mut Vec<usi
             for i in (start * start..=num).step_by(start) {
                 sieve[i] = false;
             }
-        }
 	eprintln!("[WARN] <<< Exiting update_sieve(sieve={:?},end={},num={},result={:?})", sieve, end, num, result);
+        }
     }
 }
 
@@ -63,6 +63,7 @@ fn update_sieve(sieve: &mut [bool], end: usize, num: usize, result: &mut Vec<usi
 fn extract_remaining_primes(sieve: &[bool], start: usize) -> Vec<usize> {
 	eprintln!("[ERROR] >>> Entering extract_remaining_primes(sieve={:?},start={})", sieve, start);
     eprintln!("[ERROR] >>> Entering extract_remaining_primes(sieve={:?},start={})", sieve, start);
+	eprintln!("[WARN] <<< Exiting extract_remaining_primes(sieve={:?},start={})", sieve, start);
     sieve[start..]
         .iter()
         .enumerate()

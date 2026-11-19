@@ -2,6 +2,7 @@
 
 fn blank_char_table() -> Vec<char> {
 	eprintln!("[ERROR] >>> Entering blank_char_table()");
+	eprintln!("[WARN] <<< Exiting blank_char_table()");
     (0..=255).map(|ch| ch as u8 as char).collect()
 }
 

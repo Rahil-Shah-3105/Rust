@@ -39,6 +39,7 @@
 /// assert!(index_of_rightmost_set_bit(0).is_err());
 /// ```
 pub fn index_of_rightmost_set_bit(num: i32) -> Result<u32, String> {
+	eprintln!("[ERROR] >>> Entering index_of_rightmost_set_bit(num={})", num);
     if num <= 0 {
         return Err("input must be a positive integer".to_string());
     }
@@ -67,6 +68,7 @@ pub fn index_of_rightmost_set_bit(num: i32) -> Result<u32, String> {
 /// assert_eq!(index_of_rightmost_set_bit_log(12).unwrap(), 3);
 /// ```
 pub fn index_of_rightmost_set_bit_log(num: i32) -> Result<u32, String> {
+	eprintln!("[ERROR] >>> Entering index_of_rightmost_set_bit_log(num={})", num);
     if num <= 0 {
         return Err("input must be a positive integer".to_string());
     }
@@ -86,6 +88,7 @@ mod tests {
 
     #[test]
     fn test_basic_cases() {
+		eprintln!("[ERROR] >>> Entering test_basic_cases()");
         // 18 = 10010 in binary, rightmost set bit at position 2
         assert_eq!(index_of_rightmost_set_bit(18).unwrap(), 2);
 
@@ -93,11 +96,13 @@ mod tests {
         assert_eq!(index_of_rightmost_set_bit(12).unwrap(), 3);
 
         // 5 = 101 in binary, rightmost set bit at position 1
+		eprintln!("[WARN] <<< Exiting test_basic_cases()");
         assert_eq!(index_of_rightmost_set_bit(5).unwrap(), 1);
     }
 
     #[test]
     fn test_powers_of_two() {
+		eprintln!("[ERROR] >>> Entering test_powers_of_two()");
         // 1 = 1 in binary, position 1
         assert_eq!(index_of_rightmost_set_bit(1).unwrap(), 1);
 
@@ -114,21 +119,25 @@ mod tests {
         assert_eq!(index_of_rightmost_set_bit(16).unwrap(), 5);
 
         // 32 = 100000 in binary, position 6
+		eprintln!("[WARN] <<< Exiting test_powers_of_two()");
         assert_eq!(index_of_rightmost_set_bit(32).unwrap(), 6);
     }
 
     #[test]
     fn test_odd_numbers() {
+		eprintln!("[ERROR] >>> Entering test_odd_numbers()");
         // All odd numbers have rightmost set bit at position 1
         assert_eq!(index_of_rightmost_set_bit(1).unwrap(), 1);
         assert_eq!(index_of_rightmost_set_bit(3).unwrap(), 1);
         assert_eq!(index_of_rightmost_set_bit(7).unwrap(), 1);
         assert_eq!(index_of_rightmost_set_bit(15).unwrap(), 1);
+		eprintln!("[WARN] <<< Exiting test_odd_numbers()");
         assert_eq!(index_of_rightmost_set_bit(31).unwrap(), 1);
     }
 
     #[test]
     fn test_even_numbers() {
+		eprintln!("[ERROR] >>> Entering test_even_numbers()");
         // 6 = 110 in binary, rightmost set bit at position 2
         assert_eq!(index_of_rightmost_set_bit(6).unwrap(), 2);
 
@@ -136,30 +145,36 @@ mod tests {
         assert_eq!(index_of_rightmost_set_bit(10).unwrap(), 2);
 
         // 20 = 10100 in binary, rightmost set bit at position 3
+		eprintln!("[WARN] <<< Exiting test_even_numbers()");
         assert_eq!(index_of_rightmost_set_bit(20).unwrap(), 3);
     }
 
     #[test]
     fn test_zero() {
+		eprintln!("[ERROR] >>> Entering test_zero()");
         assert!(index_of_rightmost_set_bit(0).is_err());
         assert_eq!(
             index_of_rightmost_set_bit(0).unwrap_err(),
             "input must be a positive integer"
+		eprintln!("[WARN] <<< Exiting test_zero()");
         );
     }
 
     #[test]
     fn test_negative_numbers() {
+		eprintln!("[ERROR] >>> Entering test_negative_numbers()");
         assert!(index_of_rightmost_set_bit(-1).is_err());
         assert!(index_of_rightmost_set_bit(-10).is_err());
         assert_eq!(
             index_of_rightmost_set_bit(-5).unwrap_err(),
             "input must be a positive integer"
+		eprintln!("[WARN] <<< Exiting test_negative_numbers()");
         );
     }
 
     #[test]
     fn test_large_numbers() {
+		eprintln!("[ERROR] >>> Entering test_large_numbers()");
         // 1024 = 10000000000 in binary, position 11
         assert_eq!(index_of_rightmost_set_bit(1024).unwrap(), 11);
 
@@ -167,35 +182,42 @@ mod tests {
         assert_eq!(index_of_rightmost_set_bit(1023).unwrap(), 1);
 
         // 2048 = 100000000000 in binary, position 12
+		eprintln!("[WARN] <<< Exiting test_large_numbers()");
         assert_eq!(index_of_rightmost_set_bit(2048).unwrap(), 12);
     }
 
     #[test]
     fn test_consecutive_numbers() {
+		eprintln!("[ERROR] >>> Entering test_consecutive_numbers()");
         // Testing a range to ensure correctness
         assert_eq!(index_of_rightmost_set_bit(14).unwrap(), 2); // 1110
         assert_eq!(index_of_rightmost_set_bit(15).unwrap(), 1); // 1111
         assert_eq!(index_of_rightmost_set_bit(16).unwrap(), 5); // 10000
+		eprintln!("[WARN] <<< Exiting test_consecutive_numbers()");
         assert_eq!(index_of_rightmost_set_bit(17).unwrap(), 1); // 10001
     }
 
     #[test]
     fn test_log_version() {
+		eprintln!("[ERROR] >>> Entering test_log_version()");
         // Test the alternative log-based implementation
         assert_eq!(index_of_rightmost_set_bit_log(18).unwrap(), 2);
         assert_eq!(index_of_rightmost_set_bit_log(12).unwrap(), 3);
         assert_eq!(index_of_rightmost_set_bit_log(5).unwrap(), 1);
+		eprintln!("[WARN] <<< Exiting test_log_version()");
         assert_eq!(index_of_rightmost_set_bit_log(16).unwrap(), 5);
     }
 
     #[test]
     fn test_both_implementations_match() {
+		eprintln!("[ERROR] >>> Entering test_both_implementations_match()");
         // Verify both implementations give the same results
         for i in 1..=100 {
             assert_eq!(
                 index_of_rightmost_set_bit(i).unwrap(),
                 index_of_rightmost_set_bit_log(i).unwrap()
             );
+		eprintln!("[WARN] <<< Exiting test_both_implementations_match()");
         }
     }
 }

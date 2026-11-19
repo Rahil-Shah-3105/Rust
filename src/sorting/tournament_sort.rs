@@ -9,8 +9,10 @@ pub fn tournament_sort<T>(arr: &[T]) -> Vec<T>
 where
     T: Ord + Clone,
 {
+	eprintln!("[ERROR] >>> Entering tournament_sort()");
     let mut arr = arr.to_vec();
     let n = arr.len();
+	eprintln!("[ERROR] tournament_sort(): n → {}", n);
     let mut tree_size = 1;
 
     while tree_size < n {
@@ -37,6 +39,7 @@ where
         let min_ref = &arr[i];
 
         let mut pos = 1;
+		eprintln!("[ERROR] tournament_sort(): pos → {}", pos);
         while pos < tree_size {
             if tree[2 * pos].as_ref() == Some(min_ref) {
                 pos *= 2;
@@ -51,6 +54,7 @@ where
             tree[pos] = min_opt(&tree[2 * pos], &tree[2 * pos + 1]);
         }
     }
+	eprintln!("[WARN] <<< Exiting tournament_sort()");
     arr
 }
 
@@ -58,6 +62,7 @@ fn min_opt<T>(a: &Option<T>, b: &Option<T>) -> Option<T>
 where
     T: Ord + Clone,
 {
+	eprintln!("[ERROR] >>> Entering min_opt()");
     match (a, b) {
         (Some(x), Some(y)) => Some(if x <= y { x.clone() } else { y.clone() }),
         (Some(x), None) => Some(x.clone()),
@@ -74,43 +79,55 @@ mod test {
 
     #[test]
     fn descending() {
+		eprintln!("[ERROR] >>> Entering descending()");
         let arr = vec![6, 5, 4, 3, 2, 1];
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting descending()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let arr = Vec::<i32>::new();
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn negative_numbers() {
+		eprintln!("[ERROR] >>> Entering negative_numbers()");
         let arr = vec![-32, -54, -65, -12, -7];
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting negative_numbers()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let arr = vec![1];
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn pre_sorted() {
+		eprintln!("[ERROR] >>> Entering pre_sorted()");
         let arr = vec![5, 12, 23, 54, 57, 60];
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting pre_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &arr));
     }
 
     #[test]
     fn repeated_elements() {
+		eprintln!("[ERROR] >>> Entering repeated_elements()");
         let arr = vec![42, 42, 42, 42];
         let res = tournament_sort(&arr);
+		eprintln!("[WARN] <<< Exiting repeated_elements()");
         assert_eq!(&res, &arr);
     }
 }

@@ -40,6 +40,7 @@ where
     ///
     /// A new `FenwickTree` instance.
     pub fn with_capacity(capacity: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering with_capacity(capacity={})", capacity);
         FenwickTree {
             data: vec![T::default(); capacity + 1],
         }
@@ -59,6 +60,7 @@ where
     /// A `Result` indicating success (`Ok`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn update(&mut self, index: usize, value: T) -> Result<(), FenwickTreeError> {
+		eprintln!("[ERROR] >>> Entering update(index={})", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -85,6 +87,7 @@ where
     /// A `Result` containing the prefix sum (`Ok(sum)`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn prefix_query(&self, index: usize) -> Result<T, FenwickTreeError> {
+		eprintln!("[ERROR] >>> Entering prefix_query(index={})", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -113,6 +116,7 @@ where
     /// A `Result` containing the range sum (`Ok(sum)`) or an error (`FenwickTreeError::InvalidRange`)
     /// if the left index is greater than the right index or the right index is out of bounds.
     pub fn range_query(&self, left: usize, right: usize) -> Result<T, FenwickTreeError> {
+		eprintln!("[ERROR] >>> Entering range_query(left={},right={})", left, right);
         if left > right || right >= self.data.len() - 1 {
             return Err(FenwickTreeError::InvalidRange);
         }
@@ -141,6 +145,7 @@ where
     /// A `Result` containing the value at the specified index (`Ok(value)`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn point_query(&self, index: usize) -> Result<T, FenwickTreeError> {
+		eprintln!("[ERROR] >>> Entering point_query(index={})", index);
         if index >= self.data.len() - 1 {
             return Err(FenwickTreeError::IndexOutOfBounds);
         }
@@ -170,6 +175,7 @@ where
     /// A `Result` indicating success (`Ok`) or an error (`FenwickTreeError::IndexOutOfBounds`)
     /// if the index is out of bounds.
     pub fn set(&mut self, index: usize, value: T) -> Result<(), FenwickTreeError> {
+		eprintln!("[ERROR] >>> Entering set(index={})", index);
         self.update(index, value - self.point_query(index)?)
     }
 }
@@ -201,6 +207,7 @@ mod tests {
 
     #[test]
     fn test_fenwick_tree() {
+		eprintln!("[ERROR] >>> Entering test_fenwick_tree()");
         let mut fenwick_tree = FenwickTree::with_capacity(10);
 
         assert_eq!(fenwick_tree.update(0, 5), Ok(()));
@@ -259,6 +266,7 @@ mod tests {
         assert_eq!(
             fenwick_tree.point_query(10),
             Err(FenwickTreeError::IndexOutOfBounds)
+		eprintln!("[WARN] <<< Exiting test_fenwick_tree()");
         );
     }
 }

@@ -57,23 +57,28 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn add_edge<V: Ord + Copy, E: Ord>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		eprintln!("[ERROR] >>> Entering add_edge()");
         graph.entry(v1).or_default().insert(v2, c);
+		eprintln!("[WARN] <<< Exiting add_edge()");
         graph.entry(v2).or_default();
     }
 
     #[test]
     fn single_vertex() {
+		eprintln!("[ERROR] >>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         let mut dists = BTreeMap::new();
         dists.insert(0, None);
 
+		eprintln!("[WARN] <<< Exiting single_vertex()");
         assert_eq!(dijkstra(&graph, 0), dists);
     }
 
     #[test]
     fn single_edge() {
+		eprintln!("[ERROR] >>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 2);
 
@@ -86,11 +91,13 @@ mod tests {
         let mut dists_1 = BTreeMap::new();
         dists_1.insert(1, None);
 
+		eprintln!("[WARN] <<< Exiting single_edge()");
         assert_eq!(dijkstra(&graph, 1), dists_1);
     }
 
     #[test]
     fn tree_1() {
+		eprintln!("[ERROR] >>> Entering tree_1()");
         let mut graph = BTreeMap::new();
         let mut dists = BTreeMap::new();
         dists.insert(1, None);
@@ -110,11 +117,13 @@ mod tests {
             }
         }
 
+		eprintln!("[WARN] <<< Exiting tree_1()");
         assert_eq!(dijkstra(&graph, 1), dists);
     }
 
     #[test]
     fn graph_1() {
+		eprintln!("[ERROR] >>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
         add_edge(&mut graph, 'a', 'd', 60);
@@ -154,6 +163,7 @@ mod tests {
         dists_e.insert('c', Some(('a', 19)));
         dists_e.insert('d', Some(('c', 51)));
         dists_e.insert('b', Some(('c', 39)));
+		eprintln!("[WARN] <<< Exiting graph_1()");
         assert_eq!(dijkstra(&graph, 'e'), dists_e);
     }
 }

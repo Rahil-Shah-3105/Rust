@@ -25,6 +25,7 @@
 /// assert_eq!(find_missing_number(&[1, 3, 4, 5, 6]).unwrap(), 2);
 /// ```
 pub fn find_missing_number(nums: &[i32]) -> Result<i32, String> {
+	eprintln!("[ERROR] >>> Entering find_missing_number(nums={:?})", nums);
     if nums.is_empty() {
         return Err("input array must not be empty".to_string());
     }
@@ -52,71 +53,95 @@ mod tests {
 
     #[test]
     fn test_missing_in_middle() {
+		eprintln!("[ERROR] >>> Entering test_missing_in_middle()");
+		eprintln!("[WARN] <<< Exiting test_missing_in_middle()");
         assert_eq!(find_missing_number(&[0, 1, 3, 4]).unwrap(), 2);
     }
 
     #[test]
     fn test_unordered_array() {
+		eprintln!("[ERROR] >>> Entering test_unordered_array()");
+		eprintln!("[WARN] <<< Exiting test_unordered_array()");
         assert_eq!(find_missing_number(&[4, 3, 1, 0]).unwrap(), 2);
     }
 
     #[test]
     fn test_negative_numbers() {
+		eprintln!("[ERROR] >>> Entering test_negative_numbers()");
+		eprintln!("[WARN] <<< Exiting test_negative_numbers()");
         assert_eq!(find_missing_number(&[-4, -3, -1, 0]).unwrap(), -2);
     }
 
     #[test]
     fn test_negative_and_positive() {
+		eprintln!("[ERROR] >>> Entering test_negative_and_positive()");
+		eprintln!("[WARN] <<< Exiting test_negative_and_positive()");
         assert_eq!(find_missing_number(&[-2, 2, 1, 3, 0]).unwrap(), -1);
     }
 
     #[test]
     fn test_missing_at_start() {
+		eprintln!("[ERROR] >>> Entering test_missing_at_start()");
+		eprintln!("[WARN] <<< Exiting test_missing_at_start()");
         assert_eq!(find_missing_number(&[1, 3, 4, 5, 6]).unwrap(), 2);
     }
 
     #[test]
     fn test_unordered_missing_middle() {
+		eprintln!("[ERROR] >>> Entering test_unordered_missing_middle()");
+		eprintln!("[WARN] <<< Exiting test_unordered_missing_middle()");
         assert_eq!(find_missing_number(&[6, 5, 4, 2, 1]).unwrap(), 3);
     }
 
     #[test]
     fn test_another_unordered() {
+		eprintln!("[ERROR] >>> Entering test_another_unordered()");
+		eprintln!("[WARN] <<< Exiting test_another_unordered()");
         assert_eq!(find_missing_number(&[6, 1, 5, 3, 4]).unwrap(), 2);
     }
 
     #[test]
     fn test_empty_array() {
+		eprintln!("[ERROR] >>> Entering test_empty_array()");
         assert!(find_missing_number(&[]).is_err());
         assert_eq!(
             find_missing_number(&[]).unwrap_err(),
             "input array must not be empty"
+		eprintln!("[WARN] <<< Exiting test_empty_array()");
         );
     }
 
     #[test]
     fn test_single_element() {
+		eprintln!("[ERROR] >>> Entering test_single_element()");
         assert!(find_missing_number(&[5]).is_err());
         assert_eq!(
             find_missing_number(&[5]).unwrap_err(),
             "array must have at least 2 elements to find a missing number"
+		eprintln!("[WARN] <<< Exiting test_single_element()");
         );
     }
 
     #[test]
     fn test_two_elements() {
+		eprintln!("[ERROR] >>> Entering test_two_elements()");
         assert_eq!(find_missing_number(&[0, 2]).unwrap(), 1);
+		eprintln!("[WARN] <<< Exiting test_two_elements()");
         assert_eq!(find_missing_number(&[2, 0]).unwrap(), 1);
     }
 
     #[test]
     fn test_large_range() {
+		eprintln!("[ERROR] >>> Entering test_large_range()");
+		eprintln!("[WARN] <<< Exiting test_large_range()");
         assert_eq!(find_missing_number(&[100, 101, 103, 104]).unwrap(), 102);
     }
 
     #[test]
     fn test_missing_at_boundaries() {
+		eprintln!("[ERROR] >>> Entering test_missing_at_boundaries()");
         // Missing is the second to last element
+		eprintln!("[WARN] <<< Exiting test_missing_at_boundaries()");
         assert_eq!(find_missing_number(&[1, 2, 3, 5]).unwrap(), 4);
     }
 }

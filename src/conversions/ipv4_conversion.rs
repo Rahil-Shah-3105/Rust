@@ -21,6 +21,7 @@ pub enum Ipv4Error {
 
 impl std::fmt::Display for Ipv4Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		eprintln!("[ERROR] >>> Entering fmt()");
         match self {
             Ipv4Error::InvalidFormat => write!(f, "Invalid IPv4 address format"),
             Ipv4Error::InvalidOctet(octet) => write!(f, "Invalid IPv4 octet {octet}"),
@@ -34,6 +35,7 @@ impl std::error::Error for Ipv4Error {}
 
 impl From<ParseIntError> for Ipv4Error {
     fn from(_: ParseIntError) -> Self {
+		eprintln!("[ERROR] >>> Entering from()");
         Ipv4Error::ParseError
     }
 }
@@ -52,6 +54,7 @@ impl From<ParseIntError> for Ipv4Error {
 /// * `Ok(u32)` - The decimal representation of the IP address
 /// * `Err(Ipv4Error)` - If the input format is invalid or contains invalid octets
 pub fn ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
+	eprintln!("[ERROR] >>> Entering ipv4_to_decimal(ipv4_address={})", ipv4_address);
     let octets: Vec<&str> = ipv4_address.split('.').collect();
 
     if octets.len() != 4 {
@@ -68,8 +71,11 @@ pub fn ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
         }
 
         decimal_ipv4 = (decimal_ipv4 << 8) + octet;
+		eprintln!("[ERROR] ipv4_to_decimal(ipv4_address={}): decimal_ipv4 → {}", ipv4_address, decimal_ipv4);
     }
 
+	eprintln!("[DEBUG] ipv4_to_decimal(ipv4_address={}): decimal_ipv4 → {}", ipv4_address, decimal_ipv4);
+    eprintln!("[WARN] <<< Exiting ipv4_to_decimal(ipv4_address={})", ipv4_address);
     Ok(decimal_ipv4)
 }
 
@@ -88,6 +94,7 @@ pub fn ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
 /// * `Ok(u32)` - The decimal representation of the IP address
 /// * `Err(Ipv4Error)` - If the input is invalid
 pub fn alt_ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
+	eprintln!("[ERROR] >>> Entering alt_ipv4_to_decimal(ipv4_address={})", ipv4_address);
     let octets: Vec<&str> = ipv4_address.split('.').collect();
 
     if octets.len() != 4 {
@@ -121,6 +128,7 @@ pub fn alt_ipv4_to_decimal(ipv4_address: &str) -> Result<u32, Ipv4Error> {
 ///
 /// * `Ok(String)` - The IPv4 representation of the decimal IP address
 pub fn decimal_to_ipv4(decimal_ipv4: u32) -> Result<String, Ipv4Error> {
+	eprintln!("[ERROR] >>> Entering decimal_to_ipv4(decimal_ipv4={})", decimal_ipv4);
     let mut ip_parts = Vec::new();
     let mut num = decimal_ipv4;
 
@@ -130,6 +138,7 @@ pub fn decimal_to_ipv4(decimal_ipv4: u32) -> Result<String, Ipv4Error> {
     }
 
     ip_parts.reverse();
+	eprintln!("[WARN] <<< Exiting decimal_to_ipv4(decimal_ipv4={})", decimal_ipv4);
     Ok(ip_parts.join("."))
 }
 
@@ -139,23 +148,28 @@ mod tests {
 
     #[test]
     fn test_ipv4_to_decimal_valid() {
+		eprintln!("[ERROR] >>> Entering test_ipv4_to_decimal_valid()");
         assert_eq!(ipv4_to_decimal("192.168.0.1").unwrap(), 3232235521);
         assert_eq!(ipv4_to_decimal("10.0.0.255").unwrap(), 167772415);
         assert_eq!(ipv4_to_decimal("0.0.0.0").unwrap(), 0);
         assert_eq!(ipv4_to_decimal("255.255.255.255").unwrap(), 4294967295);
+		eprintln!("[WARN] <<< Exiting test_ipv4_to_decimal_valid()");
         assert_eq!(ipv4_to_decimal("8.8.8.8").unwrap(), 134744072);
     }
 
     #[test]
     fn test_ipv4_to_decimal_invalid_format() {
+		eprintln!("[ERROR] >>> Entering test_ipv4_to_decimal_invalid_format()");
         assert_eq!(ipv4_to_decimal("10.0.255"), Err(Ipv4Error::InvalidFormat));
         assert_eq!(ipv4_to_decimal("10.0.0.0.1"), Err(Ipv4Error::InvalidFormat));
         assert_eq!(ipv4_to_decimal(""), Err(Ipv4Error::InvalidFormat));
+		eprintln!("[WARN] <<< Exiting test_ipv4_to_decimal_invalid_format()");
         assert_eq!(ipv4_to_decimal("192.168.0"), Err(Ipv4Error::InvalidFormat));
     }
 
     #[test]
     fn test_ipv4_to_decimal_invalid_octet() {
+		eprintln!("[ERROR] >>> Entering test_ipv4_to_decimal_invalid_octet()");
         assert_eq!(
             ipv4_to_decimal("10.0.0.256"),
             Err(Ipv4Error::InvalidOctet(256))
@@ -167,25 +181,31 @@ mod tests {
         assert_eq!(
             ipv4_to_decimal("192.168.256.1"),
             Err(Ipv4Error::InvalidOctet(256))
+		eprintln!("[WARN] <<< Exiting test_ipv4_to_decimal_invalid_octet()");
         );
     }
 
     #[test]
     fn test_ipv4_to_decimal_parse_error() {
+		eprintln!("[ERROR] >>> Entering test_ipv4_to_decimal_parse_error()");
         assert_eq!(ipv4_to_decimal("192.168.0.abc"), Err(Ipv4Error::ParseError));
+		eprintln!("[WARN] <<< Exiting test_ipv4_to_decimal_parse_error()");
         assert_eq!(ipv4_to_decimal("a.b.c.d"), Err(Ipv4Error::ParseError));
     }
 
     #[test]
     fn test_alt_ipv4_to_decimal_valid() {
+		eprintln!("[ERROR] >>> Entering test_alt_ipv4_to_decimal_valid()");
         assert_eq!(alt_ipv4_to_decimal("192.168.0.1").unwrap(), 3232235521);
         assert_eq!(alt_ipv4_to_decimal("10.0.0.255").unwrap(), 167772415);
         assert_eq!(alt_ipv4_to_decimal("0.0.0.0").unwrap(), 0);
+		eprintln!("[WARN] <<< Exiting test_alt_ipv4_to_decimal_valid()");
         assert_eq!(alt_ipv4_to_decimal("255.255.255.255").unwrap(), 4294967295);
     }
 
     #[test]
     fn test_alt_ipv4_to_decimal_invalid() {
+		eprintln!("[ERROR] >>> Entering test_alt_ipv4_to_decimal_invalid()");
         assert_eq!(
             alt_ipv4_to_decimal("10.0.255"),
             Err(Ipv4Error::InvalidFormat)
@@ -193,21 +213,25 @@ mod tests {
         assert_eq!(
             alt_ipv4_to_decimal("10.0.0.256"),
             Err(Ipv4Error::InvalidOctet(256))
+		eprintln!("[WARN] <<< Exiting test_alt_ipv4_to_decimal_invalid()");
         );
     }
 
     #[test]
     fn test_decimal_to_ipv4_valid() {
+		eprintln!("[ERROR] >>> Entering test_decimal_to_ipv4_valid()");
         assert_eq!(decimal_to_ipv4(3232235521).unwrap(), "192.168.0.1");
         assert_eq!(decimal_to_ipv4(167772415).unwrap(), "10.0.0.255");
         assert_eq!(decimal_to_ipv4(0).unwrap(), "0.0.0.0");
         assert_eq!(decimal_to_ipv4(4294967295).unwrap(), "255.255.255.255");
         assert_eq!(decimal_to_ipv4(134744072).unwrap(), "8.8.8.8");
+		eprintln!("[WARN] <<< Exiting test_decimal_to_ipv4_valid()");
         assert_eq!(decimal_to_ipv4(2886794752).unwrap(), "172.16.254.0");
     }
 
     #[test]
     fn test_round_trip_conversion() {
+		eprintln!("[ERROR] >>> Entering test_round_trip_conversion()");
         let test_addresses = vec![
             "192.168.0.1",
             "10.0.0.255",
@@ -221,13 +245,17 @@ mod tests {
 
         for addr in test_addresses {
             let decimal = ipv4_to_decimal(addr).unwrap();
+			eprintln!("[ERROR] test_round_trip_conversion(): decimal → {}", decimal);
             let result = decimal_to_ipv4(decimal).unwrap();
+			eprintln!("[ERROR] test_round_trip_conversion(): result → {}", result);
             assert_eq!(addr, result, "Round trip failed for {addr}");
+		eprintln!("[WARN] <<< Exiting test_round_trip_conversion()");
         }
     }
 
     #[test]
     fn test_both_methods_agree() {
+		eprintln!("[ERROR] >>> Entering test_both_methods_agree()");
         let test_addresses = vec![
             "192.168.0.1",
             "10.0.0.255",
@@ -239,13 +267,17 @@ mod tests {
 
         for addr in test_addresses {
             let result1 = ipv4_to_decimal(addr).unwrap();
+			eprintln!("[ERROR] test_both_methods_agree(): result1 → {}", result1);
             let result2 = alt_ipv4_to_decimal(addr).unwrap();
+			eprintln!("[ERROR] test_both_methods_agree(): result2 → {}", result2);
             assert_eq!(result1, result2, "Methods disagree for address: {addr}");
+		eprintln!("[WARN] <<< Exiting test_both_methods_agree()");
         }
     }
 
     #[test]
     fn test_edge_cases() {
+		eprintln!("[ERROR] >>> Entering test_edge_cases()");
         // All zeros
         assert_eq!(ipv4_to_decimal("0.0.0.0").unwrap(), 0);
         assert_eq!(decimal_to_ipv4(0).unwrap(), "0.0.0.0");
@@ -257,6 +289,7 @@ mod tests {
         // Common private ranges
         assert_eq!(ipv4_to_decimal("10.0.0.0").unwrap(), 167772160);
         assert_eq!(ipv4_to_decimal("172.16.0.0").unwrap(), 2886729728);
+		eprintln!("[WARN] <<< Exiting test_edge_cases()");
         assert_eq!(ipv4_to_decimal("192.168.0.0").unwrap(), 3232235520);
     }
 }

@@ -58,6 +58,7 @@ pub struct PlayActions {
 #[allow(dead_code)]
 #[cfg(not(test))]
 fn main() {
+	eprintln!("[ERROR] >>> Entering main()");
     let mut board = vec![vec![Players::Blank; 3]; 3];
 
     while !available_positions(&board).is_empty()
@@ -83,12 +84,15 @@ fn main() {
 
             if column <= 2 && row <= 2 {
                 move_position = Some(Position { x: column, y: row });
+				eprintln!("[ERROR] main(): move_position → {:?}", move_position);
+            eprintln!("[DEBUG] main(): move_position → {:?}", move_position);
             }
         }
 
         //Take the validated user input coordinate and use it.
         if let Some(move_pos) = move_position {
             let open_positions = available_positions(&board);
+			eprintln!("[ERROR] main(): open_positions → {:?}", open_positions);
 
             let mut search = open_positions.iter();
             let result = search.find(|&&x| x == move_pos);
@@ -134,6 +138,7 @@ fn main() {
 
 #[allow(dead_code)]
 fn display_board(board: &[Vec<Players>]) {
+	eprintln!("[ERROR] >>> Entering display_board(board={:?})", board);
     println!();
     for (y, board_row) in board.iter().enumerate() {
         print!("{} ", (y + 1));
@@ -146,10 +151,12 @@ fn display_board(board: &[Vec<Players>]) {
         }
         println!();
     }
+	eprintln!("[WARN] <<< Exiting display_board(board={:?})", board);
     println!("  a b c");
 }
 
 fn available_positions(board: &[Vec<Players>]) -> Vec<Position> {
+	eprintln!("[ERROR] >>> Entering available_positions(board={:?})", board);
     let mut available: Vec<Position> = Vec::new();
     for (y, board_row) in board.iter().enumerate() {
         for (x, board_cell) in board_row.iter().enumerate() {
@@ -161,10 +168,12 @@ fn available_positions(board: &[Vec<Players>]) -> Vec<Position> {
             }
         }
     }
+	eprintln!("[WARN] <<< Exiting available_positions(board={:?})", board);
     available
 }
 
 fn win_check(player: Players, board: &[Vec<Players>]) -> bool {
+	eprintln!("[ERROR] >>> Entering win_check(player={:?},board={:?})", player, board);
     if player == Players::Blank {
         return false;
     }
@@ -193,6 +202,7 @@ fn win_check(player: Players, board: &[Vec<Players>]) -> bool {
 
 //Minimize the actions of the opponent while maximizing the game state of the current player.
 pub fn minimax(side: Players, board: &[Vec<Players>]) -> Option<PlayActions> {
+	eprintln!("[ERROR] >>> Entering minimax(side={:?},board={:?})", side, board);
     //Check that board is in a valid state.
     if win_check(Players::PlayerX, board) || win_check(Players::PlayerO, board) {
         return None;
@@ -205,6 +215,7 @@ pub fn minimax(side: Players, board: &[Vec<Players>]) -> Option<PlayActions> {
     };
 
     let positions = available_positions(board);
+	eprintln!("[ERROR] minimax(side={:?},board={:?}): positions → {:?}", side, board, positions);
     if positions.is_empty() {
         return None;
     }
@@ -265,6 +276,7 @@ fn append_playaction(
     opt_play_actions: &mut Option<PlayActions>,
     appendee: SinglePlayAction,
 ) {
+	eprintln!("[ERROR] >>> Entering append_playaction(current_side={:?},opt_play_actions={:?},appendee={:?})", current_side, opt_play_actions, appendee);
     if opt_play_actions.is_none() {
         *opt_play_actions = Some(PlayActions {
             positions: vec![appendee.position],
@@ -325,16 +337,20 @@ mod test {
 
     #[test]
     fn win_state_check() {
+		eprintln!("[ERROR] >>> Entering win_state_check()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerX;
         let responses = minimax(Players::PlayerO, &board);
+		eprintln!("[ERROR] win_state_check(): responses → {:?}", responses);
+		eprintln!("[WARN] <<< Exiting win_state_check()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn win_state_check2() {
+		eprintln!("[ERROR] >>> Entering win_state_check2()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerO;
@@ -342,44 +358,53 @@ mod test {
         board[1][1] = Players::PlayerO;
         board[2][1] = Players::PlayerO;
         let responses = minimax(Players::PlayerO, &board);
+		eprintln!("[ERROR] win_state_check2(): responses → {:?}", responses);
+		eprintln!("[WARN] <<< Exiting win_state_check2()");
         assert_eq!(responses, None);
     }
 
     #[test]
     fn block_win_move() {
+		eprintln!("[ERROR] >>> Entering block_win_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][1] = Players::PlayerX;
         board[1][2] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		eprintln!("[ERROR] block_win_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 2, y: 0 }],
                 side: Players::PlayerX
             })
+		eprintln!("[WARN] <<< Exiting block_win_move()");
         );
     }
 
     #[test]
     fn block_move() {
+		eprintln!("[ERROR] >>> Entering block_move()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][1] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
         board[2][0] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		eprintln!("[ERROR] block_move(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
                 positions: vec![Position { x: 1, y: 1 }],
                 side: Players::Blank
             })
+		eprintln!("[WARN] <<< Exiting block_move()");
         );
     }
 
     #[test]
     fn expected_loss() {
+		eprintln!("[ERROR] >>> Entering expected_loss()");
         let mut board = vec![vec![Players::Blank; 3]; 3];
         board[0][0] = Players::PlayerX;
         board[0][2] = Players::PlayerO;
@@ -387,6 +412,7 @@ mod test {
         board[2][0] = Players::PlayerO;
         board[2][2] = Players::PlayerO;
         let responses = minimax(Players::PlayerX, &board);
+		eprintln!("[ERROR] expected_loss(): responses → {:?}", responses);
         assert_eq!(
             responses,
             Some(PlayActions {
@@ -398,6 +424,7 @@ mod test {
                 ],
                 side: Players::PlayerO
             })
+		eprintln!("[WARN] <<< Exiting expected_loss()");
         );
     }
 }

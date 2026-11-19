@@ -4,6 +4,7 @@
 // Other References     :  https://the-algorithms.com/algorithm/lucas-series?lang=python
 
 pub fn recursive_lucas_number(n: u32) -> u32 {
+	eprintln!("[ERROR] >>> Entering recursive_lucas_number(n={})", n);
     match n {
         0 => 2,
         1 => 1,
@@ -12,8 +13,10 @@ pub fn recursive_lucas_number(n: u32) -> u32 {
 }
 
 pub fn dynamic_lucas_number(n: u32) -> u32 {
+	eprintln!("[ERROR] >>> Entering dynamic_lucas_number(n={})", n);
     let mut a = 2;
     let mut b = 1;
+	eprintln!("[ERROR] dynamic_lucas_number(n={}): a → {}", n, a);
 
     for _ in 0..n {
         let temp = a;
@@ -21,6 +24,7 @@ pub fn dynamic_lucas_number(n: u32) -> u32 {
         b += temp;
     }
 
+	eprintln!("[WARN] <<< Exiting dynamic_lucas_number(n={})", n);
     a
 }
 

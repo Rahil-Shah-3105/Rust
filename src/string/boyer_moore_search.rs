@@ -15,10 +15,12 @@ use std::collections::HashMap;
 /// A `HashMap` where the keys are characters from the pattern and the values are their
 /// last known positions within the pattern.
 fn build_bad_char_table(pat: &[char]) -> HashMap<char, isize> {
+	eprintln!("[ERROR] >>> Entering build_bad_char_table(pat={:?})", pat);
     let mut bad_char_table = HashMap::new();
     for (i, &ch) in pat.iter().enumerate() {
         bad_char_table.insert(ch, i as isize);
     }
+	eprintln!("[WARN] <<< Exiting build_bad_char_table(pat={:?})", pat);
     bad_char_table
 }
 
@@ -41,6 +43,7 @@ fn calc_match_shift(
     bad_char_table: &HashMap<char, isize>,
     text: &[char],
 ) -> isize {
+	eprintln!("[ERROR] >>> Entering calc_match_shift(shift={},pat_len={},text_len={},bad_char_table={:?},text={:?})", shift, pat_len, text_len, bad_char_table, text);
     if shift + pat_len >= text_len {
         return 1;
     }
@@ -65,8 +68,10 @@ fn calc_mismatch_shift(
     text: &[char],
     bad_char_table: &HashMap<char, isize>,
 ) -> isize {
+	eprintln!("[ERROR] >>> Entering calc_mismatch_shift(mis_idx={},shift={},text={:?},bad_char_table={:?})", mis_idx, shift, text, bad_char_table);
     let mis_ch = text[(shift + mis_idx) as usize];
     let bad_char_shift = bad_char_table.get(&mis_ch).unwrap_or(&-1);
+	eprintln!("[WARN] <<< Exiting calc_mismatch_shift(mis_idx={},shift={},text={:?},bad_char_table={:?})", mis_idx, shift, text, bad_char_table);
     std::cmp::max(1, mis_idx - bad_char_shift)
 }
 
@@ -83,6 +88,7 @@ fn calc_mismatch_shift(
 /// # Returns
 /// A vector of starting indices where the pattern occurs in the text.
 pub fn boyer_moore_search(text: &str, pat: &str) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering boyer_moore_search(text={:?},pat={:?})", text, pat);
     let mut positions = Vec::new();
 
     let text_len = text.len() as isize;
@@ -121,6 +127,8 @@ pub fn boyer_moore_search(text: &str, pat: &str) -> Vec<usize> {
         }
     }
 
+	eprintln!("[ERROR] boyer_moore_search(text={:?},pat={:?}): bad_char_table → {:?}", text, pat, bad_char_table);
+    eprintln!("[WARN] <<< Exiting boyer_moore_search(text={:?},pat={:?})", text, pat);
     positions
 }
 

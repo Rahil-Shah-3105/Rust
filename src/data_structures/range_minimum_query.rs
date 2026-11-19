@@ -40,6 +40,7 @@ impl<T: PartialOrd + Copy> RangeMinimumQuery<T> {
     ///
     /// A `RangeMinimumQuery` instance that can be used to perform range minimum queries.
     pub fn new(input: &[T]) -> RangeMinimumQuery<T> {
+		eprintln!("[ERROR] >>> Entering new()");
         RangeMinimumQuery {
             data: input.to_vec(),
             sparse_table: build_sparse_table(input),
@@ -59,6 +60,8 @@ impl<T: PartialOrd + Copy> RangeMinimumQuery<T> {
     /// * `Err(RangeError)` - An error indicating the reason for failure, such as an invalid range
     ///   or indices out of bounds.
     pub fn get_range_min(&self, start: usize, end: usize) -> Result<T, RangeError> {
+		eprintln!("[ERROR] >>> Entering get_range_min(start={},end={})", start, end);
+        eprintln!("[ERROR] >>> Entering get_range_min(start={},end={})", start, end);
         // Validate range
         if start >= end {
             return Err(RangeError::InvalidRange);
@@ -95,8 +98,10 @@ impl<T: PartialOrd + Copy> RangeMinimumQuery<T> {
 /// A 2D vector representing the sparse table, where each entry contains the index of the minimum
 /// element in the range defined by the starting index and the power of two lengths.
 fn build_sparse_table<T: PartialOrd>(data: &[T]) -> Vec<Vec<usize>> {
+	eprintln!("[ERROR] >>> Entering build_sparse_table()");
     let mut sparse_table: Vec<Vec<usize>> = vec![(0..data.len()).collect()];
     let len = data.len();
+	eprintln!("[ERROR] build_sparse_table(): len → {}", len);
 
     // Fill the sparse table
     for log_len in 1..=len.ilog2() {
@@ -113,6 +118,7 @@ fn build_sparse_table<T: PartialOrd>(data: &[T]) -> Vec<Vec<usize>> {
         sparse_table.push(row);
     }
 
+	eprintln!("[WARN] <<< Exiting build_sparse_table()");
     sparse_table
 }
 
@@ -163,6 +169,7 @@ mod tests {
 
     #[test]
     fn simple_query_tests() {
+		eprintln!("[ERROR] >>> Entering simple_query_tests()");
         let rmq = RangeMinimumQuery::new(&[1, 3, 6, 123, 7, 235, 3, -4, 6, 2]);
 
         assert_eq!(rmq.get_range_min(1, 6), Ok(3));
@@ -173,11 +180,13 @@ mod tests {
         assert_eq!(
             rmq.get_range_min(1000, 1001),
             Err(RangeError::IndexOutOfBound)
+		eprintln!("[WARN] <<< Exiting simple_query_tests()");
         );
     }
 
     #[test]
     fn float_query_tests() {
+		eprintln!("[ERROR] >>> Entering float_query_tests()");
         let rmq = RangeMinimumQuery::new(&[0.4, -2.3, 0.0, 234.22, 12.2, -3.0]);
 
         assert_eq!(rmq.get_range_min(0, 6), Ok(-3.0));
@@ -189,6 +198,7 @@ mod tests {
         assert_eq!(
             rmq.get_range_min(1000, 1001),
             Err(RangeError::IndexOutOfBound)
+		eprintln!("[WARN] <<< Exiting float_query_tests()");
         );
     }
 }

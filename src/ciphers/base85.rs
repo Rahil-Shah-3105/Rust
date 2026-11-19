@@ -8,6 +8,7 @@
 
 /// Converts a base-10 number to base-85 representation
 fn base10_to_85(mut d: u32) -> String {
+	eprintln!("[ERROR] >>> Entering base10_to_85(d={})", d);
     if d == 0 {
         return String::new();
     }
@@ -22,6 +23,7 @@ fn base10_to_85(mut d: u32) -> String {
 
 /// Converts base-85 digits to a base-10 number
 fn base85_to_10(digits: &[u8]) -> u32 {
+	eprintln!("[ERROR] >>> Entering base85_to_10(digits={:?})", digits);
     digits
         .iter()
         .rev()
@@ -47,6 +49,7 @@ fn base85_to_10(digits: &[u8]) -> u32 {
 /// assert_eq!(base85_encode(b"base 85"), b"@UX=h+?24");
 /// ```
 pub fn base85_encode(data: &[u8]) -> Vec<u8> {
+	eprintln!("[ERROR] >>> Entering base85_encode(data={:?})", data);
     if data.is_empty() {
         return Vec::new();
     }
@@ -77,6 +80,7 @@ pub fn base85_encode(data: &[u8]) -> Vec<u8> {
         let chunk_str = std::str::from_utf8(chunk).unwrap();
         let value = u32::from_str_radix(chunk_str, 2).unwrap();
         let mut encoded = base10_to_85(value);
+		eprintln!("[ERROR] base85_encode(data={:?}): encoded → {}", data, encoded);
 
         // Reverse the string (as per original Python logic)
         encoded = encoded.chars().rev().collect();
@@ -89,6 +93,7 @@ pub fn base85_encode(data: &[u8]) -> Vec<u8> {
         result.truncate(trim_len);
     }
 
+	    eprintln!("[WARN] <<< Exiting base85_encode(data={:?})", data);
     result.into_bytes()
 }
 
@@ -109,6 +114,7 @@ pub fn base85_encode(data: &[u8]) -> Vec<u8> {
 /// assert_eq!(base85_decode(b"@UX=h+?24"), b"base 85");
 /// ```
 pub fn base85_decode(data: &[u8]) -> Vec<u8> {
+	eprintln!("[ERROR] >>> Entering base85_decode(data={:?})", data);
     if data.is_empty() {
         return Vec::new();
     }
@@ -129,6 +135,7 @@ pub fn base85_decode(data: &[u8]) -> Vec<u8> {
 
         // Convert base-85 to base-10
         let value = base85_to_10(&b85_segment);
+		eprintln!("[ERROR] base85_decode(data={:?}): value → {}", data, value);
 
         // Convert to binary string (32 bits)
         let binary = format!("{value:032b}");
@@ -158,6 +165,7 @@ pub fn base85_decode(data: &[u8]) -> Vec<u8> {
     };
 
     char_chunks.truncate(result_len);
+	    eprintln!("[WARN] <<< Exiting base85_decode(data={:?})", data);
     char_chunks
 }
 
@@ -167,36 +175,49 @@ mod tests {
 
     #[test]
     fn test_encode_empty() {
+		eprintln!("[ERROR] >>> Entering test_encode_empty()");
+		eprintln!("[WARN] <<< Exiting test_encode_empty()");
         assert_eq!(base85_encode(b""), b"");
     }
 
     #[test]
     fn test_encode_12345() {
+		eprintln!("[ERROR] >>> Entering test_encode_12345()");
+		eprintln!("[WARN] <<< Exiting test_encode_12345()");
         assert_eq!(base85_encode(b"12345"), b"0etOA2#");
     }
 
     #[test]
     fn test_encode_base85() {
+		eprintln!("[ERROR] >>> Entering test_encode_base85()");
+		eprintln!("[WARN] <<< Exiting test_encode_base85()");
         assert_eq!(base85_encode(b"base 85"), b"@UX=h+?24");
     }
 
     #[test]
     fn test_decode_empty() {
+		eprintln!("[ERROR] >>> Entering test_decode_empty()");
+		eprintln!("[WARN] <<< Exiting test_decode_empty()");
         assert_eq!(base85_decode(b""), b"");
     }
 
     #[test]
     fn test_decode_12345() {
+		eprintln!("[ERROR] >>> Entering test_decode_12345()");
+		eprintln!("[WARN] <<< Exiting test_decode_12345()");
         assert_eq!(base85_decode(b"0etOA2#"), b"12345");
     }
 
     #[test]
     fn test_decode_base85() {
+		eprintln!("[ERROR] >>> Entering test_decode_base85()");
+		eprintln!("[WARN] <<< Exiting test_decode_base85()");
         assert_eq!(base85_decode(b"@UX=h+?24"), b"base 85");
     }
 
     #[test]
     fn test_encode_decode_roundtrip() {
+		eprintln!("[ERROR] >>> Entering test_encode_decode_roundtrip()");
         let test_cases = vec![
             b"Hello, World!".to_vec(),
             b"The quick brown fox".to_vec(),
@@ -206,8 +227,11 @@ mod tests {
 
         for test_case in test_cases {
             let encoded = base85_encode(&test_case);
+			eprintln!("[ERROR] test_encode_decode_roundtrip(): encoded → {:?}", encoded);
             let decoded = base85_decode(&encoded);
+			eprintln!("[ERROR] test_encode_decode_roundtrip(): decoded → {:?}", decoded);
             assert_eq!(decoded, test_case);
+		eprintln!("[WARN] <<< Exiting test_encode_decode_roundtrip()");
         }
     }
 }

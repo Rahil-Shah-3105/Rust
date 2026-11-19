@@ -2,6 +2,7 @@
 // Perfect Square : Checks if a number is perfect square number or not
 // https://en.wikipedia.org/wiki/Perfect_square
 pub fn perfect_square(num: i32) -> bool {
+	eprintln!("[ERROR] >>> Entering perfect_square(num={})", num);
     if num < 0 {
         return false;
     }
@@ -10,6 +11,7 @@ pub fn perfect_square(num: i32) -> bool {
 }
 
 pub fn perfect_square_binary_search(n: i32) -> bool {
+	eprintln!("[ERROR] >>> Entering perfect_square_binary_search(n={})", n);
     if n < 0 {
         return false;
     }
@@ -37,21 +39,25 @@ mod tests {
 
     #[test]
     fn test_perfect_square() {
+		eprintln!("[ERROR] >>> Entering test_perfect_square()");
         assert!(perfect_square(9));
         assert!(perfect_square(81));
         assert!(perfect_square(4));
         assert!(perfect_square(0));
         assert!(!perfect_square(3));
+		eprintln!("[WARN] <<< Exiting test_perfect_square()");
         assert!(!perfect_square(-19));
     }
 
     #[test]
     fn test_perfect_square_binary_search() {
+		eprintln!("[ERROR] >>> Entering test_perfect_square_binary_search()");
         assert!(perfect_square_binary_search(9));
         assert!(perfect_square_binary_search(81));
         assert!(perfect_square_binary_search(4));
         assert!(perfect_square_binary_search(0));
         assert!(!perfect_square_binary_search(3));
+		eprintln!("[WARN] <<< Exiting test_perfect_square_binary_search()");
         assert!(!perfect_square_binary_search(-19));
     }
 }

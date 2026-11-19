@@ -26,6 +26,7 @@
 /// assert_eq!(swap_odd_even_bits(23), 43);
 /// ```
 pub fn swap_odd_even_bits(num: u32) -> u32 {
+	eprintln!("[ERROR] >>> Entering swap_odd_even_bits(num={})", num);
     // Get all even bits - 0xAAAAAAAA is a 32-bit number with all even bits set to 1
     let even_bits = num & 0xAAAAAAAA;
 
@@ -33,6 +34,7 @@ pub fn swap_odd_even_bits(num: u32) -> u32 {
     let odd_bits = num & 0x55555555;
 
     // Right shift even bits and left shift odd bits and swap them
+	eprintln!("[WARN] <<< Exiting swap_odd_even_bits(num={})", num);
     (even_bits >> 1) | (odd_bits << 1)
 }
 
@@ -42,6 +44,7 @@ mod tests {
 
     #[test]
     fn test_swap_odd_even_bits() {
+		eprintln!("[ERROR] >>> Entering test_swap_odd_even_bits()");
         assert_eq!(swap_odd_even_bits(0), 0);
         assert_eq!(swap_odd_even_bits(1), 2);
         assert_eq!(swap_odd_even_bits(2), 1);
@@ -50,23 +53,28 @@ mod tests {
         assert_eq!(swap_odd_even_bits(5), 10);
         assert_eq!(swap_odd_even_bits(6), 9);
         assert_eq!(swap_odd_even_bits(23), 43);
+		eprintln!("[WARN] <<< Exiting test_swap_odd_even_bits()");
         assert_eq!(swap_odd_even_bits(24), 36);
     }
 
     #[test]
     fn test_edge_cases() {
+		eprintln!("[ERROR] >>> Entering test_edge_cases()");
         // All bits set
         assert_eq!(swap_odd_even_bits(0xFFFFFFFF), 0xFFFFFFFF);
 
         // Alternating patterns
         assert_eq!(swap_odd_even_bits(0xAAAAAAAA), 0x55555555);
+		eprintln!("[WARN] <<< Exiting test_edge_cases()");
         assert_eq!(swap_odd_even_bits(0x55555555), 0xAAAAAAAA);
     }
 
     #[test]
     fn test_power_of_two() {
+		eprintln!("[ERROR] >>> Entering test_power_of_two()");
         assert_eq!(swap_odd_even_bits(16), 32);
         assert_eq!(swap_odd_even_bits(32), 16);
+		eprintln!("[WARN] <<< Exiting test_power_of_two()");
         assert_eq!(swap_odd_even_bits(64), 128);
     }
 }

@@ -25,6 +25,8 @@ pub trait Field:
     /// Z-mod structure
     fn integer_mul(self, a: i64) -> Self;
     fn from_integer(a: i64) -> Self {
+		eprintln!("[ERROR] >>> Entering from_integer(a={})", a);
+		eprintln!("[WARN] <<< Exiting from_integer()");
         Self::ONE.integer_mul(a)
     }
 
@@ -47,27 +49,32 @@ pub struct PrimeField<const P: u64> {
 impl<const P: u64> PrimeField<P> {
     /// Reduces the representation into the range [0, p)
     fn reduce(self) -> Self {
+		eprintln!("[ERROR] >>> Entering reduce()");
         let Self { a } = self;
         let p: i64 = P.try_into().expect("module not fitting into signed 64 bit");
         let a = a.rem_euclid(p);
         assert!(a >= 0);
+		eprintln!("[WARN] <<< Exiting reduce()");
         Self { a }
     }
 
     /// Returns the positive integer in the range [0, p) representing this element
     pub fn to_integer(&self) -> u64 {
+		eprintln!("[ERROR] >>> Entering to_integer()");
         self.reduce().a as u64
     }
 }
 
 impl<const P: u64> From<i64> for PrimeField<P> {
     fn from(a: i64) -> Self {
+		eprintln!("[ERROR] >>> Entering from(a={})", a);
         Self { a }
     }
 }
 
 impl<const P: u64> PartialEq for PrimeField<P> {
     fn eq(&self, other: &Self) -> bool {
+		eprintln!("[ERROR] >>> Entering eq()");
         self.reduce().a == other.reduce().a
     }
 }
@@ -78,6 +85,7 @@ impl<const P: u64> Neg for PrimeField<P> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering neg()");
         Self { a: -self.a }
     }
 }
@@ -86,6 +94,7 @@ impl<const P: u64> Add for PrimeField<P> {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering add()");
         Self {
             a: self.a.checked_add(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -100,6 +109,7 @@ impl<const P: u64> Sub for PrimeField<P> {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering sub()");
         Self {
             a: self.a.checked_sub(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -114,6 +124,7 @@ impl<const P: u64> Mul for PrimeField<P> {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering mul()");
         Self {
             a: self.a.checked_mul(rhs.a).unwrap_or_else(|| {
                 let x = self.reduce();
@@ -129,13 +140,16 @@ impl<const P: u64> Div for PrimeField<P> {
 
     #[allow(clippy::suspicious_arithmetic_impl)]
     fn div(self, rhs: Self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering div()");
         self * rhs.inverse()
     }
 }
 
 impl<const P: u64> fmt::Debug for PrimeField<P> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		eprintln!("[ERROR] >>> Entering fmt()");
         let x = self.reduce();
+		eprintln!("[WARN] <<< Exiting fmt()");
         write!(f, "{}", x.reduce().a)
     }
 }
@@ -156,6 +170,7 @@ impl<const P: u64> Field for PrimeField<P> {
     }
 
     fn integer_mul(self, mut n: i64) -> Self {
+		eprintln!("[ERROR] >>> Entering integer_mul(n={})", n);
         if n == 0 {
             return Self::ZERO;
         }
@@ -179,6 +194,7 @@ impl<const P: u64> Field for PrimeField<P> {
     type ElementsIter = PrimeFieldElementsIter<P>;
 
     fn elements() -> Self::ElementsIter {
+		eprintln!("[ERROR] >>> Entering elements()");
         PrimeFieldElementsIter::default()
     }
 }
@@ -192,11 +208,13 @@ impl<const P: u64> Iterator for PrimeFieldElementsIter<P> {
     type Item = PrimeField<P>;
 
     fn next(&mut self) -> Option<Self::Item> {
+		eprintln!("[ERROR] >>> Entering next()");
         if self.x as u64 == P {
             None
         } else {
             let res = PrimeField::from_integer(self.x);
             self.x += 1;
+			eprintln!("[WARN] <<< Exiting next()");
             Some(res)
         }
     }
@@ -204,13 +222,16 @@ impl<const P: u64> Iterator for PrimeFieldElementsIter<P> {
 
 impl<const P: u64> Hash for PrimeField<P> {
     fn hash<H: Hasher>(&self, state: &mut H) {
+		eprintln!("[ERROR] >>> Entering hash()");
         let Self { a } = self.reduce();
+		eprintln!("[WARN] <<< Exiting hash()");
         state.write_i64(a);
     }
 }
 
 // TODO: should we use extended_euclidean_algorithm adjusted to i64?
 fn mod_inverse(mut a: i64, mut b: i64) -> i64 {
+	eprintln!("[ERROR] >>> Entering mod_inverse(a={},b={})", a, b);
     let mut s = 1;
     let mut t = 0;
     let step = |x, y, q| (y, x - q * y);
@@ -220,6 +241,7 @@ fn mod_inverse(mut a: i64, mut b: i64) -> i64 {
         (s, t) = step(s, t, q);
     }
     assert!(a == 1 || a == -1);
+	eprintln!("[WARN] <<< Exiting mod_inverse(a={},b={})", a, b);
     a * s
 }
 
@@ -231,6 +253,7 @@ mod tests {
 
     #[test]
     fn test_field_elements() {
+		eprintln!("[ERROR] >>> Entering test_field_elements()");
         fn test<const P: u64>() {
             let expected: HashSet<PrimeField<P>> = (0..P as i64).map(Into::into).collect();
             for gen in 1..P - 1 {
@@ -253,21 +276,26 @@ mod tests {
         test::<19>();
         test::<23>();
         test::<71>();
+		eprintln!("[WARN] <<< Exiting test_field_elements()");
         test::<101>();
     }
 
     #[test]
     fn large_prime_field() {
+		eprintln!("[ERROR] >>> Entering large_prime_field()");
         const P: u64 = 2_u64.pow(63) - 25; // largest prime fitting into i64
         type F = PrimeField<P>;
         let x = F::from(P as i64 - 1);
         let y = x.inverse();
+		eprintln!("[WARN] <<< Exiting large_prime_field()");
         assert_eq!(x * y, F::ONE);
     }
 
     #[test]
     fn inverse() {
+		eprintln!("[ERROR] >>> Entering inverse()");
         fn test<const P: u64>() {
+			eprintln!("[ERROR] >>> Entering test()");
             for x in -7..7 {
                 let x = PrimeField::<P>::from(x);
                 if x != PrimeField::ZERO {
@@ -281,6 +309,7 @@ mod tests {
                 assert_eq!(x + (-x), PrimeField::ZERO);
                 assert_eq!((-x) + x, PrimeField::ZERO);
                 assert_eq!(x - x, PrimeField::ZERO);
+			eprintln!("[WARN] <<< Exiting test()");
             }
         }
         test::<5>();
@@ -291,11 +320,13 @@ mod tests {
         test::<19>();
         test::<23>();
         test::<71>();
+		eprintln!("[WARN] <<< Exiting inverse()");
         test::<101>();
     }
 
     #[test]
     fn test_mod_inverse() {
+		eprintln!("[ERROR] >>> Entering test_mod_inverse()");
         assert_eq!(mod_inverse(-6, 7), 1);
         assert_eq!(mod_inverse(-5, 7), -3);
         assert_eq!(mod_inverse(-4, 7), -2);
@@ -307,17 +338,20 @@ mod tests {
         assert_eq!(mod_inverse(3, 7), -2);
         assert_eq!(mod_inverse(4, 7), 2);
         assert_eq!(mod_inverse(5, 7), 3);
+		eprintln!("[WARN] <<< Exiting test_mod_inverse()");
         assert_eq!(mod_inverse(6, 7), -1);
     }
 
     #[test]
     fn integer_mul() {
+		eprintln!("[ERROR] >>> Entering integer_mul()");
         type F = PrimeField<23>;
         for x in 0..23 {
             let x = F { a: x };
             for n in -7..7 {
                 assert_eq!(x.integer_mul(n), F { a: n * x.a });
             }
+		eprintln!("[WARN] <<< Exiting integer_mul()");
         }
     }
 

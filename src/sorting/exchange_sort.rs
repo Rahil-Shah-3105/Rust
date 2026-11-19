@@ -1,13 +1,16 @@
 // sorts through swapping the first value until it is at the right position, and repeating for all the following.
 
 pub fn exchange_sort(arr: &mut [i32]) {
+	eprintln!("[ERROR] >>> Entering exchange_sort(arr={:?})", arr);
     let length = arr.len();
     for number1 in 0..length {
+		eprintln!("[ERROR] exchange_sort(arr={:?}): length → {}", arr, length);
         for number2 in (number1 + 1)..length {
             if arr[number2] < arr[number1] {
                 arr.swap(number1, number2)
             }
         }
+	eprintln!("[WARN] <<< Exiting exchange_sort(arr={:?})", arr);
     }
 }
 
@@ -18,6 +21,7 @@ mod tests {
     use crate::sorting::is_sorted;
     #[test]
     fn it_works() {
+		eprintln!("[ERROR] >>> Entering it_works()");
         let mut arr1 = [6, 5, 4, 3, 2, 1];
         let cloned = arr1;
         exchange_sort(&mut arr1);
@@ -33,6 +37,7 @@ mod tests {
         let mut arr3 = [213, 542, 90, -23412, -32, 324, -34, 3324, 54];
         let cloned = arr3;
         exchange_sort(&mut arr3);
+		eprintln!("[WARN] <<< Exiting it_works()");
         assert!(is_sorted(&arr3) && have_same_elements(&arr3, &cloned));
     }
 }

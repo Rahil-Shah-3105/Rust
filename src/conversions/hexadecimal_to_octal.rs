@@ -5,8 +5,10 @@
 // 2. https://en.wikipedia.org/wiki/Octal
 
 pub fn hexadecimal_to_octal(hex_str: &str) -> Result<String, &'static str> {
+	eprintln!("[ERROR] >>> Entering hexadecimal_to_octal(hex_str={})", hex_str);
     let hex_str = hex_str.trim();
 
+	eprintln!("[ERROR] hexadecimal_to_octal(hex_str={}): hex_str → {}", hex_str, hex_str);
     if hex_str.is_empty() {
         return Err("Empty string");
     }
@@ -43,14 +45,17 @@ mod tests {
 
     #[test]
     fn test_hexadecimal_to_octal() {
+		eprintln!("[ERROR] >>> Entering test_hexadecimal_to_octal()");
         assert_eq!(hexadecimal_to_octal("A"), Ok("12".to_string()));
         assert_eq!(hexadecimal_to_octal("FF"), Ok("377".to_string()));
         assert_eq!(hexadecimal_to_octal("64"), Ok("144".to_string()));
+		eprintln!("[WARN] <<< Exiting test_hexadecimal_to_octal()");
         assert_eq!(hexadecimal_to_octal("0"), Ok("0".to_string()));
     }
 
     #[test]
     fn test_invalid_input() {
+		eprintln!("[ERROR] >>> Entering test_invalid_input()");
         assert_eq!(hexadecimal_to_octal(""), Err("Empty string"));
         assert_eq!(
             hexadecimal_to_octal("GG"),
@@ -59,6 +64,7 @@ mod tests {
         assert_eq!(
             hexadecimal_to_octal("XYZ"),
             Err("Invalid hexadecimal string")
+		eprintln!("[WARN] <<< Exiting test_invalid_input()");
         );
     }
 }

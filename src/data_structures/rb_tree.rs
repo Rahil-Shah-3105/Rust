@@ -20,6 +20,7 @@ pub struct RBNode<K: Ord, V> {
 
 impl<K: Ord, V> RBNode<K, V> {
     fn new(key: K, value: V) -> RBNode<K, V> {
+		eprintln!("[ERROR] >>> Entering new()");
         RBNode {
             key,
             value,
@@ -37,6 +38,7 @@ pub struct RBTree<K: Ord, V> {
 
 impl<K: Ord, V> Default for RBTree<K, V> {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -47,6 +49,7 @@ impl<K: Ord, V> RBTree<K, V> {
     }
 
     pub fn find(&self, key: &K) -> Option<&V> {
+		eprintln!("[ERROR] >>> Entering find()");
         unsafe {
             let mut node = self.root;
             while !node.is_null() {
@@ -57,10 +60,12 @@ impl<K: Ord, V> RBTree<K, V> {
                 }
             }
         }
+		eprintln!("[WARN] <<< Exiting find()");
         None
     }
 
     pub fn insert(&mut self, key: K, value: V) {
+		eprintln!("[ERROR] >>> Entering insert()");
         unsafe {
             let mut parent = null_mut();
             let mut node = self.root;
@@ -84,11 +89,13 @@ impl<K: Ord, V> RBTree<K, V> {
                 (*parent).right = node;
             }
             (*node).parent = parent;
+			eprintln!("[WARN] <<< Exiting insert()");
             insert_fixup(self, node);
         }
     }
 
     pub fn delete(&mut self, key: &K) {
+		eprintln!("[ERROR] >>> Entering delete()");
         unsafe {
             let mut parent = null_mut();
             let mut node = self.root;
@@ -217,10 +224,12 @@ impl<K: Ord, V> RBTree<K, V> {
             if matches!(deleted_color, Color::Black) {
                 delete_fixup(self, parent);
             }
+		eprintln!("[WARN] <<< Exiting delete()");
         }
     }
 
     pub fn iter<'a>(&self) -> RBTreeIterator<'a, K, V> {
+		eprintln!("[ERROR] >>> Entering iter()");
         let mut iterator = RBTreeIterator { stack: Vec::new() };
         let mut node = self.root;
         unsafe {
@@ -229,12 +238,14 @@ impl<K: Ord, V> RBTree<K, V> {
                 node = (*node).left;
             }
         }
+		eprintln!("[WARN] <<< Exiting iter()");
         iterator
     }
 }
 
 #[inline]
 unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode<K, V>) {
+	eprintln!("[ERROR] >>> Entering insert_fixup()");
     let mut parent: *mut RBNode<K, V> = (*node).parent;
     let mut gparent: *mut RBNode<K, V>;
     let mut tmp: *mut RBNode<K, V>;
@@ -354,12 +365,14 @@ unsafe fn insert_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut node: *mut RBNode
             (*gparent).color = Color::Red;
             right_rotate(tree, gparent);
         }
+		eprintln!("[WARN] <<< Exiting insert_fixup()");
         break;
     }
 }
 
 #[inline]
 unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNode<K, V>) {
+	eprintln!("[ERROR] >>> Entering delete_fixup()");
     let mut node: *mut RBNode<K, V> = null_mut();
     let mut sibling: *mut RBNode<K, V>;
     /* sl and sr denote left and right child of sibling, respectively. */
@@ -500,12 +513,14 @@ unsafe fn delete_fixup<K: Ord, V>(tree: &mut RBTree<K, V>, mut parent: *mut RBNo
                 (*parent).color = Color::Black;
             }
         }
+		eprintln!("[WARN] <<< Exiting delete_fixup()");
         break;
     }
 }
 
 #[inline]
 unsafe fn left_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) {
+	eprintln!("[ERROR] >>> Entering left_rotate()");
     /*
      * Left rotate at x
      * (x could also be the left child of p)
@@ -536,11 +551,13 @@ unsafe fn left_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) 
     } else {
         (*p).right = y;
     }
+	eprintln!("[WARN] <<< Exiting left_rotate()");
     (*y).parent = p;
 }
 
 #[inline]
 unsafe fn right_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>) {
+	eprintln!("[ERROR] >>> Entering right_rotate()");
     /*
      * Right rotate at x
      * (x could also be the left child of p)
@@ -571,6 +588,7 @@ unsafe fn right_rotate<K: Ord, V>(tree: &mut RBTree<K, V>, x: *mut RBNode<K, V>)
     } else {
         (*p).right = y;
     }
+	eprintln!("[WARN] <<< Exiting right_rotate()");
     (*y).parent = p;
 }
 
@@ -597,6 +615,7 @@ pub struct RBTreeIterator<'a, K: Ord, V> {
 impl<'a, K: Ord, V> Iterator for RBTreeIterator<'a, K, V> {
     type Item = &'a RBNode<K, V>;
     fn next(&mut self) -> Option<Self::Item> {
+		eprintln!("[ERROR] >>> Entering next()");
         match self.stack.pop() {
             Some(node) => {
                 let mut next = node.right;
@@ -606,6 +625,7 @@ impl<'a, K: Ord, V> Iterator for RBTreeIterator<'a, K, V> {
                         next = (*next).left;
                     }
                 }
+				eprintln!("[WARN] <<< Exiting next()");
                 Some(node)
             }
             None => None,
@@ -656,6 +676,7 @@ mod tests {
 
     #[test]
     fn delete_edge_case_null_pointer_guard() {
+		eprintln!("[ERROR] >>> Entering delete_edge_case_null_pointer_guard()");
         let mut tree = RBTree::<i8, i8>::new();
         tree.insert(4, 4);
         tree.insert(2, 2);
@@ -670,6 +691,7 @@ mod tests {
         tree.insert(8, 8);
         tree.delete(&1);
         tree.delete(&3);
+		eprintln!("[WARN] <<< Exiting delete_edge_case_null_pointer_guard()");
         tree.delete(&-1);
     }
 }

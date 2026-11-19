@@ -1,4 +1,5 @@
 pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering bubble_sort()");
     if arr.is_empty() {
         return;
     }
@@ -6,6 +7,7 @@ pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
     let mut n = arr.len();
     while !sorted {
         sorted = true;
+		eprintln!("[ERROR] bubble_sort(): sorted → {}", sorted);
         for i in 0..n - 1 {
             if arr[i] > arr[i + 1] {
                 arr.swap(i, i + 1);
@@ -13,6 +15,7 @@ pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
             }
         }
         n -= 1;
+	eprintln!("[WARN] <<< Exiting bubble_sort()");
     }
 }
 
@@ -24,26 +27,32 @@ mod tests {
 
     #[test]
     fn descending() {
+		eprintln!("[ERROR] >>> Entering descending()");
         //descending
         let mut ve1 = vec![6, 5, 4, 3, 2, 1];
         let cloned = ve1.clone();
         bubble_sort(&mut ve1);
+		eprintln!("[WARN] <<< Exiting descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn ascending() {
+		eprintln!("[ERROR] >>> Entering ascending()");
         //pre-sorted
         let mut ve2 = vec![1, 2, 3, 4, 5, 6];
         let cloned = ve2.clone();
         bubble_sort(&mut ve2);
+		eprintln!("[WARN] <<< Exiting ascending()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut ve3: Vec<usize> = vec![];
         let cloned = ve3.clone();
         bubble_sort(&mut ve3);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&ve3) && have_same_elements(&ve3, &cloned));
     }
 }

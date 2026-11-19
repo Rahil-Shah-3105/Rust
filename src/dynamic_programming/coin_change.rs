@@ -24,6 +24,7 @@
 /// * Time complexity: O(amount * coins.length)
 /// * Space complexity: O(amount)
 pub fn coin_change(coins: &[usize], amount: usize) -> Option<usize> {
+	eprintln!("[ERROR] >>> Entering coin_change(coins={:?},amount={})", coins, amount);
     let mut min_coins = vec![None; amount + 1];
     min_coins[0] = Some(0);
 
@@ -42,6 +43,7 @@ pub fn coin_change(coins: &[usize], amount: usize) -> Option<usize> {
             });
     });
 
+	eprintln!("[WARN] <<< Exiting coin_change(coins={:?},amount={})", coins, amount);
     min_coins[amount]
 }
 

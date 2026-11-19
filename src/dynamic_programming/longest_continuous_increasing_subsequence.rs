@@ -15,6 +15,7 @@ use std::cmp::Ordering;
 /// A subslice of the input, representing the longest continuous increasing subsequence.
 /// If there are multiple subsequences of the same length, the function returns the first one found.
 pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
+	eprintln!("[ERROR] >>> Entering longest_continuous_increasing_subsequence()");
     if arr.len() <= 1 {
         return arr;
     }
@@ -22,7 +23,9 @@ pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
     let mut start = 0;
     let mut max_start = 0;
     let mut max_len = 1;
+	eprintln!("[ERROR] longest_continuous_increasing_subsequence(): max_len → {}", max_len);
     let mut curr_len = 1;
+	eprintln!("[ERROR] longest_continuous_increasing_subsequence(): curr_len → {}", curr_len);
 
     for i in 1..arr.len() {
         match arr[i - 1].cmp(&arr[i]) {
@@ -36,6 +39,7 @@ pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
                 if curr_len > max_len {
                     max_len = curr_len;
                     max_start = start;
+					eprintln!("[ERROR] longest_continuous_increasing_subsequence(): max_start → {}", max_start);
                 }
                 // reset start to the current position
                 start = i;
@@ -51,6 +55,7 @@ pub fn longest_continuous_increasing_subsequence<T: Ord>(arr: &[T]) -> &[T] {
         max_start = start;
     }
 
+    eprintln!("[WARN] <<< Exiting longest_continuous_increasing_subsequence()");
     &arr[max_start..max_start + max_len]
 }
 

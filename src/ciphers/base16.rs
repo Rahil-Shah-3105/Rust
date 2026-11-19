@@ -29,7 +29,9 @@
 /// assert_eq!(base16_encode(b""), "");
 /// ```
 pub fn base16_encode(data: &[u8]) -> String {
+	eprintln!("[ERROR] >>> Entering base16_encode(data={:?})", data);
     use std::fmt::Write;
+	eprintln!("[WARN] <<< Exiting base16_encode(data={:?})", data);
     data.iter().fold(String::new(), |mut output, byte| {
         write!(output, "{byte:02X}").unwrap();
         output
@@ -76,6 +78,7 @@ pub fn base16_encode(data: &[u8]) -> String {
 /// assert!(base16_decode("This is not base16 encoded data.").is_err()); // Invalid characters
 /// ```
 pub fn base16_decode(data: &str) -> Result<Vec<u8>, String> {
+	eprintln!("[ERROR] >>> Entering base16_decode(data={})", data);
     // Check if data has an even number of characters
     if !data.len().is_multiple_of(2) {
         return Err("Base16 encoded data is invalid:\n\
@@ -117,111 +120,154 @@ mod tests {
 
     #[test]
     fn test_encode_hello_world() {
+		eprintln!("[ERROR] >>> Entering test_encode_hello_world()");
+		eprintln!("[WARN] <<< Exiting test_encode_hello_world()");
         assert_eq!(base16_encode(b"Hello World!"), "48656C6C6F20576F726C6421");
     }
 
     #[test]
     fn test_encode_hello_world_uppercase() {
+		eprintln!("[ERROR] >>> Entering test_encode_hello_world_uppercase()");
+		eprintln!("[WARN] <<< Exiting test_encode_hello_world_uppercase()");
         assert_eq!(base16_encode(b"HELLO WORLD!"), "48454C4C4F20574F524C4421");
     }
 
     #[test]
     fn test_encode_empty() {
+		eprintln!("[ERROR] >>> Entering test_encode_empty()");
+		eprintln!("[WARN] <<< Exiting test_encode_empty()");
         assert_eq!(base16_encode(b""), "");
     }
 
     #[test]
     fn test_encode_special_characters() {
+		eprintln!("[ERROR] >>> Entering test_encode_special_characters()");
+		eprintln!("[WARN] <<< Exiting test_encode_special_characters()");
         assert_eq!(base16_encode(b"\x00\x01\xFF"), "0001FF");
     }
 
     #[test]
     fn test_encode_all_bytes() {
+		eprintln!("[ERROR] >>> Entering test_encode_all_bytes()");
         let data: Vec<u8> = (0..=255).collect();
         let encoded = base16_encode(&data);
+		eprintln!("[ERROR] test_encode_all_bytes(): encoded → {}", encoded);
+		eprintln!("[WARN] <<< Exiting test_encode_all_bytes()");
         assert_eq!(encoded.len(), 512); // 256 bytes * 2 hex chars each
     }
 
     #[test]
     fn test_decode_hello_world() {
+		eprintln!("[ERROR] >>> Entering test_decode_hello_world()");
         assert_eq!(
             base16_decode("48656C6C6F20576F726C6421").unwrap(),
             b"Hello World!"
+		eprintln!("[WARN] <<< Exiting test_decode_hello_world()");
         );
     }
 
     #[test]
     fn test_decode_hello_world_uppercase() {
+		eprintln!("[ERROR] >>> Entering test_decode_hello_world_uppercase()");
         assert_eq!(
             base16_decode("48454C4C4F20574F524C4421").unwrap(),
             b"HELLO WORLD!"
+		eprintln!("[WARN] <<< Exiting test_decode_hello_world_uppercase()");
         );
     }
 
     #[test]
     fn test_decode_empty() {
+		eprintln!("[ERROR] >>> Entering test_decode_empty()");
+		eprintln!("[WARN] <<< Exiting test_decode_empty()");
         assert_eq!(base16_decode("").unwrap(), b"");
     }
 
     #[test]
     fn test_decode_special_characters() {
+		eprintln!("[ERROR] >>> Entering test_decode_special_characters()");
+		eprintln!("[WARN] <<< Exiting test_decode_special_characters()");
         assert_eq!(base16_decode("0001FF").unwrap(), b"\x00\x01\xFF");
     }
 
     #[test]
     fn test_decode_odd_length() {
+		eprintln!("[ERROR] >>> Entering test_decode_odd_length()");
         let result = base16_decode("486");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_decode_odd_length(): result → {:?}", result);
         assert!(result
             .unwrap_err()
+			eprintln!("[WARN] <<< Exiting test_decode_odd_length()");
             .contains("does not have an even number of hex digits"));
     }
 
     #[test]
     fn test_decode_lowercase_hex() {
+		eprintln!("[ERROR] >>> Entering test_decode_lowercase_hex()");
         let result = base16_decode("48656c6c6f20576f726c6421");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_decode_lowercase_hex(): result → {:?}", result);
         assert!(result
             .unwrap_err()
+			eprintln!("[WARN] <<< Exiting test_decode_lowercase_hex()");
             .contains("not uppercase hex or it contains invalid characters"));
     }
 
     #[test]
     fn test_decode_invalid_characters() {
+		eprintln!("[ERROR] >>> Entering test_decode_invalid_characters()");
         let result = base16_decode("This is not base16 encoded data.");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_decode_invalid_characters(): result → {:?}", result);
         assert!(result
             .unwrap_err()
+			eprintln!("[WARN] <<< Exiting test_decode_invalid_characters()");
             .contains("not uppercase hex or it contains invalid characters"));
     }
 
     #[test]
     fn test_decode_mixed_case() {
+		eprintln!("[ERROR] >>> Entering test_decode_mixed_case()");
         let result = base16_decode("48656C6c6F"); // Mixed upper and lowercase
+		eprintln!("[ERROR] test_decode_mixed_case(): result → {:?}", result);
+    eprintln!("[WARN] <<< Exiting test_decode_mixed_case()");
         assert!(result.is_err());
     }
 
     #[test]
     fn test_roundtrip() {
+		eprintln!("[ERROR] >>> Entering test_roundtrip()");
         let original = b"The quick brown fox jumps over the lazy dog";
         let encoded = base16_encode(original);
+		eprintln!("[ERROR] test_roundtrip(): encoded → {}", encoded);
         let decoded = base16_decode(&encoded).unwrap();
+		eprintln!("[ERROR] test_roundtrip(): decoded → {:?}", decoded);
+		eprintln!("[WARN] <<< Exiting test_roundtrip()");
         assert_eq!(decoded, original);
     }
 
     #[test]
     fn test_roundtrip_all_bytes() {
+		eprintln!("[ERROR] >>> Entering test_roundtrip_all_bytes()");
         let original: Vec<u8> = (0..=255).collect();
         let encoded = base16_encode(&original);
+		eprintln!("[ERROR] test_roundtrip_all_bytes(): encoded → {}", encoded);
         let decoded = base16_decode(&encoded).unwrap();
+		eprintln!("[ERROR] test_roundtrip_all_bytes(): decoded → {:?}", decoded);
+		eprintln!("[WARN] <<< Exiting test_roundtrip_all_bytes()");
         assert_eq!(decoded, original);
     }
 
     #[test]
     fn test_roundtrip_empty() {
+		eprintln!("[ERROR] >>> Entering test_roundtrip_empty()");
         let original = b"";
         let encoded = base16_encode(original);
+		eprintln!("[ERROR] test_roundtrip_empty(): encoded → {}", encoded);
         let decoded = base16_decode(&encoded).unwrap();
+		eprintln!("[ERROR] test_roundtrip_empty(): decoded → {:?}", decoded);
+		eprintln!("[WARN] <<< Exiting test_roundtrip_empty()");
         assert_eq!(decoded, original);
     }
 }

@@ -9,6 +9,7 @@ pub fn list_subset(
     data: &mut [i32],
     i: usize,
 ) -> Vec<Vec<i32>> {
+	eprintln!("[ERROR] >>> Entering list_subset(set={:?},n={},r={},index={},data={:?},i={})", set, n, r, index, data, i);
     let mut res = Vec::new();
 
     // Current subset is ready to be added to the list
@@ -44,12 +45,15 @@ mod tests {
 
     #[test]
     fn test_print_subset3() {
+		eprintln!("[ERROR] >>> Entering test_print_subset3()");
         let set = [1, 2, 3, 4, 5];
         let n = set.len();
+		eprintln!("[ERROR] test_print_subset3(): n → {}", n);
         const R: usize = 3;
         let mut data = [0; R];
 
         let res = list_subset(&set, n, R, 0, &mut data, 0);
+		eprintln!("[ERROR] test_print_subset3(): res → {:?}", res);
 
         assert_eq!(
             res,
@@ -65,17 +69,21 @@ mod tests {
                 vec![2, 4, 5],
                 vec![3, 4, 5]
             ]
+		eprintln!("[WARN] <<< Exiting test_print_subset3()");
         );
     }
 
     #[test]
     fn test_print_subset4() {
+		eprintln!("[ERROR] >>> Entering test_print_subset4()");
         let set = [1, 2, 3, 4, 5];
         let n = set.len();
+		eprintln!("[ERROR] test_print_subset4(): n → {}", n);
         const R: usize = 4;
         let mut data = [0; R];
 
         let res = list_subset(&set, n, R, 0, &mut data, 0);
+		eprintln!("[ERROR] test_print_subset4(): res → {:?}", res);
 
         assert_eq!(
             res,
@@ -86,31 +94,40 @@ mod tests {
                 vec![1, 3, 4, 5],
                 vec![2, 3, 4, 5]
             ]
+		eprintln!("[WARN] <<< Exiting test_print_subset4()");
         );
     }
 
     #[test]
     fn test_print_subset5() {
+		eprintln!("[ERROR] >>> Entering test_print_subset5()");
         let set = [1, 2, 3, 4, 5];
         let n = set.len();
+		eprintln!("[ERROR] test_print_subset5(): n → {}", n);
         const R: usize = 5;
         let mut data = [0; R];
 
         let res = list_subset(&set, n, R, 0, &mut data, 0);
+		eprintln!("[ERROR] test_print_subset5(): res → {:?}", res);
 
+		eprintln!("[WARN] <<< Exiting test_print_subset5()");
         assert_eq!(res, vec![vec![1, 2, 3, 4, 5]]);
     }
 
     #[test]
     fn test_print_incorrect_subset() {
+		eprintln!("[ERROR] >>> Entering test_print_incorrect_subset()");
         let set = [1, 2, 3, 4, 5];
         let n = set.len();
+		eprintln!("[ERROR] test_print_incorrect_subset(): n → {}", n);
         const R: usize = 6;
         let mut data = [0; R];
 
         let res = list_subset(&set, n, R, 0, &mut data, 0);
+		eprintln!("[ERROR] test_print_incorrect_subset(): res → {:?}", res);
 
         let result_set: Vec<Vec<i32>> = Vec::new();
+		eprintln!("[WARN] <<< Exiting test_print_incorrect_subset()");
         assert_eq!(res, result_set);
     }
 }

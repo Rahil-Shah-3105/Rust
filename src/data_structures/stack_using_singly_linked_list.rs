@@ -14,7 +14,9 @@ impl<T> Stack<T> {
     // Self is an alias for Stack
     // We implement associated function name new for single-linked-list
     pub fn new() -> Self {
+		eprintln!("[ERROR] >>> Entering new()");
         // for new function we need to return a new instance
+		eprintln!("[WARN] <<< Exiting new()");
         Self {
             // we refer to variants of an enum using :: the namespacing operator
             head: None,
@@ -25,11 +27,13 @@ impl<T> Stack<T> {
     // Since push will modify the linked list, we need a mutable reference `&mut`.
     // The push method which the signature's first parameter is self
     pub fn push(&mut self, elem: T) {
+		eprintln!("[ERROR] >>> Entering push()");
         let new_node = Box::new(Node {
             elem,
             next: self.head.take(),
         });
         // don't forget replace the head with new node for stack
+		eprintln!("[WARN] <<< Exiting push()");
         self.head = Some(new_node);
     }
 
@@ -44,17 +48,21 @@ impl<T> Stack<T> {
     ///   * relink the list's head `head` to its following node `next`,
     ///   * return `Ok(elem)`.
     pub fn pop(&mut self) -> Result<T, &str> {
+		eprintln!("[ERROR] >>> Entering pop()");
         match self.head.take() {
             None => Err("Stack is empty"),
             Some(node) => {
                 self.head = node.next;
+				eprintln!("[WARN] <<< Exiting pop()");
                 Ok(node.elem)
             }
         }
     }
 
     pub fn is_empty(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_empty()");
         // Returns true if head is of variant `None`.
+		eprintln!("[WARN] <<< Exiting is_empty()");
         self.head.is_none()
     }
 
@@ -67,6 +75,7 @@ impl<T> Stack<T> {
     }
 
     pub fn peek_mut(&mut self) -> Option<&mut T> {
+		eprintln!("[ERROR] >>> Entering peek_mut()");
         match self.head.as_mut() {
             None => None,
             Some(node) => Some(&mut node.elem),
@@ -74,6 +83,7 @@ impl<T> Stack<T> {
     }
 
     pub fn into_iter_for_stack(self) -> IntoIter<T> {
+		eprintln!("[ERROR] >>> Entering into_iter_for_stack()");
         IntoIter(self)
     }
     pub fn iter(&self) -> Iter<'_, T> {
@@ -91,6 +101,7 @@ impl<T> Stack<T> {
 
 impl<T> Default for Stack<T> {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -108,12 +119,14 @@ impl<T> Default for Stack<T> {
 /// We wouldn't be able to drop the contents contained by the box after deallocating, so we need to manually write the iterative drop.
 impl<T> Drop for Stack<T> {
     fn drop(&mut self) {
+		eprintln!("[ERROR] >>> Entering drop()");
         let mut cur_link = self.head.take();
         while let Some(mut boxed_node) = cur_link {
             cur_link = boxed_node.next.take();
             // boxed_node goes out of scope and gets dropped here;
             // but its Node's `next` field has been set to None
             // so no unbound recursion occurs.
+		eprintln!("[WARN] <<< Exiting drop()");
         }
     }
 }
@@ -154,7 +167,9 @@ pub struct IterMut<'a, T> {
 impl<'a, T> Iterator for IterMut<'a, T> {
     type Item = &'a mut T;
     fn next(&mut self) -> Option<Self::Item> {
+		eprintln!("[ERROR] >>> Entering next()");
         // we add take() here due to &mut self isn't Copy(& and Option<&> is Copy)
+		eprintln!("[WARN] <<< Exiting next()");
         self.next.take().map(|node| {
             self.next = node.next.as_deref_mut();
             &mut node.elem
@@ -169,6 +184,7 @@ mod test_stack {
 
     #[test]
     fn basics() {
+		eprintln!("[ERROR] >>> Entering basics()");
         let mut list = Stack::new();
         assert_eq!(list.pop(), Err("Stack is empty"));
 
@@ -190,11 +206,13 @@ mod test_stack {
         assert_eq!(list.pop(), Ok(1));
         assert_eq!(list.pop(), Err("Stack is empty"));
 
+		eprintln!("[WARN] <<< Exiting basics()");
         assert!(list.is_empty());
     }
 
     #[test]
     fn peek() {
+		eprintln!("[ERROR] >>> Entering peek()");
         let mut list = Stack::new();
         assert_eq!(list.peek(), None);
         list.push(1);
@@ -210,11 +228,13 @@ mod test_stack {
         };
 
         assert_eq!(list.peek(), Some(&42));
+		eprintln!("[WARN] <<< Exiting peek()");
         assert_eq!(list.pop(), Ok(42));
     }
 
     #[test]
     fn into_iter() {
+		eprintln!("[ERROR] >>> Entering into_iter()");
         let mut list = Stack::new();
         list.push(1);
         list.push(2);
@@ -224,11 +244,13 @@ mod test_stack {
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(1));
+		eprintln!("[WARN] <<< Exiting into_iter()");
         assert_eq!(iter.next(), None);
     }
 
     #[test]
     fn iter() {
+		eprintln!("[ERROR] >>> Entering iter()");
         let mut list = Stack::new();
         list.push(1);
         list.push(2);
@@ -237,11 +259,13 @@ mod test_stack {
         let mut iter = list.iter();
         assert_eq!(iter.next(), Some(&3));
         assert_eq!(iter.next(), Some(&2));
+		eprintln!("[WARN] <<< Exiting iter()");
         assert_eq!(iter.next(), Some(&1));
     }
 
     #[test]
     fn iter_mut() {
+		eprintln!("[ERROR] >>> Entering iter_mut()");
         let mut list = Stack::new();
         list.push(1);
         list.push(2);
@@ -250,6 +274,7 @@ mod test_stack {
         let mut iter = list.iter_mut();
         assert_eq!(iter.next(), Some(&mut 3));
         assert_eq!(iter.next(), Some(&mut 2));
+		eprintln!("[WARN] <<< Exiting iter_mut()");
         assert_eq!(iter.next(), Some(&mut 1));
     }
 }

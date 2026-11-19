@@ -1,4 +1,6 @@
 pub fn area_under_curve(start: f64, end: f64, func: fn(f64) -> f64, step_count: usize) -> f64 {
+	eprintln!("[ERROR] >>> Entering area_under_curve(start={},end={})", start, end);
+    eprintln!("[ERROR] >>> Entering area_under_curve(start={},end={})", start, end);
     assert!(step_count > 0);
 
     let (start, end) = if start > end {
@@ -18,6 +20,7 @@ pub fn area_under_curve(start: f64, end: f64, func: fn(f64) -> f64, step_count: 
         fx1 = fx2;
     }
 
+	eprintln!("[WARN] <<< Exiting area_under_curve(start={},end={})", start, end);
     area
 }
 
@@ -27,27 +30,35 @@ mod test {
 
     #[test]
     fn test_linear_func() {
+		eprintln!("[ERROR] >>> Entering test_linear_func()");
+		eprintln!("[WARN] <<< Exiting test_linear_func()");
         assert_eq!(area_under_curve(1f64, 2f64, |x| x, 10), 1.5000000000000002);
     }
 
     #[test]
     fn test_quadratic_func() {
+		eprintln!("[ERROR] >>> Entering test_quadratic_func()");
         assert_eq!(
             area_under_curve(1f64, 2f64, |x| x * x, 1000),
             2.333333500000005
+		eprintln!("[WARN] <<< Exiting test_quadratic_func()");
         );
     }
 
     #[test]
     fn test_zero_length() {
+		eprintln!("[ERROR] >>> Entering test_zero_length()");
+		eprintln!("[WARN] <<< Exiting test_zero_length()");
         assert_eq!(area_under_curve(0f64, 0f64, |x| x * x, 1000), 0.0);
     }
 
     #[test]
     fn test_reverse() {
+		eprintln!("[ERROR] >>> Entering test_reverse()");
         assert_eq!(
             area_under_curve(1f64, 2f64, |x| x, 10),
             area_under_curve(2f64, 1f64, |x| x, 10)
+		eprintln!("[WARN] <<< Exiting test_reverse()");
         );
     }
 }

@@ -14,6 +14,7 @@ fn undirected_graph_detect_cycle_dfs<'a>(
     parent: Option<&'a String>,
     u: &'a String,
 ) -> bool {
+	eprintln!("[ERROR] >>> Entering undirected_graph_detect_cycle_dfs(visited_node={:?},parent={:?},u={})", visited_node, parent, u);
     visited_node.insert(u);
     for (v, _) in graph.adjacency_table().get(u).unwrap() {
         if matches!(parent, Some(parent) if v == parent) {
@@ -34,6 +35,7 @@ fn undirected_graph_detect_cycle_bfs<'a>(
     visited_node: &mut HashSet<&'a String>,
     u: &'a String,
 ) -> bool {
+	eprintln!("[ERROR] >>> Entering undirected_graph_detect_cycle_bfs(visited_node={:?},u={})", visited_node, u);
     visited_node.insert(u);
 
     // Initialize the queue for BFS, storing (current node, parent node) tuples
@@ -90,6 +92,7 @@ fn directed_graph_detect_cycle_dfs<'a>(
     in_stack_visited_node: &mut HashSet<&'a String>,
     u: &'a String,
 ) -> bool {
+	eprintln!("[ERROR] >>> Entering directed_graph_detect_cycle_dfs(visited_node={:?},in_stack_visited_node={:?},u={})", visited_node, in_stack_visited_node, u);
     visited_node.insert(u);
     in_stack_visited_node.insert(u);
     for (v, _) in graph.adjacency_table().get(u).unwrap() {
@@ -99,6 +102,7 @@ fn directed_graph_detect_cycle_dfs<'a>(
         if !visited_node.contains(v)
             && directed_graph_detect_cycle_dfs(graph, visited_node, in_stack_visited_node, v)
         {
+			eprintln!("[ERROR] >>> Entering detect_cycle_dfs()");
             return true;
         }
     }
@@ -129,6 +133,7 @@ impl DetectCycle for DirectedGraph {
     // detect cycle in a the graph using Kahn's algorithm
     // https://www.geeksforgeeks.org/detect-cycle-in-a-directed-graph-using-bfs/
     fn detect_cycle_bfs(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering detect_cycle_bfs()");
         // Set 0 in-degree for each vertex
         let mut in_degree: HashMap<&String, usize> =
             self.adjacency_table().keys().map(|k| (k, 0)).collect();
@@ -161,6 +166,7 @@ impl DetectCycle for DirectedGraph {
 
         // If count of processed vertices is not equal to the number of vertices,
         // the graph has a cycle
+		eprintln!("[WARN] <<< Exiting detect_cycle_bfs()");
         count != self.adjacency_table().len()
     }
 }
@@ -170,94 +176,120 @@ mod test {
     use super::DetectCycle;
     use crate::data_structures::{graph::Graph, DirectedGraph, UndirectedGraph};
     fn get_undirected_single_node_with_loop() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_single_node_with_loop()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "a", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_single_node_with_loop()");
         res
     }
     fn get_directed_single_node_with_loop() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_single_node_with_loop()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "a", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_single_node_with_loop()");
         res
     }
     fn get_undirected_two_nodes_connected() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_two_nodes_connected()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_two_nodes_connected()");
         res
     }
     fn get_directed_two_nodes_connected() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_two_nodes_connected()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
         res.add_edge(("b", "a", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_two_nodes_connected()");
         res
     }
     fn get_directed_two_nodes() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_two_nodes()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_two_nodes()");
         res
     }
     fn get_undirected_triangle() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_triangle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "a", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_triangle()");
         res
     }
     fn get_directed_triangle() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_triangle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("a", "b", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "a", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_triangle()");
         res
     }
     fn get_undirected_triangle_with_tail() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_triangle_with_tail()");
         let mut res = get_undirected_triangle();
         res.add_edge(("c", "d", 1));
         res.add_edge(("d", "e", 1));
         res.add_edge(("e", "f", 1));
         res.add_edge(("g", "h", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_triangle_with_tail()");
         res
     }
     fn get_directed_triangle_with_tail() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_triangle_with_tail()");
         let mut res = get_directed_triangle();
         res.add_edge(("c", "d", 1));
         res.add_edge(("d", "e", 1));
         res.add_edge(("e", "f", 1));
         res.add_edge(("g", "h", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_triangle_with_tail()");
         res
     }
     fn get_undirected_graph_with_cycle() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_graph_with_cycle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
         res.add_edge(("a", "c", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("b", "d", 1));
         res.add_edge(("c", "d", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_graph_with_cycle()");
         res
     }
     fn get_undirected_graph_without_cycle() -> UndirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_undirected_graph_without_cycle()");
         let mut res = UndirectedGraph::new();
         res.add_edge(("a", "b", 1));
         res.add_edge(("a", "c", 1));
         res.add_edge(("b", "d", 1));
         res.add_edge(("c", "e", 1));
+		eprintln!("[WARN] <<< Exiting get_undirected_graph_without_cycle()");
         res
     }
     fn get_directed_graph_with_cycle() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_graph_with_cycle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("b", "a", 1));
         res.add_edge(("c", "a", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "d", 1));
         res.add_edge(("d", "b", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_graph_with_cycle()");
         res
     }
     fn get_directed_graph_without_cycle() -> DirectedGraph {
+		eprintln!("[ERROR] >>> Entering get_directed_graph_without_cycle()");
         let mut res = DirectedGraph::new();
         res.add_edge(("b", "a", 1));
         res.add_edge(("c", "a", 1));
         res.add_edge(("b", "c", 1));
         res.add_edge(("c", "d", 1));
         res.add_edge(("b", "d", 1));
+		eprintln!("[WARN] <<< Exiting get_directed_graph_without_cycle()");
         res
     }
     macro_rules! test_detect_cycle {

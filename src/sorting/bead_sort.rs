@@ -1,6 +1,7 @@
 //Bead sort only works for sequences of non-negative integers.
 //https://en.wikipedia.org/wiki/Bead_sort
 pub fn bead_sort(a: &mut [usize]) {
+	eprintln!("[ERROR] >>> Entering bead_sort(a={:?})", a);
     // Find the maximum element
     let mut max = a[0];
     (1..a.len()).for_each(|i| {
@@ -30,6 +31,7 @@ pub fn bead_sort(a: &mut [usize]) {
         for k in ((a.len() - sum)..a.len()).rev() {
             a[k] = j + 1;
         }
+	eprintln!("[WARN] <<< Exiting bead_sort(a={:?})", a);
     }
 }
 
@@ -41,19 +43,23 @@ mod tests {
 
     #[test]
     fn descending() {
+		eprintln!("[ERROR] >>> Entering descending()");
         //descending
         let mut ve1: [usize; 5] = [5, 4, 3, 2, 1];
         let cloned = ve1;
         bead_sort(&mut ve1);
+		eprintln!("[WARN] <<< Exiting descending()");
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
     #[test]
     fn mix_values() {
+		eprintln!("[ERROR] >>> Entering mix_values()");
         //pre-sorted
         let mut ve2: [usize; 5] = [7, 9, 6, 2, 3];
         let cloned = ve2;
         bead_sort(&mut ve2);
+		eprintln!("[WARN] <<< Exiting mix_values()");
         assert!(is_sorted(&ve2) && have_same_elements(&ve2, &cloned));
     }
 }

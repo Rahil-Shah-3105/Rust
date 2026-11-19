@@ -23,6 +23,7 @@
 /// let value: u64 = 11; // 1011 in binary has 3 set bits
 /// ```
 fn bit_count(mut value: u64) -> u64 {
+	eprintln!("[ERROR] >>> Entering bit_count(value={})", value);
     let mut count = 0;
     while value != 0 {
         if value & 1 == 1 {
@@ -30,6 +31,7 @@ fn bit_count(mut value: u64) -> u64 {
         }
         value >>= 1;
     }
+	eprintln!("[WARN] <<< Exiting bit_count(value={})", value);
     count
 }
 
@@ -57,6 +59,7 @@ fn bit_count(mut value: u64) -> u64 {
 /// assert_eq!(distance, 2);
 /// ```
 pub fn hamming_distance(a: u64, b: u64) -> u64 {
+	eprintln!("[ERROR] >>> Entering hamming_distance(a={},b={})", a, b);
     bit_count(a ^ b)
 }
 
@@ -87,12 +90,14 @@ pub fn hamming_distance(a: u64, b: u64) -> u64 {
 /// assert_eq!(distance, 1);
 /// ```
 pub fn hamming_distance_str(a: &str, b: &str) -> u64 {
+	eprintln!("[ERROR] >>> Entering hamming_distance_str(a={},b={})", a, b);
     assert_eq!(
         a.len(),
         b.len(),
         "Strings must have the same length for Hamming distance calculation"
     );
 
+	eprintln!("[WARN] <<< Exiting hamming_distance_str(a={},b={})", a, b);
     a.chars()
         .zip(b.chars())
         .filter(|(ch_a, ch_b)| ch_a != ch_b)
@@ -105,32 +110,40 @@ mod tests {
 
     #[test]
     fn test_bit_count() {
+		eprintln!("[ERROR] >>> Entering test_bit_count()");
         assert_eq!(bit_count(0), 0);
         assert_eq!(bit_count(11), 3); // 1011 in binary
+		eprintln!("[WARN] <<< Exiting test_bit_count()");
         assert_eq!(bit_count(15), 4); // 1111 in binary
     }
 
     #[test]
     fn test_hamming_distance_integers() {
+		eprintln!("[ERROR] >>> Entering test_hamming_distance_integers()");
         assert_eq!(hamming_distance(11, 2), 2);
         assert_eq!(hamming_distance(2, 0), 1);
         assert_eq!(hamming_distance(11, 0), 3);
+		eprintln!("[WARN] <<< Exiting test_hamming_distance_integers()");
         assert_eq!(hamming_distance(0, 0), 0);
     }
 
     #[test]
     fn test_hamming_distance_strings() {
+		eprintln!("[ERROR] >>> Entering test_hamming_distance_strings()");
         assert_eq!(hamming_distance_str("1101", "1111"), 1);
         assert_eq!(hamming_distance_str("1111", "1111"), 0);
         assert_eq!(hamming_distance_str("0000", "1111"), 4);
         assert_eq!(hamming_distance_str("alpha", "alphb"), 1);
         assert_eq!(hamming_distance_str("abcd", "abcd"), 0);
+		eprintln!("[WARN] <<< Exiting test_hamming_distance_strings()");
         assert_eq!(hamming_distance_str("dcba", "abcd"), 4);
     }
 
     #[test]
     #[should_panic(expected = "Strings must have the same length")]
     fn test_hamming_distance_strings_different_lengths() {
+		eprintln!("[ERROR] >>> Entering test_hamming_distance_strings_different_lengths()");
+		eprintln!("[WARN] <<< Exiting test_hamming_distance_strings_different_lengths()");
         hamming_distance_str("abc", "abcd");
     }
 }

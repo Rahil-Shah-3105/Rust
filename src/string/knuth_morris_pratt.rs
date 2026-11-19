@@ -16,6 +16,7 @@
 /// A vector of starting indices where the pattern is found in the string. If the pattern or the
 /// string is empty, an empty vector is returned.
 pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering knuth_morris_pratt(string={},pattern={})", string, pattern);
     if string.is_empty() || pattern.is_empty() {
         return vec![];
     }
@@ -23,6 +24,8 @@ pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
     let text_chars = string.chars().collect::<Vec<char>>();
     let pattern_chars = pattern.chars().collect::<Vec<char>>();
     let partial_match_table = build_partial_match_table(&pattern_chars);
+	eprintln!("[ERROR] knuth_morris_pratt(string={},pattern={}): partial_match_table → {:?}", string, pattern, partial_match_table);
+    eprintln!("[WARN] <<< Exiting knuth_morris_pratt(string={},pattern={})", string, pattern);
     find_pattern(&text_chars, &pattern_chars, &partial_match_table)
 }
 
@@ -40,6 +43,7 @@ pub fn knuth_morris_pratt(string: &str, pattern: &str) -> Vec<usize> {
 ///
 /// A vector representing the partial match table.
 fn build_partial_match_table(pattern_chars: &[char]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering build_partial_match_table(pattern_chars={:?})", pattern_chars);
     let mut partial_match_table = vec![0];
     pattern_chars
         .iter()
@@ -55,6 +59,7 @@ fn build_partial_match_table(pattern_chars: &[char]) -> Vec<usize> {
             } else {
                 length
             });
+		eprintln!("[WARN] <<< Exiting build_partial_match_table(pattern_chars={:?})", pattern_chars);
         });
     partial_match_table
 }
@@ -78,6 +83,7 @@ fn find_pattern(
     pattern_chars: &[char],
     partial_match_table: &[usize],
 ) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?})", text_chars, pattern_chars, partial_match_table);
     let mut result_indices = vec![];
     let mut match_length = 0;
 
@@ -92,9 +98,11 @@ fn find_pattern(
                 match_length += 1;
             }
             if match_length == pattern_chars.len() {
+				eprintln!("[ERROR] find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?}): match_length → {}", text_chars, pattern_chars, partial_match_table, match_length);
                 result_indices.push(text_index + 1 - match_length);
                 match_length = partial_match_table[match_length - 1];
             }
+	eprintln!("[WARN] <<< Exiting find_pattern(text_chars={:?},pattern_chars={:?},partial_match_table={:?})", text_chars, pattern_chars, partial_match_table);
         });
 
     result_indices

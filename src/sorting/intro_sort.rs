@@ -2,16 +2,19 @@
 // Introspective Sort is hybrid sort (Quick Sort + Heap Sort + Insertion Sort)
 // https://en.wikipedia.org/wiki/Introsort
 fn insertion_sort<T: Ord>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering insertion_sort()");
     for i in 1..arr.len() {
         let mut j = i;
         while j > 0 && arr[j] < arr[j - 1] {
             arr.swap(j, j - 1);
             j -= 1;
         }
+	eprintln!("[WARN] <<< Exiting insertion_sort()");
     }
 }
 
 fn heapify<T: Ord>(arr: &mut [T], n: usize, i: usize) {
+	eprintln!("[ERROR] >>> Entering heapify(n={},i={})", n, i);
     let mut largest = i;
     let left = 2 * i + 1;
     let right = 2 * i + 2;
@@ -26,13 +29,16 @@ fn heapify<T: Ord>(arr: &mut [T], n: usize, i: usize) {
 
     if largest != i {
         arr.swap(i, largest);
+		eprintln!("[WARN] <<< Exiting heapify(n={},i={})", n, i);
         heapify(arr, n, largest);
     }
 }
 
 fn heap_sort<T: Ord>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering heap_sort()");
     let n = arr.len();
 
+	eprintln!("[ERROR] heap_sort(): n → {}", n);
     // Build a max-heap
     for i in (0..n / 2).rev() {
         heapify(arr, n, i);
@@ -42,30 +48,40 @@ fn heap_sort<T: Ord>(arr: &mut [T]) {
     for i in (0..n).rev() {
         arr.swap(0, i);
         heapify(arr, i, 0);
+	eprintln!("[WARN] <<< Exiting heap_sort()");
     }
 }
 
 pub fn intro_sort<T: Ord>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering intro_sort()");
     let len = arr.len();
     let max_depth = (2.0 * len as f64).log2() as usize + 1;
 
+	eprintln!("[ERROR] intro_sort(): len → {}", len);
     fn intro_sort_recursive<T: Ord>(arr: &mut [T], max_depth: usize) {
+		eprintln!("[ERROR] >>> Entering intro_sort_recursive(max_depth={})", max_depth);
         let len = arr.len();
 
+		eprintln!("[ERROR] intro_sort_recursive(max_depth={}): len → {}", max_depth, len);
         if len <= 16 {
             insertion_sort(arr);
         } else if max_depth == 0 {
             heap_sort(arr);
         } else {
             let pivot = partition(arr);
+			eprintln!("[ERROR] intro_sort(): pivot → {}", pivot);
             intro_sort_recursive(&mut arr[..pivot], max_depth - 1);
+			eprintln!("[ERROR] intro_sort_recursive(max_depth={}): pivot → {}", max_depth, pivot);
+			eprintln!("[WARN] <<< Exiting intro_sort_recursive(max_depth={})", max_depth);
             intro_sort_recursive(&mut arr[pivot + 1..], max_depth - 1);
         }
     }
 
     fn partition<T: Ord>(arr: &mut [T]) -> usize {
+		eprintln!("[ERROR] >>> Entering partition()");
         let len = arr.len();
         let pivot_index = len / 2;
+		eprintln!("[ERROR] partition(): len → {}", len);
         arr.swap(pivot_index, len - 1);
 
         let mut i = 0;
@@ -77,9 +93,11 @@ pub fn intro_sort<T: Ord>(arr: &mut [T]) {
         }
 
         arr.swap(i, len - 1);
+		eprintln!("[WARN] <<< Exiting partition()");
         i
     }
 
+	eprintln!("[WARN] <<< Exiting intro_sort()");
     intro_sort_recursive(arr, max_depth);
 }
 
@@ -89,6 +107,7 @@ mod tests {
 
     #[test]
     fn test_intro_sort() {
+		eprintln!("[ERROR] >>> Entering test_intro_sort()");
         // Test with integers
         let mut arr1 = vec![67, 34, 29, 15, 21, 9, 99];
         intro_sort(&mut arr1);
@@ -102,6 +121,7 @@ mod tests {
         // Test with an empty array
         let mut arr3: Vec<i32> = vec![];
         intro_sort(&mut arr3);
+		eprintln!("[WARN] <<< Exiting test_intro_sort()");
         assert_eq!(arr3, vec![]);
     }
 }

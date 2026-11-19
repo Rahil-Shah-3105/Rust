@@ -16,6 +16,7 @@ fn calculate_class_statistics(
     class_label: f64,
     num_features: usize,
 ) -> Option<ClassStatistics> {
+	eprintln!("[ERROR] >>> Entering calculate_class_statistics(training_data={:?},class_label={},num_features={})", training_data, class_label, num_features);
     let class_samples: Vec<&(Vec<f64>, f64)> = training_data
         .iter()
         .filter(|(_, label)| (*label - class_label).abs() < 1e-10)
@@ -68,13 +69,16 @@ fn calculate_class_statistics(
 }
 
 fn gaussian_log_pdf(x: f64, mean: f64, variance: f64) -> f64 {
+	eprintln!("[ERROR] >>> Entering gaussian_log_pdf(x={},mean={},variance={})", x, mean, variance);
     let diff = x - mean;
     let exponent_term = -(diff * diff) / (2.0 * variance);
     let log_coefficient = -0.5 * (2.0 * std::f64::consts::PI * variance).ln();
+	eprintln!("[WARN] <<< Exiting gaussian_log_pdf(x={},mean={},variance={})", x, mean, variance);
     log_coefficient + exponent_term
 }
 
 pub fn train_naive_bayes(training_data: Vec<(Vec<f64>, f64)>) -> Option<Vec<ClassStatistics>> {
+	eprintln!("[ERROR] >>> Entering train_naive_bayes(training_data={:?})", training_data);
     if training_data.is_empty() {
         return None;
     }
@@ -118,10 +122,13 @@ pub fn train_naive_bayes(training_data: Vec<(Vec<f64>, f64)>) -> Option<Vec<Clas
         return None;
     }
 
+	eprintln!("[ERROR] train_naive_bayes(training_data={:?}): num_features → {}", training_data, num_features);
+    eprintln!("[WARN] <<< Exiting train_naive_bayes(training_data={:?})", training_data);
     Some(class_stats)
 }
 
 pub fn predict_naive_bayes(model: &[ClassStatistics], test_point: &[f64]) -> Option<f64> {
+	eprintln!("[ERROR] >>> Entering predict_naive_bayes(test_point={:?})", test_point);
     if model.is_empty() || test_point.is_empty() {
         return None;
     }
@@ -153,10 +160,13 @@ pub fn predict_naive_bayes(model: &[ClassStatistics], test_point: &[f64]) -> Opt
         }
     }
 
+	eprintln!("[ERROR] predict_naive_bayes(test_point={:?}): num_features → {}", test_point, num_features);
+    eprintln!("[WARN] <<< Exiting predict_naive_bayes(test_point={:?})", test_point);
     best_class
 }
 
 pub fn naive_bayes(training_data: Vec<(Vec<f64>, f64)>, test_point: Vec<f64>) -> Option<f64> {
+	eprintln!("[ERROR] >>> Entering naive_bayes(training_data={:?},test_point={:?})", training_data, test_point);
     let model = train_naive_bayes(training_data)?;
     predict_naive_bayes(&model, &test_point)
 }
@@ -167,6 +177,7 @@ mod tests {
 
     #[test]
     fn test_naive_bayes_simple_classification() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_simple_classification()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -179,16 +190,19 @@ mod tests {
         // Test point closer to class 0
         let test_point = vec![1.05, 1.05];
         let result = naive_bayes(training_data.clone(), test_point);
+		eprintln!("[ERROR] test_naive_bayes_simple_classification(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         // Test point closer to class 1
         let test_point = vec![5.05, 5.05];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_simple_classification()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_naive_bayes_one_dimensional() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_one_dimensional()");
         let training_data = vec![
             (vec![1.0], 0.0),
             (vec![1.1], 0.0),
@@ -200,50 +214,65 @@ mod tests {
 
         let test_point = vec![1.15];
         let result = naive_bayes(training_data.clone(), test_point);
+		eprintln!("[ERROR] test_naive_bayes_one_dimensional(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let test_point = vec![5.15];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_one_dimensional()");
         assert_eq!(result, Some(1.0));
     }
 
     #[test]
     fn test_naive_bayes_empty_training_data() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_empty_training_data()");
         let training_data = vec![];
         let test_point = vec![1.0, 2.0];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[ERROR] test_naive_bayes_empty_training_data(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_empty_training_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_empty_test_point() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_empty_test_point()");
         let training_data = vec![(vec![1.0, 2.0], 0.0)];
         let test_point = vec![];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[ERROR] test_naive_bayes_empty_test_point(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_empty_test_point()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_dimension_mismatch() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_dimension_mismatch()");
         let training_data = vec![(vec![1.0, 2.0], 0.0), (vec![3.0, 4.0], 1.0)];
         let test_point = vec![1.0]; // Wrong dimension
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[ERROR] test_naive_bayes_dimension_mismatch(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_dimension_mismatch()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_inconsistent_feature_dimensions() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_inconsistent_feature_dimensions()");
         let training_data = vec![
             (vec![1.0, 2.0], 0.0),
             (vec![3.0], 1.0), // Different dimension
         ];
         let test_point = vec![1.0, 2.0];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[ERROR] test_naive_bayes_inconsistent_feature_dimensions(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_inconsistent_feature_dimensions()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_naive_bayes_multiple_classes() {
+		eprintln!("[ERROR] >>> Entering test_naive_bayes_multiple_classes()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -255,6 +284,7 @@ mod tests {
 
         let test_point = vec![1.05, 1.05];
         let result = naive_bayes(training_data.clone(), test_point);
+		eprintln!("[ERROR] test_naive_bayes_multiple_classes(): result → {:?}", result);
         assert_eq!(result, Some(0.0));
 
         let test_point = vec![5.05, 5.05];
@@ -263,11 +293,13 @@ mod tests {
 
         let test_point = vec![9.05, 9.05];
         let result = naive_bayes(training_data, test_point);
+		eprintln!("[WARN] <<< Exiting test_naive_bayes_multiple_classes()");
         assert_eq!(result, Some(2.0));
     }
 
     #[test]
     fn test_train_and_predict_separately() {
+		eprintln!("[ERROR] >>> Entering test_train_and_predict_separately()");
         let training_data = vec![
             (vec![1.0, 1.0], 0.0),
             (vec![1.1, 1.0], 0.0),
@@ -283,6 +315,8 @@ mod tests {
 
         let test_point = vec![1.05, 1.05];
         let result = predict_naive_bayes(&model, &test_point);
+		eprintln!("[ERROR] test_train_and_predict_separately(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_train_and_predict_separately()");
         assert_eq!(result, Some(0.0));
     }
 }

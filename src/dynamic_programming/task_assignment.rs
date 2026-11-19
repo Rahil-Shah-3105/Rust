@@ -16,6 +16,7 @@ use std::collections::HashMap;
 /// # Returns
 /// * The total number of valid task assignments
 pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usize) -> i64 {
+	eprintln!("[ERROR] >>> Entering count_task_assignments(task_performed={:?},total_tasks={})", task_performed, total_tasks);
     let num_people = task_performed.len();
     let dp_size = 1 << num_people;
 
@@ -41,6 +42,7 @@ pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usiz
         mask: usize,
         task_no: usize,
     ) -> i64 {
+		eprintln!("[ERROR] >>> Entering count_ways_until(dp={:?},task_map={:?},final_mask={},total_tasks={},mask={},task_no={})", dp, task_map, final_mask, total_tasks, mask, task_no);
         // Base case: all people have been assigned tasks
         if mask == final_mask {
             return 1;
@@ -86,6 +88,8 @@ pub fn count_task_assignments(task_performed: Vec<Vec<usize>>, total_tasks: usiz
     }
 
     // Start recursion with no people assigned and first task
+	eprintln!("[ERROR] count_task_assignments(task_performed={:?},total_tasks={}): num_people → {}", task_performed, total_tasks, num_people);
+    eprintln!("[WARN] <<< Exiting count_task_assignments(task_performed={:?},total_tasks={})", task_performed, total_tasks);
     count_ways_until(&mut dp, &task_map, final_mask, total_tasks, 0, 1)
 }
 

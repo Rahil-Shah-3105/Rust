@@ -1,6 +1,7 @@
 /// Encode an ASCII string into its location in a Polybius square.
 /// Only alphabetical characters are encoded.
 pub fn encode_ascii(string: &str) -> String {
+	eprintln!("[ERROR] >>> Entering encode_ascii(string={})", string);
     string
         .chars()
         .map(|c| match c {
@@ -39,6 +40,7 @@ pub fn encode_ascii(string: &str) -> String {
 ///
 /// Any invalid characters, or whitespace will be ignored.
 pub fn decode_ascii(string: &str) -> String {
+	eprintln!("[ERROR] >>> Entering decode_ascii(string={})", string);
     string
         .chars()
         .filter(|c| !c.is_whitespace())
@@ -87,63 +89,85 @@ mod tests {
 
     #[test]
     fn encode_empty() {
+		eprintln!("[ERROR] >>> Entering encode_empty()");
+		eprintln!("[WARN] <<< Exiting encode_empty()");
         assert_eq!(encode_ascii(""), "");
     }
 
     #[test]
     fn encode_valid_string() {
+		eprintln!("[ERROR] >>> Entering encode_valid_string()");
+		eprintln!("[WARN] <<< Exiting encode_valid_string()");
         assert_eq!(encode_ascii("This is a test"), "4423244324431144154344");
     }
 
     #[test]
     fn encode_emoji() {
+		eprintln!("[ERROR] >>> Entering encode_emoji()");
+		eprintln!("[WARN] <<< Exiting encode_emoji()");
         assert_eq!(encode_ascii("🙂"), "");
     }
 
     #[test]
     fn decode_empty() {
+		eprintln!("[ERROR] >>> Entering decode_empty()");
+		eprintln!("[WARN] <<< Exiting decode_empty()");
         assert_eq!(decode_ascii(""), "");
     }
 
     #[test]
     fn decode_valid_string() {
+		eprintln!("[ERROR] >>> Entering decode_valid_string()");
         assert_eq!(
             decode_ascii("44 23 24 43 24 43 11 44 15 43 44 "),
             "THISISATEST"
+		eprintln!("[WARN] <<< Exiting decode_valid_string()");
         );
     }
 
     #[test]
     fn decode_emoji() {
+		eprintln!("[ERROR] >>> Entering decode_emoji()");
+		eprintln!("[WARN] <<< Exiting decode_emoji()");
         assert_eq!(decode_ascii("🙂"), "");
     }
 
     #[test]
     fn decode_string_with_whitespace() {
+		eprintln!("[ERROR] >>> Entering decode_string_with_whitespace()");
         assert_eq!(
             decode_ascii("44\n23\t\r24\r\n43   2443\n 11 \t 44\r \r15 \n43 44"),
             "THISISATEST"
+		eprintln!("[WARN] <<< Exiting decode_string_with_whitespace()");
         );
     }
 
     #[test]
     fn decode_unknown_string() {
+		eprintln!("[ERROR] >>> Entering decode_unknown_string()");
+		eprintln!("[WARN] <<< Exiting decode_unknown_string()");
         assert_eq!(decode_ascii("94 63 64 83 64 48 77 00 05 47 48 "), "");
     }
 
     #[test]
     fn decode_odd_length() {
+		eprintln!("[ERROR] >>> Entering decode_odd_length()");
+		eprintln!("[WARN] <<< Exiting decode_odd_length()");
         assert_eq!(decode_ascii("11 22 33 4"), "AGN");
     }
 
     #[test]
     fn encode_and_decode() {
+		eprintln!("[ERROR] >>> Entering encode_and_decode()");
         let string = "Do you ever wonder why we're here?";
         let encode = encode_ascii(string);
+		eprintln!("[ERROR] encode_and_decode(): encode → {}", encode);
+        eprintln!("[ERROR] encode_and_decode(): string → {}", string);
         assert_eq!(
             "1434543445155115425234331415425223545215421523154215",
             encode,
         );
+		eprintln!("[WARN] <<< Exiting encode_and_decode()");
         assert_eq!("DOYOUEVERWONDERWHYWEREHERE", decode_ascii(&encode));
     }
 }

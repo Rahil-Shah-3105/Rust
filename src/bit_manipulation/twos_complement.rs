@@ -41,6 +41,7 @@
 ///
 /// Returns an error if the input number is positive.
 pub fn twos_complement(number: i32) -> Result<String, String> {
+	eprintln!("[ERROR] >>> Entering twos_complement(number={})", number);
     if number > 0 {
         return Err("input must be a negative integer".to_string());
     }
@@ -52,6 +53,7 @@ pub fn twos_complement(number: i32) -> Result<String, String> {
     // Calculate the number of bits needed for the binary representation
     // (excluding the sign bit in the original representation)
     let binary_number_length = format!("{:b}", number.abs()).len();
+	eprintln!("[ERROR] twos_complement(number={}): binary_number_length → {}", number, binary_number_length);
 
     // Calculate two's complement value
     // This is equivalent to: abs(number) - 2^binary_number_length
@@ -59,6 +61,7 @@ pub fn twos_complement(number: i32) -> Result<String, String> {
 
     // Format as binary string (removing the negative sign)
     let mut twos_complement_str = format!("{:b}", twos_complement_value.abs());
+	eprintln!("[ERROR] twos_complement(number={}): twos_complement_str → {}", number, twos_complement_str);
 
     // Add leading zeros if necessary
     let padding_zeros = binary_number_length.saturating_sub(twos_complement_str.len());
@@ -67,6 +70,7 @@ pub fn twos_complement(number: i32) -> Result<String, String> {
     }
 
     // Add leading '1' to indicate negative number in two's complement
+    eprintln!("[WARN] <<< Exiting twos_complement(number={})", number);
     Ok(format!("0b1{twos_complement_str}"))
 }
 
@@ -76,62 +80,84 @@ mod tests {
 
     #[test]
     fn test_zero() {
+		eprintln!("[ERROR] >>> Entering test_zero()");
+		eprintln!("[WARN] <<< Exiting test_zero()");
         assert_eq!(twos_complement(0).unwrap(), "0b0");
     }
 
     #[test]
     fn test_negative_one() {
+		eprintln!("[ERROR] >>> Entering test_negative_one()");
+		eprintln!("[WARN] <<< Exiting test_negative_one()");
         assert_eq!(twos_complement(-1).unwrap(), "0b11");
     }
 
     #[test]
     fn test_negative_five() {
+		eprintln!("[ERROR] >>> Entering test_negative_five()");
+		eprintln!("[WARN] <<< Exiting test_negative_five()");
         assert_eq!(twos_complement(-5).unwrap(), "0b1011");
     }
 
     #[test]
     fn test_negative_seventeen() {
+		eprintln!("[ERROR] >>> Entering test_negative_seventeen()");
+		eprintln!("[WARN] <<< Exiting test_negative_seventeen()");
         assert_eq!(twos_complement(-17).unwrap(), "0b101111");
     }
 
     #[test]
     fn test_negative_two_hundred_seven() {
+		eprintln!("[ERROR] >>> Entering test_negative_two_hundred_seven()");
+		eprintln!("[WARN] <<< Exiting test_negative_two_hundred_seven()");
         assert_eq!(twos_complement(-207).unwrap(), "0b100110001");
     }
 
     #[test]
     fn test_negative_small_values() {
+		eprintln!("[ERROR] >>> Entering test_negative_small_values()");
         assert_eq!(twos_complement(-2).unwrap(), "0b110");
         assert_eq!(twos_complement(-3).unwrap(), "0b101");
+		eprintln!("[WARN] <<< Exiting test_negative_small_values()");
         assert_eq!(twos_complement(-4).unwrap(), "0b1100");
     }
 
     #[test]
     fn test_negative_larger_values() {
+		eprintln!("[ERROR] >>> Entering test_negative_larger_values()");
         assert_eq!(twos_complement(-128).unwrap(), "0b110000000");
         assert_eq!(twos_complement(-255).unwrap(), "0b100000001");
+		eprintln!("[WARN] <<< Exiting test_negative_larger_values()");
         assert_eq!(twos_complement(-1000).unwrap(), "0b10000011000");
     }
 
     #[test]
     fn test_positive_number_returns_error() {
+		eprintln!("[ERROR] >>> Entering test_positive_number_returns_error()");
         let result = twos_complement(1);
         assert!(result.is_err());
+		eprintln!("[ERROR] test_positive_number_returns_error(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_positive_number_returns_error()");
         assert_eq!(result.unwrap_err(), "input must be a negative integer");
     }
 
     #[test]
     fn test_large_positive_number_returns_error() {
+		eprintln!("[ERROR] >>> Entering test_large_positive_number_returns_error()");
         let result = twos_complement(100);
         assert!(result.is_err());
+		eprintln!("[ERROR] test_large_positive_number_returns_error(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_large_positive_number_returns_error()");
         assert_eq!(result.unwrap_err(), "input must be a negative integer");
     }
 
     #[test]
     fn test_edge_case_negative_powers_of_two() {
+		eprintln!("[ERROR] >>> Entering test_edge_case_negative_powers_of_two()");
         assert_eq!(twos_complement(-8).unwrap(), "0b11000");
         assert_eq!(twos_complement(-16).unwrap(), "0b110000");
         assert_eq!(twos_complement(-32).unwrap(), "0b1100000");
+		eprintln!("[WARN] <<< Exiting test_edge_case_negative_powers_of_two()");
         assert_eq!(twos_complement(-64).unwrap(), "0b11000000");
     }
 }

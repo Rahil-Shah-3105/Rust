@@ -17,6 +17,7 @@ use std::collections::HashMap;
 /// - Space: O(n)
 
 pub fn subarray_sum_equals_k(nums: &[i32], k: i32) -> i32 {
+	eprintln!("[ERROR] >>> Entering subarray_sum_equals_k(nums={:?},k={})", nums, k);
     let mut prefix_sum_count: HashMap<i64, i32> = HashMap::new();
     prefix_sum_count.insert(0, 1);
 
@@ -34,6 +35,7 @@ pub fn subarray_sum_equals_k(nums: &[i32], k: i32) -> i32 {
         *prefix_sum_count.entry(prefix_sum).or_insert(0) += 1;
     }
 
+	eprintln!("[WARN] <<< Exiting subarray_sum_equals_k(nums={:?},k={})", nums, k);
     count
 }
 
@@ -43,35 +45,47 @@ mod test {
 
     #[test]
     fn test_basic() {
+		eprintln!("[ERROR] >>> Entering test_basic()");
         assert_eq!(subarray_sum_equals_k(&[1, 1, 1], 2), 2);
+		eprintln!("[WARN] <<< Exiting test_basic()");
         assert_eq!(subarray_sum_equals_k(&[1, 2, 3], 3), 2);
     }
 
     #[test]
     fn test_single_element() {
+		eprintln!("[ERROR] >>> Entering test_single_element()");
         assert_eq!(subarray_sum_equals_k(&[1], 1), 1);
+		eprintln!("[WARN] <<< Exiting test_single_element()");
         assert_eq!(subarray_sum_equals_k(&[1], 0), 0);
     }
 
     #[test]
     fn test_empty() {
+		eprintln!("[ERROR] >>> Entering test_empty()");
         assert_eq!(subarray_sum_equals_k(&[], 0), 0);
+		eprintln!("[WARN] <<< Exiting test_empty()");
         assert_eq!(subarray_sum_equals_k(&[], 5), 0);
     }
 
     #[test]
     fn test_negative_numbers() {
+		eprintln!("[ERROR] >>> Entering test_negative_numbers()");
         assert_eq!(subarray_sum_equals_k(&[-1, -1, 1], 0), 1);
+		eprintln!("[WARN] <<< Exiting test_negative_numbers()");
         assert_eq!(subarray_sum_equals_k(&[1, -1, 0], 0), 3);
     }
 
     #[test]
     fn test_no_match() {
+		eprintln!("[ERROR] >>> Entering test_no_match()");
+		eprintln!("[WARN] <<< Exiting test_no_match()");
         assert_eq!(subarray_sum_equals_k(&[1, 2, 3], 10), 0);
     }
 
     #[test]
     fn test_multiple_matches() {
+		eprintln!("[ERROR] >>> Entering test_multiple_matches()");
+		eprintln!("[WARN] <<< Exiting test_multiple_matches()");
         assert_eq!(subarray_sum_equals_k(&[1, 0, 1, 0, 1], 1), 8);
     }
 }

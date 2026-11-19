@@ -37,7 +37,9 @@ pub struct HeavyLightDecomposition {
 
 impl HeavyLightDecomposition {
     pub fn new(mut num_vertices: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering new(num_vertices={})", num_vertices);
         num_vertices += 1;
+		eprintln!("[WARN] <<< Exiting new(num_vertices={})", num_vertices);
         HeavyLightDecomposition {
             position: vec![0; num_vertices],
             head: vec![0; num_vertices],
@@ -46,14 +48,18 @@ impl HeavyLightDecomposition {
         }
     }
     fn dfs(&mut self, v: usize, parent: usize, adj: &Adj) -> usize {
+		eprintln!("[ERROR] >>> Entering dfs(v={},parent={})", v, parent);
         let mut big_child = 0usize;
         let mut bc_size = 0usize; // big child size
+		eprintln!("[ERROR] dfs(v={},parent={}): bc_size → {}", v, parent, bc_size);
+		eprintln!("[ERROR] dfs(v={},parent={}): big_child → {}", v, parent, big_child);
         let mut subtree_size = 1usize; // size of this subtree
         for &u in adj[v].iter() {
             if u == parent {
                 continue;
             }
             let u_size = self.dfs(u, v, adj);
+			eprintln!("[ERROR] dfs(v={},parent={}): u_size → {}", v, parent, u_size);
             subtree_size += u_size;
             if u_size > bc_size {
                 big_child = u;
@@ -61,14 +67,18 @@ impl HeavyLightDecomposition {
             }
         }
         self.big_child[v] = big_child;
+		eprintln!("[WARN] <<< Exiting dfs(v={},parent={})", v, parent);
         subtree_size
     }
     pub fn decompose(&mut self, root: usize, adj: &Adj) {
+		eprintln!("[ERROR] >>> Entering decompose(root={})", root);
         self.current_position = 1;
         self.dfs(root, 0, adj);
+		eprintln!("[WARN] <<< Exiting decompose(root={})", root);
         self.decompose_path(root, 0, root, adj);
     }
     fn decompose_path(&mut self, v: usize, parent: usize, head: usize, adj: &Adj) {
+		eprintln!("[ERROR] >>> Entering decompose_path(v={},parent={},head={})", v, parent, head);
         self.head[v] = head;
         self.position[v] = self.current_position;
         self.current_position += 1;
@@ -83,6 +93,7 @@ impl HeavyLightDecomposition {
             }
             // Start a new path
             self.decompose_path(u, v, u, adj);
+		eprintln!("[WARN] <<< Exiting decompose_path(v={},parent={},head={})", v, parent, head);
         }
     }
 }
@@ -100,6 +111,7 @@ mod tests {
 
     impl LinearCongruenceGenerator {
         fn new(multiplier: u32, increment: u32, state: u32) -> Self {
+			eprintln!("[ERROR] >>> Entering new(multiplier={},increment={},state={})", multiplier, increment, state);
             Self {
                 multiplier,
                 increment,
@@ -107,7 +119,9 @@ mod tests {
             }
         }
         fn next(&mut self) -> u32 {
+			eprintln!("[ERROR] >>> Entering next()");
             self.state =
+				eprintln!("[WARN] <<< Exiting next()");
                 (self.multiplier as u64 * self.state as u64 + self.increment as u64) as u32;
             self.state
         }
@@ -134,11 +148,13 @@ mod tests {
                 break;
             }
         }
+		eprintln!("[WARN] <<< Exiting get_num_paths(v={},parent={:?})", v, parent);
         (ans, height)
     }
 
     #[test]
     fn single_path() {
+		eprintln!("[ERROR] >>> Entering single_path()");
         let mut adj = vec![vec![], vec![2], vec![3], vec![4], vec![5], vec![6], vec![]];
         let mut hld = HeavyLightDecomposition::new(6);
         hld.decompose(1, &adj);
@@ -151,11 +167,13 @@ mod tests {
         hld.decompose(3, &adj);
         assert_eq!(hld.head, vec![0, 2, 2, 3, 3, 3, 3]);
         assert_eq!(hld.position, vec![0, 6, 5, 1, 2, 3, 4]);
+		eprintln!("[WARN] <<< Exiting single_path()");
         assert_eq!(hld.big_child, vec![0, 0, 1, 4, 5, 6, 0]);
     }
 
     #[test]
     fn random_tree() {
+		eprintln!("[ERROR] >>> Entering random_tree()");
         // Let it have 1e4 vertices. It should finish under 100ms even with
         // 1e5 vertices
         let n = 1e4 as usize;
@@ -187,6 +205,7 @@ mod tests {
         for l in leaves {
             let (p, _h) = get_num_paths(&hld, l, &parent);
             assert!(p <= threshold);
+		eprintln!("[WARN] <<< Exiting random_tree()");
         }
     }
 }

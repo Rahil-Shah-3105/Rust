@@ -55,6 +55,7 @@ impl IntoWeightUnit for &str {
 
 impl IntoWeightUnit for String {
     fn into_weight_unit(self) -> Result<WeightUnit, String> {
+		eprintln!("[ERROR] >>> Entering into_weight_unit()");
         WeightUnit::from_str(&self)
     }
 }
@@ -100,6 +101,7 @@ pub enum WeightUnit {
 
 impl fmt::Display for WeightUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		eprintln!("[ERROR] >>> Entering fmt()");
         let s = match self {
             // Large metric units
             Self::Gigatonne => "Gt",
@@ -136,6 +138,7 @@ impl fmt::Display for WeightUnit {
             Self::Carat => "ct",
             Self::AtomicMassUnit => "amu",
         };
+		eprintln!("[WARN] <<< Exiting fmt()");
         write!(f, "{s}")
     }
 }
@@ -143,6 +146,7 @@ impl fmt::Display for WeightUnit {
 impl WeightUnit {
     /// Get the conversion factor to convert this unit to kilograms
     fn to_kilogram_factor(self) -> f64 {
+		eprintln!("[ERROR] >>> Entering to_kilogram_factor()");
         match self {
             // Large metric units
             Self::Gigatonne => 1e12,
@@ -184,6 +188,7 @@ impl WeightUnit {
 
     /// Get all supported units as strings
     pub fn supported_units() -> Vec<&'static str> {
+		eprintln!("[ERROR] >>> Entering supported_units()");
         vec![
             "gigatonne",
             "megatonne",
@@ -216,6 +221,7 @@ impl FromStr for WeightUnit {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+		eprintln!("[ERROR] >>> Entering from_str(s={})", s);
         let unit = match s.to_lowercase().as_str() {
             // Large metric units
             "gigatonne" | "gt" | "gigaton" => Self::Gigatonne,
@@ -255,6 +261,7 @@ impl FromStr for WeightUnit {
             }
             _ => return Err(format!("Unknown weight unit: {s}")),
         };
+		eprintln!("[WARN] <<< Exiting from_str(s={})", s);
         Ok(unit)
     }
 }
@@ -289,6 +296,7 @@ where
     F: IntoWeightUnit,
     T: IntoWeightUnit,
 {
+	eprintln!("[ERROR] >>> Entering convert_weight(value={})", value);
     let from = from_unit.into_weight_unit().map_err(|_| {
         format!(
             "Invalid 'from_unit' value. Supported values are:\n{}",
@@ -305,6 +313,8 @@ where
 
     // Convert to kilograms first, then to target unit
     let kilograms = value * from.to_kilogram_factor();
+	eprintln!("[ERROR] convert_weight(value={}): kilograms → {}", value, kilograms);
+    eprintln!("[WARN] <<< Exiting convert_weight(value={})", value);
     Ok(kilograms / to.to_kilogram_factor())
 }
 
@@ -315,18 +325,21 @@ mod tests {
     const EPSILON: f64 = 1e-6; // Tolerance for floating point comparisons
 
     fn approx_eq(a: f64, b: f64) -> bool {
+		eprintln!("[ERROR] >>> Entering approx_eq(a={},b={})", a, b);
         let diff = (a - b).abs();
         // Use relative comparison for large numbers, absolute for small numbers
         if a.abs() > 1e10 || b.abs() > 1e10 {
             let max = a.abs().max(b.abs());
             diff / max < EPSILON
         } else {
+			eprintln!("[WARN] <<< Exiting approx_eq(a={},b={})", a, b);
             diff < EPSILON
         }
     }
 
     #[test]
     fn test_kilogram_conversions() {
+		eprintln!("[ERROR] >>> Entering test_kilogram_conversions()");
         // Test conversions from kilogram
         assert!(approx_eq(
             convert_weight(4.0, "kilogram", "kilogram").unwrap(),
@@ -371,11 +384,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "kilogram", "atomic-mass-unit").unwrap(),
             6.022_140_762e26
+		eprintln!("[WARN] <<< Exiting test_kilogram_conversions()");
         ));
     }
 
     #[test]
     fn test_large_metric_conversions() {
+		eprintln!("[ERROR] >>> Entering test_large_metric_conversions()");
         // Test gigatonne conversions
         assert!(approx_eq(
             convert_weight(1.0, "gigatonne", "megatonne").unwrap(),
@@ -406,11 +421,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "megatonne", "gram").unwrap(),
             1e12
+		eprintln!("[WARN] <<< Exiting test_large_metric_conversions()");
         ));
     }
 
     #[test]
     fn test_gram_conversions() {
+		eprintln!("[ERROR] >>> Entering test_gram_conversions()");
         // Test conversions from gram
         assert!(approx_eq(
             convert_weight(1.0, "gram", "kilogram").unwrap(),
@@ -428,11 +445,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(3.0, "gram", "pound").unwrap(),
             0.006_613_867_8
+		eprintln!("[WARN] <<< Exiting test_gram_conversions()");
         ));
     }
 
     #[test]
     fn test_milligram_conversions() {
+		eprintln!("[ERROR] >>> Entering test_milligram_conversions()");
         // Test conversions from milligram
         assert!(approx_eq(
             convert_weight(1.0, "milligram", "kilogram").unwrap(),
@@ -449,11 +468,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "milligram", "carat").unwrap(),
             0.005
+		eprintln!("[WARN] <<< Exiting test_milligram_conversions()");
         ));
     }
 
     #[test]
     fn test_small_metric_conversions() {
+		eprintln!("[ERROR] >>> Entering test_small_metric_conversions()");
         // Test microgram conversions (1 μg = 0.000001 g)
         assert!(approx_eq(
             convert_weight(1.0, "microgram", "gram").unwrap(),
@@ -494,11 +515,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "picogram", "kilogram").unwrap(),
             1e-15
+		eprintln!("[WARN] <<< Exiting test_small_metric_conversions()");
         ));
     }
 
     #[test]
     fn test_metric_ton_conversions() {
+		eprintln!("[ERROR] >>> Entering test_metric_ton_conversions()");
         // Test conversions from metric ton
         assert!(approx_eq(
             convert_weight(2.0, "metric-ton", "kilogram").unwrap(),
@@ -519,11 +542,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(3.0, "metric-ton", "pound").unwrap(),
             6_613.867_865
+		eprintln!("[WARN] <<< Exiting test_metric_ton_conversions()");
         ));
     }
 
     #[test]
     fn test_long_ton_conversions() {
+		eprintln!("[ERROR] >>> Entering test_long_ton_conversions()");
         // Test conversions from long ton (UK ton = 1016.0469088 kg precisely)
         assert!(approx_eq(
             convert_weight(4.0, "long-ton", "kilogram").unwrap(),
@@ -544,11 +569,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "long-ton", "short-ton").unwrap(),
             1.12
+		eprintln!("[WARN] <<< Exiting test_long_ton_conversions()");
         ));
     }
 
     #[test]
     fn test_imperial_large_units() {
+		eprintln!("[ERROR] >>> Entering test_imperial_large_units()");
         // Test hundredweight (112 lb = 50.80234544 kg precisely)
         assert!(approx_eq(
             convert_weight(1.0, "hundredweight", "kilogram").unwrap(),
@@ -583,11 +610,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(4.0, "quarter", "hundredweight").unwrap(),
             1.0
+		eprintln!("[WARN] <<< Exiting test_imperial_large_units()");
         ));
     }
 
     #[test]
     fn test_short_ton_conversions() {
+		eprintln!("[ERROR] >>> Entering test_short_ton_conversions()");
         // Test conversions from short ton (2000 lb = 907.18474 kg precisely)
         assert!(approx_eq(
             convert_weight(3.0, "short-ton", "kilogram").unwrap(),
@@ -608,11 +637,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(2.0, "short-ton", "pound").unwrap(),
             4_000.0
+		eprintln!("[WARN] <<< Exiting test_short_ton_conversions()");
         ));
     }
 
     #[test]
     fn test_pound_conversions() {
+		eprintln!("[ERROR] >>> Entering test_pound_conversions()");
         // Test conversions from pound (0.45359237 kg exactly)
         assert!(approx_eq(
             convert_weight(4.0, "pound", "kilogram").unwrap(),
@@ -637,11 +668,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "pound", "carat").unwrap(),
             2_267.961_85
+		eprintln!("[WARN] <<< Exiting test_pound_conversions()");
         ));
     }
 
     #[test]
     fn test_stone_conversions() {
+		eprintln!("[ERROR] >>> Entering test_stone_conversions()");
         // Test conversions from stone (14 lb = 6.35029318 kg precisely)
         assert!(approx_eq(
             convert_weight(5.0, "stone", "kilogram").unwrap(),
@@ -658,11 +691,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "stone", "ounce").unwrap(),
             224.0
+		eprintln!("[WARN] <<< Exiting test_stone_conversions()");
         ));
     }
 
     #[test]
     fn test_ounce_conversions() {
+		eprintln!("[ERROR] >>> Entering test_ounce_conversions()");
         // Test conversions from ounce (1/16 lb = 0.028349523125 kg precisely)
         assert!(approx_eq(
             convert_weight(3.0, "ounce", "kilogram").unwrap(),
@@ -683,11 +718,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(1.0, "ounce", "carat").unwrap(),
             141.747_615_625
+		eprintln!("[WARN] <<< Exiting test_ounce_conversions()");
         ));
     }
 
     #[test]
     fn test_small_imperial_units() {
+		eprintln!("[ERROR] >>> Entering test_small_imperial_units()");
         // Test dram (1/256 lb = 0.0017718451953125 kg precisely)
         assert!(approx_eq(
             convert_weight(1.0, "dram", "gram").unwrap(),
@@ -718,11 +755,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(7000.0, "grain", "pound").unwrap(),
             1.0
+		eprintln!("[WARN] <<< Exiting test_small_imperial_units()");
         ));
     }
 
     #[test]
     fn test_carat_conversions() {
+		eprintln!("[ERROR] >>> Entering test_carat_conversions()");
         // Test conversions from carat
         assert!(approx_eq(
             convert_weight(1.0, "carat", "kilogram").unwrap(),
@@ -739,11 +778,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(4.0, "carat", "carat").unwrap(),
             4.0
+		eprintln!("[WARN] <<< Exiting test_carat_conversions()");
         ));
     }
 
     #[test]
     fn test_troy_weight_system() {
+		eprintln!("[ERROR] >>> Entering test_troy_weight_system()");
         // Test troy pound (0.3732417216 kg exactly)
         assert!(approx_eq(
             convert_weight(1.0, "troy-pound", "gram").unwrap(),
@@ -800,11 +841,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(240.0, "pennyweight", "troy-pound").unwrap(),
             1.0
+		eprintln!("[WARN] <<< Exiting test_troy_weight_system()");
         ));
     }
 
     #[test]
     fn test_atomic_mass_unit_conversions() {
+		eprintln!("[ERROR] >>> Entering test_atomic_mass_unit_conversions()");
         // Test conversions from atomic mass unit
         assert!(approx_eq(
             convert_weight(4.0, "atomic-mass-unit", "kilogram").unwrap(),
@@ -813,11 +856,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(2.0, "atomic-mass-unit", "atomic-mass-unit").unwrap(),
             2.0
+		eprintln!("[WARN] <<< Exiting test_atomic_mass_unit_conversions()");
         ));
     }
 
     #[test]
     fn test_using_enums() {
+		eprintln!("[ERROR] >>> Entering test_using_enums()");
         // Test using enums (type-safe)
         assert!(approx_eq(
             convert_weight(1.0, WeightUnit::Kilogram, WeightUnit::Gram).unwrap(),
@@ -826,11 +871,13 @@ mod tests {
         assert!(approx_eq(
             convert_weight(100.0, WeightUnit::Pound, WeightUnit::Kilogram).unwrap(),
             45.359_237
+		eprintln!("[WARN] <<< Exiting test_using_enums()");
         ));
     }
 
     #[test]
     fn test_mixed_usage() {
+		eprintln!("[ERROR] >>> Entering test_mixed_usage()");
         // Test mixed usage (enum and string)
         assert!(approx_eq(
             convert_weight(1.0, WeightUnit::Kilogram, "pound").unwrap(),
@@ -839,40 +886,52 @@ mod tests {
         assert!(approx_eq(
             convert_weight(16.0, "ounce", WeightUnit::Pound).unwrap(),
             1.0
+		eprintln!("[WARN] <<< Exiting test_mixed_usage()");
         ));
     }
 
     #[test]
     fn test_invalid_units() {
+		eprintln!("[ERROR] >>> Entering test_invalid_units()");
         // Test invalid units
         assert!(convert_weight(4.0, "slug", "kilogram").is_err());
+		eprintln!("[WARN] <<< Exiting test_invalid_units()");
         assert!(convert_weight(4.0, "kilogram", "wrongUnit").is_err());
     }
 
     #[test]
     fn test_roundtrip_conversion() {
+		eprintln!("[ERROR] >>> Entering test_roundtrip_conversion()");
         // Test roundtrip conversion
         let original = 100.0;
         let converted = convert_weight(original, "pound", "kilogram").unwrap();
+		eprintln!("[ERROR] test_roundtrip_conversion(): converted → {}", converted);
         let back = convert_weight(converted, "kilogram", "pound").unwrap();
+		eprintln!("[ERROR] test_roundtrip_conversion(): back → {}", back);
+		eprintln!("[WARN] <<< Exiting test_roundtrip_conversion()");
         assert!(approx_eq(original, back));
     }
 
     #[test]
     fn test_string_ownership() {
+		eprintln!("[ERROR] >>> Entering test_string_ownership()");
         // Test String (owned) conversion
         let unit_string = String::from("kilogram");
+		eprintln!("[ERROR] test_string_ownership(): unit_string → {}", unit_string);
         assert_eq!(
             unit_string.into_weight_unit().unwrap(),
             WeightUnit::Kilogram
         );
 
         let invalid_string = String::from("invalid");
+		eprintln!("[ERROR] test_string_ownership(): invalid_string → {}", invalid_string);
+		eprintln!("[WARN] <<< Exiting test_string_ownership()");
         assert!(invalid_string.into_weight_unit().is_err());
     }
 
     #[test]
     fn test_display_implementation() {
+		eprintln!("[ERROR] >>> Entering test_display_implementation()");
         // Test Display implementation for all units
         assert_eq!(format!("{}", WeightUnit::Gigatonne), "Gt");
         assert_eq!(format!("{}", WeightUnit::Megatonne), "Mt");
@@ -896,11 +955,13 @@ mod tests {
         assert_eq!(format!("{}", WeightUnit::TroyOunce), "oz t");
         assert_eq!(format!("{}", WeightUnit::Pennyweight), "dwt");
         assert_eq!(format!("{}", WeightUnit::Carat), "ct");
+		eprintln!("[WARN] <<< Exiting test_display_implementation()");
         assert_eq!(format!("{}", WeightUnit::AtomicMassUnit), "amu");
     }
 
     #[test]
     fn test_alternative_names() {
+		eprintln!("[ERROR] >>> Entering test_alternative_names()");
         // Test alternative unit names
         assert!(convert_weight(1.0, "kg", "gram").is_ok());
         assert!(convert_weight(1.0, "lb", "kilogram").is_ok());
@@ -917,6 +978,7 @@ mod tests {
         assert!(convert_weight(1.0, "gr", "grain").is_ok());
         assert!(convert_weight(1.0, "ozt", "gram").is_ok());
         assert!(convert_weight(1.0, "lbt", "troy-pound").is_ok());
+		eprintln!("[WARN] <<< Exiting test_alternative_names()");
         assert!(convert_weight(1.0, "dwt", "gram").is_ok());
     }
 }

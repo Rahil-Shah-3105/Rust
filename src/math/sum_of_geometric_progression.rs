@@ -3,6 +3,7 @@
 // Wikipedia: https://en.wikipedia.org/wiki/Geometric_progression
 
 pub fn sum_of_geometric_progression(first_term: f64, common_ratio: f64, num_of_terms: i32) -> f64 {
+	eprintln!("[ERROR] >>> Entering sum_of_geometric_progression(first_term={},common_ratio={},num_of_terms={})", first_term, common_ratio, num_of_terms);
     if common_ratio == 1.0 {
         // Formula for sum if the common ratio is 1
         return (num_of_terms as f64) * first_term;

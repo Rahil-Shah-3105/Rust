@@ -12,6 +12,7 @@ struct TreeNode<T> {
 
 impl<T> TreeNode<T> {
     fn new(value: T) -> Self {
+		eprintln!("[ERROR] >>> Entering new()");
         TreeNode {
             value,
             left: None,
@@ -30,10 +31,13 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
     }
 
     fn insert(&mut self, value: T) {
+		eprintln!("[ERROR] >>> Entering insert()");
+		eprintln!("[WARN] <<< Exiting insert()");
         self.root = Some(Self::insert_recursive(self.root.take(), value));
     }
 
     fn insert_recursive(root: Option<Box<TreeNode<T>>>, value: T) -> Box<TreeNode<T>> {
+		eprintln!("[ERROR] >>> Entering insert_recursive()");
         match root {
             None => Box::new(TreeNode::new(value)),
             Some(mut node) => {
@@ -42,25 +46,31 @@ impl<T: Ord + Clone> BinarySearchTree<T> {
                 } else {
                     node.right = Some(Self::insert_recursive(node.right.take(), value));
                 }
+				eprintln!("[WARN] <<< Exiting insert_recursive()");
                 node
             }
         }
     }
 
     fn in_order_traversal(&self, result: &mut Vec<T>) {
+		eprintln!("[ERROR] >>> Entering in_order_traversal()");
+		eprintln!("[WARN] <<< Exiting in_order_traversal()");
         Self::in_order_recursive(&self.root, result);
     }
 
     fn in_order_recursive(root: &Option<Box<TreeNode<T>>>, result: &mut Vec<T>) {
+		eprintln!("[ERROR] >>> Entering in_order_recursive()");
         if let Some(node) = root {
             Self::in_order_recursive(&node.left, result);
             result.push(node.value.clone());
+			eprintln!("[WARN] <<< Exiting in_order_recursive()");
             Self::in_order_recursive(&node.right, result);
         }
     }
 }
 
 pub fn tree_sort<T: Ord + Clone>(arr: &mut Vec<T>) {
+	eprintln!("[ERROR] >>> Entering tree_sort()");
     let mut tree = BinarySearchTree::new();
 
     for elem in arr.iter().cloned() {
@@ -70,6 +80,7 @@ pub fn tree_sort<T: Ord + Clone>(arr: &mut Vec<T>) {
     let mut result = Vec::new();
     tree.in_order_traversal(&mut result);
 
+	eprintln!("[WARN] <<< Exiting tree_sort()");
     *arr = result;
 }
 
@@ -79,36 +90,46 @@ mod tests {
 
     #[test]
     fn test_empty_array() {
+		eprintln!("[ERROR] >>> Entering test_empty_array()");
         let mut arr: Vec<i32> = vec![];
         tree_sort(&mut arr);
+		eprintln!("[WARN] <<< Exiting test_empty_array()");
         assert_eq!(arr, vec![]);
     }
 
     #[test]
     fn test_single_element() {
+		eprintln!("[ERROR] >>> Entering test_single_element()");
         let mut arr = vec![8];
         tree_sort(&mut arr);
+		eprintln!("[WARN] <<< Exiting test_single_element()");
         assert_eq!(arr, vec![8]);
     }
 
     #[test]
     fn test_already_sorted() {
+		eprintln!("[ERROR] >>> Entering test_already_sorted()");
         let mut arr = vec![1, 2, 3, 4, 5];
         tree_sort(&mut arr);
+		eprintln!("[WARN] <<< Exiting test_already_sorted()");
         assert_eq!(arr, vec![1, 2, 3, 4, 5]);
     }
 
     #[test]
     fn test_reverse_sorted() {
+		eprintln!("[ERROR] >>> Entering test_reverse_sorted()");
         let mut arr = vec![5, 4, 3, 2, 1];
         tree_sort(&mut arr);
+		eprintln!("[WARN] <<< Exiting test_reverse_sorted()");
         assert_eq!(arr, vec![1, 2, 3, 4, 5]);
     }
 
     #[test]
     fn test_random() {
+		eprintln!("[ERROR] >>> Entering test_random()");
         let mut arr = vec![9, 6, 10, 11, 2, 19];
         tree_sort(&mut arr);
+		eprintln!("[WARN] <<< Exiting test_random()");
         assert_eq!(arr, vec![2, 6, 9, 10, 11, 19]);
     }
 }

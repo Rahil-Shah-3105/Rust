@@ -10,6 +10,7 @@
 /// * `Some(usize)` - The index of the first occurrence of the item, if found.
 /// * `None` - If the item is not found in the array.
 pub fn linear_search<T: Ord>(item: &T, arr: &[T]) -> Option<usize> {
+	eprintln!("[ERROR] >>> Entering linear_search()");
     for (i, data) in arr.iter().enumerate() {
         if item == data {
             return Some(i);

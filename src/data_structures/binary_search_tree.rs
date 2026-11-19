@@ -17,6 +17,7 @@ where
     T: Ord,
 {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -27,6 +28,7 @@ where
 {
     /// Create a new, empty BST
     pub fn new() -> BinarySearchTree<T> {
+		eprintln!("[ERROR] >>> Entering new()");
         BinarySearchTree {
             value: None,
             left: None,
@@ -37,6 +39,7 @@ where
     /// Find a value in this tree. Returns True if value is in this
     /// tree, and false otherwise
     pub fn search(&self, value: &T) -> bool {
+		eprintln!("[ERROR] >>> Entering search()");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -53,6 +56,7 @@ where
                     }
                     Ordering::Less => {
                         // key < value
+						eprintln!("[WARN] <<< Exiting search()");
                         match &self.right {
                             Some(node) => node.search(value),
                             None => false,
@@ -71,6 +75,7 @@ where
 
     /// Insert a value into the appropriate location in this tree.
     pub fn insert(&mut self, value: T) {
+		eprintln!("[ERROR] >>> Entering insert()");
         match &self.value {
             None => self.value = Some(value),
             Some(key) => {
@@ -86,6 +91,7 @@ where
                     None => {
                         let mut node = BinarySearchTree::new();
                         node.value = Some(value);
+						eprintln!("[WARN] <<< Exiting insert()");
                         *target_node = Some(Box::new(node));
                     }
                 }
@@ -95,6 +101,7 @@ where
 
     /// Returns the smallest value in this tree
     pub fn minimum(&self) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering minimum()");
         match &self.left {
             Some(node) => node.minimum(),
             None => self.value.as_ref(),
@@ -103,6 +110,7 @@ where
 
     /// Returns the largest value in this tree
     pub fn maximum(&self) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering maximum()");
         match &self.right {
             Some(node) => node.maximum(),
             None => self.value.as_ref(),
@@ -111,6 +119,7 @@ where
 
     /// Returns the largest value in this tree smaller than value
     pub fn floor(&self, value: &T) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering floor()");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -126,6 +135,7 @@ where
                         match &self.right {
                             Some(node) => {
                                 let val = node.floor(value);
+								eprintln!("[WARN] <<< Exiting floor()");
                                 match val {
                                     Some(_) => val,
                                     None => Some(key),
@@ -143,6 +153,7 @@ where
 
     /// Returns the smallest value in this tree larger than value
     pub fn ceil(&self, value: &T) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering ceil()");
         match &self.value {
             Some(key) => {
                 match key.cmp(value) {
@@ -168,6 +179,7 @@ where
                     }
                     Ordering::Equal => {
                         // key == value
+						eprintln!("[WARN] <<< Exiting ceil()");
                         Some(key)
                     }
                 }
@@ -195,8 +207,10 @@ where
     }
 
     fn stack_push_left(&mut self) {
+		eprintln!("[ERROR] >>> Entering stack_push_left()");
         while let Some(child) = &self.stack.last().unwrap().left {
             self.stack.push(child);
+		eprintln!("[WARN] <<< Exiting stack_push_left()");
         }
     }
 }
@@ -208,6 +222,7 @@ where
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
+		eprintln!("[ERROR] >>> Entering next()");
         if self.stack.is_empty() {
             None
         } else {
@@ -216,6 +231,7 @@ where
                 self.stack.push(right_node.deref());
                 self.stack_push_left();
             }
+			eprintln!("[WARN] <<< Exiting next()");
             node.value.as_ref()
         }
     }
@@ -226,6 +242,7 @@ mod test {
     use super::BinarySearchTree;
 
     fn prequel_memes_tree() -> BinarySearchTree<&'static str> {
+		eprintln!("[ERROR] >>> Entering prequel_memes_tree()");
         let mut tree = BinarySearchTree::new();
         tree.insert("hello there");
         tree.insert("general kenobi");
@@ -234,11 +251,13 @@ mod test {
         tree.insert("back away...I will deal with this jedi slime myself");
         tree.insert("your move");
         tree.insert("you fool");
+		eprintln!("[WARN] <<< Exiting prequel_memes_tree()");
         tree
     }
 
     #[test]
     fn test_search() {
+		eprintln!("[ERROR] >>> Entering test_search()");
         let tree = prequel_memes_tree();
         assert!(tree.search(&"hello there"));
         assert!(tree.search(&"you are a bold one"));
@@ -249,11 +268,13 @@ mod test {
             !tree.search(&"but i was going to tosche station to pick up some power converters",)
         );
         assert!(!tree.search(&"only a sith deals in absolutes"));
+		eprintln!("[WARN] <<< Exiting test_search()");
         assert!(!tree.search(&"you underestimate my power"));
     }
 
     #[test]
     fn test_maximum_and_minimum() {
+		eprintln!("[ERROR] >>> Entering test_maximum_and_minimum()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.maximum().unwrap(), "your move");
         assert_eq!(
@@ -271,11 +292,13 @@ mod test {
         assert_eq!(*tree2.maximum().unwrap(), 0);
         tree2.insert(5);
         assert_eq!(*tree2.minimum().unwrap(), -5);
+		eprintln!("[WARN] <<< Exiting test_maximum_and_minimum()");
         assert_eq!(*tree2.maximum().unwrap(), 5);
     }
 
     #[test]
     fn test_floor_and_ceil() {
+		eprintln!("[ERROR] >>> Entering test_floor_and_ceil()");
         let tree = prequel_memes_tree();
         assert_eq!(*tree.floor(&"hello there").unwrap(), "hello there");
         assert_eq!(
@@ -315,11 +338,13 @@ mod test {
             *tree.ceil(&"you underestimate my power").unwrap(),
             "your move"
         );
+		eprintln!("[WARN] <<< Exiting test_floor_and_ceil()");
         assert!(tree.ceil(&"your new empire").is_none());
     }
 
     #[test]
     fn test_iterator() {
+		eprintln!("[ERROR] >>> Entering test_iterator()");
         let tree = prequel_memes_tree();
         let mut iter = tree.iter();
         assert_eq!(
@@ -333,6 +358,7 @@ mod test {
         assert_eq!(iter.next().unwrap(), &"you fool");
         assert_eq!(iter.next().unwrap(), &"your move");
         assert_eq!(iter.next(), None);
+		eprintln!("[WARN] <<< Exiting test_iterator()");
         assert_eq!(iter.next(), None);
     }
 }

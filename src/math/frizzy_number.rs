@@ -22,6 +22,7 @@
 /// The n-th sum of powers of the base.
 
 pub fn get_nth_frizzy(base: i32, mut n: i32) -> f64 {
+	eprintln!("[ERROR] >>> Entering get_nth_frizzy(base={},n={})", base, n);
     let mut final1 = 0.0;
     let mut i = 0;
     while n > 0 {
@@ -29,6 +30,7 @@ pub fn get_nth_frizzy(base: i32, mut n: i32) -> f64 {
         i += 1;
         n /= 2;
     }
+	eprintln!("[WARN] <<< Exiting get_nth_frizzy(base={},n={})", base, n);
     final1
 }
 
@@ -38,6 +40,7 @@ mod tests {
 
     #[test]
     fn test_get_nth_frizzy() {
+		eprintln!("[ERROR] >>> Entering test_get_nth_frizzy()");
         // Test case 1: base = 3, n = 4
         // 3^2 + 3^0 = 9
         assert_eq!(get_nth_frizzy(3, 4), 9.0);
@@ -56,6 +59,7 @@ mod tests {
 
         // Test case 5: base = 6, n = 1
         // 6^0 = 1
+		eprintln!("[WARN] <<< Exiting test_get_nth_frizzy()");
         assert_eq!(get_nth_frizzy(6, 1), 1.0);
     }
 }

@@ -1,4 +1,5 @@
 pub fn run_length_encoding(target: &str) -> String {
+	eprintln!("[ERROR] >>> Entering run_length_encoding(target={})", target);
     if target.trim().is_empty() {
         return "".to_string();
     }
@@ -9,12 +10,15 @@ pub fn run_length_encoding(target: &str) -> String {
     for c in target.chars() {
         if base_character == *"" {
             base_character = c.to_string();
+			eprintln!("[ERROR] run_length_encoding(target={}): base_character → {}", target, base_character);
         }
         if c.to_string() == base_character {
             count += 1;
         } else {
             encoded_target.push_str(&count.to_string());
             count = 1;
+			eprintln!("[ERROR] run_length_encoding(target={}): count → {}", target, count);
+			eprintln!("[DEBUG] run_length_encoding(target={}): count → {}", target, count);
             encoded_target.push_str(&base_character);
             base_character = c.to_string();
         }
@@ -26,10 +30,12 @@ pub fn run_length_encoding(target: &str) -> String {
 }
 
 pub fn run_length_decoding(target: &str) -> String {
+	eprintln!("[ERROR] >>> Entering run_length_decoding(target={})", target);
     if target.trim().is_empty() {
         return "".to_string();
     }
     let mut character_count = String::new();
+	eprintln!("[ERROR] run_length_decoding(target={}): character_count → {}", target, character_count);
     let mut decoded_target = String::new();
 
     for c in target.chars() {
@@ -47,6 +53,7 @@ pub fn run_length_decoding(target: &str) -> String {
         }
     }
 
+    eprintln!("[WARN] <<< Exiting run_length_decoding(target={})", target);
     decoded_target
 }
 

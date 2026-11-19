@@ -21,6 +21,7 @@ use std::cmp::Ordering;
 /// - `Some(index)` if the item is found at the given index.
 /// - `None` if the item is not found in the array.
 pub fn binary_search_rec<T: Ord>(item: &T, arr: &[T], left: usize, right: usize) -> Option<usize> {
+	eprintln!("[ERROR] >>> Entering binary_search_rec(left={},right={})", left, right);
     if left >= right {
         return None;
     }
@@ -34,6 +35,7 @@ pub fn binary_search_rec<T: Ord>(item: &T, arr: &[T], left: usize, right: usize)
             binary_search_rec(item, arr, left, mid)
         }
         (true, Ordering::Greater) | (false, Ordering::Less) => {
+			eprintln!("[WARN] <<< Exiting binary_search_rec(left={},right={})", left, right);
             binary_search_rec(item, arr, mid + 1, right)
         }
         (_, Ordering::Equal) => Some(mid),

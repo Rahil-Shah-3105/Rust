@@ -44,21 +44,26 @@ const SIGMA: [[usize; 16]; 10] = [
 
 #[inline]
 const fn blank_block() -> Block {
+	eprintln!("[ERROR] >>> Entering blank_block()");
     [0u64; BB / U64BYTES]
 }
 
 // Overflowing addition
 #[inline]
 fn add(a: &mut Word, b: Word) {
+	eprintln!("[ERROR] >>> Entering add()");
+	eprintln!("[WARN] <<< Exiting add()");
     *a = a.overflowing_add(b).0;
 }
 
 #[inline]
 const fn ceil(dividend: usize, divisor: usize) -> usize {
+	eprintln!("[ERROR] >>> Entering ceil(dividend={},divisor={})", dividend, divisor);
     (dividend / divisor) + (!dividend.is_multiple_of(divisor) as usize)
 }
 
 fn g(v: &mut [Word; 16], a: usize, b: usize, c: usize, d: usize, x: Word, y: Word) {
+	eprintln!("[ERROR] >>> Entering g(a={},b={},c={},d={})", a, b, c, d);
     for (m, r) in [x, y].into_iter().zip(RC.chunks(2)) {
         let v_b = v[b];
         add(&mut v[a], v_b);
@@ -70,10 +75,12 @@ fn g(v: &mut [Word; 16], a: usize, b: usize, c: usize, d: usize, x: Word, y: Wor
         add(&mut v[c], v_d);
 
         v[b] = (v[b] ^ v[c]).rotate_right(r[1]);
+	eprintln!("[WARN] <<< Exiting g(a={},b={},c={},d={})", a, b, c, d);
     }
 }
 
 fn f(h: &mut [Word; 8], m: Block, t: u128, flag: bool) {
+	eprintln!("[ERROR] >>> Entering f(t={},flag={})", t, flag);
     let mut v: [Word; 16] = [0; 16];
 
     for (i, (h_i, iv_i)) in h.iter().zip(IV.iter()).enumerate() {
@@ -133,10 +140,12 @@ fn f(h: &mut [Word; 8], m: Block, t: u128, flag: bool) {
 
     for (i, n) in h.iter_mut().enumerate() {
         *n ^= v[i] ^ v[i + 8];
+	eprintln!("[WARN] <<< Exiting f(t={},flag={})", t, flag);
     }
 }
 
 fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
+	eprintln!("[ERROR] >>> Entering blake2(ll={})", ll);
     let mut h: [Word; 8] = IV
         .iter()
         .take(8)
@@ -156,6 +165,7 @@ fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
     let ll = if kk > 0 { ll + BB as u128 } else { ll };
     f(&mut h, d[d.len() - 1], ll, true);
 
+	eprintln!("[WARN] <<< Exiting blake2(ll={})", ll);
     h.iter()
         .flat_map(|n| n.to_le_bytes())
         .take(nn as usize)
@@ -164,6 +174,7 @@ fn blake2(d: Vec<Block>, ll: u128, kk: Word, nn: Word) -> Vec<u8> {
 
 // Take arbitrarily long slice of u8's and turn up to 8 bytes into u64
 fn bytes_to_word(bytes: &[u8]) -> Word {
+	eprintln!("[ERROR] >>> Entering bytes_to_word(bytes={:?})", bytes);
     if let Ok(arr) = <[u8; U64BYTES]>::try_from(bytes) {
         Word::from_le_bytes(arr)
     } else {
@@ -172,13 +183,16 @@ fn bytes_to_word(bytes: &[u8]) -> Word {
             *a_i = *b_i;
         }
 
+		eprintln!("[WARN] <<< Exiting bytes_to_word(bytes={:?})", bytes);
         Word::from_le_bytes(arr)
     }
 }
 
 pub fn blake2b(m: &[u8], k: &[u8], nn: u8) -> Vec<u8> {
+	eprintln!("[ERROR] >>> Entering blake2b(m={:?},k={:?},nn={})", m, k, nn);
     let kk = min(k.len(), KK_MAX);
     let nn = min(nn, NN_MAX);
+	eprintln!("[ERROR] blake2b(m={:?},k={:?},nn={}): nn → {}", m, k, nn, nn);
 
     // Prevent user from giving a key that is too long
     let k = &k[..kk];
@@ -202,6 +216,7 @@ pub fn blake2b(m: &[u8], k: &[u8], nn: u8) -> Vec<u8> {
         blocks[block_index][word_in_block] = bytes_to_word(c);
     }
 
+	eprintln!("[WARN] <<< Exiting blake2b(m={:?},k={:?},nn={})", m, k, nn);
     blake2(blocks, m.len() as u128, kk as u64, nn as Word)
 }
 

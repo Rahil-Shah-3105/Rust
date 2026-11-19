@@ -12,6 +12,7 @@ struct Suffix {
 
 impl Suffix {
     fn cmp(&self, b: &Self) -> Ordering {
+		eprintln!("[ERROR] >>> Entering cmp()");
         let a = self;
         let ((a1, a2), (b1, b2)) = (a.rank, b.rank);
         match a1.cmp(&b1) {
@@ -19,6 +20,7 @@ impl Suffix {
                 if a2 < b2 {
                     Ordering::Less
                 } else {
+					eprintln!("[WARN] <<< Exiting cmp()");
                     Ordering::Greater
                 }
             }
@@ -28,7 +30,9 @@ impl Suffix {
 }
 
 pub fn generate_suffix_array(txt: &str) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering generate_suffix_array(txt={})", txt);
     let n = txt.len();
+	eprintln!("[ERROR] generate_suffix_array(txt={}): n → {}", txt, n);
     let mut suffixes: Vec<Suffix> = vec![
         Suffix {
             index: 0,
@@ -80,6 +84,7 @@ pub fn generate_suffix_array(txt: &str) -> Vec<usize> {
     for suf in suffixes {
         suffix_arr.push(suf.index);
     }
+	eprintln!("[WARN] <<< Exiting generate_suffix_array(txt={})", txt);
     suffix_arr
 }
 
@@ -89,7 +94,10 @@ mod tests {
 
     #[test]
     fn test_suffix_array() {
+		eprintln!("[ERROR] >>> Entering test_suffix_array()");
         let a = generate_suffix_array("banana");
+		eprintln!("[ERROR] test_suffix_array(): a → {:?}", a);
+    eprintln!("[WARN] <<< Exiting test_suffix_array()");
         assert_eq!(a, vec![5, 3, 1, 0, 4, 2]);
     }
 }

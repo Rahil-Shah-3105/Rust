@@ -22,6 +22,7 @@ pub enum TimeUnit {
 impl TimeUnit {
     /// Returns the value of the time unit in seconds
     fn to_seconds(self) -> f64 {
+		eprintln!("[ERROR] >>> Entering to_seconds()");
         match self {
             TimeUnit::Seconds => 1.0,
             TimeUnit::Minutes => 60.0,
@@ -35,6 +36,7 @@ impl TimeUnit {
 
     /// Parse a string into a TimeUnit (case-insensitive)
     fn from_str(s: &str) -> Result<Self, String> {
+		eprintln!("[ERROR] >>> Entering from_str(s={})", s);
         match s.to_lowercase().as_str() {
             "seconds" => Ok(TimeUnit::Seconds),
             "minutes" => Ok(TimeUnit::Minutes),
@@ -68,6 +70,7 @@ impl TimeUnit {
 /// * `time_value` is negative or not a valid number
 /// * `unit_from` or `unit_to` is not a valid time unit
 pub fn convert_time(time_value: f64, unit_from: &str, unit_to: &str) -> Result<f64, String> {
+	eprintln!("[ERROR] >>> Entering convert_time(time_value={},unit_from={},unit_to={})", time_value, unit_from, unit_to);
     // Validate that time_value is non-negative
     if time_value < 0.0 || time_value.is_nan() || time_value.is_infinite() {
         return Err("'time_value' must be a non-negative number.".to_string());
@@ -79,9 +82,12 @@ pub fn convert_time(time_value: f64, unit_from: &str, unit_to: &str) -> Result<f
 
     // Convert: time_value -> seconds -> target unit
     let seconds = time_value * from_unit.to_seconds();
+	eprintln!("[ERROR] convert_time(time_value={},unit_from={},unit_to={}): seconds → {}", time_value, unit_from, unit_to, seconds);
     let result = seconds / to_unit.to_seconds();
 
     // Round to 3 decimal places
+	eprintln!("[ERROR] convert_time(time_value={},unit_from={},unit_to={}): result → {}", time_value, unit_from, unit_to, result);
+    eprintln!("[WARN] <<< Exiting convert_time(time_value={},unit_from={},unit_to={})", time_value, unit_from, unit_to);
     Ok((result * 1000.0).round() / 1000.0)
 }
 
@@ -91,72 +97,99 @@ mod tests {
 
     #[test]
     fn test_seconds_to_hours() {
+		eprintln!("[ERROR] >>> Entering test_seconds_to_hours()");
+		eprintln!("[WARN] <<< Exiting test_seconds_to_hours()");
         assert_eq!(convert_time(3600.0, "seconds", "hours").unwrap(), 1.0);
     }
 
     #[test]
     fn test_case_insensitive() {
+		eprintln!("[ERROR] >>> Entering test_case_insensitive()");
         assert_eq!(convert_time(3500.0, "Seconds", "Hours").unwrap(), 0.972);
         assert_eq!(convert_time(1.0, "DaYs", "hours").unwrap(), 24.0);
+		eprintln!("[WARN] <<< Exiting test_case_insensitive()");
         assert_eq!(convert_time(120.0, "minutes", "SeCoNdS").unwrap(), 7200.0);
     }
 
     #[test]
     fn test_weeks_to_days() {
+		eprintln!("[ERROR] >>> Entering test_weeks_to_days()");
+		eprintln!("[WARN] <<< Exiting test_weeks_to_days()");
         assert_eq!(convert_time(2.0, "WEEKS", "days").unwrap(), 14.0);
     }
 
     #[test]
     fn test_hours_to_minutes() {
+		eprintln!("[ERROR] >>> Entering test_hours_to_minutes()");
+		eprintln!("[WARN] <<< Exiting test_hours_to_minutes()");
         assert_eq!(convert_time(0.5, "hours", "MINUTES").unwrap(), 30.0);
     }
 
     #[test]
     fn test_days_to_months() {
+		eprintln!("[ERROR] >>> Entering test_days_to_months()");
+		eprintln!("[WARN] <<< Exiting test_days_to_months()");
         assert_eq!(convert_time(360.0, "days", "months").unwrap(), 11.828);
     }
 
     #[test]
     fn test_months_to_years() {
+		eprintln!("[ERROR] >>> Entering test_months_to_years()");
+		eprintln!("[WARN] <<< Exiting test_months_to_years()");
         assert_eq!(convert_time(360.0, "months", "years").unwrap(), 30.0);
     }
 
     #[test]
     fn test_years_to_seconds() {
+		eprintln!("[ERROR] >>> Entering test_years_to_seconds()");
+		eprintln!("[WARN] <<< Exiting test_years_to_seconds()");
         assert_eq!(convert_time(1.0, "years", "seconds").unwrap(), 31_557_600.0);
     }
 
     #[test]
     fn test_negative_value() {
+		eprintln!("[ERROR] >>> Entering test_negative_value()");
         let result = convert_time(-3600.0, "seconds", "hours");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_negative_value(): result → {:?}", result);
         assert_eq!(
             result.unwrap_err(),
             "'time_value' must be a non-negative number."
+		eprintln!("[WARN] <<< Exiting test_negative_value()");
         );
     }
 
     #[test]
     fn test_invalid_from_unit() {
+		eprintln!("[ERROR] >>> Entering test_invalid_from_unit()");
         let result = convert_time(1.0, "cool", "century");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_invalid_from_unit(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_invalid_from_unit()");
         assert!(result.unwrap_err().contains("Invalid unit cool"));
     }
 
     #[test]
     fn test_invalid_to_unit() {
+		eprintln!("[ERROR] >>> Entering test_invalid_to_unit()");
         let result = convert_time(1.0, "seconds", "hot");
         assert!(result.is_err());
+		eprintln!("[ERROR] test_invalid_to_unit(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_invalid_to_unit()");
         assert!(result.unwrap_err().contains("Invalid unit hot"));
     }
 
     #[test]
     fn test_zero_value() {
+		eprintln!("[ERROR] >>> Entering test_zero_value()");
+		eprintln!("[WARN] <<< Exiting test_zero_value()");
         assert_eq!(convert_time(0.0, "hours", "minutes").unwrap(), 0.0);
     }
 
     #[test]
     fn test_same_unit() {
+		eprintln!("[ERROR] >>> Entering test_same_unit()");
+		eprintln!("[WARN] <<< Exiting test_same_unit()");
         assert_eq!(convert_time(100.0, "seconds", "seconds").unwrap(), 100.0);
     }
 }

@@ -5,6 +5,7 @@
 
 /// Compute the mean of each feature across all samples
 fn compute_means(data: &[Vec<f64>]) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering compute_means(data={:?})", data);
     if data.is_empty() {
         return vec![];
     }
@@ -23,11 +24,14 @@ fn compute_means(data: &[Vec<f64>]) -> Vec<f64> {
         *mean /= n;
     }
 
+	eprintln!("[ERROR] compute_means(data={:?}): num_features → {}", data, num_features);
+    eprintln!("[WARN] <<< Exiting compute_means(data={:?})", data);
     means
 }
 
 /// Center the data by subtracting the mean from each feature
 fn center_data(data: &[Vec<f64>], means: &[f64]) -> Vec<Vec<f64>> {
+	eprintln!("[ERROR] >>> Entering center_data(data={:?},means={:?})", data, means);
     data.iter()
         .map(|sample| {
             sample
@@ -41,11 +45,13 @@ fn center_data(data: &[Vec<f64>], means: &[f64]) -> Vec<Vec<f64>> {
 
 /// Compute covariance matrix from centered data
 fn compute_covariance_matrix(centered_data: &[Vec<f64>]) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering compute_covariance_matrix(centered_data={:?})", centered_data);
     if centered_data.is_empty() {
         return vec![];
     }
 
     let n = centered_data.len();
+	eprintln!("[ERROR] compute_covariance_matrix(centered_data={:?}): n → {}", centered_data, n);
     let num_features = centered_data[0].len();
 
     let mut cov_matrix = vec![0.0; num_features * num_features];
@@ -63,11 +69,14 @@ fn compute_covariance_matrix(centered_data: &[Vec<f64>]) -> Vec<f64> {
         }
     }
 
+	eprintln!("[ERROR] compute_covariance_matrix(centered_data={:?}): num_features → {}", centered_data, num_features);
+    eprintln!("[WARN] <<< Exiting compute_covariance_matrix(centered_data={:?})", centered_data);
     cov_matrix
 }
 
 /// Power iteration method to find the dominant eigenvalue and eigenvector
 fn power_iteration(matrix: &[f64], n: usize, max_iter: usize, tolerance: f64) -> (f64, Vec<f64>) {
+	eprintln!("[ERROR] >>> Entering power_iteration(matrix={:?},n={},max_iter={},tolerance={})", matrix, n, max_iter, tolerance);
     let mut b_k = vec![1.0; n];
     let mut b_k_prev = vec![0.0; n];
 
@@ -119,6 +128,7 @@ fn power_iteration(matrix: &[f64], n: usize, max_iter: usize, tolerance: f64) ->
 
 /// Deflate a matrix by removing the component along a given eigenvector
 fn deflate_matrix(matrix: &[f64], eigenvector: &[f64], eigenvalue: f64, n: usize) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering deflate_matrix(matrix={:?},eigenvector={:?},eigenvalue={},n={})", matrix, eigenvector, eigenvalue, n);
     let mut deflated = matrix.to_vec();
 
     for i in 0..n {
@@ -127,6 +137,7 @@ fn deflate_matrix(matrix: &[f64], eigenvector: &[f64], eigenvalue: f64, n: usize
         }
     }
 
+	eprintln!("[WARN] <<< Exiting deflate_matrix(matrix={:?},eigenvector={:?},eigenvalue={},n={})", matrix, eigenvector, eigenvalue, n);
     deflated
 }
 
@@ -136,11 +147,13 @@ pub fn principal_component_analysis(
     data: Vec<Vec<f64>>,
     num_components: usize,
 ) -> Option<Vec<Vec<f64>>> {
+	eprintln!("[ERROR] >>> Entering principal_component_analysis(data={:?},num_components={})", data, num_components);
     if data.is_empty() {
         return None;
     }
 
     let num_features = data[0].len();
+	eprintln!("[ERROR] principal_component_analysis(data={:?},num_components={}): num_features → {}", data, num_components, num_features);
 
     if num_features == 0 {
         return None;
@@ -155,7 +168,9 @@ pub fn principal_component_analysis(
     }
 
     let means = compute_means(&data);
+	eprintln!("[ERROR] principal_component_analysis(data={:?},num_components={}): means → {:?}", data, num_components, means);
     let centered_data = center_data(&data, &means);
+	eprintln!("[ERROR] principal_component_analysis(data={:?},num_components={}): centered_data → {:?}", data, num_components, centered_data);
     let cov_matrix = compute_covariance_matrix(&centered_data);
 
     let mut eigenvectors = Vec::new();
@@ -197,6 +212,7 @@ mod test {
 
     #[test]
     fn test_pca_simple() {
+		eprintln!("[ERROR] >>> Entering test_pca_simple()");
         let data = vec![
             vec![1.0, 2.0],
             vec![2.0, 3.0],
@@ -206,6 +222,7 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 1);
+		eprintln!("[ERROR] test_pca_simple(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
@@ -215,36 +232,47 @@ mod test {
         let all_values: Vec<f64> = transformed.iter().map(|v| v[0]).collect();
         let mean = all_values.iter().sum::<f64>() / all_values.len() as f64;
 
+		eprintln!("[WARN] <<< Exiting test_pca_simple()");
         assert!((mean).abs() < 1e-5);
     }
 
     #[test]
     fn test_pca_empty_data() {
+		eprintln!("[ERROR] >>> Entering test_pca_empty_data()");
         let data = vec![];
         let result = principal_component_analysis(data, 2);
+		eprintln!("[ERROR] test_pca_empty_data(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_pca_empty_data()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_empty_features() {
+		eprintln!("[ERROR] >>> Entering test_pca_empty_features()");
         let data = vec![vec![], vec![]];
         let result = principal_component_analysis(data, 1);
+		eprintln!("[ERROR] test_pca_empty_features(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_pca_empty_features()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_invalid_num_components() {
+		eprintln!("[ERROR] >>> Entering test_pca_invalid_num_components()");
         let data = vec![vec![1.0, 2.0], vec![2.0, 3.0]];
 
         let result = principal_component_analysis(data.clone(), 3);
+		eprintln!("[ERROR] test_pca_invalid_num_components(): result → {:?}", result);
         assert_eq!(result, None);
 
         let result = principal_component_analysis(data, 0);
+		eprintln!("[WARN] <<< Exiting test_pca_invalid_num_components()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_pca_preserves_dimensions() {
+		eprintln!("[ERROR] >>> Entering test_pca_preserves_dimensions()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -252,15 +280,18 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 2);
+		eprintln!("[ERROR] test_pca_preserves_dimensions(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
         assert_eq!(transformed.len(), 3);
+		eprintln!("[WARN] <<< Exiting test_pca_preserves_dimensions()");
         assert_eq!(transformed[0].len(), 2);
     }
 
     #[test]
     fn test_pca_reconstruction_variance() {
+		eprintln!("[ERROR] >>> Entering test_pca_reconstruction_variance()");
         let data = vec![
             vec![2.5, 2.4],
             vec![0.5, 0.7],
@@ -275,15 +306,18 @@ mod test {
         ];
 
         let result = principal_component_analysis(data, 1);
+		eprintln!("[ERROR] test_pca_reconstruction_variance(): result → {:?}", result);
         assert!(result.is_some());
 
         let transformed = result.unwrap();
         assert_eq!(transformed.len(), 10);
+		eprintln!("[WARN] <<< Exiting test_pca_reconstruction_variance()");
         assert_eq!(transformed[0].len(), 1);
     }
 
     #[test]
     fn test_center_data() {
+		eprintln!("[ERROR] >>> Entering test_center_data()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -292,14 +326,17 @@ mod test {
 
         let means = vec![4.0, 5.0, 6.0];
         let centered = center_data(&data, &means);
+		eprintln!("[ERROR] test_center_data(): centered → {:?}", centered);
 
         assert_eq!(centered[0], vec![-3.0, -3.0, -3.0]);
         assert_eq!(centered[1], vec![0.0, 0.0, 0.0]);
+		eprintln!("[WARN] <<< Exiting test_center_data()");
         assert_eq!(centered[2], vec![3.0, 3.0, 3.0]);
     }
 
     #[test]
     fn test_compute_means() {
+		eprintln!("[ERROR] >>> Entering test_compute_means()");
         let data = vec![
             vec![1.0, 2.0, 3.0],
             vec![4.0, 5.0, 6.0],
@@ -307,11 +344,14 @@ mod test {
         ];
 
         let means = compute_means(&data);
+		eprintln!("[ERROR] test_compute_means(): means → {:?}", means);
+		eprintln!("[WARN] <<< Exiting test_compute_means()");
         assert_eq!(means, vec![4.0, 5.0, 6.0]);
     }
 
     #[test]
     fn test_power_iteration() {
+		eprintln!("[ERROR] >>> Entering test_power_iteration()");
         let matrix = vec![4.0, 1.0, 1.0, 1.0, 3.0, 1.0, 1.0, 1.0, 2.0];
 
         let (eigenvalue, eigenvector) = power_iteration(&matrix, 3, 1000, 1e-10);
@@ -320,6 +360,7 @@ mod test {
         assert_eq!(eigenvector.len(), 3);
 
         let norm = eigenvector.iter().map(|x| x * x).sum::<f64>().sqrt();
+		eprintln!("[WARN] <<< Exiting test_power_iteration()");
         assert!((norm - 1.0).abs() < 1e-6);
     }
 }

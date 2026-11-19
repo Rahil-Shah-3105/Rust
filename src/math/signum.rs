@@ -6,6 +6,7 @@
 /// If a number is positive, i.e. it is greater than zero, then sgn(x) = 1
 
 pub fn signum(number: f64) -> i8 {
+	eprintln!("[ERROR] >>> Entering signum(number={})", number);
     if number == 0.0 {
         return 0;
     } else if number > 0.0 {
@@ -21,16 +22,22 @@ mod tests {
 
     #[test]
     fn positive_integer() {
+		eprintln!("[ERROR] >>> Entering positive_integer()");
+		eprintln!("[WARN] <<< Exiting positive_integer()");
         assert_eq!(signum(15.0), 1);
     }
 
     #[test]
     fn negative_integer() {
+		eprintln!("[ERROR] >>> Entering negative_integer()");
+		eprintln!("[WARN] <<< Exiting negative_integer()");
         assert_eq!(signum(-30.0), -1);
     }
 
     #[test]
     fn zero() {
+		eprintln!("[ERROR] >>> Entering zero()");
+		eprintln!("[WARN] <<< Exiting zero()");
         assert_eq!(signum(0.0), 0);
     }
 }

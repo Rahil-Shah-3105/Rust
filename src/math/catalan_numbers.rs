@@ -13,6 +13,7 @@ const MOD: i64 = 1000000007; // Define your MOD value here
 const MAX: usize = 1005; // Define your MAX value here
 
 pub fn init_catalan() -> Vec<i64> {
+	eprintln!("[ERROR] >>> Entering init_catalan()");
     let mut catalan = vec![0; MAX];
     catalan[0] = 1;
     catalan[1] = 1;
@@ -27,6 +28,7 @@ pub fn init_catalan() -> Vec<i64> {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting init_catalan()");
     catalan
 }
 
@@ -36,8 +38,10 @@ mod tests {
 
     #[test]
     fn test_catalan() {
+		eprintln!("[ERROR] >>> Entering test_catalan()");
         let catalan = init_catalan();
 
+		eprintln!("[ERROR] test_catalan(): catalan → {:?}", catalan);
         // Test case 1: Catalan number for n = 0
         assert_eq!(catalan[0], 1);
 
@@ -54,6 +58,7 @@ mod tests {
         assert_eq!(catalan[15], 9694845);
 
         // Print a success message if all tests pass
+		eprintln!("[WARN] <<< Exiting test_catalan()");
         println!("All tests passed!");
     }
 }

@@ -35,6 +35,7 @@ mod tests {
 
     #[test]
     fn test_3_different_values() {
+		eprintln!("[ERROR] >>> Entering test_3_different_values()");
         let original = vec![1, 2, 3];
         let res = steinhaus_johnson_trotter_permute(&original);
         assert_eq!(res.len(), 6); // 3!
@@ -45,6 +46,7 @@ mod tests {
 
     #[test]
     fn test_3_times_the_same_value() {
+		eprintln!("[ERROR] >>> Entering test_3_times_the_same_value()");
         let original = vec![1, 1, 1];
         let res = steinhaus_johnson_trotter_permute(&original);
         assert_eq!(res.len(), 6); // 3!
@@ -55,7 +57,9 @@ mod tests {
 
     #[quickcheck]
     fn test_some_elements(NotTooBigVec { inner: original }: NotTooBigVec) {
+		eprintln!("[ERROR] >>> Entering test_some_elements()");
         let permutations = steinhaus_johnson_trotter_permute(&original);
+		eprintln!("[WARN] <<< Exiting test_some_elements()");
         assert_permutations(&original, &permutations)
     }
 }

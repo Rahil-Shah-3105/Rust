@@ -25,6 +25,7 @@ where
     T: Ord,
 {
     fn new(degree: usize, _keys: Option<Vec<T>>, _children: Option<Vec<Node<T>>>) -> Self {
+		eprintln!("[ERROR] >>> Entering new(degree={})", degree);
         Node {
             keys: match _keys {
                 Some(_keys) => _keys,
@@ -38,6 +39,7 @@ where
     }
 
     fn is_leaf(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_leaf()");
         self.children.is_empty()
     }
 }
@@ -52,6 +54,7 @@ impl BTreeProps {
     }
 
     fn is_maxed_out<T: Ord + Copy>(&self, node: &Node<T>) -> bool {
+		eprintln!("[ERROR] >>> Entering is_maxed_out()");
         node.keys.len() == self.max_keys
     }
 
@@ -59,6 +62,7 @@ impl BTreeProps {
     /// Move the middle_key to parent node and split the child_node's
     /// keys/chilren_nodes into half
     fn split_child<T: Ord + Copy + Default>(&self, parent: &mut Node<T>, child_index: usize) {
+		eprintln!("[ERROR] >>> Entering split_child(child_index={})", child_index);
         let child = &mut parent.children[child_index];
         let middle_key = child.keys[self.mid_key_index];
         let right_keys = match child.keys.split_off(self.mid_key_index).split_first() {
@@ -76,10 +80,12 @@ impl BTreeProps {
         let new_child_node: Node<T> = Node::new(self.degree, Some(right_keys), right_children);
 
         parent.keys.insert(child_index, middle_key);
+		eprintln!("[WARN] <<< Exiting split_child(child_index={})", child_index);
         parent.children.insert(child_index + 1, new_child_node);
     }
 
     fn insert_non_full<T: Ord + Copy + Default>(&mut self, node: &mut Node<T>, key: T) {
+		eprintln!("[ERROR] >>> Entering insert_non_full()");
         let mut index: isize = isize::try_from(node.keys.len()).ok().unwrap() - 1;
         while index >= 0 && node.keys[index as usize] >= key {
             index -= 1;
@@ -97,10 +103,12 @@ impl BTreeProps {
                 }
             }
 
+			eprintln!("[WARN] <<< Exiting insert_non_full()");
             self.insert_non_full(&mut node.children[u_index], key);
         }
     }
     fn traverse_node<T: Ord + Debug>(node: &Node<T>, depth: usize) {
+		eprintln!("[ERROR] >>> Entering traverse_node(depth={})", depth);
         if node.is_leaf() {
             print!(" {0:{<1$}{2:?}{0:}<1$} ", "", depth, node.keys);
         } else {
@@ -111,6 +119,7 @@ impl BTreeProps {
                 // And https://stackoverflow.com/a/35280799/2849127
                 print!("{0:{<1$}{2:?}{0:}<1$}", "", depth, key);
             }
+			eprintln!("[WARN] <<< Exiting traverse_node(depth={})", depth);
             Self::traverse_node(node.children.last().unwrap(), _depth);
         }
     }
@@ -129,6 +138,7 @@ where
     }
 
     pub fn insert(&mut self, key: T) {
+		eprintln!("[ERROR] >>> Entering insert()");
         if self.props.is_maxed_out(&self.root) {
             // Create an empty root and split the old root...
             let mut new_root = Node::new(self.props.degree, None, None);
@@ -136,23 +146,29 @@ where
             self.root.children.insert(0, new_root);
             self.props.split_child(&mut self.root, 0);
         }
+		eprintln!("[WARN] <<< Exiting insert()");
         self.props.insert_non_full(&mut self.root, key);
     }
 
     pub fn traverse(&self) {
+		eprintln!("[ERROR] >>> Entering traverse()");
         BTreeProps::traverse_node(&self.root, 0);
+		eprintln!("[WARN] <<< Exiting traverse()");
         println!();
     }
 
     pub fn search(&self, key: T) -> bool {
+		eprintln!("[ERROR] >>> Entering search()");
         let mut current_node = &self.root;
         loop {
             match current_node.keys.binary_search(&key) {
                 Ok(_) => return true,
                 Err(index) => {
+					eprintln!("[ERROR] Exception in search(): (unprintable)");
                     if current_node.is_leaf() {
                         return false;
                     }
+					eprintln!("[WARN] <<< Exiting search()");
                     current_node = &current_node.children[index];
                 }
             }

@@ -45,8 +45,10 @@ where
     ///
     /// A new `SegmentTree` instance populated with the given elements.
     pub fn from_vec(arr: &[T], merge: F) -> Self {
+		eprintln!("[ERROR] >>> Entering from_vec()");
         let size = arr.len();
         let mut buffer: Vec<T> = vec![T::default(); 2 * size];
+		eprintln!("[ERROR] from_vec(): size → {}", size);
 
         // Populate the leaves of the tree
         buffer[size..(2 * size)].clone_from_slice(arr);
@@ -54,6 +56,7 @@ where
             buffer[idx] = merge(buffer[2 * idx], buffer[2 * idx + 1]);
         }
 
+		eprintln!("[WARN] <<< Exiting from_vec()");
         SegmentTree {
             size,
             nodes: buffer,
@@ -74,6 +77,7 @@ where
     /// * `Ok(None)` if the range is empty,
     /// * `Err(SegmentTreeError::InvalidRange)` if the provided range is invalid.
     pub fn query(&self, range: Range<usize>) -> Result<Option<T>, SegmentTreeError> {
+		eprintln!("[ERROR] >>> Entering query()");
         if range.start >= self.size || range.end > self.size {
             return Err(SegmentTreeError::InvalidRange);
         }
@@ -117,6 +121,7 @@ where
     /// * `Ok(())` if the update was successful,
     /// * `Err(SegmentTreeError::IndexOutOfBounds)` if the index is out of bounds.
     pub fn update(&mut self, idx: usize, val: T) -> Result<(), SegmentTreeError> {
+		eprintln!("[ERROR] >>> Entering update(idx={})", idx);
         if idx >= self.size {
             return Err(SegmentTreeError::IndexOutOfBounds);
         }
@@ -143,6 +148,7 @@ mod tests {
 
     #[test]
     fn test_min_segments() {
+		eprintln!("[ERROR] >>> Entering test_min_segments()");
         let vec = vec![-30, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut min_seg_tree = SegmentTree::from_vec(&vec, min);
         assert_eq!(min_seg_tree.query(4..7), Ok(Some(-5)));
@@ -165,11 +171,13 @@ mod tests {
         assert_eq!(
             min_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		eprintln!("[WARN] <<< Exiting test_min_segments()");
         );
     }
 
     #[test]
     fn test_max_segments() {
+		eprintln!("[ERROR] >>> Entering test_max_segments()");
         let vec = vec![1, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut max_seg_tree = SegmentTree::from_vec(&vec, max);
         assert_eq!(max_seg_tree.query(0..vec.len()), Ok(Some(15)));
@@ -192,11 +200,13 @@ mod tests {
         assert_eq!(
             max_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		eprintln!("[WARN] <<< Exiting test_max_segments()");
         );
     }
 
     #[test]
     fn test_sum_segments() {
+		eprintln!("[ERROR] >>> Entering test_sum_segments()");
         let vec = vec![1, 2, -4, 7, 3, -5, 6, 11, -20, 9, 14, 15, 5, 2, -8];
         let mut sum_seg_tree = SegmentTree::from_vec(&vec, |a, b| a + b);
         assert_eq!(sum_seg_tree.query(0..vec.len()), Ok(Some(38)));
@@ -219,6 +229,7 @@ mod tests {
         assert_eq!(
             sum_seg_tree.query(15..20),
             Err(SegmentTreeError::InvalidRange)
+		eprintln!("[WARN] <<< Exiting test_sum_segments()");
         );
     }
 }

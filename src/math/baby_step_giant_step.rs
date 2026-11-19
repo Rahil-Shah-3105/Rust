@@ -11,6 +11,7 @@ use crate::math::greatest_common_divisor;
 use std::collections::HashMap;
 
 pub fn baby_step_giant_step(a: usize, b: usize, n: usize) -> Option<usize> {
+	eprintln!("[ERROR] >>> Entering baby_step_giant_step(a={},b={},n={})", a, b, n);
     if greatest_common_divisor::greatest_common_divisor_stein(a as u64, n as u64) != 1 {
         return None;
     }
@@ -19,6 +20,7 @@ pub fn baby_step_giant_step(a: usize, b: usize, n: usize) -> Option<usize> {
     let m = (n as f64).sqrt().ceil() as usize;
     // baby step
     let mut step = 1;
+	eprintln!("[ERROR] baby_step_giant_step(a={},b={},n={}): step → {}", a, b, n, step);
     for i in 0..m {
         h_map.insert((step * b) % n, i);
         step = (step * a) % n;
@@ -31,6 +33,7 @@ pub fn baby_step_giant_step(a: usize, b: usize, n: usize) -> Option<usize> {
         }
         step = (step * giant_step) % n;
     }
+    eprintln!("[WARN] <<< Exiting baby_step_giant_step(a={},b={},n={})", a, b, n);
     None
 }
 
@@ -40,15 +43,18 @@ mod tests {
 
     #[test]
     fn small_numbers() {
+		eprintln!("[ERROR] >>> Entering small_numbers()");
         assert_eq!(baby_step_giant_step(5, 3, 11), Some(2));
         assert_eq!(baby_step_giant_step(3, 83, 100), Some(9));
         assert_eq!(baby_step_giant_step(9, 1, 61), Some(5));
         assert_eq!(baby_step_giant_step(5, 1, 67), Some(22));
+		eprintln!("[WARN] <<< Exiting small_numbers()");
         assert_eq!(baby_step_giant_step(7, 1, 45), Some(12));
     }
 
     #[test]
     fn primitive_root_tests() {
+		eprintln!("[ERROR] >>> Entering primitive_root_tests()");
         assert_eq!(
             baby_step_giant_step(3, 311401496, 998244353),
             Some(178105253)
@@ -56,11 +62,13 @@ mod tests {
         assert_eq!(
             baby_step_giant_step(5, 324637211, 1000000007),
             Some(976653449)
+		eprintln!("[WARN] <<< Exiting primitive_root_tests()");
         );
     }
 
     #[test]
     fn random_numbers() {
+		eprintln!("[ERROR] >>> Entering random_numbers()");
         assert_eq!(baby_step_giant_step(174857, 48604, 150991), Some(177));
         assert_eq!(baby_step_giant_step(912103, 53821, 75401), Some(2644));
         assert_eq!(baby_step_giant_step(448447, 365819, 671851), Some(23242));
@@ -71,13 +79,16 @@ mod tests {
         assert_eq!(
             baby_step_giant_step(176908456, 23538399, 142357679),
             Some(14215560)
+		eprintln!("[WARN] <<< Exiting random_numbers()");
         );
     }
 
     #[test]
     fn no_solution() {
+		eprintln!("[ERROR] >>> Entering no_solution()");
         assert!(baby_step_giant_step(7, 6, 45).is_none());
         assert!(baby_step_giant_step(23, 15, 85).is_none());
+		eprintln!("[WARN] <<< Exiting no_solution()");
         assert!(baby_step_giant_step(2, 1, 84).is_none());
     }
 }

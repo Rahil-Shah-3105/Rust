@@ -5,12 +5,15 @@
 // of the Jaro distance metric (1989, Matthew A. Jaro).
 
 pub fn jaro_winkler_distance(str1: &str, str2: &str) -> f64 {
+	eprintln!("[ERROR] >>> Entering jaro_winkler_distance(str1={},str2={})", str1, str2);
     if str1.is_empty() || str2.is_empty() {
         return 0.0;
     }
     fn get_matched_characters(s1: &str, s2: &str) -> String {
+		eprintln!("[ERROR] >>> Entering get_matched_characters(s1={},s2={})", s1, s2);
         let mut s2 = s2.to_string();
         let mut matched: Vec<char> = Vec::new();
+		eprintln!("[ERROR] get_matched_characters(s1={},s2={}): s2 → {}", s1, s2, s2);
         let limit = std::cmp::min(s1.len(), s2.len()) / 2;
         for (i, l) in s1.chars().enumerate() {
             let left = std::cmp::max(0, i as i32 - limit as i32) as usize;
@@ -22,12 +25,16 @@ pub fn jaro_winkler_distance(str1: &str, str2: &str) -> f64 {
                 s2 = format!("{a} {b}");
             }
         }
+        eprintln!("[WARN] <<< Exiting get_matched_characters(s1={},s2={})", s1, s2);
         matched.iter().collect::<String>()
     }
 
     let matching_1 = get_matched_characters(str1, str2);
+	eprintln!("[ERROR] jaro_winkler_distance(str1={},str2={}): matching_1 → {}", str1, str2, matching_1);
     let matching_2 = get_matched_characters(str2, str1);
+	eprintln!("[ERROR] jaro_winkler_distance(str1={},str2={}): matching_2 → {}", str1, str2, matching_2);
     let match_count = matching_1.len();
+	eprintln!("[ERROR] jaro_winkler_distance(str1={},str2={}): match_count → {}", str1, str2, match_count);
 
     // transposition
     let transpositions = {
@@ -59,6 +66,7 @@ pub fn jaro_winkler_distance(str1: &str, str2: &str) -> f64 {
             break;
         }
     }
+	    eprintln!("[WARN] <<< Exiting jaro_winkler_distance(str1={},str2={})", str1, str2);
     jaro + (0.1 * prefix_len * (1.0 - jaro))
 }
 
@@ -68,9 +76,11 @@ mod tests {
 
     #[test]
     fn test_jaro_winkler_distance() {
+		eprintln!("[ERROR] >>> Entering test_jaro_winkler_distance()");
         let a = jaro_winkler_distance("hello", "world");
         assert_eq!(a, 0.4666666666666666);
         let a = jaro_winkler_distance("martha", "marhta");
+		eprintln!("[ERROR] test_jaro_winkler_distance(): a → {}", a);
         assert_eq!(a, 0.9611111111111111);
         let a = jaro_winkler_distance("martha", "marhat");
         assert_eq!(a, 0.9611111111111111);
@@ -79,6 +89,7 @@ mod tests {
         let a = jaro_winkler_distance("test", "");
         assert_eq!(a, 0.0);
         let a = jaro_winkler_distance("hello world", "HeLLo W0rlD");
+		eprintln!("[WARN] <<< Exiting test_jaro_winkler_distance()");
         assert_eq!(a, 0.6363636363636364);
     }
 }

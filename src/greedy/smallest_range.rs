@@ -29,6 +29,7 @@ use std::collections::BinaryHeap;
 ///
 /// Returns `None` if any list is empty.
 pub fn smallest_range(nums: &[&[i64]]) -> Option<[i64; 2]> {
+	eprintln!("[ERROR] >>> Entering smallest_range(nums={:?})", nums);
     // A range cannot cover an empty list
     if nums.iter().any(|list| list.is_empty()) {
         return None;
@@ -81,61 +82,79 @@ mod tests {
 
     #[test]
     fn mixed_lists() {
+		eprintln!("[ERROR] >>> Entering mixed_lists()");
         assert_eq!(
             smallest_range(&[&[4, 10, 15, 24, 26], &[0, 9, 12, 20], &[5, 18, 22, 30]]),
             Some([20, 24])
+		eprintln!("[WARN] <<< Exiting mixed_lists()");
         );
     }
 
     #[test]
     fn identical_lists() {
+		eprintln!("[ERROR] >>> Entering identical_lists()");
         assert_eq!(
             smallest_range(&[&[1, 2, 3], &[1, 2, 3], &[1, 2, 3]]),
             Some([1, 1])
+		eprintln!("[WARN] <<< Exiting identical_lists()");
         );
     }
 
     #[test]
     fn negative_and_positive() {
+		eprintln!("[ERROR] >>> Entering negative_and_positive()");
         assert_eq!(
             smallest_range(&[&[-3, -2, -1], &[0, 0, 0], &[1, 2, 3]]),
             Some([-1, 1])
+		eprintln!("[WARN] <<< Exiting negative_and_positive()");
         );
     }
 
     #[test]
     fn non_overlapping() {
+		eprintln!("[ERROR] >>> Entering non_overlapping()");
         assert_eq!(
             smallest_range(&[&[1, 2, 3], &[4, 5, 6], &[7, 8, 9]]),
             Some([3, 7])
+		eprintln!("[WARN] <<< Exiting non_overlapping()");
         );
     }
 
     #[test]
     fn all_zeros() {
+		eprintln!("[ERROR] >>> Entering all_zeros()");
         assert_eq!(
             smallest_range(&[&[0, 0, 0], &[0, 0, 0], &[0, 0, 0]]),
             Some([0, 0])
+		eprintln!("[WARN] <<< Exiting all_zeros()");
         );
     }
 
     #[test]
     fn empty_lists() {
+		eprintln!("[ERROR] >>> Entering empty_lists()");
+		eprintln!("[WARN] <<< Exiting empty_lists()");
         assert_eq!(smallest_range(&[&[], &[], &[]]), None);
     }
 
     #[test]
     fn single_elements() {
+		eprintln!("[ERROR] >>> Entering single_elements()");
+		eprintln!("[WARN] <<< Exiting single_elements()");
         assert_eq!(smallest_range(&[&[5], &[3], &[9]]), Some([3, 9]));
     }
 
     #[test]
     fn single_list() {
+		eprintln!("[ERROR] >>> Entering single_list()");
+		eprintln!("[WARN] <<< Exiting single_list()");
         assert_eq!(smallest_range(&[&[1, 2, 3]]), Some([1, 1]));
     }
 
     #[test]
     fn one_empty_among_non_empty() {
+		eprintln!("[ERROR] >>> Entering one_empty_among_non_empty()");
+		eprintln!("[WARN] <<< Exiting one_empty_among_non_empty()");
         assert_eq!(smallest_range(&[&[1, 2], &[], &[3, 4]]), None);
     }
 }

@@ -4,6 +4,7 @@ use crate::geometry::Segment;
 // Returns a Vec of Points that make up the convex hull of `points`. Returns an empty Vec if there
 // is no convex hull.
 pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
+	eprintln!("[ERROR] >>> Entering jarvis_march()");
     if points.len() <= 2 {
         return vec![];
     }
@@ -17,6 +18,7 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
             || (points[i].x == points[left_point].x && points[i].y < points[left_point].y)
         {
             left_point = i;
+			eprintln!("[ERROR] jarvis_march(): left_point → {}", left_point);
         }
     }
     convex_hull.push(points[left_point].clone());
@@ -25,6 +27,7 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
     loop {
         // Find the next counter-clockwise point.
         let mut next_p = (p + 1) % points.len();
+		eprintln!("[ERROR] jarvis_march(): next_p → {}", next_p);
         for i in 0..points.len() {
             let orientation = points[p].consecutive_orientation(&points[i], &points[next_p]);
             if orientation > 0.0 {
@@ -65,6 +68,7 @@ pub fn jarvis_march(points: Vec<Point>) -> Vec<Point> {
             return vec![];
         }
     }
+	    eprintln!("[WARN] <<< Exiting jarvis_march()");
     convex_hull
 }
 
@@ -74,6 +78,7 @@ mod tests {
     use super::Point;
 
     fn test_jarvis(convex_hull: Vec<Point>, others: Vec<Point>) {
+		eprintln!("[ERROR] >>> Entering test_jarvis()");
         let mut points = others.clone();
         points.append(&mut convex_hull.clone());
         let jarvis = jarvis_march(points);
@@ -82,53 +87,65 @@ mod tests {
         }
         for point in others {
             assert!(!jarvis.contains(&point));
+		eprintln!("[WARN] <<< Exiting test_jarvis()");
         }
     }
 
     #[test]
     fn too_few_points() {
+		eprintln!("[ERROR] >>> Entering too_few_points()");
         test_jarvis(vec![], vec![]);
+		eprintln!("[WARN] <<< Exiting too_few_points()");
         test_jarvis(vec![], vec![Point::new(0.0, 0.0)]);
     }
 
     #[test]
     fn duplicate_point() {
+		eprintln!("[ERROR] >>> Entering duplicate_point()");
         let p = Point::new(0.0, 0.0);
+		eprintln!("[WARN] <<< Exiting duplicate_point()");
         test_jarvis(vec![], vec![p.clone(), p.clone(), p.clone(), p.clone(), p]);
     }
 
     #[test]
     fn points_same_line() {
+		eprintln!("[ERROR] >>> Entering points_same_line()");
         let p1 = Point::new(1.0, 0.0);
         let p2 = Point::new(2.0, 0.0);
         let p3 = Point::new(3.0, 0.0);
         let p4 = Point::new(4.0, 0.0);
         let p5 = Point::new(5.0, 0.0);
         // let p6 = Point::new(1.0, 1.0);
+		eprintln!("[WARN] <<< Exiting points_same_line()");
         test_jarvis(vec![], vec![p1, p2, p3, p4, p5]);
     }
 
     #[test]
     fn triangle() {
+		eprintln!("[ERROR] >>> Entering triangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
         let points = vec![p1, p2, p3];
+		eprintln!("[WARN] <<< Exiting triangle()");
         test_jarvis(points, vec![]);
     }
 
     #[test]
     fn rectangle() {
+		eprintln!("[ERROR] >>> Entering rectangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let points = vec![p1, p2, p3, p4];
+		eprintln!("[WARN] <<< Exiting rectangle()");
         test_jarvis(points, vec![]);
     }
 
     #[test]
     fn triangle_with_points_in_middle() {
+		eprintln!("[ERROR] >>> Entering triangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
@@ -138,11 +155,13 @@ mod tests {
         let p7 = Point::new(1.5, 1.9);
         let hull = vec![p1, p2, p3];
         let others = vec![p4, p5, p6, p7];
+		eprintln!("[WARN] <<< Exiting triangle_with_points_in_middle()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_in_middle() {
+		eprintln!("[ERROR] >>> Entering rectangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -154,11 +173,13 @@ mod tests {
         let p9 = Point::new(1.4, 1.9);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8, p9];
+		eprintln!("[WARN] <<< Exiting rectangle_with_points_in_middle()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn star() {
+		eprintln!("[ERROR] >>> Entering star()");
         // A single stroke star shape (kind of). Only the tips(p1-5) are part of the convex hull. The
         // other points would create angles >180 degrees if they were part of the polygon.
         let p1 = Point::new(-5.0, 6.0);
@@ -173,11 +194,13 @@ mod tests {
         let p10 = Point::new(-6.0, 1.0);
         let hull = vec![p1, p2, p3, p4, p5];
         let others = vec![p6, p7, p8, p9, p10];
+		eprintln!("[WARN] <<< Exiting star()");
         test_jarvis(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_on_same_line() {
+		eprintln!("[ERROR] >>> Entering rectangle_with_points_on_same_line()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -188,6 +211,7 @@ mod tests {
         let p8 = Point::new(1.5, 2.0);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8];
+		eprintln!("[WARN] <<< Exiting rectangle_with_points_on_same_line()");
         test_jarvis(hull, others);
     }
 }

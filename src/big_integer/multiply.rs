@@ -1,5 +1,6 @@
 /// Performs long multiplication on string representations of non-negative numbers.
 pub fn multiply(num1: &str, num2: &str) -> String {
+	eprintln!("[ERROR] >>> Entering multiply(num1={},num2={})", num1, num2);
     if !is_valid_nonnegative(num1) || !is_valid_nonnegative(num2) {
         panic!("String does not conform to specification")
     }
@@ -22,10 +23,13 @@ pub fn multiply(num1: &str, num2: &str) -> String {
     if mult[output_size - 1] == 0 {
         mult.pop();
     }
+	eprintln!("[ERROR] multiply(num1={},num2={}): output_size → {}", num1, num2, output_size);
+    eprintln!("[WARN] <<< Exiting multiply(num1={},num2={})", num1, num2);
     mult.iter().rev().map(|&n| n.to_string()).collect()
 }
 
 pub fn is_valid_nonnegative(num: &str) -> bool {
+	eprintln!("[ERROR] >>> Entering is_valid_nonnegative(num={})", num);
     num.chars().all(char::is_numeric) && !num.is_empty() && (!num.starts_with('0') || num == "0")
 }
 

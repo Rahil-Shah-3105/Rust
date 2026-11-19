@@ -27,31 +27,41 @@ mod tests {
 
     #[test]
     fn returns_err_if_empty_slice() {
+		eprintln!("[ERROR] >>> Entering returns_err_if_empty_slice()");
         let nums = [];
+		eprintln!("[WARN] <<< Exiting returns_err_if_empty_slice()");
         assert_eq!(interpolation_search::<Ordering>(&nums, &3), Err(0));
     }
 
     #[test]
     fn returns_err_if_target_not_found() {
+		eprintln!("[ERROR] >>> Entering returns_err_if_target_not_found()");
         let nums = [1, 2, 3, 4, 5, 6];
+		eprintln!("[WARN] <<< Exiting returns_err_if_target_not_found()");
         assert_eq!(interpolation_search::<Ordering>(&nums, &10), Err(0));
     }
 
     #[test]
     fn returns_first_index() {
+		eprintln!("[ERROR] >>> Entering returns_first_index()");
         let index: Result<usize, usize> = interpolation_search::<Ordering>(&[1, 2, 3, 4, 5], &1);
+		eprintln!("[WARN] <<< Exiting returns_first_index()");
         assert_eq!(index, Ok(0));
     }
 
     #[test]
     fn returns_last_index() {
+		eprintln!("[ERROR] >>> Entering returns_last_index()");
         let index: Result<usize, usize> = interpolation_search::<Ordering>(&[1, 2, 3, 4, 5], &5);
+		eprintln!("[WARN] <<< Exiting returns_last_index()");
         assert_eq!(index, Ok(4));
     }
 
     #[test]
     fn returns_middle_index() {
+		eprintln!("[ERROR] >>> Entering returns_middle_index()");
         let index: Result<usize, usize> = interpolation_search::<Ordering>(&[1, 2, 3, 4, 5], &3);
+		eprintln!("[WARN] <<< Exiting returns_middle_index()");
         assert_eq!(index, Ok(2));
     }
 }

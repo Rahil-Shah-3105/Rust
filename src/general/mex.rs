@@ -5,6 +5,7 @@ use std::collections::BTreeSet;
 /// Uses [`BTreeSet`](std::collections::BTreeSet)
 /// O(nlog(n)) implementation
 pub fn mex_using_set(arr: &[i64]) -> i64 {
+	eprintln!("[ERROR] >>> Entering mex_using_set(arr={:?})", arr);
     let mut s: BTreeSet<i64> = BTreeSet::new();
     for i in 0..=arr.len() {
         s.insert(i as i64);
@@ -17,6 +18,7 @@ pub fn mex_using_set(arr: &[i64]) -> i64 {
     if let Some(x) = s.into_iter().next() {
         x
     } else {
+		eprintln!("[WARN] <<< Exiting mex_using_set(arr={:?})", arr);
         panic!("Some unknown error in mex_using_set")
     }
 }
@@ -24,6 +26,7 @@ pub fn mex_using_set(arr: &[i64]) -> i64 {
 /// Uses sorting
 /// O(nlog(n)) implementation
 pub fn mex_using_sort(arr: &[i64]) -> i64 {
+	eprintln!("[ERROR] >>> Entering mex_using_sort(arr={:?})", arr);
     let mut arr = arr.to_vec();
     arr.sort();
     let mut mex = 0;
@@ -44,6 +47,7 @@ mod tests {
     }
     impl MexTests {
         fn new() -> Self {
+			eprintln!("[ERROR] >>> Entering new()");
             Self {
                 test_arrays: vec![
                     vec![-1, 0, 1, 2, 3],
@@ -60,20 +64,26 @@ mod tests {
             }
         }
         fn test_function(&self, f: fn(&[i64]) -> i64) {
+			eprintln!("[ERROR] >>> Entering test_function()");
             for (nums, output) in self.test_arrays.iter().zip(self.outputs.iter()) {
                 assert_eq!(f(nums), *output);
+			eprintln!("[WARN] <<< Exiting test_function()");
             }
         }
     }
     #[test]
     fn test_mex_using_set() {
+		eprintln!("[ERROR] >>> Entering test_mex_using_set()");
         let tests = MexTests::new();
         mex_using_set(&[1, 23, 3]);
+		eprintln!("[WARN] <<< Exiting test_mex_using_set()");
         tests.test_function(mex_using_set);
     }
     #[test]
     fn test_mex_using_sort() {
+		eprintln!("[ERROR] >>> Entering test_mex_using_sort()");
         let tests = MexTests::new();
+		eprintln!("[WARN] <<< Exiting test_mex_using_sort()");
         tests.test_function(mex_using_sort);
     }
 }

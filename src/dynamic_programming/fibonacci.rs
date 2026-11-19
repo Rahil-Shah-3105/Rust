@@ -7,16 +7,20 @@ use std::collections::HashMap;
 ///
 /// Warning: This will overflow the 128-bit unsigned integer at n=186
 pub fn fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering fibonacci(n={})", n);
     // Use a and b to store the previous two values in the sequence
     let mut a = 0;
     let mut b = 1;
+	eprintln!("[ERROR] fibonacci(n={}): b → {}", n, b);
     for _i in 0..n {
         // As we iterate through, move b's value into a and the new computed
         // value into b.
         let c = a + b;
         a = b;
+		eprintln!("[ERROR] fibonacci(n={}): a → {}", n, a);
         b = c;
     }
+	eprintln!("[WARN] <<< Exiting fibonacci(n={})", n);
     b
 }
 
@@ -26,15 +30,19 @@ pub fn fibonacci(n: u32) -> u128 {
 ///
 /// Warning: This will overflow the 128-bit unsigned integer at n=186
 pub fn recursive_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering recursive_fibonacci(n={})", n);
     // Call the actual tail recursive implementation, with the extra
     // arguments set up.
+	eprintln!("[WARN] <<< Exiting recursive_fibonacci(n={})", n);
     _recursive_fibonacci(n, 0, 1)
 }
 
 fn _recursive_fibonacci(n: u32, previous: u128, current: u128) -> u128 {
+	eprintln!("[ERROR] >>> Entering _recursive_fibonacci(n={},previous={},current={})", n, previous, current);
     if n == 0 {
         current
     } else {
+		eprintln!("[WARN] <<< Exiting _recursive_fibonacci(n={},previous={},current={})", n, previous, current);
         _recursive_fibonacci(n - 1, current, current + previous)
     }
 }
@@ -45,14 +53,18 @@ fn _recursive_fibonacci(n: u32, previous: u128, current: u128) -> u128 {
 ///
 /// Warning: This will overflow the 128-bit unsigned integer at n=186
 pub fn classical_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering classical_fibonacci(n={})", n);
     match n {
         0 => 0,
         1 => 1,
         _ => {
             let k = n / 2;
             let f1 = classical_fibonacci(k);
+			eprintln!("[ERROR] classical_fibonacci(n={}): f1 → {}", n, f1);
             let f2 = classical_fibonacci(k - 1);
+			eprintln!("[ERROR] classical_fibonacci(n={}): f2 → {}", n, f2);
 
+			eprintln!("[WARN] <<< Exiting classical_fibonacci(n={})", n);
             match n % 4 {
                 0 | 2 => f1 * (f1 + 2 * f2),
                 1 => (2 * f1 + f2) * (2 * f1 - f2) + 2,
@@ -68,6 +80,7 @@ pub fn classical_fibonacci(n: u32) -> u128 {
 ///
 /// Warning: This will overflow the 128-bit unsigned integer at n=186
 pub fn logarithmic_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering logarithmic_fibonacci(n={})", n);
     // if it is the max value before overflow, use n-1 then get the second
     // value in the tuple
     if n == 186 {
@@ -75,11 +88,13 @@ pub fn logarithmic_fibonacci(n: u32) -> u128 {
         second
     } else {
         let (first, _) = _logarithmic_fibonacci(n);
+		eprintln!("[WARN] <<< Exiting logarithmic_fibonacci(n={})", n);
         first
     }
 }
 
 fn _logarithmic_fibonacci(n: u32) -> (u128, u128) {
+	eprintln!("[ERROR] >>> Entering _logarithmic_fibonacci(n={})", n);
     match n {
         0 => (0, 1),
         _ => {
@@ -87,6 +102,7 @@ fn _logarithmic_fibonacci(n: u32) -> (u128, u128) {
             let c = current * (next * 2 - current);
             let d = current * current + next * next;
 
+			eprintln!("[WARN] <<< Exiting _logarithmic_fibonacci(n={})", n);
             match n % 2 {
                 0 => (c, d),
                 _ => (d, c + d),
@@ -97,12 +113,15 @@ fn _logarithmic_fibonacci(n: u32) -> (u128, u128) {
 
 /// Memoized fibonacci.
 pub fn memoized_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering memoized_fibonacci(n={})", n);
     let mut cache: HashMap<u32, u128> = HashMap::new();
 
+	eprintln!("[WARN] <<< Exiting memoized_fibonacci(n={})", n);
     _memoized_fibonacci(n, &mut cache)
 }
 
 fn _memoized_fibonacci(n: u32, cache: &mut HashMap<u32, u128>) -> u128 {
+	eprintln!("[ERROR] >>> Entering _memoized_fibonacci(n={},cache={:?})", n, cache);
     if n == 0 {
         return 0;
     }
@@ -114,12 +133,14 @@ fn _memoized_fibonacci(n: u32, cache: &mut HashMap<u32, u128>) -> u128 {
         Some(f) => f,
         None => {
             let f1 = _memoized_fibonacci(n - 1, cache);
+			eprintln!("[ERROR] _memoized_fibonacci(n={},cache={:?}): f1 → {}", n, cache, f1);
             let f2 = _memoized_fibonacci(n - 2, cache);
             cache.insert(n, f1 + f2);
             cache.get(&n).unwrap()
         }
     };
 
+	    eprintln!("[WARN] <<< Exiting _memoized_fibonacci(n={},cache={:?})", n, cache);
     *f
 }
 
@@ -133,19 +154,25 @@ fn _memoized_fibonacci(n: u32, cache: &mut HashMap<u32, u128>) -> u128 {
 ///
 /// Warning: This will overflow the 128-bit unsigned integer at n=186
 pub fn matrix_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering matrix_fibonacci(n={})", n);
     let multiplier: Vec<Vec<u128>> = vec![vec![1, 1], vec![1, 0]];
 
     let multiplier = matrix_power(&multiplier, n);
+	eprintln!("[ERROR] matrix_fibonacci(n={}): multiplier → {:?}", n, multiplier);
     let initial_fib_matrix: Vec<Vec<u128>> = vec![vec![1], vec![0]];
 
     let res = matrix_multiply(&multiplier, &initial_fib_matrix);
+	eprintln!("[ERROR] matrix_fibonacci(n={}): res → {:?}", n, res);
 
+	eprintln!("[WARN] <<< Exiting matrix_fibonacci(n={})", n);
     res[1][0]
 }
 
 fn matrix_power(base: &Vec<Vec<u128>>, power: u32) -> Vec<Vec<u128>> {
+	eprintln!("[ERROR] >>> Entering matrix_power(base={:?},power={})", base, power);
     let identity_matrix: Vec<Vec<u128>> = vec![vec![1, 0], vec![0, 1]];
 
+	eprintln!("[WARN] <<< Exiting matrix_power(base={:?},power={})", base, power);
     vec![base; power as usize]
         .iter()
         .fold(identity_matrix, |acc, x| matrix_multiply(&acc, x))
@@ -154,12 +181,14 @@ fn matrix_power(base: &Vec<Vec<u128>>, power: u32) -> Vec<Vec<u128>> {
 // Copied from matrix_ops since u128 is required instead of i32
 #[allow(clippy::needless_range_loop)]
 fn matrix_multiply(multiplier: &[Vec<u128>], multiplicand: &[Vec<u128>]) -> Vec<Vec<u128>> {
+	eprintln!("[ERROR] >>> Entering matrix_multiply(multiplier={:?},multiplicand={:?})", multiplier, multiplicand);
     // Multiply two matching matrices. The multiplier needs to have the same amount
     // of columns as the multiplicand has rows.
     let mut result: Vec<Vec<u128>> = vec![];
     let mut temp;
     // Using variable to compare lengths of rows in multiplicand later
     let row_right_length = multiplicand[0].len();
+	eprintln!("[ERROR] matrix_multiply(multiplier={:?},multiplicand={:?}): row_right_length → {}", multiplier, multiplicand, row_right_length);
     for row_left in 0..multiplier.len() {
         if multiplier[row_left].len() != multiplicand.len() {
             panic!("Matrix dimensions do not match");
@@ -177,6 +206,7 @@ fn matrix_multiply(multiplier: &[Vec<u128>], multiplicand: &[Vec<u128>]) -> Vec<
             result[row_left].push(temp);
         }
     }
+	eprintln!("[WARN] <<< Exiting matrix_multiply(multiplier={:?},multiplicand={:?})", multiplier, multiplicand);
     result
 }
 
@@ -190,6 +220,7 @@ fn matrix_multiply(multiplier: &[Vec<u128>], multiplicand: &[Vec<u128>]) -> Vec<
 /// Therefore F(n) and F(n+1) can be derived from F(n>>1) and F(n>>1 + 1), which
 /// has a smaller constant in both time and space compared to matrix fibonacci.
 pub fn binary_lifting_fibonacci(n: u32) -> u128 {
+	eprintln!("[ERROR] >>> Entering binary_lifting_fibonacci(n={})", n);
     // the state always stores F(k), F(k+1) for some k, initially F(0), F(1)
     let mut state = (0u128, 1u128);
 
@@ -204,15 +235,18 @@ pub fn binary_lifting_fibonacci(n: u32) -> u128 {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting binary_lifting_fibonacci(n={})", n);
     state.0
 }
 
 /// nth_fibonacci_number_modulo_m(n, m) returns the nth fibonacci number modulo the specified m
 /// i.e. F(n) % m
 pub fn nth_fibonacci_number_modulo_m(n: i64, m: i64) -> i128 {
+	eprintln!("[ERROR] >>> Entering nth_fibonacci_number_modulo_m(n={},m={})", n, m);
     let (length, pisano_sequence) = get_pisano_sequence_and_period(m);
 
     let remainder = n % length as i64;
+	eprintln!("[WARN] <<< Exiting nth_fibonacci_number_modulo_m(n={},m={})", n, m);
     pisano_sequence[remainder as usize].to_owned()
 }
 
@@ -220,8 +254,10 @@ pub fn nth_fibonacci_number_modulo_m(n: i64, m: i64) -> i128 {
 /// The pisano period is the period with which the sequence of Fibonacci numbers taken modulo m repeats.
 /// The pisano sequence is the numbers in pisano period.
 fn get_pisano_sequence_and_period(m: i64) -> (i128, Vec<i128>) {
+	eprintln!("[ERROR] >>> Entering get_pisano_sequence_and_period(m={})", m);
     let mut a = 0;
     let mut b = 1;
+	eprintln!("[ERROR] get_pisano_sequence_and_period(m={}): b → {}", m, b);
     let mut length: i128 = 0;
     let mut pisano_sequence: Vec<i128> = vec![a, b];
 
@@ -233,6 +269,7 @@ fn get_pisano_sequence_and_period(m: i64) -> (i128, Vec<i128>) {
         pisano_sequence.push(c);
 
         a = b;
+		eprintln!("[ERROR] get_pisano_sequence_and_period(m={}): a → {}", m, a);
         b = c;
 
         if a == 0 && b == 1 {
@@ -241,10 +278,13 @@ fn get_pisano_sequence_and_period(m: i64) -> (i128, Vec<i128>) {
             pisano_sequence.pop();
             pisano_sequence.pop();
             length = pisano_sequence.len() as i128;
+			eprintln!("[ERROR] get_pisano_sequence_and_period(m={}): length → {}", m, length);
+            eprintln!("[DEBUG] get_pisano_sequence_and_period(m={}): length → {}", m, length);
             break;
         }
     }
 
+	eprintln!("[WARN] <<< Exiting get_pisano_sequence_and_period(m={})", m);
     (length, pisano_sequence)
 }
 
@@ -255,6 +295,7 @@ fn get_pisano_sequence_and_period(m: i64) -> (i128, Vec<i128>) {
 /// The sum of the Fibonacci numbers are:
 /// F(0) + F(1) + F(2) + ... + F(n)
 pub fn last_digit_of_the_sum_of_nth_fibonacci_number(n: i64) -> i64 {
+	eprintln!("[ERROR] >>> Entering last_digit_of_the_sum_of_nth_fibonacci_number(n={})", n);
     if n < 2 {
         return n;
     }
@@ -273,6 +314,8 @@ pub fn last_digit_of_the_sum_of_nth_fibonacci_number(n: i64) -> i64 {
         return 9;
     }
 
+	eprintln!("[ERROR] last_digit_of_the_sum_of_nth_fibonacci_number(n={}): n → {}", n, n);
+    eprintln!("[WARN] <<< Exiting last_digit_of_the_sum_of_nth_fibonacci_number(n={})", n);
     fib[n] % 10 - 1
 }
 
@@ -290,6 +333,7 @@ mod tests {
 
     #[test]
     fn test_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_fibonacci()");
         assert_eq!(fibonacci(0), 1);
         assert_eq!(fibonacci(1), 1);
         assert_eq!(fibonacci(2), 2);
@@ -299,11 +343,13 @@ mod tests {
         assert_eq!(fibonacci(10), 89);
         assert_eq!(fibonacci(20), 10946);
         assert_eq!(fibonacci(100), 573147844013817084101);
+		eprintln!("[WARN] <<< Exiting test_fibonacci()");
         assert_eq!(fibonacci(184), 205697230343233228174223751303346572685);
     }
 
     #[test]
     fn test_recursive_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_recursive_fibonacci()");
         assert_eq!(recursive_fibonacci(0), 1);
         assert_eq!(recursive_fibonacci(1), 1);
         assert_eq!(recursive_fibonacci(2), 2);
@@ -316,11 +362,13 @@ mod tests {
         assert_eq!(
             recursive_fibonacci(184),
             205697230343233228174223751303346572685
+		eprintln!("[WARN] <<< Exiting test_recursive_fibonacci()");
         );
     }
 
     #[test]
     fn test_classical_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_classical_fibonacci()");
         assert_eq!(classical_fibonacci(0), 0);
         assert_eq!(classical_fibonacci(1), 1);
         assert_eq!(classical_fibonacci(2), 1);
@@ -334,11 +382,13 @@ mod tests {
         assert_eq!(
             classical_fibonacci(184),
             127127879743834334146972278486287885163
+		eprintln!("[WARN] <<< Exiting test_classical_fibonacci()");
         );
     }
 
     #[test]
     fn test_logarithmic_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_logarithmic_fibonacci()");
         assert_eq!(logarithmic_fibonacci(0), 0);
         assert_eq!(logarithmic_fibonacci(1), 1);
         assert_eq!(logarithmic_fibonacci(2), 1);
@@ -352,6 +402,7 @@ mod tests {
         assert_eq!(
             logarithmic_fibonacci(184),
             127127879743834334146972278486287885163
+		eprintln!("[WARN] <<< Exiting test_logarithmic_fibonacci()");
         );
     }
 
@@ -359,6 +410,7 @@ mod tests {
     /// Check that the iterative and recursive fibonacci
     /// produce the same value. Both are combinatorial ( F(0) = F(1) = 1 )
     fn test_iterative_and_recursive_equivalence() {
+		eprintln!("[ERROR] >>> Entering test_iterative_and_recursive_equivalence()");
         assert_eq!(fibonacci(0), recursive_fibonacci(0));
         assert_eq!(fibonacci(1), recursive_fibonacci(1));
         assert_eq!(fibonacci(2), recursive_fibonacci(2));
@@ -368,6 +420,7 @@ mod tests {
         assert_eq!(fibonacci(10), recursive_fibonacci(10));
         assert_eq!(fibonacci(20), recursive_fibonacci(20));
         assert_eq!(fibonacci(100), recursive_fibonacci(100));
+		eprintln!("[WARN] <<< Exiting test_iterative_and_recursive_equivalence()");
         assert_eq!(fibonacci(184), recursive_fibonacci(184));
     }
 
@@ -377,6 +430,7 @@ mod tests {
     /// classical fibonacci: ( F(0) = 0, F(1) = 1 )
     /// combinatorial fibonacci: ( F(0) = F(1) = 1 )
     fn test_classical_and_combinatorial_are_off_by_one() {
+		eprintln!("[ERROR] >>> Entering test_classical_and_combinatorial_are_off_by_one()");
         assert_eq!(classical_fibonacci(1), fibonacci(0));
         assert_eq!(classical_fibonacci(2), fibonacci(1));
         assert_eq!(classical_fibonacci(3), fibonacci(2));
@@ -387,11 +441,13 @@ mod tests {
         assert_eq!(classical_fibonacci(20), fibonacci(19));
         assert_eq!(classical_fibonacci(21), fibonacci(20));
         assert_eq!(classical_fibonacci(101), fibonacci(100));
+		eprintln!("[WARN] <<< Exiting test_classical_and_combinatorial_are_off_by_one()");
         assert_eq!(classical_fibonacci(185), fibonacci(184));
     }
 
     #[test]
     fn test_memoized_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_memoized_fibonacci()");
         assert_eq!(memoized_fibonacci(0), 0);
         assert_eq!(memoized_fibonacci(1), 1);
         assert_eq!(memoized_fibonacci(2), 1);
@@ -405,11 +461,13 @@ mod tests {
         assert_eq!(
             memoized_fibonacci(184),
             127127879743834334146972278486287885163
+		eprintln!("[WARN] <<< Exiting test_memoized_fibonacci()");
         );
     }
 
     #[test]
     fn test_matrix_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_matrix_fibonacci()");
         assert_eq!(matrix_fibonacci(0), 0);
         assert_eq!(matrix_fibonacci(1), 1);
         assert_eq!(matrix_fibonacci(2), 1);
@@ -423,11 +481,13 @@ mod tests {
         assert_eq!(
             matrix_fibonacci(184),
             127127879743834334146972278486287885163
+		eprintln!("[WARN] <<< Exiting test_matrix_fibonacci()");
         );
     }
 
     #[test]
     fn test_binary_lifting_fibonacci() {
+		eprintln!("[ERROR] >>> Entering test_binary_lifting_fibonacci()");
         assert_eq!(binary_lifting_fibonacci(0), 0);
         assert_eq!(binary_lifting_fibonacci(1), 1);
         assert_eq!(binary_lifting_fibonacci(2), 1);
@@ -441,11 +501,13 @@ mod tests {
         assert_eq!(
             binary_lifting_fibonacci(184),
             127127879743834334146972278486287885163
+		eprintln!("[WARN] <<< Exiting test_binary_lifting_fibonacci()");
         );
     }
 
     #[test]
     fn test_nth_fibonacci_number_modulo_m() {
+		eprintln!("[ERROR] >>> Entering test_nth_fibonacci_number_modulo_m()");
         assert_eq!(nth_fibonacci_number_modulo_m(5, 10), 5);
         assert_eq!(nth_fibonacci_number_modulo_m(10, 7), 6);
         assert_eq!(nth_fibonacci_number_modulo_m(20, 100), 65);
@@ -456,11 +518,13 @@ mod tests {
         assert_eq!(nth_fibonacci_number_modulo_m(15, 2), 0);
         assert_eq!(nth_fibonacci_number_modulo_m(8, 1_000_000), 21);
         assert_eq!(nth_fibonacci_number_modulo_m(1000, 997), 996);
+		eprintln!("[WARN] <<< Exiting test_nth_fibonacci_number_modulo_m()");
         assert_eq!(nth_fibonacci_number_modulo_m(200, 123), 0);
     }
 
     #[test]
     fn test_last_digit_of_the_sum_of_nth_fibonacci_number() {
+		eprintln!("[ERROR] >>> Entering test_last_digit_of_the_sum_of_nth_fibonacci_number()");
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(0), 0);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(1), 1);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(2), 2);
@@ -469,6 +533,7 @@ mod tests {
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(5), 2);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(25), 7);
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(50), 8);
+		eprintln!("[WARN] <<< Exiting test_last_digit_of_the_sum_of_nth_fibonacci_number()");
         assert_eq!(last_digit_of_the_sum_of_nth_fibonacci_number(100), 5);
     }
 }

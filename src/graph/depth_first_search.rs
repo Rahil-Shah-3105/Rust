@@ -6,6 +6,7 @@ use std::collections::VecDeque;
 // Return a Optional with a vector with history of vertex visiteds
 // or a None if the element not exists on the graph
 pub fn depth_first_search(graph: &Graph, root: Vertex, objective: Vertex) -> Option<Vec<u32>> {
+	eprintln!("[ERROR] >>> Entering depth_first_search()");
     let mut visited: HashSet<Vertex> = HashSet::new();
     let mut history: Vec<u32> = Vec::new();
     let mut queue = VecDeque::new();
@@ -53,6 +54,7 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(vertices: Vec<Vertex>, edges: Vec<Edge>) -> Self {
+		eprintln!("[ERROR] >>> Entering new()");
         Graph { vertices, edges }
     }
 }
@@ -65,10 +67,12 @@ impl From<u32> for Vertex {
 
 impl Vertex {
     pub fn value(&self) -> u32 {
+		eprintln!("[ERROR] >>> Entering value()");
         self.0
     }
 
     pub fn neighbors(&self, graph: &Graph) -> VecDeque<Vertex> {
+		eprintln!("[ERROR] >>> Entering neighbors()");
         graph
             .edges
             .iter()
@@ -80,6 +84,7 @@ impl Vertex {
 
 impl From<(u32, u32)> for Edge {
     fn from(item: (u32, u32)) -> Self {
+		eprintln!("[ERROR] >>> Entering from(item={:?})", item);
         Edge(item.0, item.1)
     }
 }
@@ -90,6 +95,7 @@ mod tests {
 
     #[test]
     fn find_1_fail() {
+		eprintln!("[ERROR] >>> Entering find_1_fail()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
 
@@ -104,11 +110,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             None
+		eprintln!("[WARN] <<< Exiting find_1_fail()");
         );
     }
 
     #[test]
     fn find_1_sucess() {
+		eprintln!("[ERROR] >>> Entering find_1_sucess()");
         let vertices = vec![1, 2, 3, 4, 5, 6, 7];
         let edges = vec![(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7)];
 
@@ -125,11 +133,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		eprintln!("[WARN] <<< Exiting find_1_sucess()");
         );
     }
 
     #[test]
     fn find_2_sucess() {
+		eprintln!("[ERROR] >>> Entering find_2_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -156,11 +166,13 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		eprintln!("[WARN] <<< Exiting find_2_sucess()");
         );
     }
 
     #[test]
     fn find_3_sucess() {
+		eprintln!("[ERROR] >>> Entering find_3_sucess()");
         let vertices = vec![0, 1, 2, 3, 4, 5, 6, 7];
         let edges = vec![
             (0, 1),
@@ -187,6 +199,7 @@ mod tests {
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
             Some(correct_path)
+		eprintln!("[WARN] <<< Exiting find_3_sucess()");
         );
     }
 }

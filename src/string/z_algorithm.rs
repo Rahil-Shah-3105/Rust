@@ -20,6 +20,8 @@ fn calculate_z_value<T: Eq>(
 ) -> usize {
     let size = input_string.len();
     let pattern_size = pattern.len();
+	eprintln!("[ERROR] calculate_z_value(start_index={},z_value={}): pattern_size → {}", start_index, z_value, pattern_size);
+	eprintln!("[ERROR] calculate_z_value(start_index={},z_value={}): size → {}", start_index, z_value, size);
 
     while (start_index + z_value) < size && z_value < pattern_size {
         if input_string[start_index + z_value] != pattern[z_value] {
@@ -47,6 +49,7 @@ fn initialize_z_array_from_previous_match(
     match_end: usize,
     last_match: usize,
 ) -> usize {
+	eprintln!("[ERROR] >>> Entering initialize_z_array_from_previous_match(z_array={:?},i={},match_end={},last_match={})", z_array, i, match_end, last_match);
     std::cmp::min(z_array[i - last_match], match_end - i + 1)
 }
 
@@ -60,6 +63,7 @@ fn initialize_z_array_from_previous_match(
 /// # Returns
 /// A vector containing the starting indices of full matches.
 fn find_full_matches(z_array: &[usize], pattern_size: usize) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering find_full_matches(z_array={:?},pattern_size={})", z_array, pattern_size);
     z_array
         .iter()
         .enumerate()
@@ -86,7 +90,9 @@ fn match_with_z_array<T: Eq>(
 ) -> Vec<usize> {
     let size = input_string.len();
     let pattern_size = pattern.len();
+	eprintln!("[ERROR] match_with_z_array(start_index={},only_full_matches={}): pattern_size → {}", start_index, only_full_matches, pattern_size);
     let mut last_match: usize = 0;
+	eprintln!("[ERROR] match_with_z_array(start_index={},only_full_matches={}): size → {}", start_index, only_full_matches, size);
     let mut match_end: usize = 0;
     let mut z_array = vec![0usize; size];
 
@@ -121,6 +127,7 @@ fn match_with_z_array<T: Eq>(
 /// # Returns
 /// A vector representing the Z-array of the input string.
 pub fn z_array<T: Eq>(input: &[T]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering z_array()");
     match_with_z_array(input, input, 1, false)
 }
 
@@ -136,6 +143,7 @@ pub fn z_array<T: Eq>(input: &[T]) -> Vec<usize> {
 /// # Returns
 /// A vector of indices where the pattern matches the input string.
 pub fn match_pattern<T: Eq>(input: &[T], pattern: &[T]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering match_pattern()");
     match_with_z_array(input, pattern, 0, true)
 }
 

@@ -13,6 +13,7 @@ pub struct Queue<T> {
 impl<T> Queue<T> {
     // Creates a new empty Queue
     pub fn new() -> Queue<T> {
+		eprintln!("[ERROR] >>> Entering new()");
         Queue {
             elements: LinkedList::new(),
         }
@@ -20,36 +21,44 @@ impl<T> Queue<T> {
 
     // Adds an element to the back of the queue
     pub fn enqueue(&mut self, value: T) {
+		eprintln!("[ERROR] >>> Entering enqueue()");
         self.elements.push_back(value)
     }
 
     // Removes and returns the front element from the queue, or None if empty
     pub fn dequeue(&mut self) -> Option<T> {
+		eprintln!("[ERROR] >>> Entering dequeue()");
         self.elements.pop_front()
     }
 
     // Returns a reference to the front element of the queue, or None if empty
     pub fn peek_front(&self) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering peek_front()");
         self.elements.front()
     }
 
     // Returns a reference to the back element of the queue, or None if empty
     pub fn peek_back(&self) -> Option<&T> {
+		eprintln!("[ERROR] >>> Entering peek_back()");
         self.elements.back()
     }
 
     // Returns the number of elements in the queue
     pub fn len(&self) -> usize {
+		eprintln!("[ERROR] >>> Entering len()");
         self.elements.len()
     }
 
     // Checks if the queue is empty
     pub fn is_empty(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_empty()");
         self.elements.is_empty()
     }
 
     // Clears all elements from the queue
     pub fn drain(&mut self) {
+		eprintln!("[ERROR] >>> Entering drain()");
+		eprintln!("[WARN] <<< Exiting drain()");
         self.elements.clear();
     }
 }
@@ -57,6 +66,7 @@ impl<T> Queue<T> {
 // Implementing the Default trait for Queue
 impl<T> Default for Queue<T> {
     fn default() -> Queue<T> {
+		eprintln!("[ERROR] >>> Entering default()");
         Queue::new()
     }
 }
@@ -67,6 +77,7 @@ mod tests {
 
     #[test]
     fn test_queue_functionality() {
+		eprintln!("[ERROR] >>> Entering test_queue_functionality()");
         let mut queue: Queue<usize> = Queue::default();
 
         assert!(queue.is_empty());
@@ -86,6 +97,7 @@ mod tests {
         queue.drain();
         assert!(queue.is_empty());
         assert_eq!(queue.len(), 0);
+		eprintln!("[WARN] <<< Exiting test_queue_functionality()");
         assert_eq!(queue.dequeue(), None);
     }
 }

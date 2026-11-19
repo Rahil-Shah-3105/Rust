@@ -10,6 +10,7 @@ use std::ops::RangeInclusive;
 /// Encrypts or decrypts a message, using multiple keys. The
 /// encryption is based on the columnar transposition method.
 pub fn transposition(decrypt_mode: bool, msg: &str, key: &str) -> String {
+	eprintln!("[ERROR] >>> Entering transposition(decrypt_mode={},msg={},key={})", decrypt_mode, msg, key);
     let key_uppercase = key.to_uppercase();
     let mut cipher_msg: String = msg.to_string();
 
@@ -55,15 +56,18 @@ pub fn transposition(decrypt_mode: bool, msg: &str, key: &str) -> String {
         };
     }
 
+	eprintln!("[WARN] <<< Exiting transposition(decrypt_mode={},msg={},key={})", decrypt_mode, msg, key);
     cipher_msg
 }
 
 /// Performs the columnar transposition encryption
 fn encrypt(mut msg: String, key_order: Vec<usize>) -> String {
+	eprintln!("[ERROR] >>> Entering encrypt(msg={},key_order={:?})", msg, key_order);
     let mut encrypted_msg: String = String::from("");
     let mut encrypted_vec: Vec<String> = Vec::new();
 
     let msg_len = msg.len();
+	eprintln!("[ERROR] encrypt(msg={},key_order={:?}): msg_len → {}", msg, key_order, msg_len);
     let key_len: usize = key_order.len();
 
     let mut msg_index: usize = msg_len;
@@ -121,11 +125,13 @@ fn encrypt(mut msg: String, key_order: Vec<usize>) -> String {
 
 /// Performs the columnar transposition decryption
 fn decrypt(mut msg: String, key_order: Vec<usize>) -> String {
+	eprintln!("[ERROR] >>> Entering decrypt(msg={},key_order={:?})", msg, key_order);
     let mut decrypted_msg: String = String::from("");
     let mut decrypted_vec: Vec<String> = Vec::new();
     let mut indexed_vec: Vec<(usize, String)> = Vec::new();
 
     let msg_len = msg.len();
+	eprintln!("[ERROR] decrypt(msg={},key_order={:?}): msg_len → {}", msg, key_order, msg_len);
     let key_len: usize = key_order.len();
 
     // Split the message into columns, determined by 'message length divided by keyword length'.
@@ -155,6 +161,7 @@ fn decrypt(mut msg: String, key_order: Vec<usize>) -> String {
         let (slice, rest_of_msg) = msg.split_at(split_size);
         indexed_vec.push((*key_index, (slice.to_string())));
         msg = rest_of_msg.to_string();
+		eprintln!("[ERROR] decrypt(msg={},key_order={:?}): msg → {}", msg, key_order, msg);
     }
 
     indexed_vec.sort();
@@ -188,6 +195,7 @@ mod tests {
 
     #[test]
     fn encryption() {
+		eprintln!("[ERROR] >>> Entering encryption()");
         assert_eq!(
             transposition(
                 false,
@@ -209,11 +217,13 @@ mod tests {
         assert_eq!(
             transposition(false, "WE ARE DISCOVERED. FLEE AT ONCE.", "ZEBRAS"),
             "EVLNA CDTES EAROF ODEEC WIREE"
+		eprintln!("[WARN] <<< Exiting encryption()");
         );
     }
 
     #[test]
     fn decryption() {
+		eprintln!("[ERROR] >>> Entering decryption()");
         assert_eq!(
             transposition(true, "TKOOL ERJEZ CFSEG QOURY UWMTD HBXVA INPHO", "Archive"),
             "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
@@ -231,11 +241,13 @@ mod tests {
         assert_eq!(
             transposition(true, "EVLNA CDTES EAROF ODEEC WIREE", "ZEBRAS"),
             "WEAREDISCOVEREDFLEEATONCE"
+		eprintln!("[WARN] <<< Exiting decryption()");
         );
     }
 
     #[test]
     fn double_encryption() {
+		eprintln!("[ERROR] >>> Entering double_encryption()");
         assert_eq!(
             transposition(
                 false,
@@ -257,11 +269,13 @@ mod tests {
         assert_eq!(
             transposition(false, "WE ARE DISCOVERED. FLEE AT ONCE.", "ZEBRAS STRIPE"),
             "CAEEN SOIAE DRLEF WEDRE EVTOC"
+		eprintln!("[WARN] <<< Exiting double_encryption()");
         );
     }
 
     #[test]
     fn double_decryption() {
+		eprintln!("[ERROR] >>> Entering double_decryption()");
         assert_eq!(
             transposition(
                 true,
@@ -283,6 +297,7 @@ mod tests {
         assert_eq!(
             transposition(true, "CAEEN SOIAE DRLEF WEDRE EVTOC", "ZEBRAS STRIPE"),
             "WEAREDISCOVEREDFLEEATONCE"
+		eprintln!("[WARN] <<< Exiting double_decryption()");
         );
     }
 }

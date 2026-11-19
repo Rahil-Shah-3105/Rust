@@ -24,6 +24,7 @@
 /// assert!(find_unique_number(&[]).is_err());
 /// ```
 pub fn find_unique_number(arr: &[i32]) -> Result<i32, String> {
+	eprintln!("[ERROR] >>> Entering find_unique_number(arr={:?})", arr);
     if arr.is_empty() {
         return Err("input list must not be empty".to_string());
     }
@@ -38,48 +39,64 @@ mod tests {
 
     #[test]
     fn test_basic_case() {
+		eprintln!("[ERROR] >>> Entering test_basic_case()");
+		eprintln!("[WARN] <<< Exiting test_basic_case()");
         assert_eq!(find_unique_number(&[1, 1, 2, 2, 3]).unwrap(), 3);
     }
 
     #[test]
     fn test_different_order() {
+		eprintln!("[ERROR] >>> Entering test_different_order()");
+		eprintln!("[WARN] <<< Exiting test_different_order()");
         assert_eq!(find_unique_number(&[4, 5, 4, 6, 6]).unwrap(), 5);
     }
 
     #[test]
     fn test_single_element() {
+		eprintln!("[ERROR] >>> Entering test_single_element()");
+		eprintln!("[WARN] <<< Exiting test_single_element()");
         assert_eq!(find_unique_number(&[7]).unwrap(), 7);
     }
 
     #[test]
     fn test_three_elements() {
+		eprintln!("[ERROR] >>> Entering test_three_elements()");
+		eprintln!("[WARN] <<< Exiting test_three_elements()");
         assert_eq!(find_unique_number(&[10, 20, 10]).unwrap(), 20);
     }
 
     #[test]
     fn test_empty_array() {
+		eprintln!("[ERROR] >>> Entering test_empty_array()");
         assert!(find_unique_number(&[]).is_err());
         assert_eq!(
             find_unique_number(&[]).unwrap_err(),
             "input list must not be empty"
+		eprintln!("[WARN] <<< Exiting test_empty_array()");
         );
     }
 
     #[test]
     fn test_negative_numbers() {
+		eprintln!("[ERROR] >>> Entering test_negative_numbers()");
+		eprintln!("[WARN] <<< Exiting test_negative_numbers()");
         assert_eq!(find_unique_number(&[-1, -1, -2, -2, -3]).unwrap(), -3);
     }
 
     #[test]
     fn test_large_numbers() {
+		eprintln!("[ERROR] >>> Entering test_large_numbers()");
         assert_eq!(
             find_unique_number(&[1000, 2000, 1000, 3000, 3000]).unwrap(),
             2000
+		eprintln!("[WARN] <<< Exiting test_large_numbers()");
         );
     }
 
     #[test]
     fn test_zero() {
+		eprintln!("[ERROR] >>> Entering test_zero()");
+		eprintln!("[WARN] <<< Exiting test_zero()");
         assert_eq!(find_unique_number(&[0, 1, 1]).unwrap(), 0);
     }
 }

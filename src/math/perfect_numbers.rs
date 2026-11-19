@@ -1,4 +1,5 @@
 pub fn is_perfect_number(num: usize) -> bool {
+	eprintln!("[ERROR] >>> Entering is_perfect_number(num={})", num);
     let mut sum = 0;
 
     for i in 1..num - 1 {
@@ -7,13 +8,16 @@ pub fn is_perfect_number(num: usize) -> bool {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting is_perfect_number(num={})", num);
     num == sum
 }
 
 pub fn perfect_numbers(max: usize) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering perfect_numbers(max={})", max);
     let mut result: Vec<usize> = Vec::new();
 
     // It is not known if there are any odd perfect numbers, so we go around all the numbers.
+	eprintln!("[WARN] <<< Exiting perfect_numbers(max={})", max);
     for i in 1..=max {
         if is_perfect_number(i) {
             result.push(i);
@@ -29,6 +33,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         assert!(is_perfect_number(6));
         assert!(is_perfect_number(28));
         assert!(is_perfect_number(496));
@@ -42,6 +47,7 @@ mod tests {
         assert_eq!(perfect_numbers(10), vec![6]);
         assert_eq!(perfect_numbers(100), vec![6, 28]);
         assert_eq!(perfect_numbers(496), vec![6, 28, 496]);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert_eq!(perfect_numbers(1000), vec![6, 28, 496]);
     }
 }

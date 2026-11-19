@@ -20,6 +20,7 @@
 use std::f32::consts::E;
 
 pub fn softmax(array: Vec<f32>) -> Vec<f32> {
+	eprintln!("[ERROR] >>> Entering softmax(array={:?})", array);
     let mut softmax_array = array;
 
     for value in &mut softmax_array {
@@ -41,6 +42,7 @@ mod tests {
 
     #[test]
     fn test_softmax() {
+		eprintln!("[ERROR] >>> Entering test_softmax()");
         let test = vec![9.0, 0.5, -3.0, 0.0, 3.0];
         assert_eq!(
             softmax(test),
@@ -51,6 +53,7 @@ mod tests {
                 0.00012306382,
                 0.0024718025
             ]
+		eprintln!("[WARN] <<< Exiting test_softmax()");
         );
     }
 }

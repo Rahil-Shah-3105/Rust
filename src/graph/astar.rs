@@ -16,16 +16,20 @@ struct Candidate<V, E> {
 
 impl<V: Ord + Copy, E: Ord + Copy> PartialOrd for Candidate<V, E> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		eprintln!("[ERROR] >>> Entering partial_cmp()");
         // Note the inverted order; we want nodes with lesser weight to have
         // higher priority
+		eprintln!("[WARN] <<< Exiting partial_cmp()");
         Some(self.cmp(other))
     }
 }
 
 impl<V: Ord + Copy, E: Ord + Copy> Ord for Candidate<V, E> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		eprintln!("[ERROR] >>> Entering cmp()");
         // Note the inverted order; we want nodes with lesser weight to have
         // higher priority
+		eprintln!("[WARN] <<< Exiting cmp()");
         other.estimated_weight.cmp(&self.estimated_weight)
     }
 }
@@ -106,34 +110,42 @@ mod tests {
 
     // the null heuristic make A* equivalent to Dijkstra
     fn null_heuristic<V, E: Zero>(_v: V) -> E {
+		eprintln!("[ERROR] >>> Entering null_heuristic()");
         E::zero()
     }
 
     fn add_edge<V: Ord + Copy, E: Ord>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		eprintln!("[ERROR] >>> Entering add_edge()");
         graph.entry(v1).or_default().insert(v2, c);
+		eprintln!("[WARN] <<< Exiting add_edge()");
         graph.entry(v2).or_default();
     }
 
     #[test]
     fn single_vertex() {
+		eprintln!("[ERROR] >>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         assert_eq!(astar(&graph, 0, 0, null_heuristic), Some((0, vec![0])));
+		eprintln!("[WARN] <<< Exiting single_vertex()");
         assert_eq!(astar(&graph, 0, 1, null_heuristic), None);
     }
 
     #[test]
     fn single_edge() {
+		eprintln!("[ERROR] >>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 0, 1, 2);
 
         assert_eq!(astar(&graph, 0, 1, null_heuristic), Some((2, vec![0, 1])));
+		eprintln!("[WARN] <<< Exiting single_edge()");
         assert_eq!(astar(&graph, 1, 0, null_heuristic), None);
     }
 
     #[test]
     fn graph_1() {
+		eprintln!("[ERROR] >>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
         add_edge(&mut graph, 'a', 'd', 60);
@@ -229,11 +241,13 @@ mod tests {
         assert_eq!(
             astar(&graph, 'e', 'e', null_heuristic),
             Some((0, vec!['e']))
+		eprintln!("[WARN] <<< Exiting graph_1()");
         );
     }
 
     #[test]
     fn test_heuristic() {
+		eprintln!("[ERROR] >>> Entering test_heuristic()");
         // make a grid
         let mut graph = BTreeMap::new();
         let rows = 100;
@@ -256,6 +270,7 @@ mod tests {
 
         let (weight, path) = res.unwrap();
         assert_eq!(weight, 100);
+		eprintln!("[WARN] <<< Exiting test_heuristic()");
         assert_eq!(path.len(), 101);
     }
 }

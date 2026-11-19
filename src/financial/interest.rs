@@ -27,6 +27,7 @@ pub fn simple_interest(
     daily_interest_rate: f64,
     days_between_payments: f64,
 ) -> Result<f64, &'static str> {
+	eprintln!("[ERROR] >>> Entering simple_interest(principal={},daily_interest_rate={},days_between_payments={})", principal, daily_interest_rate, days_between_payments);
     if principal <= 0.0 {
         return Err("principal must be > 0");
     }
@@ -85,6 +86,7 @@ pub fn apr_interest(
     nominal_annual_percentage_rate: f64,
     number_of_years: f64,
 ) -> Result<f64, &'static str> {
+	eprintln!("[ERROR] >>> Entering apr_interest(principal={},nominal_annual_percentage_rate={},number_of_years={})", principal, nominal_annual_percentage_rate, number_of_years);
     if principal <= 0.0 {
         return Err("principal must be > 0");
     }
@@ -109,6 +111,7 @@ mod tests {
 
     #[test]
     fn test_simple_interest() {
+		eprintln!("[ERROR] >>> Entering test_simple_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -140,11 +143,13 @@ mod tests {
         assert_eq!(
             simple_interest(5500.0, 0.01, 0.0),
             Err("days_between_payments must be > 0")
+		eprintln!("[WARN] <<< Exiting test_simple_interest()");
         );
     }
 
     #[test]
     fn test_compound_interest() {
+		eprintln!("[ERROR] >>> Entering test_compound_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -175,11 +180,13 @@ mod tests {
         assert_eq!(
             compound_interest(10000.0, 0.06, -4.0),
             Err("number_of_compounding_periods must be > 0")
+		eprintln!("[WARN] <<< Exiting test_compound_interest()");
         );
     }
 
     #[test]
     fn test_apr_interest() {
+		eprintln!("[ERROR] >>> Entering test_apr_interest()");
         const EPSILON: f64 = 1e-9;
 
         // Standard cases
@@ -206,6 +213,7 @@ mod tests {
         assert_eq!(
             apr_interest(10000.0, 0.06, -4.0),
             Err("number_of_years must be > 0")
+		eprintln!("[WARN] <<< Exiting test_apr_interest()");
         );
     }
 }

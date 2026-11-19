@@ -19,6 +19,7 @@ pub enum LipogramError {
 ///
 /// Returns a `HashSet<char>` containing the lowercase alphabetic characters that are not present in `in_str`.
 fn compute_missing(in_str: &str) -> HashSet<char> {
+	eprintln!("[ERROR] >>> Entering compute_missing(in_str={})", in_str);
     let alphabet: HashSet<char> = ('a'..='z').collect();
 
     let letters_used: HashSet<char> = in_str
@@ -45,6 +46,7 @@ pub fn is_lipogram(
     lipogram_str: &str,
     missing_chars: &HashSet<char>,
 ) -> Result<bool, LipogramError> {
+	eprintln!("[ERROR] >>> Entering is_lipogram(lipogram_str={},missing_chars={:?})", lipogram_str, missing_chars);
     for &c in missing_chars {
         if !c.is_lowercase() {
             return Err(LipogramError::NonLowercaseMissingChar);
@@ -58,6 +60,8 @@ pub fn is_lipogram(
     }
 
     let missing = compute_missing(lipogram_str);
+	eprintln!("[ERROR] is_lipogram(lipogram_str={},missing_chars={:?}): missing → {:?}", lipogram_str, missing_chars, missing);
+    eprintln!("[WARN] <<< Exiting is_lipogram(lipogram_str={},missing_chars={:?})", lipogram_str, missing_chars);
     Ok(missing == *missing_chars)
 }
 

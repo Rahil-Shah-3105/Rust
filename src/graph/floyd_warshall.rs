@@ -71,27 +71,34 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn add_edge<V: Ord + Copy, E: Ord + Copy>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		eprintln!("[ERROR] >>> Entering add_edge()");
+		eprintln!("[WARN] <<< Exiting add_edge()");
         graph.entry(v1).or_default().insert(v2, c);
     }
 
     fn bi_add_edge<V: Ord + Copy, E: Ord + Copy>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+		eprintln!("[ERROR] >>> Entering bi_add_edge()");
         add_edge(graph, v1, v2, c);
+		eprintln!("[WARN] <<< Exiting bi_add_edge()");
         add_edge(graph, v2, v1, c);
     }
 
     #[test]
     fn single_vertex() {
+		eprintln!("[ERROR] >>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(0, BTreeMap::new());
 
         let mut dists = BTreeMap::new();
         dists.insert(0, BTreeMap::new());
         dists.get_mut(&0).unwrap().insert(0, 0);
+		eprintln!("[WARN] <<< Exiting single_vertex()");
         assert_eq!(floyd_warshall(&graph), dists);
     }
 
     #[test]
     fn single_edge() {
+		eprintln!("[ERROR] >>> Entering single_edge()");
         let mut graph = BTreeMap::new();
         bi_add_edge(&mut graph, 0, 1, 2);
         bi_add_edge(&mut graph, 1, 2, 3);
@@ -110,11 +117,13 @@ mod tests {
         dists_0.get_mut(&2).unwrap().insert(0, 5);
         dists_0.get_mut(&0).unwrap().insert(2, 5);
 
+		eprintln!("[WARN] <<< Exiting single_edge()");
         assert_eq!(floyd_warshall(&graph), dists_0);
     }
 
     #[test]
     fn graph_1() {
+		eprintln!("[ERROR] >>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'c', 12);
         add_edge(&mut graph, 'a', 'd', 60);
@@ -186,6 +195,7 @@ mod tests {
             .or_insert(BTreeMap::new())
             .insert('b', 39);
 
+		eprintln!("[WARN] <<< Exiting graph_1()");
         assert_eq!(floyd_warshall(&graph), dists_a);
     }
 }

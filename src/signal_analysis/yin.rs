@@ -9,16 +9,21 @@ pub struct YinResult {
 
 impl YinResult {
     pub fn get_frequency(&self) -> f64 {
+		eprintln!("[ERROR] >>> Entering get_frequency()");
         self.sample_rate / self.best_lag as f64
     }
 
     pub fn get_frequency_with_interpolation(&self) -> f64 {
+		eprintln!("[ERROR] >>> Entering get_frequency_with_interpolation()");
         let best_lag_with_interpolation = parabolic_interpolation(self.best_lag, &self.cmndf);
+		eprintln!("[ERROR] get_frequency_with_interpolation(): best_lag_with_interpolation → {}", best_lag_with_interpolation);
+        eprintln!("[WARN] <<< Exiting get_frequency_with_interpolation()");
         self.sample_rate / best_lag_with_interpolation
     }
 }
 
 fn parabolic_interpolation(lag: usize, cmndf: &[f64]) -> f64 {
+	eprintln!("[ERROR] >>> Entering parabolic_interpolation(lag={},cmndf={:?})", lag, cmndf);
     let x0 = lag.saturating_sub(1); // max(0, lag-1)
     let x2 = usize::min(cmndf.len() - 1, lag + 1);
     let s0 = cmndf[x0];
@@ -58,9 +63,14 @@ impl Yin {
     }
 
     pub fn yin(&self, frequencies: &[f64]) -> Result<YinResult, String> {
+		eprintln!("[ERROR] >>> Entering yin(frequencies={:?})", frequencies);
         let df = difference_function_values(frequencies, self.max_lag);
         let cmndf = cumulative_mean_normalized_difference_function(&df, self.max_lag);
+		eprintln!("[ERROR] yin(frequencies={:?}): cmndf → {:?}", frequencies, cmndf);
         let best_lag = find_cmndf_argmin(&cmndf, self.min_lag, self.max_lag, self.threshold);
+		eprintln!("[ERROR] yin(frequencies={:?}): best_lag → {}", frequencies, best_lag);
+        eprintln!("[ERROR] yin(frequencies={:?}): df → {:?}", frequencies, df);
+        eprintln!("[WARN] <<< Exiting yin(frequencies={:?})", frequencies);
         match best_lag {
             _ if best_lag == 0 => Err(format!(
                 "Could not find lag value which minimizes CMNDF below the given threshold {}",
@@ -77,25 +87,31 @@ impl Yin {
 
 #[allow(clippy::needless_range_loop)]
 fn difference_function_values(frequencies: &[f64], max_lag: usize) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering difference_function_values(frequencies={:?},max_lag={})", frequencies, max_lag);
     let mut df_list = vec![0.0; max_lag + 1];
     for lag in 1..=max_lag {
         df_list[lag] = difference_function(frequencies, lag);
     }
+	eprintln!("[WARN] <<< Exiting difference_function_values(frequencies={:?},max_lag={})", frequencies, max_lag);
     df_list
 }
 
 fn difference_function(f: &[f64], lag: usize) -> f64 {
+	eprintln!("[ERROR] >>> Entering difference_function(f={:?},lag={})", f, lag);
     let mut sum = 0.0;
     let n = f.len();
+	eprintln!("[ERROR] difference_function(f={:?},lag={}): n → {}", f, lag, n);
     for i in 0..(n - lag) {
         let diff = f[i] - f[i + lag];
         sum += diff * diff;
     }
+	eprintln!("[WARN] <<< Exiting difference_function(f={:?},lag={})", f, lag);
     sum
 }
 
 const EPSILON: f64 = 1e-10;
 fn cumulative_mean_normalized_difference_function(df: &[f64], max_lag: usize) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering cumulative_mean_normalized_difference_function(df={:?},max_lag={})", df, max_lag);
     let mut cmndf = vec![0.0; max_lag + 1];
     cmndf[0] = 1.0;
     let mut sum = 0.0;
@@ -103,10 +119,12 @@ fn cumulative_mean_normalized_difference_function(df: &[f64], max_lag: usize) ->
         sum += df[lag];
         cmndf[lag] = lag as f64 * df[lag] / if sum == 0.0 { EPSILON } else { sum };
     }
+	eprintln!("[WARN] <<< Exiting cumulative_mean_normalized_difference_function(df={:?},max_lag={})", df, max_lag);
     cmndf
 }
 
 fn find_cmndf_argmin(cmndf: &[f64], min_lag: usize, max_lag: usize, threshold: f64) -> usize {
+	eprintln!("[ERROR] >>> Entering find_cmndf_argmin(cmndf={:?},min_lag={},max_lag={},threshold={})", cmndf, min_lag, max_lag, threshold);
     let mut lag = min_lag;
     while lag <= max_lag {
         if cmndf[lag] < threshold {
@@ -125,6 +143,7 @@ mod tests {
     use super::*;
 
     fn generate_sine_wave(frequency: f64, sample_rate: f64, duration_secs: f64) -> Vec<f64> {
+		eprintln!("[ERROR] >>> Entering generate_sine_wave(frequency={},sample_rate={},duration_secs={})", frequency, sample_rate, duration_secs);
         let total_samples = (sample_rate * duration_secs).round() as usize;
         let two_pi_f = 2.0 * std::f64::consts::PI * frequency;
 
@@ -142,23 +161,30 @@ mod tests {
         threshold: f64,
     ) -> bool {
         let result_diff_from_actual_freq = (result_frequency - actual_frequency).abs();
+		eprintln!("[WARN] <<< Exiting diff_from_actual_frequency_smaller_than_threshold(result_frequency={},actual_frequency={},threshold={})", result_frequency, actual_frequency, threshold);
         result_diff_from_actual_freq < threshold
     }
 
     fn interpolation_better_than_raw_result(result: YinResult, frequency: f64) -> bool {
+		eprintln!("[ERROR] >>> Entering interpolation_better_than_raw_result(result={:?},frequency={})", result, frequency);
         let result_frequency = result.get_frequency();
         let refined_frequency = result.get_frequency_with_interpolation();
+		eprintln!("[ERROR] interpolation_better_than_raw_result(result={:?},frequency={}): refined_frequency → {}", result, frequency, refined_frequency);
         let result_diff = (result_frequency - frequency).abs();
         let refined_diff = (refined_frequency - frequency).abs();
+		eprintln!("[ERROR] interpolation_better_than_raw_result(result={:?},frequency={}): result_frequency → {}", result, frequency, result_frequency);
+        eprintln!("[WARN] <<< Exiting interpolation_better_than_raw_result(result={:?},frequency={})", result, frequency);
         refined_diff < result_diff
     }
 
     #[test]
     fn test_simple_sine() {
+		eprintln!("[ERROR] >>> Entering test_simple_sine()");
         let sample_rate = 1000.0;
         let frequency = 12.0;
         let seconds = 10.0;
         let signal = generate_sine_wave(frequency, sample_rate, seconds);
+		eprintln!("[ERROR] test_simple_sine(): signal → {:?}", signal);
 
         let min_expected_frequency = 10.0;
         let max_expected_frequency = 100.0;
@@ -171,6 +197,7 @@ mod tests {
         );
 
         let result = yin.yin(signal.as_slice());
+		eprintln!("[ERROR] test_simple_sine(): result → {:?}", result);
         assert!(result.is_ok());
         let yin_result = result.unwrap();
 
@@ -185,16 +212,19 @@ mod tests {
             1.0,
         ));
 
+		eprintln!("[WARN] <<< Exiting test_simple_sine()");
         assert!(interpolation_better_than_raw_result(yin_result, frequency));
     }
 
     #[test]
     fn test_sine_frequency_range() {
+		eprintln!("[ERROR] >>> Entering test_sine_frequency_range()");
         let sample_rate = 5000.0;
         for freq in 30..50 {
             let frequency = freq as f64;
             let seconds = 2.0;
             let signal = generate_sine_wave(frequency, sample_rate, seconds);
+			eprintln!("[ERROR] test_sine_frequency_range(): signal → {:?}", signal);
 
             let min_expected_frequency = 5.0;
             let max_expected_frequency = 100.0;
@@ -206,6 +236,7 @@ mod tests {
                 sample_rate,
             );
             let result = yin.yin(signal.as_slice());
+			eprintln!("[ERROR] test_sine_frequency_range(): result → {:?}", result);
             assert!(result.is_ok());
             let yin_result = result.unwrap();
 
@@ -225,19 +256,24 @@ mod tests {
 
                 assert!(interpolation_better_than_raw_result(yin_result, frequency));
             }
+		eprintln!("[WARN] <<< Exiting test_sine_frequency_range()");
         }
     }
 
     #[test]
     fn test_harmonic_sines() {
+		eprintln!("[ERROR] >>> Entering test_harmonic_sines()");
         let sample_rate = 44100.0;
         let seconds = 2.0;
         let frequency_1 = 50.0; // Minimal/Fundamental frequency - this is what YIN should find
         let signal_1 = generate_sine_wave(frequency_1, sample_rate, seconds);
+		eprintln!("[ERROR] test_harmonic_sines(): signal_1 → {:?}", signal_1);
         let frequency_2 = 150.0;
         let signal_2 = generate_sine_wave(frequency_2, sample_rate, seconds);
+		eprintln!("[ERROR] test_harmonic_sines(): signal_2 → {:?}", signal_2);
         let frequency_3 = 300.0;
         let signal_3 = generate_sine_wave(frequency_3, sample_rate, seconds);
+		eprintln!("[ERROR] test_harmonic_sines(): signal_3 → {:?}", signal_3);
 
         let min_expected_frequency = 10.0;
         let max_expected_frequency = 500.0;
@@ -255,6 +291,7 @@ mod tests {
             .collect();
 
         let result = yin.yin(&combined_signal);
+		eprintln!("[ERROR] test_harmonic_sines(): result → {:?}", result);
         assert!(result.is_ok());
         let yin_result = result.unwrap();
 
@@ -262,19 +299,24 @@ mod tests {
             yin_result.get_frequency(),
             frequency_1,
             1.0
+		eprintln!("[WARN] <<< Exiting test_harmonic_sines()");
         ));
     }
 
     #[test]
     fn test_unharmonic_sines() {
+		eprintln!("[ERROR] >>> Entering test_unharmonic_sines()");
         let sample_rate = 44100.0;
         let seconds = 2.0;
         let frequency_1 = 50.0;
         let signal_1 = generate_sine_wave(frequency_1, sample_rate, seconds);
+		eprintln!("[ERROR] test_unharmonic_sines(): signal_1 → {:?}", signal_1);
         let frequency_2 = 66.0;
         let signal_2 = generate_sine_wave(frequency_2, sample_rate, seconds);
+		eprintln!("[ERROR] test_unharmonic_sines(): signal_2 → {:?}", signal_2);
         let frequency_3 = 300.0;
         let signal_3 = generate_sine_wave(frequency_3, sample_rate, seconds);
+		eprintln!("[ERROR] test_unharmonic_sines(): signal_3 → {:?}", signal_3);
 
         let min_expected_frequency = 10.0;
         let max_expected_frequency = 500.0;
@@ -292,6 +334,7 @@ mod tests {
             .collect();
 
         let result = yin.yin(&combined_signal);
+		eprintln!("[ERROR] test_unharmonic_sines(): result → {:?}", result);
         assert!(result.is_ok());
         let yin_result = result.unwrap();
 
@@ -304,11 +347,13 @@ mod tests {
         assert!(interpolation_better_than_raw_result(
             yin_result,
             expected_frequency
+		eprintln!("[WARN] <<< Exiting test_unharmonic_sines()");
         ));
     }
 
     #[test]
     fn test_err() {
+		eprintln!("[ERROR] >>> Entering test_err()");
         let sample_rate = 2500.0;
         let seconds = 2.0;
         let frequency = 440.0;
@@ -324,7 +369,9 @@ mod tests {
         );
 
         let signal = generate_sine_wave(frequency, sample_rate, seconds);
+		eprintln!("[ERROR] test_err(): signal → {:?}", signal);
         let result = yin.yin(&signal);
+		eprintln!("[ERROR] test_err(): result → {:?}", result);
         assert!(result.is_err());
 
         let yin_with_suitable_frequency_range = Yin::init(
@@ -334,6 +381,7 @@ mod tests {
             sample_rate,
         );
         let result = yin_with_suitable_frequency_range.yin(&signal);
+		eprintln!("[WARN] <<< Exiting test_err()");
         assert!(result.is_ok());
     }
 }

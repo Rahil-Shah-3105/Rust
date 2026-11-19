@@ -18,6 +18,7 @@
 ///
 /// The algorithm runs in O(n) time, where `n` is the length of the input string.
 pub fn duval_algorithm(s: &str) -> Vec<String> {
+	eprintln!("[ERROR] >>> Entering duval_algorithm(s={})", s);
     factorize_duval(&s.chars().collect::<Vec<char>>())
 }
 
@@ -32,6 +33,7 @@ pub fn duval_algorithm(s: &str) -> Vec<String> {
 ///
 /// A vector of strings, each representing a Lyndon word in the factorization.
 fn factorize_duval(s: &[char]) -> Vec<String> {
+	eprintln!("[ERROR] >>> Entering factorize_duval(s={:?})", s);
     let mut start = 0;
     let mut factors: Vec<String> = Vec::new();
 
@@ -54,6 +56,7 @@ fn factorize_duval(s: &[char]) -> Vec<String> {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting factorize_duval(s={:?})", s);
     factors
 }
 

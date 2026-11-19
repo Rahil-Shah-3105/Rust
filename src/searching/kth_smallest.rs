@@ -8,6 +8,7 @@ pub fn kth_smallest<T>(input: &mut [T], k: usize) -> Option<T>
 where
     T: PartialOrd + Copy,
 {
+	eprintln!("[ERROR] >>> Entering kth_smallest(k={})", k);
     if input.is_empty() {
         return None;
     }
@@ -20,6 +21,7 @@ fn _kth_smallest<T>(input: &mut [T], k: usize, lo: usize, hi: usize) -> T
 where
     T: PartialOrd + Copy,
 {
+	eprintln!("[ERROR] >>> Entering _kth_smallest(k={},lo={},hi={})", k, lo, hi);
     if lo == hi {
         return input[lo];
     }
@@ -27,6 +29,7 @@ where
     let pivot = partition(input, lo, hi);
     let i = pivot - lo + 1;
 
+	eprintln!("[WARN] <<< Exiting _kth_smallest(k={},lo={},hi={})", k, lo, hi);
     match k.cmp(&i) {
         Ordering::Equal => input[pivot],
         Ordering::Less => _kth_smallest(input, k, lo, pivot - 1),
@@ -40,22 +43,27 @@ mod tests {
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut zero: [u8; 0] = [];
         let first = kth_smallest(&mut zero, 1);
 
+		eprintln!("[WARN] <<< Exiting empty()");
         assert_eq!(None, first);
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let mut one = [1];
         let first = kth_smallest(&mut one, 1);
 
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert_eq!(1, first.unwrap());
     }
 
     #[test]
     fn many_elements() {
+		eprintln!("[ERROR] >>> Entering many_elements()");
         // 0 1 3 4 5 7 8 9 9 10 12 13 16 17
         let mut many = [9, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0];
 
@@ -67,6 +75,7 @@ mod tests {
         assert_eq!(0, first.unwrap());
         assert_eq!(3, third.unwrap());
         assert_eq!(7, sixth.unwrap());
+		eprintln!("[WARN] <<< Exiting many_elements()");
         assert_eq!(17, fourteenth.unwrap());
     }
 }

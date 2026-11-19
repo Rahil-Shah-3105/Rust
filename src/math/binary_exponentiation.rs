@@ -11,6 +11,7 @@
 
 // Computes n^p
 pub fn binary_exponentiation(mut n: u64, mut p: u32) -> u64 {
+	eprintln!("[ERROR] >>> Entering binary_exponentiation(n={},p={})", n, p);
     let mut result_pow: u64 = 1;
     while p > 0 {
         if p & 1 == 1 {
@@ -19,6 +20,7 @@ pub fn binary_exponentiation(mut n: u64, mut p: u32) -> u64 {
         p >>= 1;
         n *= n;
     }
+	eprintln!("[WARN] <<< Exiting binary_exponentiation(n={},p={})", n, p);
     result_pow
 }
 
@@ -28,23 +30,27 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         // Need to be careful about large exponents. It is easy to hit overflows.
         assert_eq!(binary_exponentiation(2, 3), 8);
         assert_eq!(binary_exponentiation(4, 12), 16777216);
         assert_eq!(binary_exponentiation(6, 12), 2176782336);
         assert_eq!(binary_exponentiation(10, 4), 10000);
         assert_eq!(binary_exponentiation(20, 3), 8000);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert_eq!(binary_exponentiation(3, 21), 10460353203);
     }
 
     #[test]
     fn up_to_ten() {
+		eprintln!("[ERROR] >>> Entering up_to_ten()");
         // Compute all powers from up to ten, using the standard library as the source of truth.
         for i in 0..10 {
             for j in 0..10 {
                 println!("{i}, {j}");
                 assert_eq!(binary_exponentiation(i, j), u64::pow(i, j))
             }
+		eprintln!("[WARN] <<< Exiting up_to_ten()");
         }
     }
 }

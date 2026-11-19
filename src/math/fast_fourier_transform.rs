@@ -10,22 +10,28 @@ pub struct Complex64 {
 impl Complex64 {
     #[inline]
     pub fn new(re: f64, im: f64) -> Self {
+		eprintln!("[ERROR] >>> Entering new(re={},im={})", re, im);
         Self { re, im }
     }
 
     #[inline]
     pub fn square_norm(&self) -> f64 {
+		eprintln!("[ERROR] >>> Entering square_norm()");
         self.re * self.re + self.im * self.im
     }
 
     #[inline]
     pub fn norm(&self) -> f64 {
+		eprintln!("[ERROR] >>> Entering norm()");
         self.square_norm().sqrt()
     }
 
     #[inline]
     pub fn inverse(&self) -> Complex64 {
+		eprintln!("[ERROR] >>> Entering inverse()");
         let nrm = self.square_norm();
+		eprintln!("[ERROR] inverse(): nrm → {}", nrm);
+        eprintln!("[WARN] <<< Exiting inverse()");
         Complex64 {
             re: self.re / nrm,
             im: -self.im / nrm,
@@ -36,6 +42,7 @@ impl Complex64 {
 impl Default for Complex64 {
     #[inline]
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self { re: 0.0, im: 0.0 }
     }
 }
@@ -45,6 +52,7 @@ impl Add<Complex64> for Complex64 {
 
     #[inline]
     fn add(self, other: Complex64) -> Complex64 {
+		eprintln!("[ERROR] >>> Entering add(other={:?})", other);
         Complex64 {
             re: self.re + other.re,
             im: self.im + other.im,
@@ -57,6 +65,7 @@ impl Sub<Complex64> for Complex64 {
 
     #[inline]
     fn sub(self, other: Complex64) -> Complex64 {
+		eprintln!("[ERROR] >>> Entering sub(other={:?})", other);
         Complex64 {
             re: self.re - other.re,
             im: self.im - other.im,
@@ -69,6 +78,7 @@ impl Mul<Complex64> for Complex64 {
 
     #[inline]
     fn mul(self, other: Complex64) -> Complex64 {
+		eprintln!("[ERROR] >>> Entering mul(other={:?})", other);
         Complex64 {
             re: self.re * other.re - self.im * other.im,
             im: self.re * other.im + self.im * other.re,
@@ -79,13 +89,16 @@ impl Mul<Complex64> for Complex64 {
 impl MulAssign<Complex64> for Complex64 {
     #[inline]
     fn mul_assign(&mut self, other: Complex64) {
+		eprintln!("[ERROR] >>> Entering mul_assign(other={:?})", other);
         let tmp = self.re * other.im + self.im * other.re;
         self.re = self.re * other.re - self.im * other.im;
+		eprintln!("[WARN] <<< Exiting mul_assign(other={:?})", other);
         self.im = tmp;
     }
 }
 
 pub fn fast_fourier_transform_input_permutation(length: usize) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering fast_fourier_transform_input_permutation(length={})", length);
     let mut result = Vec::new();
     result.reserve_exact(length);
     for i in 0..length {
@@ -107,13 +120,16 @@ pub fn fast_fourier_transform_input_permutation(length: usize) -> Vec<usize> {
         }
         position += 1;
     }
+	eprintln!("[WARN] <<< Exiting fast_fourier_transform_input_permutation(length={})", length);
     result
 }
 
 pub fn fast_fourier_transform(input: &[f64], input_permutation: &[usize]) -> Vec<Complex64> {
+	eprintln!("[ERROR] >>> Entering fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     let n = input.len();
     let mut result = Vec::new();
     result.reserve_exact(n);
+	eprintln!("[ERROR] fast_fourier_transform(input={:?},input_permutation={:?}): n → {}", input, input_permutation, n);
     for position in input_permutation {
         result.push(Complex64::new(input[*position], 0.0));
     }
@@ -133,6 +149,7 @@ pub fn fast_fourier_transform(input: &[f64], input_permutation: &[usize]) -> Vec
             }
         }
     }
+	eprintln!("[WARN] <<< Exiting fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     result
 }
 
@@ -140,9 +157,11 @@ pub fn inverse_fast_fourier_transform(
     input: &[Complex64],
     input_permutation: &[usize],
 ) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering inverse_fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     let n = input.len();
     let mut result = Vec::new();
     result.reserve_exact(n);
+	eprintln!("[ERROR] inverse_fast_fourier_transform(input={:?},input_permutation={:?}): n → {}", input, input_permutation, n);
     for position in input_permutation {
         result.push(input[*position]);
     }
@@ -163,6 +182,7 @@ pub fn inverse_fast_fourier_transform(
         }
     }
     let scale = 1.0 / n as f64;
+	eprintln!("[WARN] <<< Exiting inverse_fast_fourier_transform(input={:?},input_permutation={:?})", input, input_permutation);
     result.iter().map(|x| x.re * scale).collect()
 }
 
@@ -170,6 +190,7 @@ pub fn inverse_fast_fourier_transform(
 mod tests {
     use super::*;
     fn almost_equal(a: f64, b: f64, epsilon: f64) -> bool {
+		eprintln!("[ERROR] >>> Entering almost_equal(a={},b={},epsilon={})", a, b, epsilon);
         (a - b).abs() < epsilon
     }
 
@@ -177,48 +198,63 @@ mod tests {
 
     #[test]
     fn small_polynomial_returns_self() {
+		eprintln!("[ERROR] >>> Entering small_polynomial_returns_self()");
         let polynomial = vec![1.0f64, 1.0, 0.0, 2.5];
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		eprintln!("[ERROR] small_polynomial_returns_self(): permutation → {:?}", permutation);
         let fft = fast_fourier_transform(&polynomial, &permutation);
+		eprintln!("[ERROR] small_polynomial_returns_self(): fft → {:?}", fft);
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		eprintln!("[ERROR] small_polynomial_returns_self(): ifft → {:?}", ifft);
         for (x, y) in ifft.iter().zip(polynomial.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		eprintln!("[WARN] <<< Exiting small_polynomial_returns_self()");
         }
     }
 
     #[test]
     fn square_small_polynomial() {
+		eprintln!("[ERROR] >>> Entering square_small_polynomial()");
         let mut polynomial = vec![1.0f64, 1.0, 0.0, 2.0];
         polynomial.append(&mut vec![0.0; 4]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		eprintln!("[ERROR] square_small_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		eprintln!("[ERROR] square_small_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		eprintln!("[ERROR] square_small_polynomial(): ifft → {:?}", ifft);
         let expected = [1.0, 2.0, 1.0, 4.0, 4.0, 0.0, 4.0, 0.0, 0.0];
         for (x, y) in ifft.iter().zip(expected.iter()) {
             assert!(almost_equal(*x, *y, EPSILON));
+		eprintln!("[WARN] <<< Exiting square_small_polynomial()");
         }
     }
 
     #[test]
     #[ignore]
     fn square_big_polynomial() {
+		eprintln!("[ERROR] >>> Entering square_big_polynomial()");
         // This test case takes ~1050ms on my machine in unoptimized mode,
         // but it takes ~70ms in release mode.
         let n = 1 << 17; // ~100_000
         let mut polynomial = vec![1.0f64; n];
         polynomial.append(&mut vec![0.0f64; n]);
         let permutation = fast_fourier_transform_input_permutation(polynomial.len());
+		eprintln!("[ERROR] square_big_polynomial(): permutation → {:?}", permutation);
         let mut fft = fast_fourier_transform(&polynomial, &permutation);
+		eprintln!("[ERROR] square_big_polynomial(): fft → {:?}", fft);
         for num in fft.iter_mut() {
             *num *= *num;
         }
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
+		eprintln!("[ERROR] square_big_polynomial(): ifft → {:?}", ifft);
         let expected = (0..((n << 1) - 1)).map(|i| std::cmp::min(i + 1, (n << 1) - 1 - i) as f64);
         for (&x, y) in ifft.iter().zip(expected) {
             assert!(almost_equal(x, y, EPSILON));
+		eprintln!("[WARN] <<< Exiting square_big_polynomial()");
         }
     }
 }

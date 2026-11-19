@@ -1,6 +1,7 @@
 // From Wikipedia: Pigeonhole sorting is a sorting algorithm that is suitable for sorting lists of elements where the number of elements (n) and the length of the range of possible key values (N) are approximately the same. It requires O(n + N) time.
 
 pub fn pigeonhole_sort(array: &mut [i32]) {
+	eprintln!("[ERROR] >>> Entering pigeonhole_sort(array={:?})", array);
     if let (Some(min), Some(max)) = (array.iter().min(), array.iter().max()) {
         let holes_range: usize = (max - min + 1) as usize;
         let mut holes = vec![0; holes_range];
@@ -17,6 +18,7 @@ pub fn pigeonhole_sort(array: &mut [i32]) {
                 index += 1;
                 holes_repeat[i] -= 1;
             }
+		eprintln!("[WARN] <<< Exiting pigeonhole_sort(array={:?})", array);
         }
     }
 }
@@ -28,11 +30,13 @@ mod tests {
 
     #[test]
     fn test1() {
+		eprintln!("[ERROR] >>> Entering test1()");
         let mut arr1 = [3, 3, 3, 1, 2, 6, 5, 5, 5, 4, 1, 6, 3];
         pigeonhole_sort(&mut arr1);
         assert!(is_sorted(&arr1));
         let mut arr2 = [6, 5, 4, 3, 2, 1];
         pigeonhole_sort(&mut arr2);
+		eprintln!("[WARN] <<< Exiting test1()");
         assert!(is_sorted(&arr2));
     }
 }

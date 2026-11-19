@@ -20,6 +20,7 @@
 //! vector with the Leaky ReLU transformation applied to each element. The input vector is not altered.
 //!
 pub fn leaky_relu(vector: &Vec<f64>, alpha: f64) -> Vec<f64> {
+	eprintln!("[ERROR] >>> Entering leaky_relu(vector={:?},alpha={})", vector, alpha);
     let mut _vector = vector.to_owned();
 
     for value in &mut _vector {
@@ -28,6 +29,7 @@ pub fn leaky_relu(vector: &Vec<f64>, alpha: f64) -> Vec<f64> {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting leaky_relu(vector={:?},alpha={})", vector, alpha);
     _vector
 }
 
@@ -37,11 +39,13 @@ mod tests {
 
     #[test]
     fn test_leaky_relu() {
+		eprintln!("[ERROR] >>> Entering test_leaky_relu()");
         let test_vector = vec![-10., 2., -3., 4., -5., 10., 0.05];
         let alpha = 0.01;
         assert_eq!(
             leaky_relu(&test_vector, alpha),
             vec![-0.1, 2.0, -0.03, 4.0, -0.05, 10.0, 0.05]
+		eprintln!("[WARN] <<< Exiting test_leaky_relu()");
         );
     }
 }

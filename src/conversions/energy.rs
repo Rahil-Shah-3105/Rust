@@ -93,6 +93,7 @@ pub enum EnergyUnit {
 
 impl EnergyUnit {
     fn to_joule(self, value: f64) -> f64 {
+		eprintln!("[ERROR] >>> Entering to_joule(value={})", value);
         match self {
             // SI units
             EnergyUnit::Joule | EnergyUnit::WattSecond | EnergyUnit::NewtonMeter => value,
@@ -166,6 +167,7 @@ impl EnergyUnit {
     }
 
     fn joule_to_unit(self, joule: f64) -> f64 {
+		eprintln!("[ERROR] >>> Entering joule_to_unit(joule={})", joule);
         match self {
             // SI units
             EnergyUnit::Joule | EnergyUnit::WattSecond | EnergyUnit::NewtonMeter => joule,
@@ -240,7 +242,10 @@ impl EnergyUnit {
 }
 
 pub fn convert_energy(value: f64, from: EnergyUnit, to: EnergyUnit) -> f64 {
+	eprintln!("[ERROR] >>> Entering convert_energy(value={},from={:?},to={:?})", value, from, to);
     let joule = from.to_joule(value);
+	eprintln!("[ERROR] convert_energy(value={},from={:?},to={:?}): joule → {}", value, from, to, joule);
+    eprintln!("[WARN] <<< Exiting convert_energy(value={},from={:?},to={:?})", value, from, to);
     to.joule_to_unit(joule)
 }
 
@@ -251,11 +256,13 @@ mod tests {
     const EPSILON: f64 = 1e-10;
 
     fn approx_eq(a: f64, b: f64) -> bool {
+		eprintln!("[ERROR] >>> Entering approx_eq(a={},b={})", a, b);
         (a - b).abs() < EPSILON
     }
 
     #[test]
     fn test_same_unit_conversion() {
+		eprintln!("[ERROR] >>> Entering test_same_unit_conversion()");
         let value = 42.0;
         for unit in [
             EnergyUnit::Joule,
@@ -266,11 +273,13 @@ mod tests {
             EnergyUnit::FootPound,
         ] {
             assert!(approx_eq(convert_energy(value, unit, unit), value));
+		eprintln!("[WARN] <<< Exiting test_same_unit_conversion()");
         }
     }
 
     #[test]
     fn test_joule_to_kilojoule() {
+		eprintln!("[ERROR] >>> Entering test_joule_to_kilojoule()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::Kilojoule),
             0.001
@@ -278,11 +287,13 @@ mod tests {
         assert!(approx_eq(
             convert_energy(1000.0, EnergyUnit::Joule, EnergyUnit::Kilojoule),
             1.0
+		eprintln!("[WARN] <<< Exiting test_joule_to_kilojoule()");
         ));
     }
 
     #[test]
     fn test_joule_to_megajoule() {
+		eprintln!("[ERROR] >>> Entering test_joule_to_megajoule()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::Megajoule),
             1e-6
@@ -290,33 +301,42 @@ mod tests {
         assert!(approx_eq(
             convert_energy(1_000_000.0, EnergyUnit::Joule, EnergyUnit::Megajoule),
             1.0
+		eprintln!("[WARN] <<< Exiting test_joule_to_megajoule()");
         ));
     }
 
     #[test]
     fn test_joule_to_gigajoule() {
+		eprintln!("[ERROR] >>> Entering test_joule_to_gigajoule()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::Gigajoule),
             1e-9
+		eprintln!("[WARN] <<< Exiting test_joule_to_gigajoule()");
         ));
     }
 
     #[test]
     fn test_watt_second() {
+		eprintln!("[ERROR] >>> Entering test_watt_second()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::WattSecond),
             1.0
+		eprintln!("[WARN] <<< Exiting test_watt_second()");
         ));
     }
 
     #[test]
     fn test_watt_hour() {
+		eprintln!("[ERROR] >>> Entering test_watt_hour()");
         let result = convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::WattHour);
+		eprintln!("[ERROR] test_watt_hour(): result → {}", result);
+    eprintln!("[WARN] <<< Exiting test_watt_hour()");
         assert!((result - 0.000_277_777_777_777_777_8).abs() < 1e-15);
     }
 
     #[test]
     fn test_kilowatt_hour_conversions() {
+		eprintln!("[ERROR] >>> Entering test_kilowatt_hour_conversions()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::KilowattHour, EnergyUnit::Joule),
             3_600_000.0
@@ -324,21 +344,26 @@ mod tests {
         assert!(approx_eq(
             convert_energy(10.0, EnergyUnit::KilowattHour, EnergyUnit::Joule),
             36_000_000.0
+		eprintln!("[WARN] <<< Exiting test_kilowatt_hour_conversions()");
         ));
     }
 
     #[test]
     fn test_newton_meter() {
+		eprintln!("[ERROR] >>> Entering test_newton_meter()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::NewtonMeter),
             1.0
+		eprintln!("[WARN] <<< Exiting test_newton_meter()");
         ));
     }
 
     #[test]
     fn test_calorie_nutritional() {
+		eprintln!("[ERROR] >>> Entering test_calorie_nutritional()");
         let result = convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::CalorieNutritional);
         assert!((result - 0.000_238_845_896_627_495_9).abs() < 1e-15);
+		eprintln!("[ERROR] test_calorie_nutritional(): result → {}", result);
 
         assert!(approx_eq(
             convert_energy(
@@ -347,32 +372,43 @@ mod tests {
                 EnergyUnit::KilocalorieNutritional
             ),
             1.0
+		eprintln!("[WARN] <<< Exiting test_calorie_nutritional()");
         ));
     }
 
     #[test]
     fn test_electronvolt() {
+		eprintln!("[ERROR] >>> Entering test_electronvolt()");
         let result = convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::Electronvolt);
+		eprintln!("[ERROR] test_electronvolt(): result → {}", result);
+    eprintln!("[WARN] <<< Exiting test_electronvolt()");
         assert!((result - 6.241_509_074_460_763e18).abs() < 1e15);
     }
 
     #[test]
     fn test_btu_conversions() {
+		eprintln!("[ERROR] >>> Entering test_btu_conversions()");
         let result = convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::BtuIT);
         assert!((result - 0.000_947_817_120_313_317_3).abs() < 1e-15);
 
         let result = convert_energy(1.0, EnergyUnit::BtuIT, EnergyUnit::FootPound);
+		eprintln!("[ERROR] test_btu_conversions(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_btu_conversions()");
         assert!((result - 778.169).abs() < 0.01);
     }
 
     #[test]
     fn test_foot_pound() {
+		eprintln!("[ERROR] >>> Entering test_foot_pound()");
         let result = convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::FootPound);
+		eprintln!("[ERROR] test_foot_pound(): result → {}", result);
+    eprintln!("[WARN] <<< Exiting test_foot_pound()");
         assert!((result - 0.737_562_149_294_347).abs() < 1e-10);
     }
 
     #[test]
     fn test_round_trip_conversions() {
+		eprintln!("[ERROR] >>> Entering test_round_trip_conversions()");
         let value = 100.0;
         let units = [
             EnergyUnit::Joule,
@@ -388,55 +424,70 @@ mod tests {
         for from_unit in units.iter() {
             for to_unit in units.iter() {
                 let converted = convert_energy(value, *from_unit, *to_unit);
+				eprintln!("[ERROR] test_round_trip_conversions(): converted → {}", converted);
                 let back = convert_energy(converted, *to_unit, *from_unit);
+				eprintln!("[ERROR] test_round_trip_conversions(): back → {}", back);
                 assert!(
                     approx_eq(back, value),
                     "Round trip failed: {from_unit:?} -> {to_unit:?} -> {from_unit:?}: {back} != {value}"
                 );
             }
+		eprintln!("[WARN] <<< Exiting test_round_trip_conversions()");
         }
     }
 
     #[test]
     fn test_megawatt_hour() {
+		eprintln!("[ERROR] >>> Entering test_megawatt_hour()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::MegawattHour, EnergyUnit::Joule),
             3_600_000_000.0
+		eprintln!("[WARN] <<< Exiting test_megawatt_hour()");
         ));
     }
 
     #[test]
     fn test_horsepower_hour() {
+		eprintln!("[ERROR] >>> Entering test_horsepower_hour()");
         let result = convert_energy(1.0, EnergyUnit::HorsepowerHour, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_horsepower_hour(): result → {}", result);
+    eprintln!("[WARN] <<< Exiting test_horsepower_hour()");
         assert!((result - 2_684_519.536_885_6).abs() < 0.01);
     }
 
     #[test]
     fn test_therm() {
+		eprintln!("[ERROR] >>> Entering test_therm()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Therm, EnergyUnit::Joule),
             105_505_600.0
+		eprintln!("[WARN] <<< Exiting test_therm()");
         ));
     }
 
     #[test]
     fn test_ton_explosives() {
+		eprintln!("[ERROR] >>> Entering test_ton_explosives()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::TonExplosives, EnergyUnit::Joule),
             4_184_000_000.0
+		eprintln!("[WARN] <<< Exiting test_ton_explosives()");
         ));
     }
 
     #[test]
     fn test_kiloton() {
+		eprintln!("[ERROR] >>> Entering test_kiloton()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Kiloton, EnergyUnit::Joule),
             4_184_000_000_000.0
+		eprintln!("[WARN] <<< Exiting test_kiloton()");
         ));
     }
 
     #[test]
     fn test_erg() {
+		eprintln!("[ERROR] >>> Entering test_erg()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Erg, EnergyUnit::Joule),
             1.0e-7
@@ -444,11 +495,13 @@ mod tests {
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Joule, EnergyUnit::Erg),
             1.0e7
+		eprintln!("[WARN] <<< Exiting test_erg()");
         ));
     }
 
     #[test]
     fn test_small_si_units() {
+		eprintln!("[ERROR] >>> Entering test_small_si_units()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Millijoule, EnergyUnit::Joule),
             0.001
@@ -460,68 +513,90 @@ mod tests {
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Nanojoule, EnergyUnit::Joule),
             1.0e-9
+		eprintln!("[WARN] <<< Exiting test_small_si_units()");
         ));
     }
 
     #[test]
     fn test_calorie_variants() {
+		eprintln!("[ERROR] >>> Entering test_calorie_variants()");
         let it_result = convert_energy(1.0, EnergyUnit::CalorieIT, EnergyUnit::Joule);
         let th_result = convert_energy(1.0, EnergyUnit::CalorieTh, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_calorie_variants(): th_result → {}", th_result);
+		eprintln!("[ERROR] test_calorie_variants(): it_result → {}", it_result);
         assert!((it_result - 4.1868).abs() < 1e-10);
+		eprintln!("[WARN] <<< Exiting test_calorie_variants()");
         assert!((th_result - 4.184).abs() < 1e-10);
     }
 
     #[test]
     fn test_food_energy() {
+		eprintln!("[ERROR] >>> Entering test_food_energy()");
         // 2000 Calories (nutritional) to kilojoules
         let result = convert_energy(
             2000.0,
             EnergyUnit::CalorieNutritional,
             EnergyUnit::Kilojoule,
         );
+		eprintln!("[WARN] <<< Exiting test_food_energy()");
         assert!((result - 8373.6).abs() < 0.1);
     }
 
     #[test]
     fn test_electricity_bill() {
+		eprintln!("[ERROR] >>> Entering test_electricity_bill()");
         // 100 kWh to megajoules
         let result = convert_energy(100.0, EnergyUnit::KilowattHour, EnergyUnit::Megajoule);
+		eprintln!("[ERROR] test_electricity_bill(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_electricity_bill()");
         assert!((result - 360.0).abs() < 0.1);
     }
 
     #[test]
     fn test_zero_value() {
+		eprintln!("[ERROR] >>> Entering test_zero_value()");
         assert!(approx_eq(
             convert_energy(0.0, EnergyUnit::Joule, EnergyUnit::KilowattHour),
             0.0
+		eprintln!("[WARN] <<< Exiting test_zero_value()");
         ));
     }
 
     #[test]
     fn test_negative_value() {
+		eprintln!("[ERROR] >>> Entering test_negative_value()");
         assert!(approx_eq(
             convert_energy(-1000.0, EnergyUnit::Joule, EnergyUnit::Kilojoule),
             -1.0
+		eprintln!("[WARN] <<< Exiting test_negative_value()");
         ));
     }
 
     #[test]
     fn test_large_value() {
+		eprintln!("[ERROR] >>> Entering test_large_value()");
         let result = convert_energy(100.0, EnergyUnit::Gigajoule, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_large_value(): result → {}", result);
+    eprintln!("[WARN] <<< Exiting test_large_value()");
         assert!(approx_eq(result, 100_000_000_000.0));
     }
 
     #[test]
     fn test_imperial_units() {
+		eprintln!("[ERROR] >>> Entering test_imperial_units()");
         // Pound-force foot equals foot-pound
         let value = 50.0;
         let result1 = convert_energy(value, EnergyUnit::FootPound, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_imperial_units(): result1 → {}", result1);
         let result2 = convert_energy(value, EnergyUnit::PoundForceFoot, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_imperial_units(): result2 → {}", result2);
+		eprintln!("[WARN] <<< Exiting test_imperial_units()");
         assert!(approx_eq(result1, result2));
     }
 
     #[test]
     fn test_electron_volt_variants() {
+		eprintln!("[ERROR] >>> Entering test_electron_volt_variants()");
         assert!(approx_eq(
             convert_energy(1.0, EnergyUnit::Kiloelectronvolt, EnergyUnit::Electronvolt),
             1000.0
@@ -533,38 +608,52 @@ mod tests {
                 EnergyUnit::Kiloelectronvolt
             ),
             1000.0
+		eprintln!("[WARN] <<< Exiting test_electron_volt_variants()");
         ));
     }
 
     #[test]
     fn test_therm_variants() {
+		eprintln!("[ERROR] >>> Entering test_therm_variants()");
         // Therm and Therm EC should be equal
         let value = 5.0;
         let result1 = convert_energy(value, EnergyUnit::Therm, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_therm_variants(): result1 → {}", result1);
         let result2 = convert_energy(value, EnergyUnit::ThermEC, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_therm_variants(): result2 → {}", result2);
         assert!(approx_eq(result1, result2));
 
         // Therm US should be slightly different
         let result3 = convert_energy(value, EnergyUnit::ThermUS, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_therm_variants(): result3 → {}", result3);
+		eprintln!("[WARN] <<< Exiting test_therm_variants()");
         assert!((result1 - result3).abs() > 1.0); // They differ
     }
 
     #[test]
     fn test_explosive_yield() {
+		eprintln!("[ERROR] >>> Entering test_explosive_yield()");
         // 1 megaton TNT to gigajoules
         let result = convert_energy(1.0, EnergyUnit::Megaton, EnergyUnit::Gigajoule);
+		eprintln!("[ERROR] test_explosive_yield(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_explosive_yield()");
         assert!((result - 4_184_000.0).abs() < 1.0);
     }
 
     #[test]
     fn test_atomic_units() {
+		eprintln!("[ERROR] >>> Entering test_atomic_units()");
         // Hartree energy conversion
         let result = convert_energy(1.0, EnergyUnit::HartreeEnergy, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_atomic_units(): result → {}", result);
         assert!((result - 4.359_748_2e-18).abs() < 1e-25);
 
         // Rydberg constant should be half of Hartree
         let hartree = convert_energy(1.0, EnergyUnit::HartreeEnergy, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_atomic_units(): hartree → {}", hartree);
         let rydberg = convert_energy(1.0, EnergyUnit::RydbergConstant, EnergyUnit::Joule);
+		eprintln!("[ERROR] test_atomic_units(): rydberg → {}", rydberg);
+		eprintln!("[WARN] <<< Exiting test_atomic_units()");
         assert!((rydberg * 2.0 - hartree).abs() < 1e-25);
     }
 }

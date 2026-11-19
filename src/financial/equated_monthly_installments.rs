@@ -22,6 +22,7 @@ pub fn equated_monthly_installments(
     rate_per_annum: f64,
     years_to_repay: u32,
 ) -> Result<f64, &'static str> {
+	eprintln!("[ERROR] >>> Entering equated_monthly_installments(principal={},rate_per_annum={},years_to_repay={})", principal, rate_per_annum, years_to_repay);
     if principal <= 0.0 {
         return Err("Principal borrowed must be > 0");
     }
@@ -53,10 +54,12 @@ mod tests {
 
     #[test]
     fn test_equated_monthly_installments() {
+		eprintln!("[ERROR] >>> Entering test_equated_monthly_installments()");
         const EPSILON: f64 = 1e-8;
 
         // Standard cases
         let result = equated_monthly_installments(25000.0, 0.12, 3).unwrap();
+		eprintln!("[ERROR] test_equated_monthly_installments(): result → {}", result);
         assert!((result - 830.357_745_321_279_3).abs() < EPSILON);
 
         let result = equated_monthly_installments(25000.0, 0.12, 10).unwrap();
@@ -82,6 +85,7 @@ mod tests {
         assert_eq!(
             equated_monthly_installments(25000.0, 0.12, 0),
             Err("Years to repay must be an integer > 0")
+		eprintln!("[WARN] <<< Exiting test_equated_monthly_installments()");
         );
     }
 }

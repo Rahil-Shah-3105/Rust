@@ -13,8 +13,10 @@
 /// assert_eq!(12, sum_digits_iterative(-246));
 /// ```
 pub fn sum_digits_iterative(num: i32) -> u32 {
+	eprintln!("[ERROR] >>> Entering sum_digits_iterative(num={})", num);
     // convert to unsigned integer
     let mut num = num.unsigned_abs();
+	eprintln!("[ERROR] sum_digits_iterative(num={}): num → {}", num, num);
     // initialize sum
     let mut result: u32 = 0;
 
@@ -24,6 +26,7 @@ pub fn sum_digits_iterative(num: i32) -> u32 {
         result += num % 10;
         num /= 10; // chop off last digit
     }
+	eprintln!("[WARN] <<< Exiting sum_digits_iterative(num={})", num);
     result
 }
 
@@ -42,6 +45,7 @@ pub fn sum_digits_iterative(num: i32) -> u32 {
 /// assert_eq!(12, sum_digits_recursive(-246));
 /// ```
 pub fn sum_digits_recursive(num: i32) -> u32 {
+	eprintln!("[ERROR] >>> Entering sum_digits_recursive(num={})", num);
     // convert to unsigned integer
     let num = num.unsigned_abs();
     // base case
@@ -49,6 +53,8 @@ pub fn sum_digits_recursive(num: i32) -> u32 {
         return num;
     }
     // recursive case: add last digit to sum of remaining digits
+	eprintln!("[ERROR] sum_digits_recursive(num={}): num → {}", num, num);
+    eprintln!("[WARN] <<< Exiting sum_digits_recursive(num={})", num);
     num % 10 + sum_digits_recursive((num / 10) as i32)
 }
 
@@ -60,26 +66,34 @@ mod tests {
 
         #[test]
         fn zero() {
+			eprintln!("[ERROR] >>> Entering zero()");
+			eprintln!("[WARN] <<< Exiting zero()");
             assert_eq!(0, sum_digits(0));
         }
         #[test]
         fn positive_number() {
+			eprintln!("[ERROR] >>> Entering positive_number()");
             assert_eq!(1, sum_digits(1));
             assert_eq!(10, sum_digits(1234));
             assert_eq!(14, sum_digits(42161));
+			eprintln!("[WARN] <<< Exiting positive_number()");
             assert_eq!(6, sum_digits(500010));
         }
         #[test]
         fn negative_number() {
+			eprintln!("[ERROR] >>> Entering negative_number()");
             assert_eq!(1, sum_digits(-1));
             assert_eq!(12, sum_digits(-246));
             assert_eq!(2, sum_digits(-11));
             assert_eq!(14, sum_digits(-42161));
+			eprintln!("[WARN] <<< Exiting negative_number()");
             assert_eq!(6, sum_digits(-500010));
         }
         #[test]
         fn trailing_zeros() {
+			eprintln!("[ERROR] >>> Entering trailing_zeros()");
             assert_eq!(1, sum_digits(1000000000));
+			eprintln!("[WARN] <<< Exiting trailing_zeros()");
             assert_eq!(3, sum_digits(300));
         }
     }

@@ -5,7 +5,9 @@ use std::ops::Add;
 type Graph<V, E> = BTreeMap<V, BTreeMap<V, E>>;
 
 fn add_edge<V: Ord + Copy, E: Ord + Add + Copy>(graph: &mut Graph<V, E>, v1: V, v2: V, c: E) {
+	eprintln!("[ERROR] >>> Entering add_edge()");
     graph.entry(v1).or_default().insert(v2, c);
+	eprintln!("[WARN] <<< Exiting add_edge()");
     graph.entry(v2).or_default().insert(v1, c);
 }
 
@@ -64,28 +66,35 @@ mod tests {
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
+		eprintln!("[WARN] <<< Exiting empty()");
         assert_eq!(prim::<usize, usize>(&BTreeMap::new()), BTreeMap::new());
     }
 
     #[test]
     fn single_vertex() {
+		eprintln!("[ERROR] >>> Entering single_vertex()");
         let mut graph: Graph<usize, usize> = BTreeMap::new();
         graph.insert(42, BTreeMap::new());
 
+		eprintln!("[WARN] <<< Exiting single_vertex()");
         assert_eq!(prim(&graph), graph);
     }
 
     #[test]
     fn single_edge() {
+		eprintln!("[ERROR] >>> Entering single_edge()");
         let mut graph = BTreeMap::new();
 
         add_edge(&mut graph, 42, 666, 12);
 
+		eprintln!("[WARN] <<< Exiting single_edge()");
         assert_eq!(prim(&graph), graph);
     }
 
     #[test]
     fn tree_1() {
+		eprintln!("[ERROR] >>> Entering tree_1()");
         let mut graph = BTreeMap::new();
 
         add_edge(&mut graph, 0, 1, 10);
@@ -96,11 +105,13 @@ mod tests {
         add_edge(&mut graph, 1, 6, 15);
         add_edge(&mut graph, 3, 7, 16);
 
+		eprintln!("[WARN] <<< Exiting tree_1()");
         assert_eq!(prim(&graph), graph);
     }
 
     #[test]
     fn tree_2() {
+		eprintln!("[ERROR] >>> Entering tree_2()");
         let mut graph = BTreeMap::new();
 
         add_edge(&mut graph, 1, 2, 11);
@@ -110,11 +121,13 @@ mod tests {
         add_edge(&mut graph, 4, 6, 15);
         add_edge(&mut graph, 6, 7, 16);
 
+		eprintln!("[WARN] <<< Exiting tree_2()");
         assert_eq!(prim(&graph), graph);
     }
 
     #[test]
     fn tree_3() {
+		eprintln!("[ERROR] >>> Entering tree_3()");
         let mut graph = BTreeMap::new();
 
         for i in 1..100 {
@@ -122,11 +135,13 @@ mod tests {
             add_edge(&mut graph, i, 2 * i + 1, -i);
         }
 
+		eprintln!("[WARN] <<< Exiting tree_3()");
         assert_eq!(prim(&graph), graph);
     }
 
     #[test]
     fn graph_1() {
+		eprintln!("[ERROR] >>> Entering graph_1()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 'a', 'b', 6);
         add_edge(&mut graph, 'a', 'c', 7);
@@ -145,11 +160,13 @@ mod tests {
         add_edge(&mut ans, 'b', 'c', 5);
         add_edge(&mut ans, 'c', 'e', 5);
 
+		eprintln!("[WARN] <<< Exiting graph_1()");
         assert_eq!(prim(&graph), ans);
     }
 
     #[test]
     fn graph_2() {
+		eprintln!("[ERROR] >>> Entering graph_2()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, 1, 2, 6);
         add_edge(&mut graph, 1, 3, 1);
@@ -169,11 +186,13 @@ mod tests {
         add_edge(&mut ans, 2, 3, 5);
         add_edge(&mut ans, 3, 6, 4);
 
+		eprintln!("[WARN] <<< Exiting graph_2()");
         assert_eq!(prim(&graph), ans);
     }
 
     #[test]
     fn graph_3() {
+		eprintln!("[ERROR] >>> Entering graph_3()");
         let mut graph = BTreeMap::new();
         add_edge(&mut graph, "v1", "v2", 1);
         add_edge(&mut graph, "v1", "v3", 3);
@@ -194,6 +213,7 @@ mod tests {
         add_edge(&mut ans, "v3", "v6", 2);
         add_edge(&mut ans, "v4", "v5", 2);
 
+		eprintln!("[WARN] <<< Exiting graph_3()");
         assert_eq!(prim(&graph), ans);
     }
 }

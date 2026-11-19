@@ -1,6 +1,7 @@
 use std::vec;
 
 pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering patience_sort()");
     if arr.is_empty() {
         return;
     }
@@ -9,7 +10,9 @@ pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
     let mut piles: Vec<Vec<T>> = Vec::new();
     for &card in arr.iter() {
         let mut left = 0usize;
+		eprintln!("[ERROR] patience_sort(): left → {}", left);
         let mut right = piles.len();
+		eprintln!("[ERROR] patience_sort(): right → {}", right);
 
         while left < right {
             let mid = left + (right - left) / 2;
@@ -39,6 +42,7 @@ pub fn patience_sort<T: Ord + Copy>(arr: &mut [T]) {
         piles[min_id].pop();
 
         if piles[min_id].is_empty() {
+			eprintln!("[WARN] <<< Exiting patience_sort()");
             _ = piles.remove(min_id);
         }
     }
@@ -52,35 +56,43 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         let mut array = vec![
             -2, 7, 15, -14, 0, 15, 0, 10_033, 7, -7, -4, -13, 5, 8, -14, 12,
         ];
         let cloned = array.clone();
         patience_sort(&mut array);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut array = Vec::<i32>::new();
         let cloned = array.clone();
         patience_sort(&mut array);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let mut array = vec![3];
         let cloned = array.clone();
         patience_sort(&mut array);
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 
     #[test]
     fn pre_sorted() {
+		eprintln!("[ERROR] >>> Entering pre_sorted()");
         let mut array = vec![-123_456, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         let cloned = array.clone();
         patience_sort(&mut array);
+		eprintln!("[WARN] <<< Exiting pre_sorted()");
         assert!(is_sorted(&array) && have_same_elements(&array, &cloned));
     }
 }

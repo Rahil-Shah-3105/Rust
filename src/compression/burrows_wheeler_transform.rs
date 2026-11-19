@@ -41,6 +41,7 @@ pub struct BwtResult {
 /// assert_eq!(rotations[1], "BANANA|^");
 /// ```
 pub fn all_rotations(s: &str) -> Vec<String> {
+	eprintln!("[ERROR] >>> Entering all_rotations(s={})", s);
     (0..s.len())
         .map(|i| format!("{}{}", &s[i..], &s[..i]))
         .collect()
@@ -73,9 +74,11 @@ pub fn all_rotations(s: &str) -> Vec<String> {
 /// assert_eq!(result.idx_original_string, 11);
 /// ```
 pub fn bwt_transform(s: &str) -> BwtResult {
+	eprintln!("[ERROR] >>> Entering bwt_transform(s={})", s);
     assert!(!s.is_empty(), "Input string must not be empty");
 
     let mut rotations = all_rotations(s);
+	eprintln!("[ERROR] bwt_transform(s={}): rotations → {:?}", s, rotations);
     rotations.sort();
 
     // Find the index of the original string in sorted rotations
@@ -121,6 +124,7 @@ pub fn bwt_transform(s: &str) -> BwtResult {
 /// assert_eq!(reverse_bwt("mnpbnnaaaaaa", 11), "panamabanana");
 /// ```
 pub fn reverse_bwt(bwt_string: &str, idx_original_string: usize) -> String {
+	eprintln!("[ERROR] >>> Entering reverse_bwt(bwt_string={},idx_original_string={})", bwt_string, idx_original_string);
     assert!(!bwt_string.is_empty(), "BWT string must not be empty");
     assert!(
         idx_original_string < bwt_string.len(),
@@ -128,6 +132,7 @@ pub fn reverse_bwt(bwt_string: &str, idx_original_string: usize) -> String {
     );
 
     let len = bwt_string.len();
+	eprintln!("[ERROR] reverse_bwt(bwt_string={},idx_original_string={}): len → {}", bwt_string, idx_original_string, len);
     let bwt_chars: Vec<char> = bwt_string.chars().collect();
     let mut ordered_rotations: Vec<String> = vec![String::new(); len];
 
@@ -139,6 +144,7 @@ pub fn reverse_bwt(bwt_string: &str, idx_original_string: usize) -> String {
         ordered_rotations.sort();
     }
 
+	eprintln!("[WARN] <<< Exiting reverse_bwt(bwt_string={},idx_original_string={})", bwt_string, idx_original_string);
     ordered_rotations[idx_original_string].clone()
 }
 
@@ -148,93 +154,127 @@ mod tests {
 
     #[test]
     fn test_all_rotations_banana() {
+		eprintln!("[ERROR] >>> Entering test_all_rotations_banana()");
         let rotations = all_rotations("^BANANA|");
         assert_eq!(rotations.len(), 8);
+		eprintln!("[ERROR] test_all_rotations_banana(): rotations → {:?}", rotations);
         assert_eq!(
             rotations,
             vec![
                 "^BANANA|", "BANANA|^", "ANANA|^B", "NANA|^BA", "ANA|^BAN", "NA|^BANA", "A|^BANAN",
                 "|^BANANA"
             ]
+		eprintln!("[WARN] <<< Exiting test_all_rotations_banana()");
         );
     }
 
     #[test]
     fn test_all_rotations_casa() {
+		eprintln!("[ERROR] >>> Entering test_all_rotations_casa()");
         let rotations = all_rotations("a_asa_da_casa");
         assert_eq!(rotations.len(), 13);
+		eprintln!("[ERROR] test_all_rotations_casa(): rotations → {:?}", rotations);
         assert_eq!(rotations[0], "a_asa_da_casa");
         assert_eq!(rotations[1], "_asa_da_casaa");
+		eprintln!("[WARN] <<< Exiting test_all_rotations_casa()");
         assert_eq!(rotations[12], "aa_asa_da_cas");
     }
 
     #[test]
     fn test_all_rotations_panama() {
+		eprintln!("[ERROR] >>> Entering test_all_rotations_panama()");
         let rotations = all_rotations("panamabanana");
         assert_eq!(rotations.len(), 12);
+		eprintln!("[ERROR] test_all_rotations_panama(): rotations → {:?}", rotations);
         assert_eq!(rotations[0], "panamabanana");
+		eprintln!("[WARN] <<< Exiting test_all_rotations_panama()");
         assert_eq!(rotations[11], "apanamabanan");
     }
 
     #[test]
     fn test_bwt_transform_banana() {
+		eprintln!("[ERROR] >>> Entering test_bwt_transform_banana()");
         let result = bwt_transform("^BANANA");
         assert_eq!(result.bwt_string, "BNN^AAA");
+		eprintln!("[ERROR] test_bwt_transform_banana(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_bwt_transform_banana()");
         assert_eq!(result.idx_original_string, 6);
     }
 
     #[test]
     fn test_bwt_transform_casa() {
+		eprintln!("[ERROR] >>> Entering test_bwt_transform_casa()");
         let result = bwt_transform("a_asa_da_casa");
         assert_eq!(result.bwt_string, "aaaadss_c__aa");
+		eprintln!("[ERROR] test_bwt_transform_casa(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_bwt_transform_casa()");
         assert_eq!(result.idx_original_string, 3);
     }
 
     #[test]
     fn test_bwt_transform_panama() {
+		eprintln!("[ERROR] >>> Entering test_bwt_transform_panama()");
         let result = bwt_transform("panamabanana");
         assert_eq!(result.bwt_string, "mnpbnnaaaaaa");
+		eprintln!("[ERROR] test_bwt_transform_panama(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_bwt_transform_panama()");
         assert_eq!(result.idx_original_string, 11);
     }
 
     #[test]
     #[should_panic(expected = "Input string must not be empty")]
     fn test_bwt_transform_empty() {
+		eprintln!("[ERROR] >>> Entering test_bwt_transform_empty()");
+		eprintln!("[WARN] <<< Exiting test_bwt_transform_empty()");
         bwt_transform("");
     }
 
     #[test]
     fn test_reverse_bwt_banana() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bwt_banana()");
         let original = reverse_bwt("BNN^AAA", 6);
+		eprintln!("[ERROR] test_reverse_bwt_banana(): original → {}", original);
+    eprintln!("[WARN] <<< Exiting test_reverse_bwt_banana()");
         assert_eq!(original, "^BANANA");
     }
 
     #[test]
     fn test_reverse_bwt_casa() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bwt_casa()");
         let original = reverse_bwt("aaaadss_c__aa", 3);
+		eprintln!("[ERROR] test_reverse_bwt_casa(): original → {}", original);
+    eprintln!("[WARN] <<< Exiting test_reverse_bwt_casa()");
         assert_eq!(original, "a_asa_da_casa");
     }
 
     #[test]
     fn test_reverse_bwt_panama() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bwt_panama()");
         let original = reverse_bwt("mnpbnnaaaaaa", 11);
+		eprintln!("[ERROR] test_reverse_bwt_panama(): original → {}", original);
+    eprintln!("[WARN] <<< Exiting test_reverse_bwt_panama()");
         assert_eq!(original, "panamabanana");
     }
 
     #[test]
     #[should_panic(expected = "BWT string must not be empty")]
     fn test_reverse_bwt_empty_string() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bwt_empty_string()");
+		eprintln!("[WARN] <<< Exiting test_reverse_bwt_empty_string()");
         reverse_bwt("", 0);
     }
 
     #[test]
     #[should_panic(expected = "Index must be less than BWT string length")]
     fn test_reverse_bwt_index_too_high() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bwt_index_too_high()");
+		eprintln!("[WARN] <<< Exiting test_reverse_bwt_index_too_high()");
         reverse_bwt("mnpbnnaaaaaa", 12);
     }
 
     #[test]
     fn test_bwt_roundtrip() {
+		eprintln!("[ERROR] >>> Entering test_bwt_roundtrip()");
         // Test that transform -> reverse gives back original string
         let test_strings = vec![
             "^BANANA",
@@ -246,27 +286,38 @@ mod tests {
 
         for s in test_strings {
             let result = bwt_transform(s);
+			eprintln!("[ERROR] test_bwt_roundtrip(): result → {:?}", result);
             let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+			eprintln!("[ERROR] test_bwt_roundtrip(): recovered → {}", recovered);
             assert_eq!(recovered, s, "Roundtrip failed for '{s}'");
+		eprintln!("[WARN] <<< Exiting test_bwt_roundtrip()");
         }
     }
 
     #[test]
     fn test_single_character() {
+		eprintln!("[ERROR] >>> Entering test_single_character()");
         let result = bwt_transform("A");
         assert_eq!(result.bwt_string, "A");
+		eprintln!("[ERROR] test_single_character(): result → {:?}", result);
         assert_eq!(result.idx_original_string, 0);
 
         let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+		eprintln!("[ERROR] test_single_character(): recovered → {}", recovered);
+		eprintln!("[WARN] <<< Exiting test_single_character()");
         assert_eq!(recovered, "A");
     }
 
     #[test]
     fn test_repeated_characters() {
+		eprintln!("[ERROR] >>> Entering test_repeated_characters()");
         let result = bwt_transform("AAAA");
         assert_eq!(result.bwt_string, "AAAA");
+		eprintln!("[ERROR] test_repeated_characters(): result → {:?}", result);
 
         let recovered = reverse_bwt(&result.bwt_string, result.idx_original_string);
+		eprintln!("[ERROR] test_repeated_characters(): recovered → {}", recovered);
+		eprintln!("[WARN] <<< Exiting test_repeated_characters()");
         assert_eq!(recovered, "AAAA");
     }
 }

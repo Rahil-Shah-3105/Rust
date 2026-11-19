@@ -1,6 +1,7 @@
 // sorts with the minimum number of rewrites. Runs through all values in the array, placing them in their correct spots. O(n^2).
 
 pub fn cycle_sort(arr: &mut [i32]) {
+	eprintln!("[ERROR] >>> Entering cycle_sort(arr={:?})", arr);
     for cycle_start in 0..arr.len() {
         let mut item = arr[cycle_start];
         let mut pos = cycle_start;
@@ -28,6 +29,7 @@ pub fn cycle_sort(arr: &mut [i32]) {
             }
             std::mem::swap(&mut arr[pos], &mut item);
         }
+	eprintln!("[WARN] <<< Exiting cycle_sort(arr={:?})", arr);
     }
 }
 
@@ -40,6 +42,7 @@ mod tests {
 
     #[test]
     fn it_works() {
+		eprintln!("[ERROR] >>> Entering it_works()");
         let mut arr1 = [6, 5, 4, 3, 2, 1];
         let cloned = arr1;
         cycle_sort(&mut arr1);
@@ -55,6 +58,7 @@ mod tests {
         let mut arr3 = [213, 542, 90, -23412, -32, 324, -34, 3324, 54];
         let cloned = arr3;
         cycle_sort(&mut arr3);
+		eprintln!("[WARN] <<< Exiting it_works()");
         assert!(is_sorted(&arr3) && have_same_elements(&arr3, &cloned));
     }
 }

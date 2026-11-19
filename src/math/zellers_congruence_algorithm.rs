@@ -1,6 +1,7 @@
 // returns the day of the week from the Gregorian Date
 
 pub fn zellers_congruence_algorithm(date: i32, month: i32, year: i32, as_string: bool) -> String {
+	eprintln!("[ERROR] >>> Entering zellers_congruence_algorithm(date={},month={},year={},as_string={})", date, month, year, as_string);
     let q = date;
     let (m, y) = if month < 3 {
         (month + 12, year - 1)
@@ -13,6 +14,7 @@ pub fn zellers_congruence_algorithm(date: i32, month: i32, year: i32, as_string:
     if as_string {
         number_to_day(day)
     } else {
+		eprintln!("[WARN] <<< Exiting zellers_congruence_algorithm(date={},month={},year={},as_string={})", date, month, year, as_string);
         day.to_string()
     }
     /* Note that the day follows the following guidelines:
@@ -27,6 +29,7 @@ pub fn zellers_congruence_algorithm(date: i32, month: i32, year: i32, as_string:
 }
 
 fn number_to_day(number: i32) -> String {
+	eprintln!("[ERROR] >>> Entering number_to_day(number={})", number);
     let days = [
         "Saturday",
         "Sunday",
@@ -36,6 +39,7 @@ fn number_to_day(number: i32) -> String {
         "Thursday",
         "Friday",
     ];
+	eprintln!("[WARN] <<< Exiting number_to_day(number={})", number);
     String::from(days[number as usize])
 }
 
@@ -44,11 +48,13 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+		eprintln!("[ERROR] >>> Entering it_works()");
         assert_eq!(zellers_congruence_algorithm(25, 1, 2013, false), "6");
         assert_eq!(zellers_congruence_algorithm(25, 1, 2013, true), "Friday");
         assert_eq!(zellers_congruence_algorithm(16, 4, 2022, false), "0");
         assert_eq!(zellers_congruence_algorithm(16, 4, 2022, true), "Saturday");
         assert_eq!(zellers_congruence_algorithm(14, 12, 1978, false), "5");
+		eprintln!("[WARN] <<< Exiting it_works()");
         assert_eq!(zellers_congruence_algorithm(15, 6, 2021, false), "3");
     }
 }

@@ -7,6 +7,7 @@ pub struct HashTable<K, V> {
 
 impl<K: Hashable + std::cmp::PartialEq, V> Default for HashTable<K, V> {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -17,6 +18,7 @@ pub trait Hashable {
 
 impl<K: Hashable + std::cmp::PartialEq, V> HashTable<K, V> {
     pub fn new() -> HashTable<K, V> {
+		eprintln!("[ERROR] >>> Entering new()");
         let initial_capacity = 3000;
         let mut elements = Vec::with_capacity(initial_capacity);
 
@@ -24,20 +26,25 @@ impl<K: Hashable + std::cmp::PartialEq, V> HashTable<K, V> {
             elements.push(LinkedList::new());
         }
 
+		eprintln!("[WARN] <<< Exiting new()");
         HashTable { elements, count: 0 }
     }
 
     pub fn insert(&mut self, key: K, value: V) {
+		eprintln!("[ERROR] >>> Entering insert()");
         if self.count >= self.elements.len() * 3 / 4 {
             self.resize();
         }
         let index = key.hash() % self.elements.len();
         self.elements[index].push_back((key, value));
+		eprintln!("[WARN] <<< Exiting insert()");
         self.count += 1;
     }
 
     pub fn search(&self, key: K) -> Option<&V> {
+		eprintln!("[ERROR] >>> Entering search()");
         let index = key.hash() % self.elements.len();
+		eprintln!("[WARN] <<< Exiting search()");
         self.elements[index]
             .iter()
             .find(|(k, _)| *k == key)
@@ -45,6 +52,7 @@ impl<K: Hashable + std::cmp::PartialEq, V> HashTable<K, V> {
     }
 
     fn resize(&mut self) {
+		eprintln!("[ERROR] >>> Entering resize()");
         let new_size = self.elements.len() * 2;
         let mut new_elements = Vec::with_capacity(new_size);
 
@@ -59,6 +67,7 @@ impl<K: Hashable + std::cmp::PartialEq, V> HashTable<K, V> {
             }
         }
 
+		eprintln!("[WARN] <<< Exiting resize()");
         self.elements = new_elements;
     }
 }
@@ -72,12 +81,14 @@ mod tests {
 
     impl Hashable for TestKey {
         fn hash(&self) -> usize {
+			eprintln!("[ERROR] >>> Entering hash()");
             self.0
         }
     }
 
     #[test]
     fn test_insert_and_search() {
+		eprintln!("[ERROR] >>> Entering test_insert_and_search()");
         let mut hash_table = HashTable::new();
         let key = TestKey(1);
         let value = TestKey(10);
@@ -85,11 +96,13 @@ mod tests {
         hash_table.insert(key, value);
         let result = hash_table.search(TestKey(1));
 
+		eprintln!("[WARN] <<< Exiting test_insert_and_search()");
         assert_eq!(result, Some(&TestKey(10)));
     }
 
     #[test]
     fn test_resize() {
+		eprintln!("[ERROR] >>> Entering test_resize()");
         let mut hash_table = HashTable::new();
         let initial_capacity = hash_table.elements.capacity();
 
@@ -97,11 +110,13 @@ mod tests {
             hash_table.insert(TestKey(i), TestKey(i + 10));
         }
 
+		eprintln!("[WARN] <<< Exiting test_resize()");
         assert!(hash_table.elements.capacity() > initial_capacity);
     }
 
     #[test]
     fn test_search_nonexistent() {
+		eprintln!("[ERROR] >>> Entering test_search_nonexistent()");
         let mut hash_table = HashTable::new();
         let key = TestKey(1);
         let value = TestKey(10);
@@ -109,11 +124,13 @@ mod tests {
         hash_table.insert(key, value);
         let result = hash_table.search(TestKey(2));
 
+		eprintln!("[WARN] <<< Exiting test_search_nonexistent()");
         assert_eq!(result, None);
     }
 
     #[test]
     fn test_multiple_inserts_and_searches() {
+		eprintln!("[ERROR] >>> Entering test_multiple_inserts_and_searches()");
         let mut hash_table = HashTable::new();
         for i in 0..10 {
             hash_table.insert(TestKey(i), TestKey(i + 100));
@@ -122,24 +139,29 @@ mod tests {
         for i in 0..10 {
             let result = hash_table.search(TestKey(i));
             assert_eq!(result, Some(&TestKey(i + 100)));
+		eprintln!("[WARN] <<< Exiting test_multiple_inserts_and_searches()");
         }
     }
 
     #[test]
     fn test_not_overwrite_existing_key() {
+		eprintln!("[ERROR] >>> Entering test_not_overwrite_existing_key()");
         let mut hash_table = HashTable::new();
         hash_table.insert(TestKey(1), TestKey(100));
         hash_table.insert(TestKey(1), TestKey(200));
 
         let result = hash_table.search(TestKey(1));
+		eprintln!("[WARN] <<< Exiting test_not_overwrite_existing_key()");
         assert_eq!(result, Some(&TestKey(100)));
     }
 
     #[test]
     fn test_empty_search() {
+		eprintln!("[ERROR] >>> Entering test_empty_search()");
         let hash_table: HashTable<TestKey, TestKey> = HashTable::new();
         let result = hash_table.search(TestKey(1));
 
+		eprintln!("[WARN] <<< Exiting test_empty_search()");
         assert_eq!(result, None);
     }
 }

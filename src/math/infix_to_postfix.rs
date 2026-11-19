@@ -6,6 +6,7 @@ pub enum InfixToPostfixError {
 
 /// Function to convert [infix expression](https://en.wikipedia.org/wiki/Infix_notation) to [postfix expression](https://en.wikipedia.org/wiki/Reverse_Polish_notation)
 pub fn infix_to_postfix(infix: &str) -> Result<String, InfixToPostfixError> {
+	eprintln!("[ERROR] >>> Entering infix_to_postfix(infix={})", infix);
     let mut postfix = String::new();
     let mut stack: Vec<char> = Vec::new();
 

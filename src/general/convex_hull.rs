@@ -1,6 +1,7 @@
 use std::cmp::Ordering::Equal;
 
 fn sort_by_min_angle(pts: &[(f64, f64)], min: &(f64, f64)) -> Vec<(f64, f64)> {
+	eprintln!("[ERROR] >>> Entering sort_by_min_angle(pts={:?},min={:?})", pts, min);
     let mut points: Vec<(f64, f64, (f64, f64))> = pts
         .iter()
         .map(|x| {
@@ -14,11 +15,13 @@ fn sort_by_min_angle(pts: &[(f64, f64)], min: &(f64, f64)) -> Vec<(f64, f64)> {
         })
         .collect();
     points.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Equal));
+	eprintln!("[WARN] <<< Exiting sort_by_min_angle(pts={:?},min={:?})", pts, min);
     points.into_iter().map(|x| x.2).collect()
 }
 
 // calculates the z coordinate of the vector product of vectors ab and ac
 fn calc_z_coord_vector_product(a: &(f64, f64), b: &(f64, f64), c: &(f64, f64)) -> f64 {
+	eprintln!("[ERROR] >>> Entering calc_z_coord_vector_product(a={:?},b={:?},c={:?})", a, b, c);
     (b.0 - a.0) * (c.1 - a.1) - (c.0 - a.0) * (b.1 - a.1)
 }
 
@@ -30,6 +33,7 @@ fn calc_z_coord_vector_product(a: &(f64, f64), b: &(f64, f64), c: &(f64, f64)) -
     Points are then given counter-clockwise, and the closest one is given first if needed.
 */
 pub fn convex_hull_graham(pts: &[(f64, f64)]) -> Vec<(f64, f64)> {
+	eprintln!("[ERROR] >>> Entering convex_hull_graham(pts={:?})", pts);
     if pts.is_empty() {
         return vec![];
     }
@@ -61,6 +65,7 @@ pub fn convex_hull_graham(pts: &[(f64, f64)]) -> Vec<(f64, f64)> {
         stack.push(point);
     }
 
+    eprintln!("[WARN] <<< Exiting convex_hull_graham(pts={:?})", pts);
     stack
 }
 
@@ -70,32 +75,41 @@ mod tests {
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
+		eprintln!("[WARN] <<< Exiting empty()");
         assert_eq!(convex_hull_graham(&[]), vec![]);
     }
 
     #[test]
     fn not_enough_points() {
+		eprintln!("[ERROR] >>> Entering not_enough_points()");
         let list = vec![(0f64, 0f64)];
+		eprintln!("[WARN] <<< Exiting not_enough_points()");
         assert_eq!(convex_hull_graham(&list), list);
     }
 
     #[test]
     fn not_enough_points1() {
+		eprintln!("[ERROR] >>> Entering not_enough_points1()");
         let list = vec![(2f64, 2f64), (1f64, 1f64), (0f64, 0f64)];
         let ans = vec![(0f64, 0f64), (1f64, 1f64), (2f64, 2f64)];
+		eprintln!("[WARN] <<< Exiting not_enough_points1()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     fn not_enough_points2() {
+		eprintln!("[ERROR] >>> Entering not_enough_points2()");
         let list = vec![(2f64, 2f64), (1f64, 2f64), (0f64, 0f64)];
         let ans = vec![(0f64, 0f64), (2f64, 2f64), (1f64, 2f64)];
+		eprintln!("[WARN] <<< Exiting not_enough_points2()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     // from https://codegolf.stackexchange.com/questions/11035/find-the-convex-hull-of-a-set-of-2d-points
     fn lots_of_points() {
+		eprintln!("[ERROR] >>> Entering lots_of_points()");
         let list = vec![
             (4.4, 14.),
             (6.7, 15.25),
@@ -127,12 +141,14 @@ mod tests {
             (5.3, 2.4),
         ];
 
+		eprintln!("[WARN] <<< Exiting lots_of_points()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 
     #[test]
     // from https://codegolf.stackexchange.com/questions/11035/find-the-convex-hull-of-a-set-of-2d-points
     fn lots_of_points2() {
+		eprintln!("[ERROR] >>> Entering lots_of_points2()");
         let list = vec![
             (1., 0.),
             (1., 1.),
@@ -169,6 +185,7 @@ mod tests {
             (-0.553528, -0.967036),
         ];
 
+		eprintln!("[WARN] <<< Exiting lots_of_points2()");
         assert_eq!(convex_hull_graham(&list), ans);
     }
 }

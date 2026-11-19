@@ -2,10 +2,12 @@ use crate::geometry::Point;
 use std::cmp::Ordering;
 
 fn point_min(a: &&Point, b: &&Point) -> Ordering {
+	eprintln!("[ERROR] >>> Entering point_min()");
     // Find the bottom-most point. In the case of a tie, find the left-most.
     if a.y == b.y {
         a.x.partial_cmp(&b.x).unwrap()
     } else {
+		eprintln!("[WARN] <<< Exiting point_min()");
         a.y.partial_cmp(&b.y).unwrap()
     }
 }
@@ -13,6 +15,7 @@ fn point_min(a: &&Point, b: &&Point) -> Ordering {
 // Returns a Vec of Points that make up the convex hull of `points`. Returns an empty Vec if there
 // is no convex hull.
 pub fn graham_scan(mut points: Vec<Point>) -> Vec<Point> {
+	eprintln!("[ERROR] >>> Entering graham_scan()");
     if points.len() <= 2 {
         return vec![];
     }
@@ -87,6 +90,7 @@ mod tests {
     use super::Point;
 
     fn test_graham(convex_hull: Vec<Point>, others: Vec<Point>) {
+		eprintln!("[ERROR] >>> Entering test_graham()");
         let mut points = convex_hull.clone();
         points.append(&mut others.clone());
         let graham = graham_scan(points);
@@ -95,53 +99,65 @@ mod tests {
         }
         for point in others {
             assert!(!graham.contains(&point));
+		eprintln!("[WARN] <<< Exiting test_graham()");
         }
     }
 
     #[test]
     fn too_few_points() {
+		eprintln!("[ERROR] >>> Entering too_few_points()");
         test_graham(vec![], vec![]);
+		eprintln!("[WARN] <<< Exiting too_few_points()");
         test_graham(vec![], vec![Point::new(0.0, 0.0)]);
     }
 
     #[test]
     fn duplicate_point() {
+		eprintln!("[ERROR] >>> Entering duplicate_point()");
         let p = Point::new(0.0, 0.0);
+		eprintln!("[WARN] <<< Exiting duplicate_point()");
         test_graham(vec![], vec![p.clone(), p.clone(), p.clone(), p.clone(), p]);
     }
 
     #[test]
     fn points_same_line() {
+		eprintln!("[ERROR] >>> Entering points_same_line()");
         let p1 = Point::new(1.0, 0.0);
         let p2 = Point::new(2.0, 0.0);
         let p3 = Point::new(3.0, 0.0);
         let p4 = Point::new(4.0, 0.0);
         let p5 = Point::new(5.0, 0.0);
         // let p6 = Point::new(1.0, 1.0);
+		eprintln!("[WARN] <<< Exiting points_same_line()");
         test_graham(vec![], vec![p1, p2, p3, p4, p5]);
     }
 
     #[test]
     fn triangle() {
+		eprintln!("[ERROR] >>> Entering triangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
         let points = vec![p1, p2, p3];
+		eprintln!("[WARN] <<< Exiting triangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn rectangle() {
+		eprintln!("[ERROR] >>> Entering rectangle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
         let p4 = Point::new(1.0, 2.0);
         let points = vec![p1, p2, p3, p4];
+		eprintln!("[WARN] <<< Exiting rectangle()");
         test_graham(points, vec![]);
     }
 
     #[test]
     fn triangle_with_points_in_middle() {
+		eprintln!("[ERROR] >>> Entering triangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(1.5, 2.0);
@@ -151,11 +167,13 @@ mod tests {
         let p7 = Point::new(1.5, 1.9);
         let hull = vec![p1, p2, p3];
         let others = vec![p4, p5, p6, p7];
+		eprintln!("[WARN] <<< Exiting triangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_in_middle() {
+		eprintln!("[ERROR] >>> Entering rectangle_with_points_in_middle()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -167,11 +185,13 @@ mod tests {
         let p9 = Point::new(1.4, 1.9);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8, p9];
+		eprintln!("[WARN] <<< Exiting rectangle_with_points_in_middle()");
         test_graham(hull, others);
     }
 
     #[test]
     fn star() {
+		eprintln!("[ERROR] >>> Entering star()");
         // A single stroke star shape (kind of). Only the tips(p1-5) are part of the convex hull. The
         // other points would create angles >180 degrees if they were part of the polygon.
         let p1 = Point::new(-5.0, 6.0);
@@ -186,11 +206,13 @@ mod tests {
         let p10 = Point::new(-6.0, 1.0);
         let hull = vec![p1, p2, p3, p4, p5];
         let others = vec![p6, p7, p8, p9, p10];
+		eprintln!("[WARN] <<< Exiting star()");
         test_graham(hull, others);
     }
 
     #[test]
     fn rectangle_with_points_on_same_line() {
+		eprintln!("[ERROR] >>> Entering rectangle_with_points_on_same_line()");
         let p1 = Point::new(1.0, 1.0);
         let p2 = Point::new(2.0, 1.0);
         let p3 = Point::new(2.0, 2.0);
@@ -201,6 +223,7 @@ mod tests {
         let p8 = Point::new(1.5, 2.0);
         let hull = vec![p1, p2, p3, p4];
         let others = vec![p5, p6, p7, p8];
+		eprintln!("[WARN] <<< Exiting rectangle_with_points_on_same_line()");
         test_graham(hull, others);
     }
 }

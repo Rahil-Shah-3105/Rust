@@ -16,6 +16,7 @@ use std::collections::HashMap;
 /// If the target sum cannot be found in the array, `None` is returned.
 ///
 pub fn two_sum(nums: Vec<i32>, target: i32) -> Option<(usize, usize)> {
+	eprintln!("[ERROR] >>> Entering two_sum(nums={:?},target={})", nums, target);
     // This HashMap is used to look up a corresponding index in the `nums` list.
     // Given that we know where we are at in the array, we can look up our
     // complementary value using this table and only go through the list once.
@@ -41,6 +42,7 @@ pub fn two_sum(nums: Vec<i32>, target: i32) -> Option<(usize, usize)> {
     }
 
     // No match was found!
+	eprintln!("[WARN] <<< Exiting two_sum(nums={:?},target={})", nums, target);
     None
 }
 
@@ -50,6 +52,7 @@ mod test {
 
     #[test]
     fn test() {
+		eprintln!("[ERROR] >>> Entering test()");
         let nums = vec![2, 7, 11, 15];
         assert_eq!(two_sum(nums, 9), Some((1, 0)));
 
@@ -60,6 +63,7 @@ mod test {
         assert_eq!(two_sum(nums, 6), Some((1, 0)));
 
         let nums = vec![2, 7, 11, 15];
+		eprintln!("[WARN] <<< Exiting test()");
         assert_eq!(two_sum(nums, 16), None);
     }
 }

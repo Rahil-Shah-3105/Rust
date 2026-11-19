@@ -3,17 +3,20 @@ use std::f64::consts::E;
 
 // function to calculate simple interest
 pub fn simple_interest(principal: f64, annual_rate: f64, years: f64) -> (f64, f64) {
+	eprintln!("[ERROR] >>> Entering simple_interest(principal={},annual_rate={},years={})", principal, annual_rate, years);
     let interest = principal * annual_rate * years;
     let value = principal * (1.0 + (annual_rate * years));
 
     println!("Interest earned: {interest}");
     println!("Future value: {value}");
 
+	eprintln!("[WARN] <<< Exiting simple_interest(principal={},annual_rate={},years={})", principal, annual_rate, years);
     (interest, value)
 }
 
 // function to calculate compound interest compounded over periods or continuously
 pub fn compound_interest(principal: f64, annual_rate: f64, years: f64, period: Option<f64>) -> f64 {
+	eprintln!("[ERROR] >>> Entering compound_interest(principal={},annual_rate={},years={},period={:?})", principal, annual_rate, years, period);
     // checks if the period is None type, if so calculates continuous compounding interest
     let value = if period.is_none() {
         principal * E.powf(annual_rate * years)
@@ -35,12 +38,15 @@ mod tests {
     use super::*;
     #[test]
     fn test_simple() {
+		eprintln!("[ERROR] >>> Entering test_simple()");
         let x = 385.65_f64 * 0.03_f64 * 5.0_f64;
         let y = 385.65_f64 * (1.0 + (0.03_f64 * 5.0_f64));
+		eprintln!("[WARN] <<< Exiting test_simple()");
         assert_eq!(simple_interest(385.65_f64, 0.03_f64, 5.0_f64), (x, y));
     }
     #[test]
     fn test_compounding() {
+		eprintln!("[ERROR] >>> Entering test_compounding()");
         let x = 385.65_f64 * E.powf(0.03_f64 * 5.0_f64);
         assert_eq!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, None), x);
 
@@ -50,6 +56,7 @@ mod tests {
             y
         );
         assert!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, Some(-5.0_f64)).is_nan());
+		eprintln!("[WARN] <<< Exiting test_compounding()");
         assert!(compound_interest(385.65_f64, 0.03_f64, 5.0_f64, Some(0.0_f64)).is_nan());
     }
 }

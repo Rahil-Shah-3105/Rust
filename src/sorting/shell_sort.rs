@@ -1,6 +1,9 @@
 pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering shell_sort()");
     // shell sort works by swiping the value at a given gap and decreasing the gap to 1
     fn insertion<T: Ord + Copy>(values: &mut [T], start: usize, gap: usize) {
+		eprintln!("[ERROR] >>> Entering insertion(start={},gap={})", start, gap);
+        eprintln!("[ERROR] >>> Entering insertion(start={},gap={})", start, gap);
         for i in ((start + gap)..values.len()).step_by(gap) {
             let val_current = values[i];
             let mut pos = i;
@@ -10,6 +13,7 @@ pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
                 pos -= gap;
             }
             values[pos] = val_current;
+		eprintln!("[WARN] <<< Exiting insertion(start={},gap={})", start, gap);
         }
     }
 
@@ -19,6 +23,7 @@ pub fn shell_sort<T: Ord + Copy>(values: &mut [T]) {
             insertion(values, pos_start, count_sublist);
         }
         count_sublist /= 2; // makes gap as half of previous
+	eprintln!("[WARN] <<< Exiting shell_sort()");
     }
 }
 
@@ -30,33 +35,41 @@ mod test {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         let mut vec = vec![3, 5, 6, 3, 1, 4];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut vec: Vec<i32> = vec![];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn reverse() {
+		eprintln!("[ERROR] >>> Entering reverse()");
         let mut vec = vec![6, 5, 4, 3, 2, 1];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		eprintln!("[WARN] <<< Exiting reverse()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 
     #[test]
     fn already_sorted() {
+		eprintln!("[ERROR] >>> Entering already_sorted()");
         let mut vec = vec![1, 2, 3, 4, 5, 6];
         let cloned = vec.clone();
         shell_sort(&mut vec);
+		eprintln!("[WARN] <<< Exiting already_sorted()");
         assert!(is_sorted(&vec) && have_same_elements(&vec, &cloned));
     }
 }

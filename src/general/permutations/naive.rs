@@ -20,6 +20,7 @@ pub fn permute<T: Clone + Debug>(arr: &[T]) -> Vec<Vec<T>> {
 }
 
 fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut Vec<Vec<T>>) {
+	eprintln!("[ERROR] >>> Entering permute_recurse(k={})", k);
     if k == 1 {
         collector.push(arr.to_owned());
         return;
@@ -28,6 +29,7 @@ fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse(arr, k - 1, collector); // collect the permutations of the rest
         arr.swap(i, k - 1); // swap back to original
+	eprintln!("[WARN] <<< Exiting permute_recurse(k={})", k);
     }
 }
 
@@ -51,6 +53,7 @@ fn permute_recurse_unique<T: Clone + Debug + Eq + Hash + Copy>(
     k: usize,
     collector: &mut Vec<Vec<T>>,
 ) {
+	eprintln!("[ERROR] >>> Entering permute_recurse_unique(k={})", k);
     // We have the same base-case as previously, whenever we reach the first element in the array, collect the result
     if k == 1 {
         collector.push(arr.to_owned());
@@ -74,6 +77,7 @@ fn permute_recurse_unique<T: Clone + Debug + Eq + Hash + Copy>(
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse_unique(arr, k - 1, collector); // collect the permutations
         arr.swap(i, k - 1); // go back to original
+	eprintln!("[WARN] <<< Exiting permute_recurse_unique(k={})", k);
     }
 }
 
@@ -88,6 +92,7 @@ mod tests {
 
     #[test]
     fn test_3_different_values() {
+		eprintln!("[ERROR] >>> Entering test_3_different_values()");
         let original = vec![1, 2, 3];
         let res = permute(&original);
         assert_eq!(res.len(), 6); // 3!
@@ -98,13 +103,16 @@ mod tests {
 
     #[test]
     fn empty_array() {
+		eprintln!("[ERROR] >>> Entering empty_array()");
         let empty: std::vec::Vec<u8> = vec![];
         assert_eq!(permute(&empty), vec![vec![]]);
+		eprintln!("[WARN] <<< Exiting empty_array()");
         assert_eq!(permute_unique(&empty), vec![vec![]]);
     }
 
     #[test]
     fn test_3_times_the_same_value() {
+		eprintln!("[ERROR] >>> Entering test_3_times_the_same_value()");
         let original = vec![1, 1, 1];
         let res = permute(&original);
         assert_eq!(res.len(), 6); // 3!
@@ -115,18 +123,22 @@ mod tests {
 
     #[quickcheck]
     fn test_some_elements(NotTooBigVec { inner: original }: NotTooBigVec) {
+		eprintln!("[ERROR] >>> Entering test_some_elements()");
         let permutations = permute(&original);
+		eprintln!("[WARN] <<< Exiting test_some_elements()");
         assert_permutations(&original, &permutations)
     }
 
     #[test]
     fn test_unique_values() {
+		eprintln!("[ERROR] >>> Entering test_unique_values()");
         let original = vec![1, 1, 2, 2];
         let unique_permutations = permute_unique(&original);
         let every_permutation = permute(&original);
         for unique_permutation in &unique_permutations {
             assert!(every_permutation.contains(unique_permutation));
         }
+		eprintln!("[WARN] <<< Exiting test_unique_values()");
         assert_eq!(
             unique_permutations.len(),
             every_permutation.iter().collect::<HashSet<_>>().len()

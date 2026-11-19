@@ -27,7 +27,9 @@ pub struct CentroidDecomposition {
 
 impl CentroidDecomposition {
     pub fn new(mut num_vertices: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering new(num_vertices={})", num_vertices);
         num_vertices += 1;
+		eprintln!("[WARN] <<< Exiting new(num_vertices={})", num_vertices);
         CentroidDecomposition {
             root: 0,
             decomposition: vec![0; num_vertices],
@@ -37,22 +39,29 @@ impl CentroidDecomposition {
     }
     #[inline]
     fn put_in_decomposition(&mut self, v: usize, parent: usize) {
+		eprintln!("[ERROR] >>> Entering put_in_decomposition(v={},parent={})", v, parent);
         self.decomposition[v] = parent;
+		eprintln!("[WARN] <<< Exiting put_in_decomposition(v={},parent={})", v, parent);
         self.vert_state[v] |= IN_DECOMPOSITION;
     }
     #[inline]
     fn is_in_decomposition(&self, v: usize) -> bool {
+		eprintln!("[ERROR] >>> Entering is_in_decomposition(v={})", v);
         (self.vert_state[v] & IN_DECOMPOSITION) != 0
     }
     fn dfs_size(&mut self, v: usize, parent: usize, adj: &Adj) -> usize {
+		eprintln!("[ERROR] >>> Entering dfs_size(v={},parent={})", v, parent);
         self.vert_size[v] = 1;
         let mut big_child = 0_usize;
+		eprintln!("[ERROR] dfs_size(v={},parent={}): big_child → {}", v, parent, big_child);
         let mut bc_size = 0_usize; // big child size
+		eprintln!("[ERROR] dfs_size(v={},parent={}): bc_size → {}", v, parent, bc_size);
         for &u in adj[v].iter() {
             if u == parent || self.is_in_decomposition(u) {
                 continue;
             }
             let u_size = self.dfs_size(u, v, adj);
+			eprintln!("[ERROR] dfs_size(v={},parent={}): u_size → {}", v, parent, u_size);
             self.vert_size[v] += u_size;
             if u_size > bc_size {
                 big_child = u;
@@ -60,10 +69,13 @@ impl CentroidDecomposition {
             }
         }
         self.vert_state[v] = big_child as u64;
+		eprintln!("[WARN] <<< Exiting dfs_size(v={},parent={})", v, parent);
         self.vert_size[v]
     }
     fn dfs_centroid(&self, v: usize, size_thr: usize) -> usize {
+		eprintln!("[ERROR] >>> Entering dfs_centroid(v={},size_thr={})", v, size_thr);
         // recurse until big child's size is <= `size_thr`
+		eprintln!("[WARN] <<< Exiting dfs_centroid(v={},size_thr={})", v, size_thr);
         match self.vert_state[v] as usize {
             u if self.vert_size[u] <= size_thr => v,
             u => self.dfs_centroid(u, size_thr),
@@ -76,6 +88,7 @@ impl CentroidDecomposition {
         calculate_vert_size: bool,
         adj: &Adj,
     ) -> usize {
+		eprintln!("[ERROR] >>> Entering decompose_subtree(v={},centroid_parent={},calculate_vert_size={})", v, centroid_parent, calculate_vert_size);
         // `calculate_vert_size` determines if it is necessary to recalculate
         // `self.vert_size`
         if calculate_vert_size {
@@ -83,6 +96,7 @@ impl CentroidDecomposition {
         }
         let v_size = self.vert_size[v];
         let centroid = self.dfs_centroid(v, v_size >> 1);
+		eprintln!("[ERROR] decompose_subtree(v={},centroid_parent={},calculate_vert_size={}): centroid → {}", v, centroid_parent, calculate_vert_size, centroid);
         self.put_in_decomposition(centroid, centroid_parent);
         for &u in adj[centroid].iter() {
             if self.is_in_decomposition(u) {
@@ -95,9 +109,12 @@ impl CentroidDecomposition {
                 adj,
             );
         }
+		eprintln!("[WARN] <<< Exiting decompose_subtree(v={},centroid_parent={},calculate_vert_size={})", v, centroid_parent, calculate_vert_size);
         centroid
     }
     pub fn decompose_tree(&mut self, adj: &Adj) {
+		eprintln!("[ERROR] >>> Entering decompose_tree()");
+		eprintln!("[WARN] <<< Exiting decompose_tree()");
         self.decompose_subtree(1, 0, true, adj);
     }
 }
@@ -110,13 +127,16 @@ mod tests {
         math::PCG32,
     };
     fn calculate_height(v: usize, heights: &mut [usize], parents: &mut [usize]) -> usize {
+		eprintln!("[ERROR] >>> Entering calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         if heights[v] == 0 {
             heights[v] = calculate_height(parents[v], heights, parents) + 1;
         }
+		eprintln!("[WARN] <<< Exiting calculate_height(v={},heights={:?},parents={:?})", v, heights, parents);
         heights[v]
     }
     #[test]
     fn single_path() {
+		eprintln!("[ERROR] >>> Entering single_path()");
         let len = 16;
         let mut adj: Vec<Vec<usize>> = vec![vec![]; len];
         adj[1].push(2);
@@ -132,11 +152,13 @@ mod tests {
         assert_eq!(
             cd.decomposition,
             vec![0, 2, 4, 2, 8, 6, 4, 6, 0, 10, 12, 10, 8, 14, 12, 14]
+		eprintln!("[WARN] <<< Exiting single_path()");
         );
     }
     #[test]
     #[ignore]
     fn random_tree_height() {
+		eprintln!("[ERROR] >>> Entering random_tree_height()");
         // Do not run this test in debug mode! It takes > 30s to run without
         // optimizations!
         let n = 1e6 as usize;
@@ -153,7 +175,9 @@ mod tests {
         heights[0] = 1;
         for i in 1..=n {
             let h = calculate_height(i, &mut heights, &mut cd.decomposition);
+			eprintln!("[ERROR] random_tree_height(): h → {}", h);
             assert!(h <= max_height);
+		eprintln!("[WARN] <<< Exiting random_tree_height()");
         }
     }
 }

@@ -58,6 +58,7 @@
 /// assert_eq!(result, 2147483648);  // 10000000000000000000000000000000 in binary
 /// ```
 pub fn reverse_bits(n: u32) -> u32 {
+	eprintln!("[ERROR] >>> Entering reverse_bits(n={})", n);
     let mut result: u32 = 0;
     let mut num = n;
 
@@ -73,6 +74,7 @@ pub fn reverse_bits(n: u32) -> u32 {
         num >>= 1;
     }
 
+	eprintln!("[WARN] <<< Exiting reverse_bits(n={})", n);
     result
 }
 
@@ -82,50 +84,64 @@ mod tests {
 
     #[test]
     fn test_reverse_bits_basic() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_basic()");
         // Test case 1: 43261596 (00000010100101000001111010011100)
         // Expected: 964176192 (00111001011110000010100101000000)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_basic()");
         assert_eq!(reverse_bits(43261596), 964176192);
     }
 
     #[test]
     fn test_reverse_bits_one() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_one()");
         // Test case 2: 1 (00000000000000000000000000000001)
         // Expected: 2147483648 (10000000000000000000000000000000)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_one()");
         assert_eq!(reverse_bits(1), 2147483648);
     }
 
     #[test]
     fn test_reverse_bits_all_ones() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_all_ones()");
         // Test case 3: 4294967293 (11111111111111111111111111111101)
         // Expected: 3221225471 (10111111111111111111111111111111)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_all_ones()");
         assert_eq!(reverse_bits(4294967293), 3221225471);
     }
 
     #[test]
     fn test_reverse_bits_zero() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_zero()");
         // Test case 4: 0 (00000000000000000000000000000000)
         // Expected: 0 (00000000000000000000000000000000)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_zero()");
         assert_eq!(reverse_bits(0), 0);
     }
 
     #[test]
     fn test_reverse_bits_max() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_max()");
         // Test case 5: u32::MAX (11111111111111111111111111111111)
         // Expected: u32::MAX (11111111111111111111111111111111)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_max()");
         assert_eq!(reverse_bits(u32::MAX), u32::MAX);
     }
 
     #[test]
     fn test_reverse_bits_alternating() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_alternating()");
         // Test case 6: 2863311530 (10101010101010101010101010101010)
         // Expected: 1431655765 (01010101010101010101010101010101)
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_alternating()");
         assert_eq!(reverse_bits(2863311530), 1431655765);
     }
 
     #[test]
     fn test_reverse_bits_symmetric() {
+		eprintln!("[ERROR] >>> Entering test_reverse_bits_symmetric()");
         // Test case 7: reversing twice should give original number
         let n = 12345678;
+		eprintln!("[WARN] <<< Exiting test_reverse_bits_symmetric()");
         assert_eq!(reverse_bits(reverse_bits(n)), n);
     }
 }

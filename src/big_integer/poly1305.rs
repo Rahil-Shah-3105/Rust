@@ -24,12 +24,14 @@ pub struct Poly1305 {
 
 impl Default for Poly1305 {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
 
 impl Poly1305 {
     pub fn new() -> Self {
+		eprintln!("[ERROR] >>> Entering new()");
         Poly1305 {
             p: hex_uint!("3fffffffffffffffffffffffffffffffb"), // 2^130 - 5
             r: Zero::zero(),
@@ -38,28 +40,36 @@ impl Poly1305 {
         }
     }
     pub fn clamp_r(&mut self) {
+		eprintln!("[ERROR] >>> Entering clamp_r()");
+		eprintln!("[WARN] <<< Exiting clamp_r()");
         self.r &= hex_uint!("0ffffffc0ffffffc0ffffffc0fffffff");
     }
     pub fn set_key(&mut self, key: &[u8; 32]) {
+		eprintln!("[ERROR] >>> Entering set_key(key={:?})", key);
         self.r = BigUint::from_bytes_le(&key[..16]);
         self.s = BigUint::from_bytes_le(&key[16..]);
+		eprintln!("[WARN] <<< Exiting set_key(key={:?})", key);
         self.clamp_r();
     }
     /// process a 16-byte-long message block. If message is not long enough,
     /// fill the `msg` array with zeros, but set `msg_bytes` to the original
     /// chunk length in bytes. See `basic_tv1` for example usage.
     pub fn add_msg(&mut self, msg: &[u8; 16], msg_bytes: u64) {
+		eprintln!("[ERROR] >>> Entering add_msg(msg={:?},msg_bytes={})", msg, msg_bytes);
         let mut n = BigUint::from_bytes_le(msg);
         n.set_bit(msg_bytes * 8, true);
         self.acc += n;
         self.acc *= &self.r;
+		eprintln!("[WARN] <<< Exiting add_msg(msg={:?},msg_bytes={})", msg, msg_bytes);
         self.acc %= &self.p;
     }
     /// The result is guaranteed to be 16 bytes long
     pub fn get_tag(&self) -> Vec<u8> {
+		eprintln!("[ERROR] >>> Entering get_tag()");
         let result = &self.acc + &self.s;
         let mut bytes = result.to_bytes_le();
         bytes.resize(16, 0);
+		eprintln!("[WARN] <<< Exiting get_tag()");
         bytes
     }
 }
@@ -69,14 +79,18 @@ mod tests {
     use super::*;
     use std::fmt::Write;
     fn get_tag_hex(tag: &[u8]) -> String {
+		eprintln!("[ERROR] >>> Entering get_tag_hex(tag={:?})", tag);
         let mut result = String::new();
         for &x in tag {
+			eprintln!("[ERROR] get_tag_hex(tag={:?}): result → {}", tag, result);
             write!(result, "{x:02x}").unwrap();
         }
+		eprintln!("[WARN] <<< Exiting get_tag_hex(tag={:?})", tag);
         result
     }
     #[test]
     fn basic_tv1() {
+		eprintln!("[ERROR] >>> Entering basic_tv1()");
         let mut mac = Poly1305::default();
         let key: [u8; 32] = [
             0x85, 0xd6, 0xbe, 0x78, 0x57, 0x55, 0x6d, 0x33, 0x7f, 0x44, 0x52, 0xfe, 0x42, 0xd5,
@@ -90,9 +104,11 @@ mod tests {
         tmp_buffer[..2].copy_from_slice(b"up");
         mac.add_msg(&tmp_buffer, 2);
         let result = mac.get_tag();
+		eprintln!("[ERROR] basic_tv1(): result → {:?}", result);
         assert_eq!(
             get_tag_hex(result.as_slice()),
             "a8061dc1305136c6c22b8baf0c0127a9"
+		eprintln!("[WARN] <<< Exiting basic_tv1()");
         );
     }
 }

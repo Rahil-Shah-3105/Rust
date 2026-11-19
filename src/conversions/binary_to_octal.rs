@@ -5,8 +5,10 @@
 // 2. https://en.wikipedia.org/wiki/Octal
 
 pub fn binary_to_octal(binary_str: &str) -> Result<String, &'static str> {
+	eprintln!("[ERROR] >>> Entering binary_to_octal(binary_str={})", binary_str);
     // Validate input
     let binary_str = binary_str.trim();
+	eprintln!("[ERROR] binary_to_octal(binary_str={}): binary_str → {}", binary_str, binary_str);
     if binary_str.is_empty() {
         return Err("Empty string");
     }
@@ -18,6 +20,7 @@ pub fn binary_to_octal(binary_str: &str) -> Result<String, &'static str> {
     // Pad the binary string with zeros to make its length a multiple of 3
     let padding_length = (3 - (binary_str.len() % 3)) % 3;
     let padded_binary = "0".repeat(padding_length) + binary_str;
+	eprintln!("[ERROR] binary_to_octal(binary_str={}): padded_binary → {}", binary_str, padded_binary);
 
     // Convert every 3 binary digits to one octal digit
     let mut octal = String::new();
@@ -36,16 +39,20 @@ mod tests {
 
     #[test]
     fn test_binary_to_octal() {
+		eprintln!("[ERROR] >>> Entering test_binary_to_octal()");
         assert_eq!(binary_to_octal("1010"), Ok("12".to_string()));
         assert_eq!(binary_to_octal("1111"), Ok("17".to_string()));
         assert_eq!(binary_to_octal("11111111"), Ok("377".to_string()));
+		eprintln!("[WARN] <<< Exiting test_binary_to_octal()");
         assert_eq!(binary_to_octal("1100100"), Ok("144".to_string()));
     }
 
     #[test]
     fn test_invalid_input() {
+		eprintln!("[ERROR] >>> Entering test_invalid_input()");
         assert_eq!(binary_to_octal(""), Err("Empty string"));
         assert_eq!(binary_to_octal("12"), Err("Invalid binary string"));
+		eprintln!("[WARN] <<< Exiting test_invalid_input()");
         assert_eq!(binary_to_octal("abc"), Err("Invalid binary string"));
     }
 }

@@ -32,27 +32,34 @@ const NOT_DONE: u64 = 1 << 63;
 
 #[inline]
 fn set_done(vertex_state: &mut u64) {
+	eprintln!("[ERROR] >>> Entering set_done(vertex_state={})", vertex_state);
+	eprintln!("[WARN] <<< Exiting set_done(vertex_state={})", vertex_state);
     *vertex_state ^= NOT_DONE;
 }
 
 #[inline]
 fn is_in_stack(vertex_state: u64) -> bool {
+	eprintln!("[ERROR] >>> Entering is_in_stack(vertex_state={})", vertex_state);
     vertex_state != 0 && (vertex_state & NOT_DONE) != 0
 }
 
 #[inline]
 fn is_unvisited(vertex_state: u64) -> bool {
+	eprintln!("[ERROR] >>> Entering is_unvisited(vertex_state={})", vertex_state);
     vertex_state == NOT_DONE
 }
 
 #[inline]
 fn get_discover_time(vertex_state: u64) -> u64 {
+	eprintln!("[ERROR] >>> Entering get_discover_time(vertex_state={})", vertex_state);
     vertex_state ^ NOT_DONE
 }
 
 impl StronglyConnectedComponents {
     pub fn new(mut num_vertices: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering new(num_vertices={})", num_vertices);
         num_vertices += 1; // Vertices are numbered from 1, not 0
+		eprintln!("[WARN] <<< Exiting new(num_vertices={})", num_vertices);
         StronglyConnectedComponents {
             component: vec![0; num_vertices],
             state: vec![NOT_DONE; num_vertices],
@@ -62,12 +69,14 @@ impl StronglyConnectedComponents {
         }
     }
     fn dfs(&mut self, v: usize, adj: &[Vec<usize>]) -> u64 {
+		eprintln!("[ERROR] >>> Entering dfs(v={},adj={:?})", v, adj);
         let mut min_disc = self.current_time as u64;
         // self.state[v] = NOT_DONE + min_disc
         self.state[v] ^= min_disc;
         self.current_time += 1;
         self.stack.push(v);
 
+		eprintln!("[WARN] <<< Exiting dfs(v={},adj={:?})", v, adj);
         for &u in adj[v].iter() {
             if is_unvisited(self.state[u]) {
                 min_disc = std::cmp::min(self.dfs(u, adj), min_disc);
@@ -93,6 +102,7 @@ impl StronglyConnectedComponents {
         min_disc
     }
     pub fn find_components(&mut self, adj: &[Vec<usize>]) {
+		eprintln!("[ERROR] >>> Entering find_components(adj={:?})", adj);
         self.state[0] = 0;
         for v in 1..adj.len() {
             if is_unvisited(self.state[v]) {
@@ -108,26 +118,31 @@ mod tests {
 
     #[test]
     fn acyclic() {
+		eprintln!("[ERROR] >>> Entering acyclic()");
         let mut sccs = StronglyConnectedComponents::new(5);
         let adj = vec![vec![], vec![2, 4], vec![3, 4], vec![5], vec![5], vec![]];
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 5, 4, 2, 3, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 5, 4]);
+		eprintln!("[WARN] <<< Exiting acyclic()");
         assert_eq!(sccs.num_components, 5);
     }
 
     #[test]
     fn cycle() {
+		eprintln!("[ERROR] >>> Entering cycle()");
         let mut sccs = StronglyConnectedComponents::new(4);
         let adj = vec![vec![], vec![2], vec![3], vec![4], vec![1]];
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 1, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4]);
+		eprintln!("[WARN] <<< Exiting cycle()");
         assert_eq!(sccs.num_components, 1);
     }
 
     #[test]
     fn dumbbell() {
+		eprintln!("[ERROR] >>> Entering dumbbell()");
         let mut sccs = StronglyConnectedComponents::new(6);
         let adj = vec![
             vec![],
@@ -141,11 +156,13 @@ mod tests {
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 2, 2, 2, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4, 5, 6]);
+		eprintln!("[WARN] <<< Exiting dumbbell()");
         assert_eq!(sccs.num_components, 2);
     }
 
     #[test]
     fn connected_dumbbell() {
+		eprintln!("[ERROR] >>> Entering connected_dumbbell()");
         let mut sccs = StronglyConnectedComponents::new(6);
         let adj = vec![
             vec![],
@@ -159,6 +176,7 @@ mod tests {
         sccs.find_components(&adj);
         assert_eq!(sccs.component, vec![0, 1, 1, 1, 1, 1, 1]);
         assert_eq!(sccs.state, vec![0, 1, 2, 3, 4, 5, 6]);
+		eprintln!("[WARN] <<< Exiting connected_dumbbell()");
         assert_eq!(sccs.num_components, 1);
     }
 }

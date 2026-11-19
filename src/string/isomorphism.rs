@@ -15,6 +15,7 @@ use std::collections::HashMap;
 ///
 /// `true` if the strings are isomorphic, `false` otherwise.
 pub fn is_isomorphic(s: &str, t: &str) -> bool {
+	eprintln!("[ERROR] >>> Entering is_isomorphic(s={},t={})", s, t);
     let s_chars: Vec<char> = s.chars().collect();
     let t_chars: Vec<char> = t.chars().collect();
     if s_chars.len() != t_chars.len() {

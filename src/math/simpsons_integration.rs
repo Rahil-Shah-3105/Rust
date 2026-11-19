@@ -2,6 +2,7 @@ pub fn simpsons_integration<F>(f: F, a: f64, b: f64, n: usize) -> f64
 where
     F: Fn(f64) -> f64,
 {
+	eprintln!("[ERROR] >>> Entering simpsons_integration(a={},b={},n={})", a, b, n);
     let h = (b - a) / n as f64;
     (0..n)
         .map(|i| {
@@ -19,109 +20,142 @@ mod tests {
 
     #[test]
     fn test_simpsons_integration() {
+		eprintln!("[ERROR] >>> Entering test_simpsons_integration()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_simpsons_integration(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_simpsons_integration()");
         assert!((result - 1.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_error() {
+		eprintln!("[ERROR] >>> Entering test_error()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_error(): result → {}", result);
         let error = (1.0 / 3.0 - result).abs();
+		eprintln!("[WARN] <<< Exiting test_error()");
         assert!(error < 1e-6);
     }
 
     #[test]
     fn test_convergence() {
+		eprintln!("[ERROR] >>> Entering test_convergence()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result1 = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_convergence(): result1 → {}", result1);
         let result2 = simpsons_integration(f, a, b, 2 * n);
+		eprintln!("[ERROR] test_convergence(): result2 → {}", result2);
         let result3 = simpsons_integration(f, a, b, 4 * n);
+		eprintln!("[ERROR] test_convergence(): result3 → {}", result3);
         let result4 = simpsons_integration(f, a, b, 8 * n);
+		eprintln!("[ERROR] test_convergence(): result4 → {}", result4);
         assert!((result1 - result2).abs() < 1e-6);
         assert!((result2 - result3).abs() < 1e-6);
+		eprintln!("[WARN] <<< Exiting test_convergence()");
         assert!((result3 - result4).abs() < 1e-6);
     }
 
     #[test]
     fn test_negative() {
+		eprintln!("[ERROR] >>> Entering test_negative()");
         let f = |x: f64| -x.powi(2);
         let a = 0.0;
         let b = 1.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_negative(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_negative()");
         assert!((result + 1.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_bound() {
+		eprintln!("[ERROR] >>> Entering test_non_zero_lower_bound()");
         let f = |x: f64| x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_non_zero_lower_bound(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_non_zero_lower_bound()");
         assert!((result - 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_upper_bound() {
+		eprintln!("[ERROR] >>> Entering test_non_zero_upper_bound()");
         let f = |x: f64| x.powi(2);
         let a = 0.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_non_zero_upper_bound(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_non_zero_upper_bound()");
         assert!((result - 8.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_and_upper_bound() {
+		eprintln!("[ERROR] >>> Entering test_non_zero_lower_and_upper_bound()");
         let f = |x: f64| x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_non_zero_lower_and_upper_bound(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_non_zero_lower_and_upper_bound()");
         assert!((result - 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn test_non_zero_lower_and_upper_bound_negative() {
+		eprintln!("[ERROR] >>> Entering test_non_zero_lower_and_upper_bound_negative()");
         let f = |x: f64| -x.powi(2);
         let a = 1.0;
         let b = 2.0;
         let n = 100;
         let result = simpsons_integration(f, a, b, n);
+		eprintln!("[ERROR] test_non_zero_lower_and_upper_bound_negative(): result → {}", result);
+		eprintln!("[WARN] <<< Exiting test_non_zero_lower_and_upper_bound_negative()");
         assert!((result + 7.0 / 3.0).abs() < 1e-6);
     }
 
     #[test]
     fn parabola_curve_length() {
+		eprintln!("[ERROR] >>> Entering parabola_curve_length()");
         // Calculate the length of the curve f(x) = x^2 for -5 <= x <= 5
         // We should integrate sqrt(1 + (f'(x))^2)
         let function = |x: f64| -> f64 { (1.0 + 4.0 * x * x).sqrt() };
         let result = simpsons_integration(function, -5.0, 5.0, 1_000);
+		eprintln!("[ERROR] parabola_curve_length(): result → {}", result);
         let integrated = |x: f64| -> f64 { (x * function(x) / 2.0) + ((2.0 * x).asinh() / 4.0) };
         let expected = integrated(5.0) - integrated(-5.0);
+		eprintln!("[WARN] <<< Exiting parabola_curve_length()");
         assert!((result - expected).abs() < 1e-9);
     }
 
     #[test]
     fn area_under_cosine() {
+		eprintln!("[ERROR] >>> Entering area_under_cosine()");
         use std::f64::consts::PI;
         // Calculate area under f(x) = cos(x) + 5 for -pi <= x <= pi
         // cosine should cancel out and the answer should be 2pi * 5
         let function = |x: f64| -> f64 { x.cos() + 5.0 };
         let result = simpsons_integration(function, -PI, PI, 1_000);
+		eprintln!("[ERROR] area_under_cosine(): result → {}", result);
         let expected = 2.0 * PI * 5.0;
+		eprintln!("[WARN] <<< Exiting area_under_cosine()");
         assert!((result - expected).abs() < 1e-9);
     }
 }

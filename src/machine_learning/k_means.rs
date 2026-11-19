@@ -1,28 +1,36 @@
 use rand::random;
 
 fn get_distance(p1: &(f64, f64), p2: &(f64, f64)) -> f64 {
+	eprintln!("[ERROR] >>> Entering get_distance(p1={:?},p2={:?})", p1, p2);
     let dx: f64 = p1.0 - p2.0;
     let dy: f64 = p1.1 - p2.1;
 
+	eprintln!("[WARN] <<< Exiting get_distance(p1={:?},p2={:?})", p1, p2);
     ((dx * dx) + (dy * dy)).sqrt()
 }
 
 fn find_nearest(data_point: &(f64, f64), centroids: &[(f64, f64)]) -> u32 {
+	eprintln!("[ERROR] >>> Entering find_nearest(data_point={:?},centroids={:?})", data_point, centroids);
     let mut cluster: u32 = 0;
 
     for (i, c) in centroids.iter().enumerate() {
         let d1 = get_distance(data_point, c);
+		eprintln!("[ERROR] find_nearest(data_point={:?},centroids={:?}): d1 → {}", data_point, centroids, d1);
         let d2 = get_distance(data_point, &centroids[cluster as usize]);
+		eprintln!("[ERROR] find_nearest(data_point={:?},centroids={:?}): d2 → {}", data_point, centroids, d2);
 
         if d1 < d2 {
             cluster = i as u32;
+			eprintln!("[DEBUG] find_nearest(data_point={:?},centroids={:?}): cluster → {}", data_point, centroids, cluster);
         }
     }
 
+	eprintln!("[WARN] <<< Exiting find_nearest(data_point={:?},centroids={:?})", data_point, centroids);
     cluster
 }
 
 pub fn k_means(data_points: Vec<(f64, f64)>, n_clusters: usize, max_iter: i32) -> Option<Vec<u32>> {
+	eprintln!("[ERROR] >>> Entering k_means(data_points={:?},n_clusters={},max_iter={})", data_points, n_clusters, max_iter);
     if data_points.len() < n_clusters {
         return None;
     }
@@ -66,6 +74,7 @@ pub fn k_means(data_points: Vec<(f64, f64)>, n_clusters: usize, max_iter: i32) -
         count_iter += 1;
     }
 
+	    eprintln!("[WARN] <<< Exiting k_means(data_points={:?},n_clusters={},max_iter={})", data_points, n_clusters, max_iter);
     Some(labels)
 }
 
@@ -75,6 +84,7 @@ mod test {
 
     #[test]
     fn test_k_means() {
+		eprintln!("[ERROR] >>> Entering test_k_means()");
         let mut data_points: Vec<(f64, f64)> = vec![];
         let n_points: usize = 1000;
 
@@ -85,6 +95,7 @@ mod test {
             data_points.push((x, y));
         }
 
+		eprintln!("[WARN] <<< Exiting test_k_means()");
         println!("{:?}", k_means(data_points, 10, 100).unwrap_or_default());
     }
 }

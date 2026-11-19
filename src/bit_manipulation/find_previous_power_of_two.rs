@@ -51,6 +51,7 @@
 ///
 /// Returns an error if the input number is negative.
 pub fn find_previous_power_of_two(number: i32) -> Result<u32, String> {
+	eprintln!("[ERROR] >>> Entering find_previous_power_of_two(number={})", number);
     if number < 0 {
         return Err("Input must be a non-negative integer".to_string());
     }
@@ -75,16 +76,21 @@ mod tests {
 
     #[test]
     fn test_zero() {
+		eprintln!("[ERROR] >>> Entering test_zero()");
+		eprintln!("[WARN] <<< Exiting test_zero()");
         assert_eq!(find_previous_power_of_two(0).unwrap(), 0);
     }
 
     #[test]
     fn test_one() {
+		eprintln!("[ERROR] >>> Entering test_one()");
+		eprintln!("[WARN] <<< Exiting test_one()");
         assert_eq!(find_previous_power_of_two(1).unwrap(), 1);
     }
 
     #[test]
     fn test_powers_of_two() {
+		eprintln!("[ERROR] >>> Entering test_powers_of_two()");
         assert_eq!(find_previous_power_of_two(2).unwrap(), 2);
         assert_eq!(find_previous_power_of_two(4).unwrap(), 4);
         assert_eq!(find_previous_power_of_two(8).unwrap(), 8);
@@ -94,11 +100,13 @@ mod tests {
         assert_eq!(find_previous_power_of_two(128).unwrap(), 128);
         assert_eq!(find_previous_power_of_two(256).unwrap(), 256);
         assert_eq!(find_previous_power_of_two(512).unwrap(), 512);
+		eprintln!("[WARN] <<< Exiting test_powers_of_two()");
         assert_eq!(find_previous_power_of_two(1024).unwrap(), 1024);
     }
 
     #[test]
     fn test_numbers_between_powers() {
+		eprintln!("[ERROR] >>> Entering test_numbers_between_powers()");
         // Between 2 and 4
         assert_eq!(find_previous_power_of_two(3).unwrap(), 2);
 
@@ -119,54 +127,68 @@ mod tests {
         // Between 16 and 32
         assert_eq!(find_previous_power_of_two(17).unwrap(), 16);
         assert_eq!(find_previous_power_of_two(20).unwrap(), 16);
+		eprintln!("[WARN] <<< Exiting test_numbers_between_powers()");
         assert_eq!(find_previous_power_of_two(31).unwrap(), 16);
     }
 
     #[test]
     fn test_range_0_to_17() {
+		eprintln!("[ERROR] >>> Entering test_range_0_to_17()");
         // Test the exact output from the Python docstring
         let expected = vec![0, 1, 2, 2, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 16, 16];
         let results: Vec<u32> = (0..18)
             .map(|i| find_previous_power_of_two(i).unwrap())
             .collect();
+		eprintln!("[WARN] <<< Exiting test_range_0_to_17()");
         assert_eq!(results, expected);
     }
 
     #[test]
     fn test_large_numbers() {
+		eprintln!("[ERROR] >>> Entering test_large_numbers()");
         assert_eq!(find_previous_power_of_two(100).unwrap(), 64);
         assert_eq!(find_previous_power_of_two(500).unwrap(), 256);
         assert_eq!(find_previous_power_of_two(1000).unwrap(), 512);
         assert_eq!(find_previous_power_of_two(2000).unwrap(), 1024);
+		eprintln!("[WARN] <<< Exiting test_large_numbers()");
         assert_eq!(find_previous_power_of_two(10000).unwrap(), 8192);
     }
 
     #[test]
     fn test_max_safe_values() {
+		eprintln!("[ERROR] >>> Entering test_max_safe_values()");
         assert_eq!(find_previous_power_of_two(1023).unwrap(), 512);
         assert_eq!(find_previous_power_of_two(2047).unwrap(), 1024);
+		eprintln!("[WARN] <<< Exiting test_max_safe_values()");
         assert_eq!(find_previous_power_of_two(4095).unwrap(), 2048);
     }
 
     #[test]
     fn test_negative_number_returns_error() {
+		eprintln!("[ERROR] >>> Entering test_negative_number_returns_error()");
         let result = find_previous_power_of_two(-1);
         assert!(result.is_err());
+		eprintln!("[ERROR] test_negative_number_returns_error(): result → {:?}", result);
+		eprintln!("[WARN] <<< Exiting test_negative_number_returns_error()");
         assert_eq!(result.unwrap_err(), "Input must be a non-negative integer");
     }
 
     #[test]
     fn test_negative_numbers_return_errors() {
+		eprintln!("[ERROR] >>> Entering test_negative_numbers_return_errors()");
         assert!(find_previous_power_of_two(-5).is_err());
         assert!(find_previous_power_of_two(-10).is_err());
+		eprintln!("[WARN] <<< Exiting test_negative_numbers_return_errors()");
         assert!(find_previous_power_of_two(-100).is_err());
     }
 
     #[test]
     fn test_edge_cases() {
+		eprintln!("[ERROR] >>> Entering test_edge_cases()");
         // One less than powers of two
         assert_eq!(find_previous_power_of_two(127).unwrap(), 64);
         assert_eq!(find_previous_power_of_two(255).unwrap(), 128);
+		eprintln!("[WARN] <<< Exiting test_edge_cases()");
         assert_eq!(find_previous_power_of_two(511).unwrap(), 256);
     }
 }

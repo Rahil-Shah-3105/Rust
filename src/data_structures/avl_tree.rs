@@ -33,6 +33,7 @@ enum Side {
 impl<T: Ord> AVLTree<T> {
     /// Creates an empty `AVLTree`.
     pub fn new() -> AVLTree<T> {
+		eprintln!("[ERROR] >>> Entering new()");
         AVLTree {
             root: None,
             length: 0,
@@ -41,6 +42,7 @@ impl<T: Ord> AVLTree<T> {
 
     /// Returns `true` if the tree contains a value.
     pub fn contains(&self, value: &T) -> bool {
+		eprintln!("[ERROR] >>> Entering contains()");
         let mut current = &self.root;
         while let Some(node) = current {
             current = match value.cmp(&node.value) {
@@ -49,6 +51,7 @@ impl<T: Ord> AVLTree<T> {
                 Ordering::Greater => &node.right,
             }
         }
+		eprintln!("[WARN] <<< Exiting contains()");
         false
     }
 
@@ -56,10 +59,12 @@ impl<T: Ord> AVLTree<T> {
     ///
     /// Returns `true` if the tree did not yet contain the value.
     pub fn insert(&mut self, value: T) -> bool {
+		eprintln!("[ERROR] >>> Entering insert()");
         let inserted = insert(&mut self.root, value);
         if inserted {
             self.length += 1;
         }
+		eprintln!("[WARN] <<< Exiting insert()");
         inserted
     }
 
@@ -67,10 +72,12 @@ impl<T: Ord> AVLTree<T> {
     ///
     /// Returns `true` if the tree contained the value.
     pub fn remove(&mut self, value: &T) -> bool {
+		eprintln!("[ERROR] >>> Entering remove()");
         let removed = remove(&mut self.root, value);
         if removed {
             self.length -= 1;
         }
+		eprintln!("[WARN] <<< Exiting remove()");
         removed
     }
 
@@ -81,11 +88,13 @@ impl<T: Ord> AVLTree<T> {
 
     /// Returns `true` if the tree contains no values.
     pub fn is_empty(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_empty()");
         self.length == 0
     }
 
     /// Returns an iterator that visits the nodes in the tree in order.
     fn node_iter(&self) -> NodeIter<'_, T> {
+		eprintln!("[ERROR] >>> Entering node_iter()");
         let cap = self.root.as_ref().map_or(0, |n| n.height);
         let mut node_iter = NodeIter {
             stack: Vec::with_capacity(cap),
@@ -96,11 +105,13 @@ impl<T: Ord> AVLTree<T> {
             node_iter.stack.push(node.as_ref());
             child = &node.left;
         }
+		eprintln!("[WARN] <<< Exiting node_iter()");
         node_iter
     }
 
     /// Returns an iterator that visits the values in the tree in ascending order.
     pub fn iter(&self) -> Iter<'_, T> {
+		eprintln!("[ERROR] >>> Entering iter()");
         Iter {
             node_iter: self.node_iter(),
         }
@@ -156,17 +167,20 @@ fn remove<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>, value: &T) -> bool {
 
 /// Merges two trees and returns the root of the merged tree.
 fn merge<T: Ord>(left: Box<AVLNode<T>>, right: Box<AVLNode<T>>) -> Box<AVLNode<T>> {
+	eprintln!("[ERROR] >>> Entering merge()");
     let mut op_right = Some(right);
     // Guaranteed not to panic since right has at least one node
     let mut root = take_min(&mut op_right).unwrap();
     root.left = Some(left);
     root.right = op_right;
     root.rebalance();
+	eprintln!("[WARN] <<< Exiting merge()");
     root
 }
 
 /// Removes the smallest node from the tree, if one exists.
 fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>>> {
+	eprintln!("[ERROR] >>> Entering take_min()");
     if let Some(mut node) = tree.take() {
         // Recurse along the left side
         if let Some(small) = take_min(&mut node.left) {
@@ -180,6 +194,7 @@ fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>
             Some(node)
         }
     } else {
+		eprintln!("[WARN] <<< Exiting take_min()");
         None
     }
 }
@@ -187,6 +202,7 @@ fn take_min<T: Ord>(tree: &mut Option<Box<AVLNode<T>>>) -> Option<Box<AVLNode<T>
 impl<T: Ord> AVLNode<T> {
     /// Returns a reference to the left or right child.
     fn child(&self, side: Side) -> &Option<Box<AVLNode<T>>> {
+		eprintln!("[ERROR] >>> Entering child()");
         match side {
             Side::Left => &self.left,
             Side::Right => &self.right,
@@ -195,6 +211,7 @@ impl<T: Ord> AVLNode<T> {
 
     /// Returns a mutable reference to the left or right child.
     fn child_mut(&mut self, side: Side) -> &mut Option<Box<AVLNode<T>>> {
+		eprintln!("[ERROR] >>> Entering child_mut()");
         match side {
             Side::Left => &mut self.left,
             Side::Right => &mut self.right,
@@ -203,11 +220,13 @@ impl<T: Ord> AVLNode<T> {
 
     /// Returns the height of the left or right subtree.
     fn height(&self, side: Side) -> usize {
+		eprintln!("[ERROR] >>> Entering height()");
         self.child(side).as_ref().map_or(0, |n| n.height)
     }
 
     /// Returns the height difference between the left and right subtrees.
     fn balance_factor(&self) -> i8 {
+		eprintln!("[ERROR] >>> Entering balance_factor()");
         let (left, right) = (self.height(Side::Left), self.height(Side::Right));
         if left < right {
             (right - left) as i8
@@ -218,11 +237,14 @@ impl<T: Ord> AVLNode<T> {
 
     /// Recomputes the `height` field.
     fn update_height(&mut self) {
+		eprintln!("[ERROR] >>> Entering update_height()");
+		eprintln!("[WARN] <<< Exiting update_height()");
         self.height = 1 + max(self.height(Side::Left), self.height(Side::Right));
     }
 
     /// Performs a left or right rotation.
     fn rotate(&mut self, side: Side) {
+		eprintln!("[ERROR] >>> Entering rotate()");
         let mut subtree = self.child_mut(!side).take().unwrap();
         *self.child_mut(!side) = subtree.child_mut(side).take();
         self.update_height();
@@ -230,11 +252,13 @@ impl<T: Ord> AVLNode<T> {
         mem::swap(self, subtree.as_mut());
         // Set old root (subtree) as child of new root (self)
         *self.child_mut(side) = Some(subtree);
+		eprintln!("[WARN] <<< Exiting rotate()");
         self.update_height();
     }
 
     /// Performs left or right tree rotations to balance this node.
     fn rebalance(&mut self) {
+		eprintln!("[ERROR] >>> Entering rebalance()");
         self.update_height();
         let side = match self.balance_factor() {
             -2 => Side::Left,
@@ -247,12 +271,14 @@ impl<T: Ord> AVLNode<T> {
             subtree.rotate(side);
         }
         // Rotate in opposite direction of heavy side
+		eprintln!("[WARN] <<< Exiting rebalance()");
         self.rotate(!side);
     }
 }
 
 impl<T: Ord> Default for AVLTree<T> {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -261,6 +287,7 @@ impl Not for Side {
     type Output = Side;
 
     fn not(self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering not()");
         match self {
             Side::Left => Side::Right,
             Side::Right => Side::Left,
@@ -289,6 +316,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
     type Item = &'a AVLNode<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
+		eprintln!("[ERROR] >>> Entering next()");
         if let Some(node) = self.stack.pop() {
             // Push left path of right subtree to stack
             let mut child = &node.right;
@@ -298,6 +326,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
             }
             Some(node)
         } else {
+			eprintln!("[WARN] <<< Exiting next()");
             None
         }
     }
@@ -327,13 +356,16 @@ mod tests {
 
     /// Returns `true` if all nodes in the tree are balanced.
     fn is_balanced<T: Ord>(tree: &AVLTree<T>) -> bool {
+		eprintln!("[ERROR] >>> Entering is_balanced()");
         tree.node_iter()
             .all(|n| (-1..=1).contains(&n.balance_factor()))
     }
 
     #[test]
     fn len() {
+		eprintln!("[ERROR] >>> Entering len()");
         let tree: AVLTree<_> = (1..4).collect();
+		eprintln!("[WARN] <<< Exiting len()");
         assert_eq!(tree.len(), 3);
     }
 
@@ -364,17 +396,21 @@ mod tests {
 
     #[test]
     fn sorted() {
+		eprintln!("[ERROR] >>> Entering sorted()");
         let tree: AVLTree<_> = (1..8).rev().collect();
+		eprintln!("[WARN] <<< Exiting sorted()");
         assert!((1..8).eq(tree.iter().copied()));
     }
 
     #[test]
     fn balanced() {
+		eprintln!("[ERROR] >>> Entering balanced()");
         let mut tree: AVLTree<_> = (1..8).collect();
         assert!(is_balanced(&tree));
         for x in 1..8 {
             tree.remove(&x);
             assert!(is_balanced(&tree));
+		eprintln!("[WARN] <<< Exiting balanced()");
         }
     }
 }

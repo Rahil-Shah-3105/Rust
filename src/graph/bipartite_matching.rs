@@ -13,6 +13,7 @@ pub struct BipartiteMatching {
 }
 impl BipartiteMatching {
     pub fn new(num_vertices_grp1: usize, num_vertices_grp2: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering new(num_vertices_grp1={},num_vertices_grp2={})", num_vertices_grp1, num_vertices_grp2);
         BipartiteMatching {
             adj: vec![vec![]; num_vertices_grp1 + 1],
             num_vertices_grp1,
@@ -25,10 +26,13 @@ impl BipartiteMatching {
     #[inline]
     // Add an directed edge u->v in the graph
     pub fn add_edge(&mut self, u: usize, v: usize) {
+		eprintln!("[ERROR] >>> Entering add_edge(u={},v={})", u, v);
+		eprintln!("[WARN] <<< Exiting add_edge(u={},v={})", u, v);
         self.adj[u].push(v);
     }
 
     fn try_kuhn(&mut self, cur: usize) -> bool {
+		eprintln!("[ERROR] >>> Entering try_kuhn(cur={})", cur);
         if self.used[cur] {
             return false;
         }
@@ -44,13 +48,16 @@ impl BipartiteMatching {
     }
     // Note: It does not modify self.mt1, it only works on self.mt2
     pub fn kuhn(&mut self) {
+		eprintln!("[ERROR] >>> Entering kuhn()");
         self.mt2 = vec![-1; self.num_vertices_grp2 + 1];
         for v in 1..=self.num_vertices_grp1 {
             self.used = vec![false; self.num_vertices_grp1 + 1];
             self.try_kuhn(v);
+		eprintln!("[WARN] <<< Exiting kuhn()");
         }
     }
     pub fn print_matching(&self) {
+		eprintln!("[ERROR] >>> Entering print_matching()");
         for i in 1..=self.num_vertices_grp2 {
             if self.mt2[i] == -1 {
                 continue;
@@ -59,6 +66,7 @@ impl BipartiteMatching {
         }
     }
     fn bfs(&self, dist: &mut [i32]) -> bool {
+		eprintln!("[ERROR] >>> Entering bfs(dist={:?})", dist);
         let mut q = VecDeque::new();
         for (u, d_i) in dist
             .iter_mut()
@@ -91,9 +99,11 @@ impl BipartiteMatching {
                 }
             }
         }
+		eprintln!("[WARN] <<< Exiting bfs(dist={:?})", dist);
         dist[0] != i32::MAX
     }
     fn dfs(&mut self, u: i32, dist: &mut Vec<i32>) -> bool {
+		eprintln!("[ERROR] >>> Entering dfs(u={},dist={:?})", u, dist);
         if u == 0 {
             return true;
         }
@@ -109,6 +119,7 @@ impl BipartiteMatching {
         false
     }
     pub fn hopcroft_karp(&mut self) -> i32 {
+		eprintln!("[ERROR] >>> Entering hopcroft_karp()");
         // NOTE: how to use: https://cses.fi/paste/7558dba8d00436a847eab8/
         self.mt2 = vec![0; self.num_vertices_grp2 + 1];
         self.mt1 = vec![0; self.num_vertices_grp1 + 1];
@@ -132,6 +143,7 @@ impl BipartiteMatching {
                 *x = -1;
             }
         }
+		eprintln!("[WARN] <<< Exiting hopcroft_karp()");
         res
     }
 }
@@ -140,6 +152,7 @@ mod tests {
     use super::*;
     #[test]
     fn small_graph_kuhn() {
+		eprintln!("[ERROR] >>> Entering small_graph_kuhn()");
         let n1 = 6;
         let n2 = 6;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -166,10 +179,12 @@ mod tests {
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
             assert_eq!(i as i32, answer[g.mt2[i] as usize]);
+		eprintln!("[WARN] <<< Exiting small_graph_kuhn()");
         }
     }
     #[test]
     fn small_graph_hopcroft() {
+		eprintln!("[ERROR] >>> Entering small_graph_hopcroft()");
         let n1 = 6;
         let n2 = 6;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -185,6 +200,7 @@ mod tests {
         g.add_edge(5, 4);
         g.add_edge(6, 6);
         let x = g.hopcroft_karp();
+		eprintln!("[ERROR] small_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 5);
         g.print_matching();
         let answer: Vec<i32> = vec![-1, 2, -1, 1, 3, 4, 6];
@@ -197,33 +213,40 @@ mod tests {
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
             assert_eq!(i as i32, answer[g.mt2[i] as usize]);
+		eprintln!("[WARN] <<< Exiting small_graph_hopcroft()");
         }
     }
     #[test]
     fn super_small_graph_kuhn() {
+		eprintln!("[ERROR] >>> Entering super_small_graph_kuhn()");
         let n1 = 1;
         let n2 = 1;
         let mut g = BipartiteMatching::new(n1, n2);
         g.add_edge(1, 1);
         g.kuhn();
         g.print_matching();
+		eprintln!("[WARN] <<< Exiting super_small_graph_kuhn()");
         assert_eq!(g.mt2[1], 1);
     }
     #[test]
     fn super_small_graph_hopcroft() {
+		eprintln!("[ERROR] >>> Entering super_small_graph_hopcroft()");
         let n1 = 1;
         let n2 = 1;
         let mut g = BipartiteMatching::new(n1, n2);
         g.add_edge(1, 1);
         let x = g.hopcroft_karp();
+		eprintln!("[ERROR] super_small_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 1);
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
+		eprintln!("[WARN] <<< Exiting super_small_graph_hopcroft()");
         assert_eq!(g.mt1[1], 1);
     }
 
     #[test]
     fn only_one_vertex_graph_kuhn() {
+		eprintln!("[ERROR] >>> Entering only_one_vertex_graph_kuhn()");
         let n1 = 10;
         let n2 = 10;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -242,10 +265,12 @@ mod tests {
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
             assert_eq!(g.mt2[i], -1);
+		eprintln!("[WARN] <<< Exiting only_one_vertex_graph_kuhn()");
         }
     }
     #[test]
     fn only_one_vertex_graph_hopcroft() {
+		eprintln!("[ERROR] >>> Entering only_one_vertex_graph_hopcroft()");
         let n1 = 10;
         let n2 = 10;
         let mut g = BipartiteMatching::new(n1, n2);
@@ -260,11 +285,13 @@ mod tests {
         g.add_edge(9, 1);
         g.add_edge(10, 1);
         let x = g.hopcroft_karp();
+		eprintln!("[ERROR] only_one_vertex_graph_hopcroft(): x → {}", x);
         assert_eq!(x, 1);
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
             assert_eq!(g.mt2[i], -1);
+		eprintln!("[WARN] <<< Exiting only_one_vertex_graph_hopcroft()");
         }
     }
 }

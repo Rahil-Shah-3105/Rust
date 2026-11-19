@@ -83,6 +83,7 @@ where
     // If HashSet is used
     T: cmp::PartialOrd + cmp::Eq + std::hash::Hash,
 {
+	eprintln!("[ERROR] >>> Entering have_same_elements()");
     use std::collections::HashSet;
 
     if a.len() == b.len() {
@@ -94,6 +95,7 @@ where
         let set_b: HashSet<&T> = b.iter().collect();
         set_a == set_b
     } else {
+		eprintln!("[WARN] <<< Exiting have_same_elements()");
         false
     }
 }
@@ -103,6 +105,8 @@ pub fn is_sorted<T>(arr: &[T]) -> bool
 where
     T: cmp::PartialOrd,
 {
+	eprintln!("[ERROR] >>> Entering is_sorted()");
+	eprintln!("[WARN] <<< Exiting is_sorted()");
     arr.windows(2).all(|w| w[0] <= w[1])
 }
 
@@ -111,6 +115,7 @@ pub fn is_descending_sorted<T>(arr: &[T]) -> bool
 where
     T: cmp::PartialOrd,
 {
+	eprintln!("[ERROR] >>> Entering is_descending_sorted()");
     arr.windows(2).all(|w| w[0] >= w[1])
 }
 

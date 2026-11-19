@@ -22,12 +22,14 @@ pub struct HuffmanNode<T> {
 
 impl<T> PartialEq for HuffmanNode<T> {
     fn eq(&self, other: &Self) -> bool {
+		eprintln!("[ERROR] >>> Entering eq()");
         self.frequency == other.frequency
     }
 }
 
 impl<T> PartialOrd for HuffmanNode<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		eprintln!("[ERROR] >>> Entering partial_cmp()");
         Some(self.cmp(other))
     }
 }
@@ -36,6 +38,7 @@ impl<T> Eq for HuffmanNode<T> {}
 
 impl<T> Ord for HuffmanNode<T> {
     fn cmp(&self, other: &Self) -> Ordering {
+		eprintln!("[ERROR] >>> Entering cmp()");
         self.frequency.cmp(&other.frequency).reverse()
     }
 }
@@ -48,6 +51,7 @@ impl<T: Clone + Copy + Ord> HuffmanNode<T> {
         node: &HuffmanNode<T>,
         map: &mut BTreeMap<T, HuffmanValue>,
     ) {
+		eprintln!("[ERROR] >>> Entering get_alphabet(height={},path={})", height, path);
         match node.symbol {
             Some(s) => {
                 map.insert(
@@ -91,6 +95,7 @@ impl<T: Clone + Copy + Ord> HuffmanDictionary<T> {
     /// let dict = HuffmanDictionary::new(&freq).unwrap();
     ///
     pub fn new(alphabet: &[(T, u64)]) -> Option<Self> {
+		eprintln!("[ERROR] >>> Entering new()");
         if alphabet.is_empty() {
             return None;
         }
@@ -152,10 +157,12 @@ impl<T: Clone + Copy + Ord> HuffmanDictionary<T> {
         }
     }
     pub fn encode(&self, data: &[T]) -> HuffmanEncoding {
+		eprintln!("[ERROR] >>> Entering encode()");
         let mut result = HuffmanEncoding::new();
         for value in data.iter() {
             result.add_data(self.alphabet[value]);
         }
+		eprintln!("[WARN] <<< Exiting encode()");
         result
     }
 }
@@ -166,6 +173,7 @@ pub struct HuffmanEncoding {
 
 impl Default for HuffmanEncoding {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -179,22 +187,26 @@ impl HuffmanEncoding {
     }
     #[inline]
     pub fn add_data(&mut self, data: HuffmanValue) {
+		eprintln!("[ERROR] >>> Entering add_data(data={:?})", data);
         let shift = (self.num_bits & 63) as u32;
         let val = data.value;
         *self.data.last_mut().unwrap() |= val.wrapping_shl(shift);
         if (shift + data.bits) >= 64 {
             self.data.push(val.wrapping_shr(64 - shift));
         }
+		eprintln!("[WARN] <<< Exiting add_data(data={:?})", data);
         self.num_bits += data.bits as u64;
     }
 
     #[inline]
     fn get_bit(&self, pos: u64) -> bool {
+		eprintln!("[ERROR] >>> Entering get_bit(pos={})", pos);
         (self.data[(pos >> 6) as usize] & (1 << (pos & 63))) != 0
     }
 
     /// In case the encoding is invalid, `None` is returned
     pub fn decode<T: Clone + Copy + Ord>(&self, dict: &HuffmanDictionary<T>) -> Option<Vec<T>> {
+		eprintln!("[ERROR] >>> Entering decode()");
         // Handle empty encoding
         if self.num_bits == 0 {
             return Some(vec![]);
@@ -237,6 +249,7 @@ impl HuffmanEncoding {
 mod tests {
     use super::*;
     fn get_frequency(bytes: &[u8]) -> Vec<(u8, u64)> {
+		eprintln!("[ERROR] >>> Entering get_frequency(bytes={:?})", bytes);
         let mut cnts: Vec<u64> = vec![0; 256];
         for &b in bytes.iter() {
             cnts[b as usize] += 1;
@@ -251,27 +264,36 @@ mod tests {
 
     #[test]
     fn empty_text() {
+		eprintln!("[ERROR] >>> Entering empty_text()");
         let text = "";
         let bytes = text.as_bytes();
         let freq = get_frequency(bytes);
+		eprintln!("[ERROR] empty_text(): freq → {:?}", freq);
         let dict = HuffmanDictionary::new(&freq);
+		eprintln!("[ERROR] empty_text(): text → {}", text);
+    eprintln!("[WARN] <<< Exiting empty_text()");
         assert!(dict.is_none());
     }
 
     #[test]
     fn one_symbol_text() {
+		eprintln!("[ERROR] >>> Entering one_symbol_text()");
         let text = "aaaa";
         let bytes = text.as_bytes();
         let freq = get_frequency(bytes);
+		eprintln!("[ERROR] one_symbol_text(): freq → {:?}", freq);
         let dict = HuffmanDictionary::new(&freq).unwrap();
         let encoded = dict.encode(bytes);
         assert_eq!(encoded.num_bits, 4);
+		eprintln!("[ERROR] one_symbol_text(): text → {}", text);
         let decoded = encoded.decode(&dict).unwrap();
+		eprintln!("[WARN] <<< Exiting one_symbol_text()");
         assert_eq!(decoded, bytes);
     }
 
     #[test]
     fn test_decode_empty_encoding_struct() {
+		eprintln!("[ERROR] >>> Entering test_decode_empty_encoding_struct()");
         // Create a minimal but VALID HuffmanDictionary.
         // This is required because decode() expects a dictionary, even though
         // the content of the dictionary doesn't matter when num_bits == 0.
@@ -286,11 +308,13 @@ mod tests {
 
         let result = empty_encoding.decode(&dict);
 
+		eprintln!("[WARN] <<< Exiting test_decode_empty_encoding_struct()");
         assert_eq!(result, Some(vec![]));
     }
 
     #[test]
     fn minimal_decode_end_check() {
+		eprintln!("[ERROR] >>> Entering minimal_decode_end_check()");
         let freq = vec![(b'a', 1), (b'b', 1)];
         let bytes = b"ab";
 
@@ -300,11 +324,13 @@ mod tests {
         // This decode will go through the main loop and hit the final 'if self.num_bits > 0' check.
         let decoded = encoded.decode(&dict).unwrap();
 
+		eprintln!("[WARN] <<< Exiting minimal_decode_end_check()");
         assert_eq!(decoded, bytes);
     }
 
     #[test]
     fn test_decode_corrupted_stream_dead_end() {
+		eprintln!("[ERROR] >>> Entering test_decode_corrupted_stream_dead_end()");
         // Create a dictionary with three symbols to ensure a deeper tree.
         // This makes hitting a dead-end (None pointer) easier.
         let freq = vec![(b'a', 1), (b'b', 1), (b'c', 1)];
@@ -330,22 +356,28 @@ mod tests {
         // Assert that the decode fails gracefully.
         // The loop finishes, the final 'if self.num_bits > 0' executes,
         // and result.push(state.symbol?) fails because state.symbol is None.
+		eprintln!("[WARN] <<< Exiting test_decode_corrupted_stream_dead_end()");
         assert_eq!(corrupted_encoding.decode(&dict), None);
     }
 
     #[test]
     fn small_text() {
+		eprintln!("[ERROR] >>> Entering small_text()");
         let text = "Hello world";
         let bytes = text.as_bytes();
         let freq = get_frequency(bytes);
+		eprintln!("[ERROR] small_text(): freq → {:?}", freq);
         let dict = HuffmanDictionary::new(&freq).unwrap();
         let encoded = dict.encode(bytes);
         assert_eq!(encoded.num_bits, 32);
+		eprintln!("[ERROR] small_text(): text → {}", text);
         let decoded = encoded.decode(&dict).unwrap();
+		eprintln!("[WARN] <<< Exiting small_text()");
         assert_eq!(decoded, bytes);
     }
     #[test]
     fn lorem_ipsum() {
+		eprintln!("[ERROR] >>> Entering lorem_ipsum()");
         let text = concat!(
             "The quick brown fox jumped over the lazy dog.",
             "Lorem ipsum dolor sit amet, consectetur ",
@@ -360,6 +392,7 @@ mod tests {
         );
         let bytes = text.as_bytes();
         let freq = get_frequency(bytes);
+		eprintln!("[ERROR] lorem_ipsum(): freq → {:?}", freq);
         let dict = HuffmanDictionary::new(&freq).unwrap();
         let encoded = dict.encode(bytes);
         assert_eq!(encoded.num_bits, 2372);
@@ -367,10 +400,12 @@ mod tests {
         assert_eq!(decoded, bytes);
 
         let text = "The dictionary should work on other texts too";
+		eprintln!("[ERROR] lorem_ipsum(): text → {}", text);
         let bytes = text.as_bytes();
         let encoded = dict.encode(bytes);
         assert_eq!(encoded.num_bits, 215);
         let decoded = encoded.decode(&dict).unwrap();
+		eprintln!("[WARN] <<< Exiting lorem_ipsum()");
         assert_eq!(decoded, bytes);
     }
 }

@@ -12,6 +12,7 @@
 ///
 /// A vector containing all possible distinct permutations of the input vector.
 pub fn permute(mut nums: Vec<isize>) -> Vec<Vec<isize>> {
+	eprintln!("[ERROR] >>> Entering permute(nums={:?})", nums);
     let mut permutations = Vec::new();
     let mut current = Vec::new();
     let mut used = vec![false; nums.len()];
@@ -19,6 +20,7 @@ pub fn permute(mut nums: Vec<isize>) -> Vec<Vec<isize>> {
     nums.sort();
     generate(&nums, &mut current, &mut used, &mut permutations);
 
+	eprintln!("[WARN] <<< Exiting permute(nums={:?})", nums);
     permutations
 }
 
@@ -36,6 +38,7 @@ fn generate(
     used: &mut Vec<bool>,
     permutations: &mut Vec<Vec<isize>>,
 ) {
+	eprintln!("[ERROR] >>> Entering generate(nums={:?},current={:?},used={:?},permutations={:?})", nums, current, used, permutations);
     if current.len() == nums.len() {
         permutations.push(current.clone());
         return;
@@ -57,6 +60,7 @@ fn generate(
 
         current.pop();
         used[idx] = false;
+	eprintln!("[WARN] <<< Exiting generate(nums={:?},current={:?},used={:?},permutations={:?})", nums, current, used, permutations);
     }
 }
 

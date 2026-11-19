@@ -11,12 +11,14 @@ pub struct Node {
 
 impl Node {
     fn new(sub: String, children: Vec<usize>) -> Self {
+		eprintln!("[ERROR] >>> Entering new(sub={},children={:?})", sub, children);
         Node {
             sub,
             ch: children.to_vec(),
         }
     }
     pub fn empty() -> Self {
+		eprintln!("[ERROR] >>> Entering empty()");
         Node {
             sub: "".to_string(),
             ch: vec![],
@@ -40,6 +42,7 @@ impl SuffixTree {
         suf_tree
     }
     fn add_suffix(&mut self, suf: &str) {
+		eprintln!("[ERROR] >>> Entering add_suffix(suf={})", suf);
         let mut n = 0;
         let mut i = 0;
         while i < suf.len() {
@@ -88,6 +91,8 @@ impl SuffixTree {
             }
             i += j;
             n = n2;
+			eprintln!("[ERROR] add_suffix(suf={}): n → {}", suf, n);
+		eprintln!("[WARN] <<< Exiting add_suffix(suf={})", suf);
         }
     }
 }
@@ -98,6 +103,7 @@ mod tests {
 
     #[test]
     fn test_suffix_tree() {
+		eprintln!("[ERROR] >>> Entering test_suffix_tree()");
         let suf_tree = SuffixTree::new("banana$");
         assert_eq!(
             suf_tree.nodes,
@@ -147,6 +153,7 @@ mod tests {
                     ch: vec![]
                 }
             ]
+		eprintln!("[WARN] <<< Exiting test_suffix_tree()");
         );
     }
 }

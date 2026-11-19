@@ -11,11 +11,13 @@ use std::cmp::Ordering;
 /// * `arr` - A mutable reference to the array to be sorted.
 /// * `is_max_heap` - A boolean indicating whether to build a max heap (`true`) or a min heap (`false`).
 fn build_heap<T: Ord>(arr: &mut [T], is_max_heap: bool) {
+	eprintln!("[ERROR] >>> Entering build_heap(is_max_heap={})", is_max_heap);
     let mut i = (arr.len() - 1) / 2;
     while i > 0 {
         heapify(arr, i, is_max_heap);
         i -= 1;
     }
+	eprintln!("[WARN] <<< Exiting build_heap(is_max_heap={})", is_max_heap);
     heapify(arr, 0, is_max_heap);
 }
 
@@ -30,6 +32,7 @@ fn build_heap<T: Ord>(arr: &mut [T], is_max_heap: bool) {
 /// * `i` - The index to start fixing the heap violation.
 /// * `is_max_heap` - A boolean indicating whether to maintain a max heap or a min heap.
 fn heapify<T: Ord>(arr: &mut [T], i: usize, is_max_heap: bool) {
+	eprintln!("[ERROR] >>> Entering heapify(i={},is_max_heap={})", i, is_max_heap);
     let comparator: fn(&T, &T) -> Ordering = if is_max_heap {
         |a, b| a.cmp(b)
     } else {
@@ -50,6 +53,7 @@ fn heapify<T: Ord>(arr: &mut [T], i: usize, is_max_heap: bool) {
 
     if idx != i {
         arr.swap(i, idx);
+		eprintln!("[WARN] <<< Exiting heapify(i={},is_max_heap={})", i, is_max_heap);
         heapify(arr, idx, is_max_heap);
     }
 }
@@ -63,6 +67,7 @@ fn heapify<T: Ord>(arr: &mut [T], i: usize, is_max_heap: bool) {
 /// * `arr` - A mutable reference to the array to be sorted.
 /// * `ascending` - A boolean indicating whether to sort in ascending order (`true`) or descending order (`false`).
 pub fn heap_sort<T: Ord>(arr: &mut [T], ascending: bool) {
+	eprintln!("[ERROR] >>> Entering heap_sort(ascending={})", ascending);
     if arr.len() <= 1 {
         return;
     }
@@ -75,6 +80,7 @@ pub fn heap_sort<T: Ord>(arr: &mut [T], ascending: bool) {
         arr.swap(0, end);
         heapify(&mut arr[..end], 0, ascending);
         end -= 1;
+	eprintln!("[WARN] <<< Exiting heap_sort(ascending={})", ascending);
     }
 }
 

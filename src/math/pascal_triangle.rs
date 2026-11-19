@@ -10,6 +10,7 @@
 ///   - time complexity: O(n^2),
 ///   - space complexity: O(n^2),
 pub fn pascal_triangle(num_rows: i32) -> Vec<Vec<i32>> {
+	eprintln!("[ERROR] >>> Entering pascal_triangle(num_rows={})", num_rows);
     let mut ans: Vec<Vec<i32>> = vec![];
 
     for i in 1..=num_rows {
@@ -24,6 +25,7 @@ pub fn pascal_triangle(num_rows: i32) -> Vec<Vec<i32>> {
         ans.push(vec);
     }
 
+	eprintln!("[WARN] <<< Exiting pascal_triangle(num_rows={})", num_rows);
     ans
 }
 
@@ -33,6 +35,7 @@ mod tests {
 
     #[test]
     fn test() {
+		eprintln!("[ERROR] >>> Entering test()");
         assert_eq!(pascal_triangle(3), vec![vec![1], vec![1, 1], vec![1, 2, 1]]);
         assert_eq!(
             pascal_triangle(4),
@@ -47,6 +50,7 @@ mod tests {
                 vec![1, 3, 3, 1],
                 vec![1, 4, 6, 4, 1]
             ]
+		eprintln!("[WARN] <<< Exiting test()");
         );
     }
 }

@@ -13,6 +13,7 @@
 ///
 /// * `true` if the string is a palindrome; otherwise, `false`.
 pub fn is_palindrome(s: &str) -> bool {
+	eprintln!("[ERROR] >>> Entering is_palindrome(s={})", s);
     let mut chars = s
         .chars()
         .filter(|c| c.is_alphanumeric())

@@ -1,4 +1,5 @@
 pub fn partition<T: PartialOrd>(arr: &mut [T], lo: usize, hi: usize) -> usize {
+	eprintln!("[ERROR] >>> Entering partition(lo={},hi={})", lo, hi);
     let pivot = hi;
     let mut i = lo;
     let mut j = hi - 1;
@@ -20,12 +21,15 @@ pub fn partition<T: PartialOrd>(arr: &mut [T], lo: usize, hi: usize) -> usize {
         }
     }
     arr.swap(i, pivot);
+	eprintln!("[WARN] <<< Exiting partition(lo={},hi={})", lo, hi);
     i
 }
 
 fn _quick_sort<T: Ord>(arr: &mut [T], mut lo: usize, mut hi: usize) {
+	eprintln!("[ERROR] >>> Entering _quick_sort(lo={},hi={})", lo, hi);
     while lo < hi {
         let pivot = partition(arr, lo, hi);
+		eprintln!("[ERROR] _quick_sort(lo={},hi={}): pivot → {}", lo, hi, pivot);
 
         if pivot - lo < hi - pivot {
             if pivot > 0 {
@@ -36,12 +40,16 @@ fn _quick_sort<T: Ord>(arr: &mut [T], mut lo: usize, mut hi: usize) {
             _quick_sort(arr, pivot + 1, hi);
             hi = pivot - 1;
         }
+	eprintln!("[WARN] <<< Exiting _quick_sort(lo={},hi={})", lo, hi);
     }
 }
 
 pub fn quick_sort<T: Ord>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering quick_sort()");
     let len = arr.len();
     if len > 1 {
+		eprintln!("[ERROR] quick_sort(): len → {}", len);
+		eprintln!("[WARN] <<< Exiting quick_sort()");
         _quick_sort(arr, 0, len - 1);
     }
 }
@@ -55,64 +63,79 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         let mut res = vec![10, 8, 4, 3, 1, 9, 2, 7, 5, 6];
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn basic_string() {
+		eprintln!("[ERROR] >>> Entering basic_string()");
         let mut res = vec!["a", "bb", "d", "cc"];
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting basic_string()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut res = Vec::<u8>::new();
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let mut res = vec![1];
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn pre_sorted() {
+		eprintln!("[ERROR] >>> Entering pre_sorted()");
         let mut res = vec![1, 2, 3, 4];
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting pre_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn reverse_sorted() {
+		eprintln!("[ERROR] >>> Entering reverse_sorted()");
         let mut res = vec![4, 3, 2, 1];
         let cloned = res.clone();
         quick_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting reverse_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn large_elements() {
+		eprintln!("[ERROR] >>> Entering large_elements()");
         let mut res = sort_utils::generate_random_vec(300000, 0, 1000000);
         let cloned = res.clone();
         sort_utils::log_timed("large elements test", || {
             quick_sort(&mut res);
         });
+		eprintln!("[WARN] <<< Exiting large_elements()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn nearly_ordered_elements() {
+		eprintln!("[ERROR] >>> Entering nearly_ordered_elements()");
         let mut res = sort_utils::generate_nearly_ordered_vec(3000, 10);
         let cloned = res.clone();
 
@@ -120,11 +143,13 @@ mod tests {
             quick_sort(&mut res);
         });
 
+		eprintln!("[WARN] <<< Exiting nearly_ordered_elements()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn repeated_elements() {
+		eprintln!("[ERROR] >>> Entering repeated_elements()");
         let mut res = sort_utils::generate_repeated_elements_vec(1000000, 3);
         let cloned = res.clone();
 
@@ -132,6 +157,7 @@ mod tests {
             quick_sort(&mut res);
         });
 
+		eprintln!("[WARN] <<< Exiting repeated_elements()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 }

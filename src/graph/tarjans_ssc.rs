@@ -5,6 +5,7 @@ pub struct Graph {
 
 impl Graph {
     pub fn new(n: usize) -> Self {
+		eprintln!("[ERROR] >>> Entering new(n={})", n);
         Self {
             n,
             adj_list: vec![vec![]; n],
@@ -12,10 +13,13 @@ impl Graph {
     }
 
     pub fn add_edge(&mut self, u: usize, v: usize) {
+		eprintln!("[ERROR] >>> Entering add_edge(u={},v={})", u, v);
+		eprintln!("[WARN] <<< Exiting add_edge(u={},v={})", u, v);
         self.adj_list[u].push(v);
     }
 }
 pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
+	eprintln!("[ERROR] >>> Entering tarjan_scc()");
     struct TarjanState {
         index: i32,
         stack: Vec<usize>,
@@ -33,8 +37,10 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
         lowlink_of: vec![-1; graph.n],
         components: Vec::new(),
     };
+	eprintln!("[WARN] <<< Exiting tarjan_scc()");
 
     fn strong_connect(v: usize, graph: &Graph, state: &mut TarjanState) {
+		eprintln!("[ERROR] >>> Entering strong_connect(v={})", v);
         state.index_of[v] = state.index;
         state.lowlink_of[v] = state.index;
         state.index += 1;
@@ -59,6 +65,7 @@ pub fn tarjan_scc(graph: &Graph) -> Vec<Vec<usize>> {
                     break;
                 }
             }
+			eprintln!("[WARN] <<< Exiting strong_connect(v={})", v);
             state.components.push(component);
         }
     }
@@ -78,6 +85,7 @@ mod tests {
 
     #[test]
     fn test_tarjan_scc() {
+		eprintln!("[ERROR] >>> Entering test_tarjan_scc()");
         // Test 1: A graph with multiple strongly connected components
         let n_vertices = 11;
         let edges = vec![
@@ -106,6 +114,7 @@ mod tests {
         }
 
         let components = tarjan_scc(&graph);
+		eprintln!("[ERROR] test_tarjan_scc(): components → {:?}", components);
         assert_eq!(
             components,
             vec![
@@ -120,6 +129,7 @@ mod tests {
         // Test 2: A graph with no edges
         let n_vertices = 5;
         let edges: Vec<(usize, usize)> = vec![];
+		eprintln!("[ERROR] test_tarjan_scc(): edges → {:?}", edges);
         let mut graph = Graph::new(n_vertices);
 
         for &(u, v) in &edges {
@@ -168,6 +178,7 @@ mod tests {
         assert_eq!(
             components,
             vec![vec![5], vec![3], vec![4], vec![6], vec![2, 1, 0],]
+		eprintln!("[WARN] <<< Exiting test_tarjan_scc()");
         );
     }
 }

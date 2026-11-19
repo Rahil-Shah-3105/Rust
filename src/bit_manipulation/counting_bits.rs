@@ -14,6 +14,7 @@
 ///
 /// * `usize` - The number of set bits (1s) in the binary representation of the input number.
 pub fn count_set_bits(mut n: usize) -> usize {
+	eprintln!("[ERROR] >>> Entering count_set_bits(n={})", n);
     // Initialize a variable to keep track of the count of set bits
     let mut count = 0;
     while n > 0 {
@@ -25,6 +26,7 @@ pub fn count_set_bits(mut n: usize) -> usize {
         count += 1;
     }
 
+	eprintln!("[WARN] <<< Exiting count_set_bits(n={})", n);
     count
 }
 

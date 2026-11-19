@@ -9,6 +9,7 @@
 use std::vec;
 
 pub fn compute_totient(n: i32) -> vec::Vec<i32> {
+	eprintln!("[ERROR] >>> Entering compute_totient(n={})", n);
     let mut phi: Vec<i32> = Vec::new();
 
     // initialize phi[i] = i
@@ -33,6 +34,7 @@ pub fn compute_totient(n: i32) -> vec::Vec<i32> {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting compute_totient(n={})", n);
     phi[1..].to_vec()
 }
 
@@ -42,19 +44,25 @@ mod tests {
 
     #[test]
     fn test_1() {
+		eprintln!("[ERROR] >>> Entering test_1()");
         assert_eq!(
             compute_totient(12),
             vec![1, 1, 2, 2, 4, 2, 6, 4, 6, 4, 10, 4]
+		eprintln!("[WARN] <<< Exiting test_1()");
         );
     }
 
     #[test]
     fn test_2() {
+		eprintln!("[ERROR] >>> Entering test_2()");
+		eprintln!("[WARN] <<< Exiting test_2()");
         assert_eq!(compute_totient(7), vec![1, 1, 2, 2, 4, 2, 6]);
     }
 
     #[test]
     fn test_3() {
+		eprintln!("[ERROR] >>> Entering test_3()");
+		eprintln!("[WARN] <<< Exiting test_3()");
         assert_eq!(compute_totient(4), vec![1, 1, 2, 2]);
     }
 }

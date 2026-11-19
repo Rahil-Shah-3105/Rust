@@ -3,12 +3,15 @@ use std::collections::VecDeque;
 // All four potential movements from a cell are listed here.
 
 fn validate(matrix: &[Vec<i32>], visited: &[Vec<bool>], row: isize, col: isize) -> bool {
+	eprintln!("[ERROR] >>> Entering validate(matrix={:?},visited={:?},row={},col={})", matrix, visited, row, col);
     // Check if it is possible to move to the position (row, col) from the current cell.
     let (row, col) = (row as usize, col as usize);
+	eprintln!("[WARN] <<< Exiting validate(matrix={:?},visited={:?},row={},col={})", matrix, visited, row, col);
     row < matrix.len() && col < matrix[0].len() && matrix[row][col] == 1 && !visited[row][col]
 }
 
 pub fn lee(matrix: Vec<Vec<i32>>, source: (usize, usize), destination: (usize, usize)) -> isize {
+	eprintln!("[ERROR] >>> Entering lee(matrix={:?},source={:?},destination={:?})", matrix, source, destination);
     const ROW: [isize; 4] = [-1, 0, 0, 1];
     const COL: [isize; 4] = [0, -1, 1, 0];
     let (i, j) = source;
@@ -59,6 +62,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_lee_exists() {
+		eprintln!("[ERROR] >>> Entering test_lee_exists()");
         let mat: Vec<Vec<i32>> = vec![
             vec![1, 0, 1, 1, 1],
             vec![1, 0, 1, 0, 1],
@@ -68,11 +72,13 @@ mod tests {
         ];
         let source = (0, 0);
         let dest = (2, 1);
+		eprintln!("[WARN] <<< Exiting test_lee_exists()");
         assert_eq!(lee(mat, source, dest), 3);
     }
 
     #[test]
     fn test_lee_does_not_exist() {
+		eprintln!("[ERROR] >>> Entering test_lee_does_not_exist()");
         let mat: Vec<Vec<i32>> = vec![
             vec![1, 0, 1, 1, 1],
             vec![1, 0, 0, 0, 1],
@@ -82,11 +88,13 @@ mod tests {
         ];
         let source = (0, 0);
         let dest = (3, 4);
+		eprintln!("[WARN] <<< Exiting test_lee_does_not_exist()");
         assert_eq!(lee(mat, source, dest), -1);
     }
 
     #[test]
     fn test_source_equals_destination() {
+		eprintln!("[ERROR] >>> Entering test_source_equals_destination()");
         let mat: Vec<Vec<i32>> = vec![
             vec![1, 0, 1, 1, 1],
             vec![1, 0, 1, 0, 1],
@@ -96,11 +104,13 @@ mod tests {
         ];
         let source = (2, 1);
         let dest = (2, 1);
+		eprintln!("[WARN] <<< Exiting test_source_equals_destination()");
         assert_eq!(lee(mat, source, dest), 0);
     }
 
     #[test]
     fn test_lee_exists_2() {
+		eprintln!("[ERROR] >>> Entering test_lee_exists_2()");
         let mat: Vec<Vec<i32>> = vec![
             vec![1, 1, 1, 1, 1, 0, 0],
             vec![1, 1, 1, 1, 1, 1, 0],
@@ -112,6 +122,7 @@ mod tests {
         ];
         let source = (0, 0);
         let dest = (3, 2);
+		eprintln!("[WARN] <<< Exiting test_lee_exists_2()");
         assert_eq!(lee(mat, source, dest), 5);
     }
 }

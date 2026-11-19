@@ -1,6 +1,7 @@
 use num_traits::CheckedAdd;
 
 pub fn binary_to_decimal(binary: &str) -> Option<u128> {
+	eprintln!("[ERROR] >>> Entering binary_to_decimal(binary={})", binary);
     if binary.len() > 128 {
         return None;
     }
@@ -17,6 +18,8 @@ pub fn binary_to_decimal(binary: &str) -> Option<u128> {
         }
         idx_val <<= 1;
     }
+	eprintln!("[ERROR] binary_to_decimal(binary={}): num → {}", binary, num);
+    eprintln!("[WARN] <<< Exiting binary_to_decimal(binary={})", binary);
     Some(num)
 }
 
@@ -26,12 +29,15 @@ mod tests {
 
     #[test]
     fn basic_binary_to_decimal() {
+		eprintln!("[ERROR] >>> Entering basic_binary_to_decimal()");
         assert_eq!(binary_to_decimal("0000000110"), Some(6));
         assert_eq!(binary_to_decimal("1000011110"), Some(542));
+		eprintln!("[WARN] <<< Exiting basic_binary_to_decimal()");
         assert_eq!(binary_to_decimal("1111111111"), Some(1023));
     }
     #[test]
     fn big_binary_to_decimal() {
+		eprintln!("[ERROR] >>> Entering big_binary_to_decimal()");
         assert_eq!(
             binary_to_decimal("111111111111111111111111"),
             Some(16_777_215)
@@ -45,10 +51,12 @@ mod tests {
         assert_eq!(
             binary_to_decimal("1111111111111111111111111111111111111111111111111111111111111111"),
             Some(18_446_744_073_709_551_615u128)
+		eprintln!("[WARN] <<< Exiting big_binary_to_decimal()");
         );
     }
     #[test]
     fn very_big_binary_to_decimal() {
+		eprintln!("[ERROR] >>> Entering very_big_binary_to_decimal()");
         // 96 bits
         assert_eq!(
             binary_to_decimal(
@@ -82,6 +90,7 @@ mod tests {
                 1111111111111111111111111111111111111111111111111111111111111\
                 1111111111111111111111111111111111111111111111111111111111111"
         )
+		eprintln!("[WARN] <<< Exiting very_big_binary_to_decimal()");
         .is_none());
     }
 }

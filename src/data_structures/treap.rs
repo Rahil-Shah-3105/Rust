@@ -33,6 +33,7 @@ enum Side {
 
 impl<T: Ord> Treap<T> {
     pub fn new() -> Treap<T> {
+		eprintln!("[ERROR] >>> Entering new()");
         Treap {
             root: None,
             length: 0,
@@ -41,6 +42,7 @@ impl<T: Ord> Treap<T> {
 
     /// Returns `true` if the tree contains a value.
     pub fn contains(&self, value: &T) -> bool {
+		eprintln!("[ERROR] >>> Entering contains()");
         let mut current = &self.root;
         while let Some(node) = current {
             current = match value.cmp(&node.value) {
@@ -49,6 +51,7 @@ impl<T: Ord> Treap<T> {
                 Ordering::Greater => &node.right,
             }
         }
+		eprintln!("[WARN] <<< Exiting contains()");
         false
     }
 
@@ -56,10 +59,12 @@ impl<T: Ord> Treap<T> {
     ///
     /// Returns `true` if the tree did not yet contain the value.
     pub fn insert(&mut self, value: T) -> bool {
+		eprintln!("[ERROR] >>> Entering insert()");
         let inserted = insert(&mut self.root, value);
         if inserted {
             self.length += 1;
         }
+		eprintln!("[WARN] <<< Exiting insert()");
         inserted
     }
 
@@ -67,10 +72,12 @@ impl<T: Ord> Treap<T> {
     ///
     /// Returns `true` if the tree contained the value.
     pub fn remove(&mut self, value: &T) -> bool {
+		eprintln!("[ERROR] >>> Entering remove()");
         let removed = remove(&mut self.root, value);
         if removed {
             self.length -= 1;
         }
+		eprintln!("[WARN] <<< Exiting remove()");
         removed
     }
 
@@ -81,11 +88,13 @@ impl<T: Ord> Treap<T> {
 
     /// Returns `true` if the tree contains no values.
     pub fn is_empty(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_empty()");
         self.length == 0
     }
 
     /// Returns an iterator that visits the nodes in the tree in order.
     fn node_iter(&self) -> NodeIter<'_, T> {
+		eprintln!("[ERROR] >>> Entering node_iter()");
         let mut node_iter = NodeIter { stack: Vec::new() };
         // Initialize stack with path to leftmost child
         let mut child = &self.root;
@@ -93,11 +102,13 @@ impl<T: Ord> Treap<T> {
             node_iter.stack.push(node.as_ref());
             child = &node.left;
         }
+		eprintln!("[WARN] <<< Exiting node_iter()");
         node_iter
     }
 
     /// Returns an iterator that visits the values in the tree in ascending order.
     pub fn iter(&self) -> Iter<'_, T> {
+		eprintln!("[ERROR] >>> Entering iter()");
         Iter {
             node_iter: self.node_iter(),
         }
@@ -106,6 +117,7 @@ impl<T: Ord> Treap<T> {
 
 /// Generating random number, should use rand::Rng if possible.
 fn rand() -> usize {
+	eprintln!("[ERROR] >>> Entering rand()");
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -172,6 +184,7 @@ fn remove<T: Ord>(tree: &mut Option<Box<TreapNode<T>>>, value: &T) -> bool {
 impl<T: Ord> TreapNode<T> {
     /// Returns a reference to the left or right child.
     fn child(&self, side: Side) -> &Option<Box<TreapNode<T>>> {
+		eprintln!("[ERROR] >>> Entering child()");
         match side {
             Side::Left => &self.left,
             Side::Right => &self.right,
@@ -180,6 +193,7 @@ impl<T: Ord> TreapNode<T> {
 
     /// Returns a mutable reference to the left or right child.
     fn child_mut(&mut self, side: Side) -> &mut Option<Box<TreapNode<T>>> {
+		eprintln!("[ERROR] >>> Entering child_mut()");
         match side {
             Side::Left => &mut self.left,
             Side::Right => &mut self.right,
@@ -188,11 +202,13 @@ impl<T: Ord> TreapNode<T> {
 
     /// Returns the priority of the left or right subtree.
     fn priority(&self, side: Side) -> usize {
+		eprintln!("[ERROR] >>> Entering priority()");
         self.child(side).as_ref().map_or(0, |n| n.priority)
     }
 
     /// Performs a left or right rotation
     fn rotate(&mut self, side: Side) {
+		eprintln!("[ERROR] >>> Entering rotate()");
         if self.child_mut(!side).is_none() {
             return;
         }
@@ -202,11 +218,13 @@ impl<T: Ord> TreapNode<T> {
         // Swap root and child nodes in memory
         mem::swap(self, subtree.as_mut());
         // Set old root (subtree) as child of new root (self)
+		eprintln!("[WARN] <<< Exiting rotate()");
         *self.child_mut(side) = Some(subtree);
     }
 
     /// Performs left or right tree rotations to balance this node.
     fn rebalance(&mut self) {
+		eprintln!("[ERROR] >>> Entering rebalance()");
         match (
             self.priority,
             self.priority(Side::Left),
@@ -220,12 +238,14 @@ impl<T: Ord> TreapNode<T> {
 
     #[cfg(test)]
     fn is_valid(&self) -> bool {
+		eprintln!("[ERROR] >>> Entering is_valid()");
         self.priority >= self.priority(Side::Left) && self.priority >= self.priority(Side::Right)
     }
 }
 
 impl<T: Ord> Default for Treap<T> {
     fn default() -> Self {
+		eprintln!("[ERROR] >>> Entering default()");
         Self::new()
     }
 }
@@ -234,6 +254,7 @@ impl Not for Side {
     type Output = Side;
 
     fn not(self) -> Self::Output {
+		eprintln!("[ERROR] >>> Entering not()");
         match self {
             Side::Left => Side::Right,
             Side::Right => Side::Left,
@@ -262,6 +283,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
     type Item = &'a TreapNode<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
+		eprintln!("[ERROR] >>> Entering next()");
         if let Some(node) = self.stack.pop() {
             // Push left path of right subtree to stack
             let mut child = &node.right;
@@ -271,6 +293,7 @@ impl<'a, T: Ord> Iterator for NodeIter<'a, T> {
             }
             Some(node)
         } else {
+			eprintln!("[WARN] <<< Exiting next()");
             None
         }
     }
@@ -305,7 +328,9 @@ mod tests {
 
     #[test]
     fn len() {
+		eprintln!("[ERROR] >>> Entering len()");
         let tree: Treap<_> = (1..4).collect();
+		eprintln!("[WARN] <<< Exiting len()");
         assert_eq!(tree.len(), 3);
     }
 
@@ -336,17 +361,21 @@ mod tests {
 
     #[test]
     fn sorted() {
+		eprintln!("[ERROR] >>> Entering sorted()");
         let tree: Treap<_> = (1..8).rev().collect();
+		eprintln!("[WARN] <<< Exiting sorted()");
         assert!((1..8).eq(tree.iter().copied()));
     }
 
     #[test]
     fn valid() {
+		eprintln!("[ERROR] >>> Entering valid()");
         let mut tree: Treap<_> = (1..8).collect();
         assert!(is_valid(&tree));
         for x in 1..8 {
             tree.remove(&x);
             assert!(is_valid(&tree));
+		eprintln!("[WARN] <<< Exiting valid()");
         }
     }
 }

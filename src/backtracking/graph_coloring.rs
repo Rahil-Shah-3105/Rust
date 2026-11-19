@@ -26,6 +26,7 @@ pub fn generate_colorings(
     adjacency_matrix: Vec<Vec<bool>>,
     num_colors: usize,
 ) -> Result<Option<Vec<Vec<usize>>>, GraphColoringError> {
+	eprintln!("[ERROR] >>> Entering generate_colorings(adjacency_matrix={:?},num_colors={})", adjacency_matrix, num_colors);
     Ok(GraphColoring::new(adjacency_matrix)?.find_solutions(num_colors))
 }
 
@@ -50,6 +51,7 @@ impl GraphColoring {
     ///
     /// * A new instance of GraphColoring or a `GraphColoringError` if the matrix is empty or non-square.
     fn new(adjacency_matrix: Vec<Vec<bool>>) -> Result<Self, GraphColoringError> {
+		eprintln!("[ERROR] >>> Entering new(adjacency_matrix={:?})", adjacency_matrix);
         let num_vertices = adjacency_matrix.len();
 
         // Check if the adjacency matrix is empty
@@ -62,6 +64,8 @@ impl GraphColoring {
             return Err(GraphColoringError::ImproperAdjacencyMatrix);
         }
 
+		eprintln!("[ERROR] new(adjacency_matrix={:?}): num_vertices → {}", adjacency_matrix, num_vertices);
+        eprintln!("[WARN] <<< Exiting new(adjacency_matrix={:?})", adjacency_matrix);
         Ok(GraphColoring {
             adjacency_matrix,
             vertex_colors: vec![usize::MAX; num_vertices],
@@ -71,6 +75,7 @@ impl GraphColoring {
 
     /// Returns the number of vertices in the graph.
     fn num_vertices(&self) -> usize {
+		eprintln!("[ERROR] >>> Entering num_vertices()");
         self.adjacency_matrix.len()
     }
 
@@ -85,6 +90,7 @@ impl GraphColoring {
     ///
     /// * `true` if the color can be assigned to the vertex, `false` otherwise.
     fn is_color_valid(&self, vertex: usize, color: usize) -> bool {
+		eprintln!("[ERROR] >>> Entering is_color_valid(vertex={},color={})", vertex, color);
         for neighbor in 0..self.num_vertices() {
             // Check outgoing edges from vertex and incoming edges to vertex
             if (self.adjacency_matrix[vertex][neighbor] || self.adjacency_matrix[neighbor][vertex])
@@ -103,6 +109,7 @@ impl GraphColoring {
     /// * `vertex` - The current vertex to be colored.
     /// * `num_colors` - The number of colors available for coloring the graph.
     fn find_colorings(&mut self, vertex: usize, num_colors: usize) {
+		eprintln!("[ERROR] >>> Entering find_colorings(vertex={},num_colors={})", vertex, num_colors);
         if vertex == self.num_vertices() {
             self.solutions.push(self.vertex_colors.clone());
             return;
@@ -114,6 +121,7 @@ impl GraphColoring {
                 self.find_colorings(vertex + 1, num_colors);
                 self.vertex_colors[vertex] = usize::MAX;
             }
+		eprintln!("[WARN] <<< Exiting find_colorings(vertex={},num_colors={})", vertex, num_colors);
         }
     }
 
@@ -127,10 +135,12 @@ impl GraphColoring {
     ///
     /// * A `Result` containing an `Option` with a vector of solutions or a `GraphColoringError`.
     fn find_solutions(&mut self, num_colors: usize) -> Option<Vec<Vec<usize>>> {
+		eprintln!("[ERROR] >>> Entering find_solutions(num_colors={})", num_colors);
         self.find_colorings(0, num_colors);
         if self.solutions.is_empty() {
             None
         } else {
+			eprintln!("[WARN] <<< Exiting find_solutions(num_colors={})", num_colors);
             Some(std::mem::take(&mut self.solutions))
         }
     }

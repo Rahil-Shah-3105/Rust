@@ -32,6 +32,7 @@ pub enum PostfixError {
 /// * `PostfixError::InsufficientOperands` - If there are not enough operands for an operator.
 /// * `PostfixError::InvalidExpression` - If the expression is malformed (e.g., multiple values are left on the stack).
 pub fn evaluate_postfix(expression: &str) -> Result<isize, PostfixError> {
+	eprintln!("[ERROR] >>> Entering evaluate_postfix(expression={})", expression);
     let mut stack: Vec<isize> = Vec::new();
 
     for token in expression.split_whitespace() {

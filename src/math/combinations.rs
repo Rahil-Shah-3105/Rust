@@ -1,7 +1,10 @@
 // Function to calculate combinations of k elements from a set of n elements
 pub fn combinations(n: i64, k: i64) -> i64 {
+	eprintln!("[ERROR] >>> Entering combinations(n={},k={})", n, k);
     // Check if either n or k is negative, and panic if so
     if n < 0 || k < 0 {
+		let __log_start = std::time::Instant::now();
+		eprintln!("[ERROR] combinations(n,k)={},{}: save query executed in {} ms", n, k, __log_start.elapsed().as_millis());
         panic!("Please insert positive values");
     }
 
@@ -13,6 +16,7 @@ pub fn combinations(n: i64, k: i64) -> i64 {
         res /= i + 1;
     }
 
+	eprintln!("[WARN] <<< Exiting combinations(n={},k={})", n, k);
     res
 }
 
@@ -23,18 +27,24 @@ mod tests {
     // Test case for combinations(10, 5)
     #[test]
     fn test_combinations_10_choose_5() {
+		eprintln!("[ERROR] >>> Entering test_combinations_10_choose_5()");
+		eprintln!("[WARN] <<< Exiting test_combinations_10_choose_5()");
         assert_eq!(combinations(10, 5), 252);
     }
 
     // Test case for combinations(6, 3)
     #[test]
     fn test_combinations_6_choose_3() {
+		eprintln!("[ERROR] >>> Entering test_combinations_6_choose_3()");
+		eprintln!("[WARN] <<< Exiting test_combinations_6_choose_3()");
         assert_eq!(combinations(6, 3), 20);
     }
 
     // Test case for combinations(20, 5)
     #[test]
     fn test_combinations_20_choose_5() {
+		eprintln!("[ERROR] >>> Entering test_combinations_20_choose_5()");
+		eprintln!("[WARN] <<< Exiting test_combinations_20_choose_5()");
         assert_eq!(combinations(20, 5), 15504);
     }
 
@@ -42,6 +52,8 @@ mod tests {
     #[test]
     #[should_panic(expected = "Please insert positive values")]
     fn test_combinations_invalid_input() {
+		eprintln!("[ERROR] >>> Entering test_combinations_invalid_input()");
+		eprintln!("[WARN] <<< Exiting test_combinations_invalid_input()");
         combinations(-5, 10);
     }
 }

@@ -20,6 +20,7 @@ pub enum CombinationError {
 /// A `Result` containing a vector with all possible combinations of `k` numbers out of `0...n-1`,
 /// or a `CombinationError` if the input is invalid.
 pub fn generate_all_combinations(n: usize, k: usize) -> Result<Vec<Vec<usize>>, CombinationError> {
+	eprintln!("[ERROR] >>> Entering generate_all_combinations(n={},k={})", n, k);
     if n == 0 && k > 0 {
         return Err(CombinationError::InvalidZeroRange);
     }

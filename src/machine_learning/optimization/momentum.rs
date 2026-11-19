@@ -54,7 +54,9 @@ mod test {
 
     #[test]
     fn test_momentum_optimized() {
+		eprintln!("[ERROR] >>> Entering test_momentum_optimized()");
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
+			eprintln!("[ERROR] >>> Entering derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2.0 * x).collect()
         }
 
@@ -76,11 +78,13 @@ mod test {
 
         for (minimized_value, test_value) in minimized_vector.iter().zip(test_vector.iter()) {
             assert!((minimized_value - test_value).abs() < tolerance);
+		eprintln!("[WARN] <<< Exiting test_momentum_optimized()");
         }
     }
 
     #[test]
     fn test_momentum_unoptimized() {
+		eprintln!("[ERROR] >>> Entering test_momentum_unoptimized()");
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
             params.iter().map(|x| 2.0 * x).collect()
         }
@@ -103,11 +107,13 @@ mod test {
 
         for (minimized_value, test_value) in minimized_vector.iter().zip(test_vector.iter()) {
             assert!((minimized_value - test_value).abs() >= tolerance);
+		eprintln!("[WARN] <<< Exiting test_momentum_unoptimized()");
         }
     }
 
     #[test]
     fn test_momentum_faster_than_gd() {
+		eprintln!("[ERROR] >>> Entering test_momentum_faster_than_gd()");
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
             params.iter().map(|x| 2.0 * x).collect()
         }
@@ -130,6 +136,7 @@ mod test {
         // Gradient descent from your original implementation
         for _ in 0..num_iterations {
             let gradient = derivative_of_square(&x_gd);
+			eprintln!("[ERROR] test_momentum_faster_than_gd(): gradient → {:?}", gradient);
             for (x_k, grad) in x_gd.iter_mut().zip(gradient.iter()) {
                 *x_k -= learning_rate * grad;
             }
@@ -139,6 +146,7 @@ mod test {
         let momentum_distance: f64 = x_momentum.iter().map(|x| x * x).sum();
         let gd_distance: f64 = x_gd.iter().map(|x| x * x).sum();
 
+		eprintln!("[WARN] <<< Exiting test_momentum_faster_than_gd()");
         assert!(momentum_distance < gd_distance);
     }
 }

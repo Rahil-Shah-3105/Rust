@@ -6,6 +6,7 @@ pub fn abs<T>(num: T) -> T
 where
     T: std::ops::Neg<Output = T> + PartialOrd + Copy + num_traits::Zero,
 {
+	eprintln!("[ERROR] >>> Entering abs()");
     if num < T::zero() {
         return -num;
     }
@@ -18,21 +19,29 @@ mod test {
 
     #[test]
     fn test_negative_number_i32() {
+		eprintln!("[ERROR] >>> Entering test_negative_number_i32()");
+		eprintln!("[WARN] <<< Exiting test_negative_number_i32()");
         assert_eq!(69, abs(-69));
     }
 
     #[test]
     fn test_negative_number_f64() {
+		eprintln!("[ERROR] >>> Entering test_negative_number_f64()");
+		eprintln!("[WARN] <<< Exiting test_negative_number_f64()");
         assert_eq!(69.69, abs(-69.69));
     }
 
     #[test]
     fn zero() {
+		eprintln!("[ERROR] >>> Entering zero()");
+		eprintln!("[WARN] <<< Exiting zero()");
         assert_eq!(0.0, abs(0.0));
     }
 
     #[test]
     fn positive_number() {
+		eprintln!("[ERROR] >>> Entering positive_number()");
+		eprintln!("[WARN] <<< Exiting positive_number()");
         assert_eq!(69.69, abs(69.69));
     }
 }

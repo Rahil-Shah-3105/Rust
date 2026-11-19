@@ -7,10 +7,12 @@
 ///
 /// * `n` - A non-negative integer representing the number of pairs of parentheses.
 pub fn generate_parentheses(n: usize) -> Vec<String> {
+	eprintln!("[ERROR] >>> Entering generate_parentheses(n={})", n);
     let mut result = Vec::new();
     if n > 0 {
         generate("", 0, 0, n, &mut result);
     }
+	eprintln!("[WARN] <<< Exiting generate_parentheses(n={})", n);
     result
 }
 
@@ -34,6 +36,7 @@ fn generate(
     n: usize,
     result: &mut Vec<String>,
 ) {
+	eprintln!("[ERROR] >>> Entering generate(current={},open_count={},close_count={},n={},result={:?})", current, open_count, close_count, n, result);
     if current.len() == (n * 2) {
         result.push(current.to_string());
         return;
@@ -46,6 +49,7 @@ fn generate(
 
     if close_count < open_count {
         let new_str = current.to_string() + ")";
+		eprintln!("[WARN] <<< Exiting generate(current={},open_count={},close_count={},n={},result={:?})", current, open_count, close_count, n, result);
         generate(&new_str, open_count, close_count + 1, n, result);
     }
 }

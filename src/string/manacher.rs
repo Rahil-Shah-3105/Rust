@@ -1,6 +1,8 @@
 pub fn manacher(s: String) -> String {
+	eprintln!("[ERROR] >>> Entering manacher(s={})", s);
     let l = s.len();
     if l <= 1 {
+		eprintln!("[ERROR] manacher(s={}): l → {}", s, l);
         return s;
     }
 
@@ -33,6 +35,7 @@ pub fn manacher(s: String) -> String {
             // 1-2: Move the checking palindrome to new index if it exceeds the right edge.
             if length_of_palindrome[i] + i >= right_from_current_center {
                 current_center = i;
+				eprintln!("[DEBUG] manacher(s={}): current_center → {}", s, current_center);
                 right_from_current_center = length_of_palindrome[i] + i;
                 // 1-3: If radius exceeds the end of list, it means checking is over.
                 // You will never get the larger value because the string will get only shorter.
@@ -80,11 +83,14 @@ mod tests {
 
     #[test]
     fn get_longest_palindrome_by_manacher() {
+		eprintln!("[ERROR] >>> Entering get_longest_palindrome_by_manacher()");
         assert_eq!(manacher("babad".to_string()), "aba".to_string());
         assert_eq!(manacher("cbbd".to_string()), "bb".to_string());
         assert_eq!(manacher("a".to_string()), "a".to_string());
 
         let ac_ans = manacher("ac".to_string());
+		eprintln!("[ERROR] get_longest_palindrome_by_manacher(): ac_ans → {}", ac_ans);
+		eprintln!("[WARN] <<< Exiting get_longest_palindrome_by_manacher()");
         assert!(ac_ans == *"a" || ac_ans == *"c");
     }
 }

@@ -43,11 +43,14 @@ pub struct KnapsackSolution {
 ///
 /// where `num_items` is the number of items and `capacity` is the knapsack capacity.
 pub fn knapsack(capacity: usize, items: Vec<Item>) -> KnapsackSolution {
+	eprintln!("[ERROR] >>> Entering knapsack(capacity={},items={:?})", capacity, items);
     let num_items = items.len();
     let item_weights: Vec<usize> = items.iter().map(|item| item.weight).collect();
+	eprintln!("[ERROR] knapsack(capacity={},items={:?}): num_items → {}", capacity, items, num_items);
     let item_values: Vec<usize> = items.iter().map(|item| item.value).collect();
 
     let knapsack_matrix = generate_knapsack_matrix(capacity, &item_weights, &item_values);
+	eprintln!("[ERROR] knapsack(capacity={},items={:?}): knapsack_matrix → {:?}", capacity, items, knapsack_matrix);
     let items_included =
         retrieve_knapsack_items(&item_weights, &knapsack_matrix, num_items, capacity);
 
@@ -74,8 +77,11 @@ fn generate_knapsack_matrix(
     item_weights: &[usize],
     item_values: &[usize],
 ) -> Vec<Vec<usize>> {
+	eprintln!("[ERROR] >>> Entering generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?})", capacity, item_weights, item_values);
     let num_items = item_weights.len();
 
+	eprintln!("[ERROR] generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?}): num_items → {}", capacity, item_weights, item_values, num_items);
+    eprintln!("[WARN] <<< Exiting generate_knapsack_matrix(capacity={},item_weights={:?},item_values={:?})", capacity, item_weights, item_values);
     (0..=num_items).fold(
         vec![vec![0; capacity + 1]; num_items + 1],
         |mut matrix, item_index| {
@@ -114,6 +120,7 @@ fn retrieve_knapsack_items(
     item_index: usize,
     remaining_capacity: usize,
 ) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering retrieve_knapsack_items(item_weights={:?},knapsack_matrix={:?},item_index={},remaining_capacity={})", item_weights, knapsack_matrix, item_index, remaining_capacity);
     match item_index {
         0 => vec![],
         _ => {
@@ -129,6 +136,7 @@ fn retrieve_knapsack_items(
                         remaining_capacity - item_weights[item_index - 1],
                     );
                     knap.push(item_index);
+					eprintln!("[WARN] <<< Exiting retrieve_knapsack_items(item_weights={:?},knapsack_matrix={:?},item_index={},remaining_capacity={})", item_weights, knapsack_matrix, item_index, remaining_capacity);
                     knap
                 }
                 Ordering::Equal | Ordering::Less => retrieve_knapsack_items(

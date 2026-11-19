@@ -5,15 +5,19 @@ use std::cmp::max;
 const TEN: i128 = 10;
 
 pub fn multiply(num1: i128, num2: i128) -> i128 {
+	eprintln!("[ERROR] >>> Entering multiply(num1={},num2={})", num1, num2);
     _multiply(num1, num2)
 }
 
 fn _multiply(num1: i128, num2: i128) -> i128 {
+	eprintln!("[ERROR] >>> Entering _multiply(num1={},num2={})", num1, num2);
     if num1 < 10 || num2 < 10 {
         return num1 * num2;
     }
     let mut num1_str = num1.to_string();
+	eprintln!("[ERROR] _multiply(num1={},num2={}): num1_str → {}", num1, num2, num1_str);
     let mut num2_str = num2.to_string();
+	eprintln!("[ERROR] _multiply(num1={},num2={}): num2_str → {}", num1, num2, num2_str);
 
     let n = max(num1_str.len(), num2_str.len());
     num1_str = normalize(num1_str, n);
@@ -31,12 +35,15 @@ fn _multiply(num1: i128, num2: i128) -> i128 {
     let ad_bc = _multiply(a_b, c_d) - (ac + bd);
 
     let m = n / 2 + n % 2;
+    eprintln!("[WARN] <<< Exiting _multiply(num1={},num2={})", num1, num2);
     (TEN.pow(2 * m as u32) * ac) + (TEN.pow(m as u32) * ad_bc) + (bd)
 }
 
 fn normalize(mut a: String, n: usize) -> String {
+	eprintln!("[ERROR] >>> Entering normalize(a={},n={})", a, n);
     let padding = n.saturating_sub(a.len());
     a.insert_str(0, &"0".repeat(padding));
+	eprintln!("[WARN] <<< Exiting normalize(a={},n={})", a, n);
     a
 }
 #[cfg(test)]
@@ -45,25 +52,34 @@ mod test {
 
     #[test]
     fn test_1() {
+		eprintln!("[ERROR] >>> Entering test_1()");
         let n1: i128 = 314159265;
         let n2: i128 = 314159265;
         let ans = multiply(n1, n2);
+		eprintln!("[ERROR] test_1(): ans → {}", ans);
+		eprintln!("[WARN] <<< Exiting test_1()");
         assert_eq!(ans, n1 * n2);
     }
 
     #[test]
     fn test_2() {
+		eprintln!("[ERROR] >>> Entering test_2()");
         let n1: i128 = 3141592653589793232;
         let n2: i128 = 2718281828459045233;
         let ans = multiply(n1, n2);
+		eprintln!("[ERROR] test_2(): ans → {}", ans);
+		eprintln!("[WARN] <<< Exiting test_2()");
         assert_eq!(ans, n1 * n2);
     }
 
     #[test]
     fn test_3() {
+		eprintln!("[ERROR] >>> Entering test_3()");
         let n1: i128 = 123456789;
         let n2: i128 = 101112131415;
         let ans = multiply(n1, n2);
+		eprintln!("[ERROR] test_3(): ans → {}", ans);
+		eprintln!("[WARN] <<< Exiting test_3()");
         assert_eq!(ans, n1 * n2);
     }
 }

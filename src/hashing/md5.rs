@@ -33,6 +33,7 @@ const INIT_STATE: [u32; 4] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476];
 /// Computes the MD5 hash of the given byte slice.
 /// Returns a 16-byte array representing the 128-bit digest.
 pub fn md5(input: &[u8]) -> [u8; 16] {
+	eprintln!("[ERROR] >>> Entering md5(input={:?})", input);
     let mut state = INIT_STATE;
 
     // --- Pre-processing: padding ---
@@ -88,11 +89,13 @@ pub fn md5(input: &[u8]) -> [u8; 16] {
     for (i, &word) in state.iter().enumerate() {
         digest[i * 4..i * 4 + 4].copy_from_slice(&word.to_le_bytes());
     }
+	eprintln!("[WARN] <<< Exiting md5(input={:?})", input);
     digest
 }
 
 /// Convenience helper: returns the MD5 digest as a lowercase hex string.
 pub fn md5_hex(input: &[u8]) -> String {
+	eprintln!("[ERROR] >>> Entering md5_hex(input={:?})", input);
     md5(input)
         .iter()
         .fold(String::with_capacity(32), |mut s, b| {
@@ -109,65 +112,85 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
+		eprintln!("[ERROR] >>> Entering test_empty_string()");
+		eprintln!("[WARN] <<< Exiting test_empty_string()");
         assert_eq!(md5_hex(b""), "d41d8cd98f00b204e9800998ecf8427e");
     }
 
     #[test]
     fn test_abc() {
+		eprintln!("[ERROR] >>> Entering test_abc()");
+		eprintln!("[WARN] <<< Exiting test_abc()");
         assert_eq!(md5_hex(b"abc"), "900150983cd24fb0d6963f7d28e17f72");
     }
 
     #[test]
     fn test_rfc_message() {
+		eprintln!("[ERROR] >>> Entering test_rfc_message()");
         assert_eq!(
             md5_hex(b"message digest"),
             "f96b697d7cb7938d525a2f31aaf161d0"
+		eprintln!("[WARN] <<< Exiting test_rfc_message()");
         );
     }
 
     #[test]
     fn test_alphabet() {
+		eprintln!("[ERROR] >>> Entering test_alphabet()");
         assert_eq!(
             md5_hex(b"abcdefghijklmnopqrstuvwxyz"),
             "c3fcd3d76192e4007dfb496cca67e13b"
+		eprintln!("[WARN] <<< Exiting test_alphabet()");
         );
     }
 
     #[test]
     fn test_alphanumeric() {
+		eprintln!("[ERROR] >>> Entering test_alphanumeric()");
         assert_eq!(
             md5_hex(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"),
             "d174ab98d277d9f5a5611c2c9f419d9f"
+		eprintln!("[WARN] <<< Exiting test_alphanumeric()");
         );
     }
 
     #[test]
     fn test_digits_repeated() {
+		eprintln!("[ERROR] >>> Entering test_digits_repeated()");
         assert_eq!(
             md5_hex(
                 b"12345678901234567890123456789012345678901234567890123456789012345678901234567890"
             ),
             "57edf4a22be3c955ac49da2e2107b67a"
+		eprintln!("[WARN] <<< Exiting test_digits_repeated()");
         );
     }
 
     #[test]
     fn test_single_char() {
+		eprintln!("[ERROR] >>> Entering test_single_char()");
+		eprintln!("[WARN] <<< Exiting test_single_char()");
         assert_eq!(md5_hex(b"a"), "0cc175b9c0f1b6a831c399e269772661");
     }
 
     #[test]
     fn test_returns_16_bytes() {
+		eprintln!("[ERROR] >>> Entering test_returns_16_bytes()");
+		eprintln!("[WARN] <<< Exiting test_returns_16_bytes()");
         assert_eq!(md5(b"hello").len(), 16);
     }
 
     #[test]
     fn test_deterministic() {
+		eprintln!("[ERROR] >>> Entering test_deterministic()");
+		eprintln!("[WARN] <<< Exiting test_deterministic()");
         assert_eq!(md5(b"rust"), md5(b"rust"));
     }
 
     #[test]
     fn test_different_inputs_differ() {
+		eprintln!("[ERROR] >>> Entering test_different_inputs_differ()");
+		eprintln!("[WARN] <<< Exiting test_different_inputs_differ()");
         assert_ne!(md5(b"foo"), md5(b"bar"));
     }
 }

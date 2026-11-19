@@ -5,6 +5,7 @@
 ///
 /// Space complexity is `O(n + k)`, as it sorts not in-place.
 pub fn bucket_sort(arr: &[usize]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering bucket_sort(arr={:?})", arr);
     if arr.is_empty() {
         return vec![];
     }
@@ -28,6 +29,8 @@ pub fn bucket_sort(arr: &[usize]) -> Vec<usize> {
         }
     }
 
+	eprintln!("[ERROR] bucket_sort(arr={:?}): len → {}", arr, len);
+    eprintln!("[WARN] <<< Exiting bucket_sort(arr={:?})", arr);
     result
 }
 
@@ -39,49 +42,67 @@ mod tests {
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let arr: [usize; 0] = [];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] empty(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let arr: [usize; 1] = [4];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] one_element(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn already_sorted() {
+		eprintln!("[ERROR] >>> Entering already_sorted()");
         let arr: [usize; 3] = [10, 19, 105];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] already_sorted(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting already_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         let arr: [usize; 4] = [35, 53, 1, 0];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] basic(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn odd_number_of_elements() {
+		eprintln!("[ERROR] >>> Entering odd_number_of_elements()");
         let arr: [usize; 5] = [1, 21, 5, 11, 58];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] odd_number_of_elements(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting odd_number_of_elements()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn repeated_elements() {
+		eprintln!("[ERROR] >>> Entering repeated_elements()");
         let arr: [usize; 4] = [542, 542, 542, 542];
         let cloned = arr;
         let res = bucket_sort(&arr);
+		eprintln!("[ERROR] repeated_elements(): res → {:?}", res);
+		eprintln!("[WARN] <<< Exiting repeated_elements()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 }

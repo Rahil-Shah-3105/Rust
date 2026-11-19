@@ -1,4 +1,5 @@
 pub fn prime_check(num: usize) -> bool {
+	eprintln!("[ERROR] >>> Entering prime_check(num={})", num);
     if (num > 1) && (num < 4) {
         return true;
     } else if (num < 2) || (num.is_multiple_of(2)) {
@@ -20,6 +21,7 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         assert!(prime_check(3));
         assert!(prime_check(7));
         assert!(prime_check(11));
@@ -28,6 +30,7 @@ mod tests {
         assert!(!prime_check(4));
         assert!(!prime_check(6));
         assert!(!prime_check(21));
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(!prime_check(2004));
     }
 }

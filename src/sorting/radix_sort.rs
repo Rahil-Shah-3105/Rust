@@ -6,6 +6,7 @@
 ///
 /// Space complexity is `O(n + b)`.
 pub fn radix_sort(arr: &mut [u64]) {
+	eprintln!("[ERROR] >>> Entering radix_sort(arr={:?})", arr);
     let max: usize = match arr.iter().max() {
         Some(&x) => x as usize,
         None => return,
@@ -31,6 +32,7 @@ pub fn radix_sort(arr: &mut [u64]) {
             arr[counter[digit_of(x)]] = x;
         }
         place *= radix;
+	eprintln!("[WARN] <<< Exiting radix_sort(arr={:?})", arr);
     }
 }
 
@@ -42,25 +44,31 @@ mod tests {
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut a: [u64; 0] = [];
         let cloned = a;
         radix_sort(&mut a);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&a) && have_same_elements(&a, &cloned));
     }
 
     #[test]
     fn descending() {
+		eprintln!("[ERROR] >>> Entering descending()");
         let mut v = vec![201, 127, 64, 37, 24, 4, 1];
         let cloned = v.clone();
         radix_sort(&mut v);
+		eprintln!("[WARN] <<< Exiting descending()");
         assert!(is_sorted(&v) && have_same_elements(&v, &cloned));
     }
 
     #[test]
     fn ascending() {
+		eprintln!("[ERROR] >>> Entering ascending()");
         let mut v = vec![1, 4, 24, 37, 64, 127, 201];
         let cloned = v.clone();
         radix_sort(&mut v);
+		eprintln!("[WARN] <<< Exiting ascending()");
         assert!(is_sorted(&v) && have_same_elements(&v, &cloned));
     }
 }

@@ -45,6 +45,7 @@
 /// assert_eq!(v, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 /// ```
 pub fn strand_sort<T: Ord>(arr: &mut Vec<T>) {
+	eprintln!("[ERROR] >>> Entering strand_sort()");
     let mut result: Vec<T> = Vec::new();
 
     while !arr.is_empty() {
@@ -69,6 +70,7 @@ pub fn strand_sort<T: Ord>(arr: &mut Vec<T>) {
         result = merge_sorted(result, strand);
     }
 
+	eprintln!("[WARN] <<< Exiting strand_sort()");
     *arr = result;
 }
 
@@ -78,6 +80,7 @@ pub fn strand_sort<T: Ord>(arr: &mut Vec<T>) {
 /// of the two input lengths.  This is the standard two-way merge used in
 /// merge sort, adapted here for `Vec` ownership.
 fn merge_sorted<T: Ord>(left: Vec<T>, right: Vec<T>) -> Vec<T> {
+	eprintln!("[ERROR] >>> Entering merge_sorted()");
     let mut result = Vec::with_capacity(left.len() + right.len());
     let mut left = left.into_iter().peekable();
     let mut right = right.into_iter().peekable();
@@ -103,6 +106,7 @@ fn merge_sorted<T: Ord>(left: Vec<T>, right: Vec<T>) -> Vec<T> {
         }
     }
 
+	eprintln!("[WARN] <<< Exiting merge_sorted()");
     result
 }
 
@@ -114,81 +118,101 @@ mod tests {
 
     #[test]
     fn basic() {
+		eprintln!("[ERROR] >>> Entering basic()");
         let mut res = vec![10, 8, 4, 3, 1, 9, 2, 7, 5, 6];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting basic()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn basic_string() {
+		eprintln!("[ERROR] >>> Entering basic_string()");
         let mut res = vec!["d", "a", "c", "b"];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting basic_string()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         let mut res: Vec<i32> = vec![];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting empty()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn one_element() {
+		eprintln!("[ERROR] >>> Entering one_element()");
         let mut res = vec![42];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting one_element()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn already_sorted() {
+		eprintln!("[ERROR] >>> Entering already_sorted()");
         let mut res = vec![1, 2, 3, 4, 5];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting already_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn reverse_sorted() {
+		eprintln!("[ERROR] >>> Entering reverse_sorted()");
         let mut res = vec![5, 4, 3, 2, 1];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting reverse_sorted()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn all_equal() {
+		eprintln!("[ERROR] >>> Entering all_equal()");
         let mut res = vec![7, 7, 7, 7];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting all_equal()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     #[test]
     fn duplicates() {
+		eprintln!("[ERROR] >>> Entering duplicates()");
         let mut res = vec![3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting duplicates()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 
     /// Wikipedia's own worked example: {5,1,4,2,0,9,6,3,8,7} → {0..9}
     #[test]
     fn wikipedia_example() {
+		eprintln!("[ERROR] >>> Entering wikipedia_example()");
         let mut res = vec![5, 1, 4, 2, 0, 9, 6, 3, 8, 7];
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting wikipedia_example()");
         assert_eq!(res, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
     }
 
     #[test]
     fn negative_numbers() {
+		eprintln!("[ERROR] >>> Entering negative_numbers()");
         let mut res = vec![-3, -1, -4, -1, -5, -9, -2, -6];
         let cloned = res.clone();
         strand_sort(&mut res);
+		eprintln!("[WARN] <<< Exiting negative_numbers()");
         assert!(is_sorted(&res) && have_same_elements(&res, &cloned));
     }
 }

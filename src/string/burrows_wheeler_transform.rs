@@ -1,6 +1,8 @@
 pub fn burrows_wheeler_transform(input: &str) -> (String, usize) {
+	eprintln!("[ERROR] >>> Entering burrows_wheeler_transform(input={})", input);
     let len = input.len();
 
+	eprintln!("[ERROR] burrows_wheeler_transform(input={}): len → {}", input, len);
     let mut table = Vec::<String>::with_capacity(len);
     for i in 0..len {
         table.push(input[i..].to_owned() + &input[..i]);
@@ -13,9 +15,11 @@ pub fn burrows_wheeler_transform(input: &str) -> (String, usize) {
         encoded.push(item.chars().last().unwrap());
         if item.eq(&input) {
             index = i;
+			eprintln!("[DEBUG] burrows_wheeler_transform(input={}): index → {}", input, index);
         }
     }
 
+	eprintln!("[WARN] <<< Exiting burrows_wheeler_transform(input={})", input);
     (encoded, index)
 }
 
@@ -45,6 +49,7 @@ mod tests {
     #[test]
     //Ensure function stand-alone legitimacy
     fn stand_alone_function() {
+		eprintln!("[ERROR] >>> Entering stand_alone_function()");
         assert_eq!(
             burrows_wheeler_transform("CARROT"),
             ("CTRRAO".to_owned(), 1usize)
@@ -65,10 +70,12 @@ mod tests {
         assert_eq!(
             inv_burrows_wheeler_transform((":..!!?:=.?!", 0usize)),
             "!.!.!??.=::"
+		eprintln!("[WARN] <<< Exiting stand_alone_function()");
         );
     }
     #[test]
     fn basic_characters() {
+		eprintln!("[ERROR] >>> Entering basic_characters()");
         assert_eq!(
             inv_burrows_wheeler_transform(burrows_wheeler_transform("CARROT")),
             "CARROT"
@@ -88,11 +95,13 @@ mod tests {
         assert_eq!(
             inv_burrows_wheeler_transform(burrows_wheeler_transform("RUST")),
             "RUST"
+		eprintln!("[WARN] <<< Exiting basic_characters()");
         );
     }
 
     #[test]
     fn special_characters() {
+		eprintln!("[ERROR] >>> Entering special_characters()");
         assert_eq!(
             inv_burrows_wheeler_transform(burrows_wheeler_transform("!.!.!??.=::")),
             "!.!.!??.=::"
@@ -104,14 +113,17 @@ mod tests {
         assert_eq!(
             inv_burrows_wheeler_transform(burrows_wheeler_transform("//&$[]")),
             "//&$[]"
+		eprintln!("[WARN] <<< Exiting special_characters()");
         );
     }
 
     #[test]
     fn empty() {
+		eprintln!("[ERROR] >>> Entering empty()");
         assert_eq!(
             inv_burrows_wheeler_transform(burrows_wheeler_transform("")),
             ""
+		eprintln!("[WARN] <<< Exiting empty()");
         );
     }
 }

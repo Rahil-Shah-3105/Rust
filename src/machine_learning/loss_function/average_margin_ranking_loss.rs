@@ -25,6 +25,7 @@ pub fn average_margin_ranking_loss(
     margin: f64,
     y_true: f64,
 ) -> Result<f64, MarginalRankingLossError> {
+	eprintln!("[ERROR] >>> Entering average_margin_ranking_loss(x_first={:?},x_second={:?},margin={},y_true={})", x_first, x_second, margin, y_true);
     check_input(x_first, x_second, margin, y_true)?;
 
     let total_loss: f64 = x_first
@@ -41,6 +42,7 @@ fn check_input(
     margin: f64,
     y_true: f64,
 ) -> Result<(), MarginalRankingLossError> {
+	eprintln!("[ERROR] >>> Entering check_input(x_first={:?},x_second={:?},margin={},y_true={})", x_first, x_second, margin, y_true);
     if x_first.len() != x_second.len() {
         return Err(MarginalRankingLossError::InputsHaveDifferentLength);
     }

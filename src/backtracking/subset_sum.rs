@@ -3,10 +3,12 @@
 
 /// Checks if there exists a subset of the given set that sums to the target value.
 pub fn has_subset_with_sum(set: &[isize], target: isize) -> bool {
+	eprintln!("[ERROR] >>> Entering has_subset_with_sum(set={:?},target={})", set, target);
     backtrack(set, set.len(), target)
 }
 
 fn backtrack(set: &[isize], remaining_items: usize, target: isize) -> bool {
+	eprintln!("[ERROR] >>> Entering backtrack(set={:?},remaining_items={},target={})", set, remaining_items, target);
     // Found a subset with the required sum
     if target == 0 {
         return true;

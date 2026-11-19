@@ -57,12 +57,14 @@ const fn eq_s(a: &[u8], b: &[u8]) -> bool {
 }
 
 pub fn moore_voting_2pass<T: Eq>(arr: &[T]) -> Option<&T> {
+	eprintln!("[ERROR] >>> Entering moore_voting_2pass()");
     let mut ele = arr.first()?;
     let mut cnt = 0;
 
     for item in arr.iter() {
         if cnt == 0 {
             cnt = 1;
+			eprintln!("[ERROR] moore_voting_2pass(): cnt → {}", cnt);
             ele = item;
         } else if item == ele {
             cnt += 1;
@@ -74,9 +76,11 @@ pub fn moore_voting_2pass<T: Eq>(arr: &[T]) -> Option<&T> {
     let cnt_check = arr.iter().filter(|&x| x == ele).count();
 
     let n = arr.len();
+	eprintln!("[ERROR] moore_voting_2pass(): n → {}", n);
     if cnt_check > (n / 2) {
         Some(ele)
     } else {
+		eprintln!("[WARN] <<< Exiting moore_voting_2pass()");
         None
     }
 }
@@ -153,10 +157,12 @@ mod tests {
 
     #[test]
     fn test_moore_voting() {
+		eprintln!("[ERROR] >>> Entering test_moore_voting()");
         let arr1: Vec<i32> = vec![9, 1, 8, 1, 1];
         assert_eq!(moore_voting_2pass(&arr1), Some(&1));
         assert_eq!(moore_voting_it(arr1), Some(1));
         let arr2: Vec<i32> = vec![1, 2, 3, 4];
+		eprintln!("[WARN] <<< Exiting test_moore_voting()");
         assert_eq!(moore_voting_2pass(&arr2), None);
     }
 }

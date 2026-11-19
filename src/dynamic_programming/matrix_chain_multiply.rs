@@ -35,6 +35,7 @@ pub enum MatrixChainMultiplicationError {
 pub fn matrix_chain_multiply(
     dimensions: Vec<usize>,
 ) -> Result<usize, MatrixChainMultiplicationError> {
+	eprintln!("[ERROR] >>> Entering matrix_chain_multiply(dimensions={:?})", dimensions);
     if dimensions.is_empty() {
         return Err(MatrixChainMultiplicationError::EmptyDimensions);
     }

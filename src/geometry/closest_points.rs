@@ -2,7 +2,9 @@ use crate::geometry::Point;
 use std::cmp::Ordering;
 
 fn cmp_x(p1: &Point, p2: &Point) -> Ordering {
+	eprintln!("[ERROR] >>> Entering cmp_x()");
     let acmp = f64_cmp(&p1.x, &p2.x);
+	eprintln!("[WARN] <<< Exiting cmp_x()");
     match acmp {
         Ordering::Equal => f64_cmp(&p1.y, &p2.y),
         _ => acmp,
@@ -10,17 +12,20 @@ fn cmp_x(p1: &Point, p2: &Point) -> Ordering {
 }
 
 fn f64_cmp(a: &f64, b: &f64) -> Ordering {
+	eprintln!("[ERROR] >>> Entering f64_cmp(a={},b={})", a, b);
     a.partial_cmp(b).unwrap()
 }
 
 /// returns the two closest points
 /// or None if there are zero or one point
 pub fn closest_points(points: &[Point]) -> Option<(Point, Point)> {
+	eprintln!("[ERROR] >>> Entering closest_points()");
     let mut points_x: Vec<Point> = points.to_vec();
     points_x.sort_by(cmp_x);
     let mut points_y = points_x.clone();
     points_y.sort_by(|p1: &Point, p2: &Point| -> Ordering { p1.y.partial_cmp(&p2.y).unwrap() });
 
+	eprintln!("[WARN] <<< Exiting closest_points()");
     closest_points_aux(&points_x, points_y, 0, points_x.len())
 }
 
@@ -32,6 +37,8 @@ fn closest_points_aux(
     mut start: usize,
     mut end: usize,
 ) -> Option<(Point, Point)> {
+	eprintln!("[ERROR] >>> Entering closest_points_aux(start={},end={})", start, end);
+    eprintln!("[ERROR] >>> Entering closest_points_aux(start={},end={})", start, end);
     let n = end - start;
 
     if n <= 1 {
@@ -118,6 +125,7 @@ mod tests {
     use super::Point;
 
     fn eq(p1: Option<(Point, Point)>, p2: Option<(Point, Point)>) -> bool {
+		eprintln!("[ERROR] >>> Entering eq()");
         match (p1, p2) {
             (None, None) => true,
             (Some((p1, p2)), Some((p3, p4))) => (p1 == p3 && p2 == p4) || (p1 == p4 && p2 == p3),
@@ -138,36 +146,45 @@ mod tests {
 
     #[test]
     fn zero_points() {
+		eprintln!("[ERROR] >>> Entering zero_points()");
         let vals: [Point; 0] = [];
+		eprintln!("[WARN] <<< Exiting zero_points()");
         assert_display!(closest_points(&vals), None::<(Point, Point)>);
     }
 
     #[test]
     fn one_points() {
+		eprintln!("[ERROR] >>> Entering one_points()");
         let vals = [Point::new(0., 0.)];
+		eprintln!("[WARN] <<< Exiting one_points()");
         assert_display!(closest_points(&vals), None::<(Point, Point)>);
     }
 
     #[test]
     fn two_points() {
+		eprintln!("[ERROR] >>> Entering two_points()");
         let vals = [Point::new(0., 0.), Point::new(1., 1.)];
         assert_display!(
             closest_points(&vals),
             Some((vals[0].clone(), vals[1].clone()))
+		eprintln!("[WARN] <<< Exiting two_points()");
         );
     }
 
     #[test]
     fn three_points() {
+		eprintln!("[ERROR] >>> Entering three_points()");
         let vals = [Point::new(0., 0.), Point::new(1., 1.), Point::new(3., 3.)];
         assert_display!(
             closest_points(&vals),
             Some((vals[0].clone(), vals[1].clone()))
+		eprintln!("[WARN] <<< Exiting three_points()");
         );
     }
 
     #[test]
     fn list_1() {
+		eprintln!("[ERROR] >>> Entering list_1()");
         let vals = [
             Point::new(0., 0.),
             Point::new(2., 1.),
@@ -184,11 +201,13 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(2., 1.), Point::new(2., 3.)))
+		eprintln!("[WARN] <<< Exiting list_1()");
         );
     }
 
     #[test]
     fn list_2() {
+		eprintln!("[ERROR] >>> Entering list_2()");
         let vals = [
             Point::new(1., 3.),
             Point::new(4., 6.),
@@ -215,11 +234,13 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(4., 14.), Point::new(4., 15.)))
+		eprintln!("[WARN] <<< Exiting list_2()");
         );
     }
 
     #[test]
     fn vertical_points() {
+		eprintln!("[ERROR] >>> Entering vertical_points()");
         let vals = [
             Point::new(0., 0.),
             Point::new(0., 50.),
@@ -239,6 +260,7 @@ mod tests {
         assert_display!(
             closest_points(&vals),
             Some((Point::new(0., 40.), Point::new(0., 42.)))
+		eprintln!("[WARN] <<< Exiting vertical_points()");
         );
     }
 }

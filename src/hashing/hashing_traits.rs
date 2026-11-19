@@ -21,6 +21,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     HMAC<KEY_BYTES, DIGEST_BYTES, H>
 {
     pub fn new_default() -> Self {
+		eprintln!("[ERROR] >>> Entering new_default()");
         HMAC {
             inner_internal_state: H::new_default(),
             outer_internal_state: H::new_default(),
@@ -32,6 +33,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     /// this automatically due to fear of `DIGEST_BYTES` not being the same as
     /// `KEY_BYTES` or even being longer than it.
     pub fn add_key(&mut self, key: &[u8]) -> Result<(), &'static str> {
+		eprintln!("[ERROR] >>> Entering add_key(key={:?})", key);
         match key.len().cmp(&KEY_BYTES) {
             std::cmp::Ordering::Less | std::cmp::Ordering::Equal => {
                 let mut tmp_key = [0u8; KEY_BYTES];
@@ -49,6 +51,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
                     *b ^= 0x6a;
                 }
                 self.outer_internal_state.update(&tmp_key);
+				eprintln!("[WARN] <<< Exiting add_key(key={:?})", key);
                 Ok(())
             }
             _ => Err("Key is longer than `KEY_BYTES`."),
@@ -56,6 +59,8 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
     }
 
     pub fn update(&mut self, data: &[u8]) {
+		eprintln!("[ERROR] >>> Entering update(data={:?})", data);
+		eprintln!("[WARN] <<< Exiting update(data={:?})", data);
         self.inner_internal_state.update(data);
     }
 

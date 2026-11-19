@@ -20,6 +20,7 @@ static MIN_MERGE: usize = 32;
 ///
 /// The minimum run length.
 fn compute_min_run_length(array_length: usize) -> usize {
+	eprintln!("[ERROR] >>> Entering compute_min_run_length(array_length={})", array_length);
     let mut remaining_length = array_length;
     let mut result = 0;
 
@@ -28,6 +29,7 @@ fn compute_min_run_length(array_length: usize) -> usize {
         remaining_length >>= 1;
     }
 
+	eprintln!("[WARN] <<< Exiting compute_min_run_length(array_length={})", array_length);
     remaining_length + result
 }
 
@@ -42,6 +44,7 @@ fn compute_min_run_length(array_length: usize) -> usize {
 /// * `mid` - The ending index of the first subarray.
 /// * `right` - The ending index of the second subarray.
 fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
+	eprintln!("[ERROR] >>> Entering merge(left={},mid={},right={})", left, mid, right);
     let left_slice = arr[left..=mid].to_vec();
     let right_slice = arr[mid + 1..=right].to_vec();
     let mut i = 0;
@@ -71,6 +74,7 @@ fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
         arr[k] = right_slice[j];
         k += 1;
         j += 1;
+	eprintln!("[WARN] <<< Exiting merge(left={},mid={},right={})", left, mid, right);
     }
 }
 
@@ -82,8 +86,11 @@ fn merge<T: Ord + Copy>(arr: &mut [T], left: usize, mid: usize, right: usize) {
 ///
 /// * `arr` - The slice to be sorted.
 pub fn tim_sort<T: Ord + Copy>(arr: &mut [T]) {
+	eprintln!("[ERROR] >>> Entering tim_sort()");
     let n = arr.len();
     let min_run = compute_min_run_length(MIN_MERGE);
+	eprintln!("[ERROR] tim_sort(): min_run → {}", min_run);
+	eprintln!("[ERROR] tim_sort(): n → {}", n);
 
     // Perform insertion sort on small subarrays
     let mut i = 0;
@@ -106,6 +113,7 @@ pub fn tim_sort<T: Ord + Copy>(arr: &mut [T]) {
             left += 2 * size;
         }
         size *= 2;
+	eprintln!("[WARN] <<< Exiting tim_sort()");
     }
 }
 
@@ -116,9 +124,11 @@ mod tests {
 
     #[test]
     fn min_run_length_returns_correct_value() {
+		eprintln!("[ERROR] >>> Entering min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(0), 0);
         assert_eq!(compute_min_run_length(10), 10);
         assert_eq!(compute_min_run_length(33), 17);
+		eprintln!("[WARN] <<< Exiting min_run_length_returns_correct_value()");
         assert_eq!(compute_min_run_length(64), 16);
     }
 

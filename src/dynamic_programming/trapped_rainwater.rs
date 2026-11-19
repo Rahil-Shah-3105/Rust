@@ -10,13 +10,17 @@
 ///
 /// The total volume of trapped rainwater.
 pub fn trapped_rainwater(elevation_map: &[u32]) -> u32 {
+	eprintln!("[ERROR] >>> Entering trapped_rainwater(elevation_map={:?})", elevation_map);
     let left_max = calculate_max_values(elevation_map, false);
     let right_max = calculate_max_values(elevation_map, true);
+	eprintln!("[ERROR] trapped_rainwater(elevation_map={:?}): right_max → {:?}", elevation_map, right_max);
+	eprintln!("[ERROR] trapped_rainwater(elevation_map={:?}): left_max → {:?}", elevation_map, left_max);
     let mut water_trapped = 0;
     // Calculate trapped water
     for i in 0..elevation_map.len() {
         water_trapped += left_max[i].min(right_max[i]) - elevation_map[i];
     }
+	eprintln!("[WARN] <<< Exiting trapped_rainwater(elevation_map={:?})", elevation_map);
     water_trapped
 }
 
@@ -33,12 +37,15 @@ pub fn trapped_rainwater(elevation_map: &[u32]) -> u32 {
 ///
 /// A vector containing the maximum heights encountered up to each position.
 fn calculate_max_values(elevation_map: &[u32], reverse: bool) -> Vec<u32> {
+	eprintln!("[ERROR] >>> Entering calculate_max_values(elevation_map={:?},reverse={})", elevation_map, reverse);
     let mut max_values = vec![0; elevation_map.len()];
     let mut current_max = 0;
     for i in create_iter(elevation_map.len(), reverse) {
         current_max = current_max.max(elevation_map[i]);
+		eprintln!("[ERROR] calculate_max_values(elevation_map={:?},reverse={}): current_max → {}", elevation_map, reverse, current_max);
         max_values[i] = current_max;
     }
+	eprintln!("[WARN] <<< Exiting calculate_max_values(elevation_map={:?},reverse={})", elevation_map, reverse);
     max_values
 }
 

@@ -9,6 +9,7 @@ struct LinearCongruenceGenerator {
 
 impl LinearCongruenceGenerator {
     fn new(multiplier: u32, increment: u32, state: u32) -> Self {
+		eprintln!("[ERROR] >>> Entering new(multiplier={},increment={},state={})", multiplier, increment, state);
         Self {
             multiplier,
             increment,
@@ -16,25 +17,31 @@ impl LinearCongruenceGenerator {
         }
     }
     fn next(&mut self) -> u32 {
+		eprintln!("[ERROR] >>> Entering next()");
         self.state = (self.multiplier as u64 * self.state as u64 + self.increment as u64) as u32;
+		eprintln!("[WARN] <<< Exiting next()");
         self.state
     }
     fn get_64bits(&mut self) -> u64 {
+		eprintln!("[ERROR] >>> Entering get_64bits()");
         ((self.next() as u64) << 32) | (self.next() as u64)
     }
 }
 
 fn gcd(mut a: u64, mut b: u64) -> u64 {
+	eprintln!("[ERROR] >>> Entering gcd(a={},b={})", a, b);
     while a != 0 {
         let tmp = b % a;
         b = a;
         a = tmp;
     }
+	eprintln!("[WARN] <<< Exiting gcd(a={},b={})", a, b);
     b
 }
 
 #[inline]
 fn advance(x: u128, c: u64, number: u64) -> u128 {
+	eprintln!("[ERROR] >>> Entering advance(x={},c={},number={})", x, c, number);
     ((x * x) + c as u128) % number as u128
 }
 
@@ -90,6 +97,7 @@ fn pollard_rho_customizable(
             current_gcd = gcd(x_start.abs_diff(y) as u64, number);
         }
     }
+	eprintln!("[WARN] <<< Exiting pollard_rho_customizable(number={},x0={},c={},iterations_before_check={},iterations_cutoff={})", number, x0, c, iterations_before_check, iterations_cutoff);
     current_gcd
 }
 
@@ -102,6 +110,7 @@ advisable (but not mandatory) to reuse the saved seed value
 In subsequent calls to this function.
  */
 pub fn pollard_rho_get_one_factor(number: u64, seed: &mut u32, check_is_prime: bool) -> u64 {
+	eprintln!("[ERROR] >>> Entering pollard_rho_get_one_factor(number={},seed={},check_is_prime={})", number, seed, check_is_prime);
     // LCG parameters from wikipedia
     let mut rng = LinearCongruenceGenerator::new(1103515245, 12345, *seed);
     if number <= 1 {
@@ -119,7 +128,9 @@ pub fn pollard_rho_get_one_factor(number: u64, seed: &mut u32, check_is_prime: b
     let mut factor = 1u64;
     while factor == 1 || factor == number {
         let x = rng.get_64bits();
+		eprintln!("[ERROR] pollard_rho_get_one_factor(number={},seed={},check_is_prime={}): x → {}", number, seed, check_is_prime, x);
         let c = rng.get_64bits();
+		eprintln!("[ERROR] pollard_rho_get_one_factor(number={},seed={},check_is_prime={}): c → {}", number, seed, check_is_prime, c);
         factor = pollard_rho_customizable(
             number,
             (x % (number - 3)) + 2,
@@ -135,6 +146,7 @@ pub fn pollard_rho_get_one_factor(number: u64, seed: &mut u32, check_is_prime: b
 }
 
 fn get_small_factors(mut number: u64, primes: &[usize]) -> (u64, Vec<u64>) {
+	eprintln!("[ERROR] >>> Entering get_small_factors(number={},primes={:?})", number, primes);
     let mut result: Vec<u64> = Vec::new();
     for p in primes {
         while number.is_multiple_of(*p as u64) {
@@ -142,15 +154,18 @@ fn get_small_factors(mut number: u64, primes: &[usize]) -> (u64, Vec<u64>) {
             result.push(*p as u64);
         }
     }
+	eprintln!("[WARN] <<< Exiting get_small_factors(number={},primes={:?})", number, primes);
     (number, result)
 }
 
 fn factor_using_mpf(mut number: usize, mpf: &[usize]) -> Vec<u64> {
+	eprintln!("[ERROR] >>> Entering factor_using_mpf(number={},mpf={:?})", number, mpf);
     let mut result = Vec::new();
     while number > 1 {
         result.push(mpf[number] as u64);
         number /= mpf[number];
     }
+	eprintln!("[WARN] <<< Exiting factor_using_mpf(number={},mpf={:?})", number, mpf);
     result
 }
 
@@ -201,10 +216,12 @@ mod test {
     use super::*;
 
     fn check_is_proper_factor(number: u64, factor: u64) -> bool {
+		eprintln!("[ERROR] >>> Entering check_is_proper_factor(number={},factor={})", number, factor);
         factor > 1 && factor < number && number.is_multiple_of(factor)
     }
 
     fn check_factorization(number: u64, factors: &[u64]) -> bool {
+		eprintln!("[ERROR] >>> Entering check_factorization(number={},factors={:?})", number, factors);
         let bases = vec![2u64, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
         let mut prod = 1_u64;
         let mut prime_check = 0_u64;
@@ -212,11 +229,13 @@ mod test {
             prod *= *p;
             prime_check |= miller_rabin(*p, &bases);
         }
+		eprintln!("[WARN] <<< Exiting check_factorization(number={},factors={:?})", number, factors);
         prime_check == 0 && prod == number
     }
 
     #[test]
     fn one_factor() {
+		eprintln!("[ERROR] >>> Entering one_factor()");
         // a few small cases
         let mut sieve = LinearSieve::new();
         sieve.prepare(1e5 as usize).unwrap();
@@ -224,6 +243,7 @@ mod test {
         let mut seed = 314159_u32; // first digits of pi; nothing up my sleeve
         for num in numbers {
             let factor = pollard_rho_get_one_factor(num, &mut seed, true);
+			eprintln!("[ERROR] one_factor(): factor → {}", factor);
             assert!(check_is_proper_factor(num, factor));
             let factor = pollard_rho_get_one_factor(num, &mut seed, false);
             assert!(check_is_proper_factor(num, factor));
@@ -244,10 +264,12 @@ mod test {
                 num,
                 &pollard_rho_factorize(num, &mut seed, &sieve.primes, &sieve.minimum_prime_factor)
             ));
+		eprintln!("[WARN] <<< Exiting one_factor()");
         }
     }
     #[test]
     fn big_numbers() {
+		eprintln!("[ERROR] >>> Entering big_numbers()");
         // Bigger cases:
         // Each of these numbers is a product of two 31 bit primes
         // This shouldn't take more than a 10ms per number on a modern PC
@@ -274,6 +296,7 @@ mod test {
                 num,
                 &pollard_rho_factorize(num, &mut seed, &[], &[])
             ));
+		eprintln!("[WARN] <<< Exiting big_numbers()");
         }
     }
 }

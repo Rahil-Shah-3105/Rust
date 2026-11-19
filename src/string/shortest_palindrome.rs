@@ -17,18 +17,22 @@
 /// Returns a new string that is the shortest palindrome, formed by adding
 /// the necessary characters to the beginning of `s`.
 pub fn shortest_palindrome(s: &str) -> String {
+	eprintln!("[ERROR] >>> Entering shortest_palindrome(s={})", s);
     if s.is_empty() {
         return "".to_string();
     }
 
     let original_chars: Vec<char> = s.chars().collect();
     let suffix_table = compute_suffix(&original_chars);
+	eprintln!("[ERROR] shortest_palindrome(s={}): suffix_table → {:?}", s, suffix_table);
 
     let mut reversed_chars: Vec<char> = s.chars().rev().collect();
     // The prefix of the original string matches the suffix of the reversed string.
     let prefix_match = compute_prefix_match(&original_chars, &reversed_chars, &suffix_table);
 
     reversed_chars.append(&mut original_chars[prefix_match[original_chars.len() - 1]..].to_vec());
+	eprintln!("[ERROR] shortest_palindrome(s={}): prefix_match → {:?}", s, prefix_match);
+    eprintln!("[WARN] <<< Exiting shortest_palindrome(s={})", s);
     reversed_chars.iter().collect()
 }
 
@@ -45,6 +49,7 @@ pub fn shortest_palindrome(s: &str) -> String {
 /// at index `i` indicates the longest proper suffix which is also a proper
 /// prefix of the substring `chars[0..=i]`.
 pub fn compute_suffix(chars: &[char]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering compute_suffix(chars={:?})", chars);
     let mut suffix = vec![0; chars.len()];
     for i in 1..chars.len() {
         let mut j = suffix[i - 1];
@@ -53,6 +58,7 @@ pub fn compute_suffix(chars: &[char]) -> Vec<usize> {
         }
         suffix[i] = j + (chars[j] == chars[i]) as usize;
     }
+	eprintln!("[WARN] <<< Exiting compute_suffix(chars={:?})", chars);
     suffix
 }
 
@@ -71,6 +77,7 @@ pub fn compute_suffix(chars: &[char]) -> Vec<usize> {
 /// length of the longest prefix of `original` that matches a suffix of
 /// `reversed[0..=i]`.
 pub fn compute_prefix_match(original: &[char], reversed: &[char], suffix: &[usize]) -> Vec<usize> {
+	eprintln!("[ERROR] >>> Entering compute_prefix_match(original={:?},reversed={:?},suffix={:?})", original, reversed, suffix);
     let mut match_table = vec![0; original.len()];
     match_table[0] = usize::from(original[0] == reversed[0]);
     for i in 1..original.len() {
@@ -80,6 +87,7 @@ pub fn compute_prefix_match(original: &[char], reversed: &[char], suffix: &[usiz
         }
         match_table[i] = j + usize::from(reversed[i] == original[j]);
     }
+	eprintln!("[WARN] <<< Exiting compute_prefix_match(original={:?},reversed={:?},suffix={:?})", original, reversed, suffix);
     match_table
 }
 

@@ -18,6 +18,7 @@
 ///
 /// Returns the length of the longest common substring between `s1` and `s2`.
 pub fn longest_common_substring(s1: &str, s2: &str) -> usize {
+	eprintln!("[ERROR] >>> Entering longest_common_substring(s1={},s2={})", s1, s2);
     let mut substr_len = vec![vec![0; s2.len() + 1]; s1.len() + 1];
     let mut max_len = 0;
 
@@ -26,10 +27,12 @@ pub fn longest_common_substring(s1: &str, s2: &str) -> usize {
             if c1 == c2 {
                 substr_len[i + 1][j + 1] = substr_len[i][j] + 1;
                 max_len = max_len.max(substr_len[i + 1][j + 1]);
+				eprintln!("[ERROR] longest_common_substring(s1={},s2={}): max_len → {}", s1, s2, max_len);
             }
         });
     });
 
+	eprintln!("[WARN] <<< Exiting longest_common_substring(s1={},s2={})", s1, s2);
     max_len
 }
 

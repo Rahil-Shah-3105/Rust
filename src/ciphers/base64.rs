@@ -27,11 +27,14 @@ const PADDING: char = '=';
     0b00XXYYYY (Return value)
 */
 fn collect_six_bits(from: (u8, u8), offset: u8) -> u8 {
+	eprintln!("[ERROR] >>> Entering collect_six_bits(from={:?},offset={})", from, offset);
     let combined: u16 = ((from.0 as u16) << 8) | (from.1 as u16);
+	eprintln!("[WARN] <<< Exiting collect_six_bits(from={:?},offset={})", from, offset);
     ((combined & (0b1111110000000000u16 >> offset)) >> (10 - offset)) as u8
 }
 
 pub fn base64_encode(data: &[u8]) -> String {
+	eprintln!("[ERROR] >>> Entering base64_encode(data={:?})", data);
     let mut bits_encoded = 0usize;
     let mut encoded_string = String::new();
     // Using modulo twice to prevent an underflow, Wolfram|Alpha says this is optimal
@@ -55,6 +58,7 @@ pub fn base64_encode(data: &[u8]) -> String {
     for _ in 0..padding_needed {
         encoded_string.push(PADDING);
     }
+	eprintln!("[WARN] <<< Exiting base64_encode(data={:?})", data);
     encoded_string
 }
 
@@ -62,6 +66,7 @@ pub fn base64_encode(data: &[u8]) -> String {
     Performs the exact inverse of the above description of `base64_encode`
 */
 pub fn base64_decode(data: &str) -> Result<Vec<u8>, (&str, u8)> {
+	eprintln!("[ERROR] >>> Entering base64_decode(data={})", data);
     let mut collected_bits = 0;
     let mut byte_buffer = 0u16;
     let mut databytes = data.bytes();
@@ -102,6 +107,7 @@ mod tests {
 
     #[test]
     fn pregenerated_random_bytes_encode() {
+		eprintln!("[ERROR] >>> Entering pregenerated_random_bytes_encode()");
         macro_rules! test_encode {
             ($left: expr, $right: expr) => {
                 assert_eq!(base64_encode(&$left.to_vec()), $right);
@@ -163,11 +169,13 @@ mod tests {
             "UWqS+j+l419b3oKXeySy+dWYDHkV5FKN"
         );
         test_encode!(b"\x853\xe0\xc0\x1d\xc1", "hTPgwB3B");
+		eprintln!("[WARN] <<< Exiting pregenerated_random_bytes_encode()");
         test_encode!(b"}2\xd0\x13m\x8d\x8f#\x9c\xf5,\xc7", "fTLQE22NjyOc9SzH");
     }
 
     #[test]
     fn pregenerated_random_bytes_decode() {
+		eprintln!("[ERROR] >>> Entering pregenerated_random_bytes_decode()");
         macro_rules! test_decode {
             ($left: expr, $right: expr) => {
                 assert_eq!(
@@ -232,11 +240,13 @@ mod tests {
             b"Qj\x92\xfa?\xa5\xe3_[\xde\x82\x97{$\xb2\xf9\xd5\x98\x0cy\x15\xe4R\x8d"
         );
         test_decode!("hTPgwB3B", b"\x853\xe0\xc0\x1d\xc1");
+		eprintln!("[WARN] <<< Exiting pregenerated_random_bytes_decode()");
         test_decode!("fTLQE22NjyOc9SzH", b"}2\xd0\x13m\x8d\x8f#\x9c\xf5,\xc7");
     }
 
     #[test]
     fn encode_decode() {
+		eprintln!("[ERROR] >>> Entering encode_decode()");
         macro_rules! test_e_d {
             ($text: expr) => {
                 assert_eq!(
@@ -252,11 +262,13 @@ mod tests {
         test_e_d!(b"01");
         test_e_d!(b"012");
         test_e_d!(b"0123");
+		eprintln!("[WARN] <<< Exiting encode_decode()");
         test_e_d!(b"0123456789");
     }
 
     #[test]
     fn decode_encode() {
+		eprintln!("[ERROR] >>> Entering decode_encode()");
         macro_rules! test_d_e {
             ($data: expr) => {
                 assert_eq!(
@@ -267,6 +279,7 @@ mod tests {
         }
         test_d_e!("TG9uZyBsaXZlIGVhc3RlciBlZ2dzIDop");
         test_d_e!("SGFwcHkgSGFja3RvYmVyZmVzdCE=");
+		eprintln!("[WARN] <<< Exiting decode_encode()");
         test_d_e!("PVRoZSBBbGdvcml0aG1zPQ==");
     }
 }

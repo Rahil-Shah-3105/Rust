@@ -13,12 +13,15 @@ use std::cmp::min;
 ///   - time complexity: O(n^2),
 ///   - space complexity: O(n),
 pub fn maximal_square(matrix: &mut [Vec<i32>]) -> i32 {
+	eprintln!("[ERROR] >>> Entering maximal_square(matrix={:?})", matrix);
     if matrix.is_empty() {
         return 0;
     }
 
     let rows = matrix.len();
+	eprintln!("[ERROR] maximal_square(matrix={:?}): rows → {}", matrix, rows);
     let cols = matrix[0].len();
+	eprintln!("[ERROR] maximal_square(matrix={:?}): cols → {}", matrix, cols);
     let mut result: i32 = 0;
 
     for row in 0..rows {
@@ -38,6 +41,7 @@ pub fn maximal_square(matrix: &mut [Vec<i32>]) -> i32 {
         }
     }
 
+    eprintln!("[WARN] <<< Exiting maximal_square(matrix={:?})", matrix);
     result * result
 }
 
@@ -47,6 +51,7 @@ mod tests {
 
     #[test]
     fn test() {
+		eprintln!("[ERROR] >>> Entering test()");
         assert_eq!(maximal_square(&mut []), 0);
 
         let mut matrix = vec![vec![0, 1], vec![1, 0]];
@@ -61,6 +66,7 @@ mod tests {
         assert_eq!(maximal_square(&mut matrix), 4);
 
         let mut matrix = vec![vec![0]];
+		eprintln!("[WARN] <<< Exiting test()");
         assert_eq!(maximal_square(&mut matrix), 0);
     }
 }

@@ -19,6 +19,7 @@ pub struct DecrementalConnectivity {
 impl DecrementalConnectivity {
     //expects the parent of a root to be itself
     pub fn new(adjacent: Vec<HashSet<usize>>) -> Result<Self, String> {
+		eprintln!("[ERROR] >>> Entering new(adjacent={:?})", adjacent);
         let n = adjacent.len();
         if !is_forest(&adjacent) {
             return Err("input graph is not a forest!".to_string());
@@ -35,6 +36,7 @@ impl DecrementalConnectivity {
     }
 
     pub fn connected(&self, u: usize, v: usize) -> Option<bool> {
+		eprintln!("[ERROR] >>> Entering connected(u={},v={})", u, v);
         match (self.component.get(u), self.component.get(v)) {
             (Some(a), Some(b)) => Some(a == b),
             _ => None,
@@ -42,6 +44,7 @@ impl DecrementalConnectivity {
     }
 
     pub fn delete(&mut self, u: usize, v: usize) {
+		eprintln!("[ERROR] >>> Entering delete(u={},v={})", u, v);
         if !self.adjacent[u].contains(&v) || self.component[u] != self.component[v] {
             panic!("delete called on the edge ({u}, {v}) which doesn't exist");
         }
@@ -64,10 +67,12 @@ impl DecrementalConnectivity {
             self.dfs_step(&mut queue, self.dfs_id);
             self.component[current] = self.count;
         }
+		eprintln!("[WARN] <<< Exiting delete(u={},v={})", u, v);
         self.count += 1;
     }
 
     fn calc_component(&mut self) -> Vec<usize> {
+		eprintln!("[ERROR] >>> Entering calc_component()");
         let mut visited: Vec<bool> = vec![false; self.adjacent.len()];
         let mut comp: Vec<usize> = vec![0; self.adjacent.len()];
 
@@ -87,10 +92,12 @@ impl DecrementalConnectivity {
             }
             self.count += 1;
         }
+		eprintln!("[WARN] <<< Exiting calc_component()");
         comp
     }
 
     fn is_smaller(&mut self, u: usize, v: usize) -> bool {
+		eprintln!("[ERROR] >>> Entering is_smaller(u={},v={})", u, v);
         let mut u_queue: Vec<usize> = vec![u];
         let u_id = self.dfs_id;
         self.visited[v] = u_id;
@@ -106,10 +113,12 @@ impl DecrementalConnectivity {
             self.dfs_step(&mut u_queue, u_id);
             self.dfs_step(&mut v_queue, v_id);
         }
+		eprintln!("[WARN] <<< Exiting is_smaller(u={},v={})", u, v);
         u_queue.is_empty()
     }
 
     fn dfs_step(&mut self, queue: &mut Vec<usize>, dfs_id: usize) {
+		eprintln!("[ERROR] >>> Entering dfs_step(queue={:?},dfs_id={})", queue, dfs_id);
         let u = queue.pop().unwrap();
         self.visited[u] = dfs_id;
         for &v in self.adjacent[u].iter() {
@@ -117,6 +126,7 @@ impl DecrementalConnectivity {
                 continue;
             }
             queue.push(v);
+		eprintln!("[WARN] <<< Exiting dfs_step(queue={:?},dfs_id={})", queue, dfs_id);
         }
     }
 }
@@ -124,6 +134,7 @@ impl DecrementalConnectivity {
 // checks whether the given graph is a forest
 // also checks for all adjacent vertices a,b if adjacent[a].contains(b) && adjacent[b].contains(a)
 fn is_forest(adjacent: &Vec<HashSet<usize>>) -> bool {
+	eprintln!("[ERROR] >>> Entering is_forest(adjacent={:?})", adjacent);
     let mut visited = vec![false; adjacent.len()];
     for node in 0..adjacent.len() {
         if visited[node] {
@@ -142,9 +153,11 @@ fn has_cycle(
     node: usize,
     parent: usize,
 ) -> bool {
+	eprintln!("[ERROR] >>> Entering has_cycle(adjacent={:?},visited={:?},node={},parent={})", adjacent, visited, node, parent);
     visited[node] = true;
     for &neighbour in adjacent[node].iter() {
         if !adjacent[neighbour].contains(&node) {
+			eprintln!("[WARN] <<< Exiting has_cycle(adjacent={:?},visited={:?},node={},parent={})", adjacent, visited, node, parent);
             panic!("the given graph does not strictly contain bidirectional edges\n {node} -> {neighbour} exists, but the other direction does not");
         }
         if !visited[neighbour] {
@@ -172,6 +185,7 @@ mod tests {
     //        4   5   6
     #[test]
     fn construction_test() {
+		eprintln!("[ERROR] >>> Entering construction_test()");
         let mut adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -189,11 +203,13 @@ mod tests {
         // add a cycle to the tree
         adjacent[2].insert(4);
         adjacent[4].insert(2);
+		eprintln!("[WARN] <<< Exiting construction_test()");
         assert!(super::DecrementalConnectivity::new(adjacent.clone()).is_err());
     }
     #[test]
     #[should_panic(expected = "2 -> 4 exists")]
     fn non_bidirectional_test() {
+		eprintln!("[ERROR] >>> Entering non_bidirectional_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -207,12 +223,14 @@ mod tests {
         ];
 
         // should panic now since our graph is not bidirectional
+		eprintln!("[WARN] <<< Exiting non_bidirectional_test()");
         super::DecrementalConnectivity::new(adjacent).unwrap();
     }
 
     #[test]
     #[should_panic(expected = "delete called on the edge (2, 4)")]
     fn delete_panic_test() {
+		eprintln!("[ERROR] >>> Entering delete_panic_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -225,11 +243,13 @@ mod tests {
             HashSet::from([7]),
         ];
         let mut dec_con = super::DecrementalConnectivity::new(adjacent).unwrap();
+		eprintln!("[WARN] <<< Exiting delete_panic_test()");
         dec_con.delete(2, 4);
     }
 
     #[test]
     fn query_test() {
+		eprintln!("[ERROR] >>> Entering query_test()");
         let adjacent = vec![
             HashSet::from([0, 1, 2, 3]),
             HashSet::from([0, 4]),
@@ -262,6 +282,7 @@ mod tests {
 
         let mut dec_con3 = super::DecrementalConnectivity::new(adjacent).unwrap();
         dec_con3.delete(1, 4);
+		eprintln!("[WARN] <<< Exiting query_test()");
         assert!(!dec_con3.connected(4, 1).unwrap());
     }
 }

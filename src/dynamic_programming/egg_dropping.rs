@@ -14,6 +14,7 @@
 /// * `Some(usize)` - The minimum number of drops required if the number of eggs is greater than 0.
 /// * `None` - If the number of eggs is 0.
 pub fn egg_drop(eggs: usize, floors: usize) -> Option<usize> {
+	eprintln!("[ERROR] >>> Entering egg_drop(eggs={},floors={})", eggs, floors);
     if eggs == 0 {
         return None;
     }

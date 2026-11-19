@@ -5,6 +5,7 @@
 
 pub fn recursive_lucas_number(n: u32) -> u32 {
 	eprintln!("[ERROR] >>> Entering recursive_lucas_number(n={})", n);
+	eprintln!("[WARN] <<< Exiting recursive_lucas_number(n={})", n);
     match n {
         0 => 2,
         1 => 1,

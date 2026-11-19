@@ -45,6 +45,7 @@ const SIGMA: [[usize; 16]; 10] = [
 #[inline]
 const fn blank_block() -> Block {
 	eprintln!("[ERROR] >>> Entering blank_block()");
+	eprintln!("[WARN] <<< Exiting blank_block()");
     [0u64; BB / U64BYTES]
 }
 
@@ -59,6 +60,7 @@ fn add(a: &mut Word, b: Word) {
 #[inline]
 const fn ceil(dividend: usize, divisor: usize) -> usize {
 	eprintln!("[ERROR] >>> Entering ceil(dividend={},divisor={})", dividend, divisor);
+	eprintln!("[WARN] <<< Exiting ceil(dividend={},divisor={})", dividend, divisor);
     (dividend / divisor) + (!dividend.is_multiple_of(divisor) as usize)
 }
 
@@ -74,8 +76,8 @@ fn g(v: &mut [Word; 16], a: usize, b: usize, c: usize, d: usize, x: Word, y: Wor
         let v_d = v[d];
         add(&mut v[c], v_d);
 
-        v[b] = (v[b] ^ v[c]).rotate_right(r[1]);
 	eprintln!("[WARN] <<< Exiting g(a={},b={},c={},d={})", a, b, c, d);
+        v[b] = (v[b] ^ v[c]).rotate_right(r[1]);
     }
 }
 
@@ -139,8 +141,8 @@ fn f(h: &mut [Word; 8], m: Block, t: u128, flag: bool) {
     }
 
     for (i, n) in h.iter_mut().enumerate() {
-        *n ^= v[i] ^ v[i + 8];
 	eprintln!("[WARN] <<< Exiting f(t={},flag={})", t, flag);
+        *n ^= v[i] ^ v[i + 8];
     }
 }
 

@@ -66,12 +66,14 @@ impl KnightTour {
     /// Returns the width of the chessboard.
     fn size_x(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering size_x()");
+		eprintln!("[WARN] <<< Exiting size_x()");
         self.board.len()
     }
 
     /// Returns the height of the chessboard.
     fn size_y(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering size_y()");
+		eprintln!("[WARN] <<< Exiting size_y()");
         self.board[0].len()
     }
 
@@ -87,6 +89,7 @@ impl KnightTour {
     /// A boolean indicating whether the position is safe to move to.
     fn is_safe(&self, x: isize, y: isize) -> bool {
 		eprintln!("[ERROR] >>> Entering is_safe(x={},y={})", x, y);
+		eprintln!("[WARN] <<< Exiting is_safe(x={},y={})", x, y);
         x >= 0
             && y >= 0
             && x < self.size_x() as isize

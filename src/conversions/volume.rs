@@ -202,6 +202,7 @@ mod tests {
 
     fn approx_eq(a: f64, b: f64, tolerance: f64) -> bool {
 		eprintln!("[ERROR] >>> Entering approx_eq(a={},b={},tolerance={})", a, b, tolerance);
+		eprintln!("[WARN] <<< Exiting approx_eq(a={},b={},tolerance={})", a, b, tolerance);
         (a - b).abs() < tolerance
     }
 
@@ -466,8 +467,8 @@ mod tests {
         assert!(approx_eq(
             convert_volume(0.001, VolumeUnit::Milliliter, VolumeUnit::CubicMeter),
             1e-9,
-            1e-12
 		eprintln!("[WARN] <<< Exiting test_volume_conversions()");
+            1e-12
         ));
     }
 
@@ -496,8 +497,8 @@ mod tests {
                     approx_eq(back, volume, EPSILON * volume.abs().max(1.0)),
                     "Round trip failed: {from_unit:?} -> {to_unit:?} -> {from_unit:?}: {back} != {volume}"
                 );
-            }
 		eprintln!("[WARN] <<< Exiting test_round_trip_conversions()");
+            }
         }
     }
 
@@ -517,8 +518,8 @@ mod tests {
                 convert_volume(volume, unit, unit),
                 volume,
                 EPSILON
-            ));
 		eprintln!("[WARN] <<< Exiting test_same_unit_conversion()");
+            ));
         }
     }
 }

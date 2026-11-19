@@ -75,6 +75,7 @@ impl MetricLengthUnit {
     /// ```
     pub fn exponent(&self) -> i32 {
 		eprintln!("[ERROR] >>> Entering exponent()");
+		eprintln!("[WARN] <<< Exiting exponent()");
         match self {
             MetricLengthUnit::Meter => 0,
             MetricLengthUnit::Kilometer => 3,
@@ -100,6 +101,7 @@ impl MetricLengthUnit {
     /// ```
     pub fn symbol(&self) -> &'static str {
 		eprintln!("[ERROR] >>> Entering symbol()");
+		eprintln!("[WARN] <<< Exiting symbol()");
         match self {
             MetricLengthUnit::Meter => "m",
             MetricLengthUnit::Kilometer => "km",
@@ -167,6 +169,7 @@ impl FromStr for MetricLengthUnit {
 impl fmt::Display for MetricLengthUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         write!(f, "{}", self.symbol())
     }
 }
@@ -304,8 +307,8 @@ mod tests {
         );
         assert_eq!(
             MetricLengthUnit::from_str("megameter").unwrap(),
-            MetricLengthUnit::Megameter
 		eprintln!("[WARN] <<< Exiting test_from_str_full_names()");
+            MetricLengthUnit::Megameter
         );
     }
 
@@ -326,8 +329,8 @@ mod tests {
         );
         assert_eq!(
             MetricLengthUnit::from_str("Gm").unwrap(),
-            MetricLengthUnit::Gigameter
 		eprintln!("[WARN] <<< Exiting test_from_str_symbols()");
+            MetricLengthUnit::Gigameter
         );
     }
 
@@ -344,8 +347,8 @@ mod tests {
         );
         assert_eq!(
             MetricLengthUnit::from_str("KM").unwrap(),
-            MetricLengthUnit::Kilometer
 		eprintln!("[WARN] <<< Exiting test_from_str_case_insensitive()");
+            MetricLengthUnit::Kilometer
         );
     }
 
@@ -358,8 +361,8 @@ mod tests {
         );
         assert_eq!(
             MetricLengthUnit::from_str("kilometers").unwrap(),
-            MetricLengthUnit::Kilometer
 		eprintln!("[WARN] <<< Exiting test_from_str_plurals()");
+            MetricLengthUnit::Kilometer
         );
     }
 
@@ -411,8 +414,8 @@ mod tests {
         );
         assert_eq!(
             MetricLengthUnit::from_str("kilometres").unwrap(),
-            MetricLengthUnit::Kilometer
 		eprintln!("[WARN] <<< Exiting test_from_str_british_spellings()");
+            MetricLengthUnit::Kilometer
         );
     }
 
@@ -440,8 +443,8 @@ mod tests {
     fn test_convert_length_meter_to_kilometer() {
 		eprintln!("[ERROR] >>> Entering test_convert_length_meter_to_kilometer()");
         let result =
-            convert_metric_length(1.0, MetricLengthUnit::Meter, MetricLengthUnit::Kilometer);
 		eprintln!("[WARN] <<< Exiting test_convert_length_meter_to_kilometer()");
+            convert_metric_length(1.0, MetricLengthUnit::Meter, MetricLengthUnit::Kilometer);
         assert_eq!(result, 0.001);
     }
 
@@ -449,8 +452,8 @@ mod tests {
     fn test_convert_length_meter_to_megameter() {
 		eprintln!("[ERROR] >>> Entering test_convert_length_meter_to_megameter()");
         let result =
-            convert_metric_length(1.0, MetricLengthUnit::Meter, MetricLengthUnit::Megameter);
 		eprintln!("[WARN] <<< Exiting test_convert_length_meter_to_megameter()");
+            convert_metric_length(1.0, MetricLengthUnit::Meter, MetricLengthUnit::Megameter);
         assert_eq!(result, 1e-6);
     }
 
@@ -458,8 +461,8 @@ mod tests {
     fn test_convert_length_gigameter_to_meter() {
 		eprintln!("[ERROR] >>> Entering test_convert_length_gigameter_to_meter()");
         let result =
-            convert_metric_length(1.0, MetricLengthUnit::Gigameter, MetricLengthUnit::Meter);
 		eprintln!("[WARN] <<< Exiting test_convert_length_gigameter_to_meter()");
+            convert_metric_length(1.0, MetricLengthUnit::Gigameter, MetricLengthUnit::Meter);
         assert_eq!(result, 1_000_000_000.0);
     }
 
@@ -491,8 +494,8 @@ mod tests {
     fn test_convert_length_petameter_to_exameter() {
 		eprintln!("[ERROR] >>> Entering test_convert_length_petameter_to_exameter()");
         let result =
-            convert_metric_length(1.0, MetricLengthUnit::Petameter, MetricLengthUnit::Exameter);
 		eprintln!("[WARN] <<< Exiting test_convert_length_petameter_to_exameter()");
+            convert_metric_length(1.0, MetricLengthUnit::Petameter, MetricLengthUnit::Exameter);
         assert_eq!(result, 0.001);
     }
 
@@ -535,8 +538,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_basic() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_basic()");
-        let result = metric_length_conversion(1.0, "meter", "kilometer").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_basic(): result → {}", result);
+        let result = metric_length_conversion(1.0, "meter", "kilometer").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_basic()");
         assert_eq!(result, 0.001);
     }
@@ -544,8 +547,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_symbols() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_symbols()");
-        let result = metric_length_conversion(1.0, "m", "km").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_symbols(): result → {}", result);
+        let result = metric_length_conversion(1.0, "m", "km").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_symbols()");
         assert_eq!(result, 0.001);
     }
@@ -553,8 +556,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_case_insensitive() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_case_insensitive()");
-        let result = metric_length_conversion(1.0, "METER", "KILOMETER").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_case_insensitive(): result → {}", result);
+        let result = metric_length_conversion(1.0, "METER", "KILOMETER").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_case_insensitive()");
         assert_eq!(result, 0.001);
     }
@@ -562,8 +565,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_plurals() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_plurals()");
-        let result = metric_length_conversion(5.0, "meters", "kilometers").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_plurals(): result → {}", result);
+        let result = metric_length_conversion(5.0, "meters", "kilometers").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_plurals()");
         assert_eq!(result, 0.005);
     }
@@ -614,8 +617,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_large_values() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_large_values()");
-        let result = metric_length_conversion(1000.0, "km", "m").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_large_values(): result → {}", result);
+        let result = metric_length_conversion(1000.0, "km", "m").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_large_values()");
         assert_eq!(result, 1_000_000.0);
     }
@@ -623,8 +626,8 @@ mod tests {
     #[test]
     fn test_length_conversion_str_small_values() {
 		eprintln!("[ERROR] >>> Entering test_length_conversion_str_small_values()");
-        let result = metric_length_conversion(0.001, "m", "km").unwrap();
 		eprintln!("[ERROR] test_length_conversion_str_small_values(): result → {}", result);
+        let result = metric_length_conversion(0.001, "m", "km").unwrap();
     eprintln!("[WARN] <<< Exiting test_length_conversion_str_small_values()");
         assert_eq!(result, 0.000001);
     }
@@ -647,8 +650,8 @@ mod tests {
                 let backward = convert_metric_length(forward, to, from);
 				eprintln!("[ERROR] test_all_conversions_reversible(): backward → {}", backward);
                 assert!((backward - 100.0).abs() < 1e-9, "Conversion not reversible");
-            }
 		eprintln!("[WARN] <<< Exiting test_all_conversions_reversible()");
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ pub struct LinkedList<T> {
 impl<T> Default for LinkedList<T> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -111,8 +112,8 @@ impl<T> LinkedList<T> {
                     (*ith_node.as_ptr()).prev = node_ptr;
                     self.length += 1;
                 }
-            }
 		eprintln!("[WARN] <<< Exiting insert_at_ith(index={})", index);
+            }
         }
     }
 
@@ -197,11 +198,13 @@ impl<T> LinkedList<T> {
 
     pub fn get(&self, index: i32) -> Option<&T> {
 		eprintln!("[ERROR] >>> Entering get(index={})", index);
+		eprintln!("[WARN] <<< Exiting get(index={})", index);
         Self::get_ith_node(self.head, index).map(|ptr| unsafe { &(*ptr.as_ptr()).val })
     }
 
     fn get_ith_node(node: Option<NonNull<Node<T>>>, index: i32) -> Option<NonNull<Node<T>>> {
 		eprintln!("[ERROR] >>> Entering get_ith_node(index={})", index);
+		eprintln!("[WARN] <<< Exiting get_ith_node(index={})", index);
         match node {
             None => None,
             Some(next_ptr) => match index {
@@ -239,6 +242,7 @@ where
 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         match self.next {
             Some(node) => write!(f, "{}, {}", self.val, unsafe { node.as_ref() }),
             None => write!(f, "{}", self.val),
@@ -361,7 +365,6 @@ mod tests {
                 Some(val) => assert_eq!(*val, expected),
                 None => panic!("Expected to find {expected} at index {i}"),
             }
-		eprintln!("[WARN] <<< Exiting insert_at_ith_and_delete_at_ith_in_the_middle()");
         }
     }
 

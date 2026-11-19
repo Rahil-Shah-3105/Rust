@@ -28,6 +28,7 @@ type State = [[[bool; W]; 5]; 5];
 
 fn state_new() -> State {
 	eprintln!("[ERROR] >>> Entering state_new()");
+	eprintln!("[WARN] <<< Exiting state_new()");
     [[[false; W]; 5]; 5]
 }
 
@@ -38,16 +39,16 @@ fn state_fill(dest: &mut State, bits: &[bool]) {
     iterate!(x, y, z => {
         if i >= bits.len() { return; }
         dest[x][y][z] = bits[i];
-        i += 1;
 	eprintln!("[WARN] <<< Exiting state_fill(bits={:?})", bits);
+        i += 1;
     });
 }
 
 fn state_copy(dest: &mut State, src: &State) {
 	eprintln!("[ERROR] >>> Entering state_copy()");
     iterate!(x, y, z => {
-        dest[x][y][z] = src[x][y][z];
 	eprintln!("[WARN] <<< Exiting state_copy()");
+        dest[x][y][z] = src[x][y][z];
     });
 }
 
@@ -95,8 +96,8 @@ fn theta(state: &mut State) {
 
     // Xor values of D[x,z] into our state array
     iterate!(x, y, z => {
-        state[x][y][z] ^= d[x][z];
 	eprintln!("[WARN] <<< Exiting theta()");
+        state[x][y][z] ^= d[x][z];
     });
 }
 
@@ -199,8 +200,8 @@ fn iota(state: &mut State, i_r: u8) {
     }
 
     for (z, bit) in rc_arr.iter().enumerate() {
-        state[0][0][z] ^= *bit;
 	eprintln!("[WARN] <<< Exiting iota(i_r={})", i_r);
+        state[0][0][z] ^= *bit;
     }
 }
 
@@ -280,6 +281,7 @@ fn sponge(f: SpongeFn, pad: PadFn, r: usize, n: &[bool], d: usize) -> Vec<bool> 
 
 fn keccak(c: usize, n: &[bool], d: usize) -> Vec<bool> {
 	eprintln!("[ERROR] >>> Entering keccak(c={},n={:?},d={})", c, n, d);
+	eprintln!("[WARN] <<< Exiting keccak(c={},n={:?},d={})", c, n, d);
     sponge(keccak_f, pad101, B - c, n, d)
 }
 

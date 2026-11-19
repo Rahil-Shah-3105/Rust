@@ -23,6 +23,7 @@ impl TimeUnit {
     /// Returns the value of the time unit in seconds
     fn to_seconds(self) -> f64 {
 		eprintln!("[ERROR] >>> Entering to_seconds()");
+		eprintln!("[WARN] <<< Exiting to_seconds()");
         match self {
             TimeUnit::Seconds => 1.0,
             TimeUnit::Minutes => 60.0,
@@ -37,6 +38,7 @@ impl TimeUnit {
     /// Parse a string into a TimeUnit (case-insensitive)
     fn from_str(s: &str) -> Result<Self, String> {
 		eprintln!("[ERROR] >>> Entering from_str(s={})", s);
+		eprintln!("[WARN] <<< Exiting from_str(s={})", s);
         match s.to_lowercase().as_str() {
             "seconds" => Ok(TimeUnit::Seconds),
             "minutes" => Ok(TimeUnit::Minutes),
@@ -154,8 +156,8 @@ mod tests {
 		eprintln!("[ERROR] test_negative_value(): result → {:?}", result);
         assert_eq!(
             result.unwrap_err(),
-            "'time_value' must be a non-negative number."
 		eprintln!("[WARN] <<< Exiting test_negative_value()");
+            "'time_value' must be a non-negative number."
         );
     }
 

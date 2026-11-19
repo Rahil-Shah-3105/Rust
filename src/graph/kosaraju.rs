@@ -8,6 +8,7 @@ pub struct Graph {
 impl Graph {
     pub fn new(vertices: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new(vertices={})", vertices);
+		eprintln!("[WARN] <<< Exiting new(vertices={})", vertices);
         Graph {
             vertices,
             adj_list: vec![vec![]; vertices],
@@ -41,8 +42,8 @@ impl Graph {
         for &neighbor in &self.transpose_adj_list[node] {
             if !visited[neighbor] {
                 self.dfs_scc(neighbor, visited, scc);
-            }
 		eprintln!("[WARN] <<< Exiting dfs_scc(node={},visited={:?},scc={:?})", node, visited, scc);
+            }
         }
     }
 }
@@ -162,8 +163,8 @@ mod tests {
 		eprintln!("[ERROR] test_kosaraju_no_scc(): sccs → {:?}", sccs);
         assert_eq!(sccs.len(), 4);
         for (i, _) in sccs.iter().enumerate().take(vertices) {
-            assert_eq!(sccs[i], vec![i]);
 		eprintln!("[WARN] <<< Exiting test_kosaraju_no_scc()");
+            assert_eq!(sccs[i], vec![i]);
         }
     }
 

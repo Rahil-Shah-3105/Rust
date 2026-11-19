@@ -8,6 +8,7 @@ pub struct HashTable<K, V> {
 impl<K: Hashable + std::cmp::PartialEq, V> Default for HashTable<K, V> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -82,6 +83,7 @@ mod tests {
     impl Hashable for TestKey {
         fn hash(&self) -> usize {
 			eprintln!("[ERROR] >>> Entering hash()");
+			eprintln!("[WARN] <<< Exiting hash()");
             self.0
         }
     }
@@ -138,8 +140,8 @@ mod tests {
 
         for i in 0..10 {
             let result = hash_table.search(TestKey(i));
-            assert_eq!(result, Some(&TestKey(i + 100)));
 		eprintln!("[WARN] <<< Exiting test_multiple_inserts_and_searches()");
+            assert_eq!(result, Some(&TestKey(i + 100)));
         }
     }
 

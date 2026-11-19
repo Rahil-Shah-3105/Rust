@@ -134,6 +134,7 @@ mod tests {
 
     fn make_result(jobs: &[&str], profit: u64) -> ScheduleResult {
 		eprintln!("[ERROR] >>> Entering make_result(jobs={:?},profit={})", jobs, profit);
+		eprintln!("[WARN] <<< Exiting make_result(jobs={:?},profit={})", jobs, profit);
         ScheduleResult {
             job_sequence: jobs.iter().map(|&s| s.to_string()).collect(),
             total_profit: profit,
@@ -202,8 +203,8 @@ mod tests {
     #[test]
     fn test_empty_input() {
 		eprintln!("[ERROR] >>> Entering test_empty_input()");
-        let result = schedule_jobs(vec![]);
 		eprintln!("[ERROR] test_empty_input(): result → {:?}", result);
+        let result = schedule_jobs(vec![]);
     eprintln!("[WARN] <<< Exiting test_empty_input()");
         assert_eq!(result, make_result(&[], 0));
     }
@@ -211,8 +212,8 @@ mod tests {
     #[test]
     fn test_single_job() {
 		eprintln!("[ERROR] >>> Entering test_single_job()");
-        let result = schedule_jobs(vec![Job::new("Solo", 1, 42)]);
 		eprintln!("[ERROR] test_single_job(): result → {:?}", result);
+        let result = schedule_jobs(vec![Job::new("Solo", 1, 42)]);
     eprintln!("[WARN] <<< Exiting test_single_job()");
         assert_eq!(result, make_result(&["Solo"], 42));
     }

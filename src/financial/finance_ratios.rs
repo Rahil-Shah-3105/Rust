@@ -2,21 +2,25 @@
 // and Earnings per Sale (EPS)
 pub fn return_on_investment(gain: f64, cost: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering return_on_investment(gain={},cost={})", gain, cost);
+	eprintln!("[WARN] <<< Exiting return_on_investment(gain={},cost={})", gain, cost);
     (gain - cost) / cost
 }
 
 pub fn debt_to_equity(debt: f64, equity: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering debt_to_equity(debt={},equity={})", debt, equity);
+	eprintln!("[WARN] <<< Exiting debt_to_equity(debt={},equity={})", debt, equity);
     debt / equity
 }
 
 pub fn gross_profit_margin(revenue: f64, cost: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering gross_profit_margin(revenue={},cost={})", revenue, cost);
+	eprintln!("[WARN] <<< Exiting gross_profit_margin(revenue={},cost={})", revenue, cost);
     (revenue - cost) / revenue
 }
 
 pub fn earnings_per_sale(net_income: f64, pref_dividend: f64, share_avg: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering earnings_per_sale(net_income={},pref_dividend={},share_avg={})", net_income, pref_dividend, share_avg);
+	eprintln!("[WARN] <<< Exiting earnings_per_sale(net_income={},pref_dividend={},share_avg={})", net_income, pref_dividend, share_avg);
     (net_income - pref_dividend) / share_avg
 }
 

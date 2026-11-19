@@ -83,8 +83,8 @@ mod tests {
 
         assert_eq!(result.len(), expected.len());
         for (r, e) in result.iter().zip(expected.iter()) {
-            assert!(approx_eq(*r, *e), "Expected {e}, got {r}");
 		eprintln!("[WARN] <<< Exiting test_basic_ema()");
+            assert!(approx_eq(*r, *e), "Expected {e}, got {r}");
         }
     }
 
@@ -109,8 +109,8 @@ mod tests {
         let prices = vec![42.0];
         let result: Vec<f64> = exponential_moving_average(prices.into_iter(), 3)
             .unwrap()
-            .collect();
 		eprintln!("[WARN] <<< Exiting test_single_price()");
+            .collect();
         assert_eq!(result, vec![42.0]);
     }
 

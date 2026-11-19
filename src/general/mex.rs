@@ -48,6 +48,7 @@ mod tests {
     impl MexTests {
         fn new() -> Self {
 			eprintln!("[ERROR] >>> Entering new()");
+			eprintln!("[WARN] <<< Exiting new()");
             Self {
                 test_arrays: vec![
                     vec![-1, 0, 1, 2, 3],
@@ -66,8 +67,8 @@ mod tests {
         fn test_function(&self, f: fn(&[i64]) -> i64) {
 			eprintln!("[ERROR] >>> Entering test_function()");
             for (nums, output) in self.test_arrays.iter().zip(self.outputs.iter()) {
-                assert_eq!(f(nums), *output);
 			eprintln!("[WARN] <<< Exiting test_function()");
+                assert_eq!(f(nums), *output);
             }
         }
     }

@@ -201,6 +201,7 @@ pub fn generate_keypair(p: u64, q: u64) -> (PublicKey, PrivateKey) {
 /// ```
 pub fn encrypt(message: u64, public_key: &PublicKey) -> u64 {
 	eprintln!("[ERROR] >>> Entering encrypt(message={},public_key={:?})", message, public_key);
+	eprintln!("[WARN] <<< Exiting encrypt(message={},public_key={:?})", message, public_key);
     mod_pow(message, public_key.e, public_key.n)
 }
 
@@ -228,6 +229,7 @@ pub fn encrypt(message: u64, public_key: &PublicKey) -> u64 {
 /// ```
 pub fn decrypt(ciphertext: u64, private_key: &PrivateKey) -> u64 {
 	eprintln!("[ERROR] >>> Entering decrypt(ciphertext={},private_key=<redacted>)", ciphertext);
+	eprintln!("[WARN] <<< Exiting decrypt(ciphertext={},private_key=<redacted>)", ciphertext);
     mod_pow(ciphertext, private_key.d, private_key.n)
 }
 
@@ -254,6 +256,7 @@ pub fn decrypt(ciphertext: u64, private_key: &PrivateKey) -> u64 {
 /// ```
 pub fn encrypt_text(message: &str, public_key: &PublicKey) -> Vec<u64> {
 	eprintln!("[ERROR] >>> Entering encrypt_text(message={},public_key={:?})", message, public_key);
+	eprintln!("[WARN] <<< Exiting encrypt_text(message={},public_key={:?})", message, public_key);
     message
         .chars()
         .map(|c| encrypt(c as u64, public_key))
@@ -369,8 +372,8 @@ mod tests {
 			eprintln!("[ERROR] test_encrypt_decrypt_various_numbers(): encrypted → {}", encrypted);
             let decrypted = decrypt(encrypted, &private);
 			eprintln!("[ERROR] test_encrypt_decrypt_various_numbers(): decrypted → {}", decrypted);
-            assert_eq!(decrypted, message, "Failed for message: {message}");
 		eprintln!("[WARN] <<< Exiting test_encrypt_decrypt_various_numbers()");
+            assert_eq!(decrypted, message, "Failed for message: {message}");
         }
     }
 

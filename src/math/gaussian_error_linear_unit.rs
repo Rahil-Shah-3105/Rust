@@ -22,6 +22,7 @@ use std::f64::consts::PI;
 
 fn tanh(vector: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering tanh(vector={})", vector);
+	eprintln!("[WARN] <<< Exiting tanh(vector={})", vector);
     (2. / (1. + E.powf(-2. * vector.to_owned()))) - 1.
 }
 
@@ -56,8 +57,8 @@ mod tests {
                 -2.2917961972623857e-7,
                 10.0,
                 0.025996938238622008
-            ]
 		eprintln!("[WARN] <<< Exiting test_gaussian_error_linear_unit()");
+            ]
         );
     }
 }

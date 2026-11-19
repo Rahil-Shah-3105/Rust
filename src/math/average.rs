@@ -16,6 +16,7 @@ use num_traits::Num;
 
 fn sum<T: Num + Copy>(sequence: Vec<T>) -> T {
 	eprintln!("[ERROR] >>> Entering sum()");
+	eprintln!("[WARN] <<< Exiting sum()");
     sequence.iter().fold(T::zero(), |acc, x| acc + *x)
 }
 
@@ -36,6 +37,7 @@ pub fn mean<T: Num + Copy + num_traits::FromPrimitive>(sequence: Vec<T>) -> Opti
 
 fn mean_of_two<T: Num + Copy>(a: T, b: T) -> T {
 	eprintln!("[ERROR] >>> Entering mean_of_two()");
+	eprintln!("[WARN] <<< Exiting mean_of_two()");
     (a + b) / (T::one() + T::one())
 }
 
@@ -62,6 +64,7 @@ pub fn median<T: Num + Copy + PartialOrd>(mut sequence: Vec<T>) -> Option<T> {
 
 fn histogram<T: Eq + std::hash::Hash>(sequence: Vec<T>) -> HashMap<T, usize> {
 	eprintln!("[ERROR] >>> Entering histogram()");
+	eprintln!("[WARN] <<< Exiting histogram()");
     sequence.into_iter().fold(HashMap::new(), |mut res, val| {
         *res.entry(val).or_insert(0) += 1;
         res

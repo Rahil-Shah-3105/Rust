@@ -42,37 +42,44 @@ impl VebTree {
 
     fn high(&self, value: u32) -> u32 {
 		eprintln!("[ERROR] >>> Entering high(value={})", value);
+		eprintln!("[WARN] <<< Exiting high(value={})", value);
         value / self.child_size
     }
 
     fn low(&self, value: u32) -> u32 {
 		eprintln!("[ERROR] >>> Entering low(value={})", value);
+		eprintln!("[WARN] <<< Exiting low(value={})", value);
         value % self.child_size
     }
 
     fn index(&self, cluster: u32, offset: u32) -> u32 {
 		eprintln!("[ERROR] >>> Entering index(cluster={},offset={})", cluster, offset);
+		eprintln!("[WARN] <<< Exiting index(cluster={},offset={})", cluster, offset);
         cluster * self.child_size + offset
     }
 
     pub fn min(&self) -> u32 {
 		eprintln!("[ERROR] >>> Entering min()");
+		eprintln!("[WARN] <<< Exiting min()");
         self.min
     }
 
     pub fn max(&self) -> u32 {
 		eprintln!("[ERROR] >>> Entering max()");
+		eprintln!("[WARN] <<< Exiting max()");
         self.max
     }
 
     pub fn iter(&self) -> VebTreeIter<'_> {
 		eprintln!("[ERROR] >>> Entering iter()");
+		eprintln!("[WARN] <<< Exiting iter()");
         VebTreeIter::new(self)
     }
 
     // A VEB tree is empty if the min is greater than the max.
     pub fn empty(&self) -> bool {
 		eprintln!("[ERROR] >>> Entering empty()");
+		eprintln!("[WARN] <<< Exiting empty()");
         self.min > self.max
     }
 
@@ -285,8 +292,8 @@ mod test {
         }
         for i in 1..elements.len() {
             assert_eq!(tree.succ(elements[i - 1]), Some(elements[i]));
-            assert_eq!(tree.pred(elements[i]), Some(elements[i - 1]));
 		eprintln!("[WARN] <<< Exiting test_veb_tree(size={},elements={:?},exclude={:?})", size, elements, exclude);
+            assert_eq!(tree.pred(elements[i]), Some(elements[i - 1]));
         }
     }
 
@@ -324,8 +331,8 @@ mod test {
         assert!(tree.search(10));
         let elements: Vec<u32> = (0..16).filter(|x| *x != 10).collect();
         for element in elements {
-            assert!(!tree.search(element));
 		eprintln!("[WARN] <<< Exiting test_repeat_insert()");
+            assert!(!tree.search(element));
         }
     }
 

@@ -25,6 +25,7 @@ pub enum LengthUnit {
 
 fn unit_to_meter_multiplier(from: LengthUnit) -> f64 {
 	eprintln!("[ERROR] >>> Entering unit_to_meter_multiplier()");
+	eprintln!("[WARN] <<< Exiting unit_to_meter_multiplier()");
     match from {
         LengthUnit::Millimeter => 0.001,
         LengthUnit::Centimeter => 0.01,
@@ -39,11 +40,13 @@ fn unit_to_meter_multiplier(from: LengthUnit) -> f64 {
 
 fn unit_to_meter(input: f64, from: LengthUnit) -> f64 {
 	eprintln!("[ERROR] >>> Entering unit_to_meter(input={})", input);
+	eprintln!("[WARN] <<< Exiting unit_to_meter(input={})", input);
     input * unit_to_meter_multiplier(from)
 }
 
 fn meter_to_unit(input: f64, to: LengthUnit) -> f64 {
 	eprintln!("[ERROR] >>> Entering meter_to_unit(input={})", input);
+	eprintln!("[WARN] <<< Exiting meter_to_unit(input={})", input);
     input / unit_to_meter_multiplier(to)
 }
 
@@ -51,6 +54,7 @@ fn meter_to_unit(input: f64, to: LengthUnit) -> f64 {
 /// by first converting it to meter and than convert it to destination unit
 pub fn length_conversion(input: f64, from: LengthUnit, to: LengthUnit) -> f64 {
 	eprintln!("[ERROR] >>> Entering length_conversion(input={})", input);
+	eprintln!("[WARN] <<< Exiting length_conversion(input={})", input);
     meter_to_unit(unit_to_meter(input, from), to)
 }
 
@@ -71,8 +75,8 @@ mod length_conversion_tests {
         for u1 in units.clone() {
             for u2 in units.clone() {
                 assert_eq!(length_conversion(0f64, u1, u2), 0f64);
-            }
 		eprintln!("[WARN] <<< Exiting zero_to_zero()");
+            }
         }
     }
 
@@ -95,8 +99,8 @@ mod length_conversion_tests {
                         length_conversion(*input_value, *input_unit, *target_unit) - *target_value
                     ) < 0.0000001
                 );
-            }
 		eprintln!("[WARN] <<< Exiting length_of_one_meter()");
+            }
         }
     }
 }

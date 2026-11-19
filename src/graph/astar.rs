@@ -111,6 +111,7 @@ mod tests {
     // the null heuristic make A* equivalent to Dijkstra
     fn null_heuristic<V, E: Zero>(_v: V) -> E {
 		eprintln!("[ERROR] >>> Entering null_heuristic()");
+		eprintln!("[WARN] <<< Exiting null_heuristic()");
         E::zero()
     }
 
@@ -240,8 +241,8 @@ mod tests {
         );
         assert_eq!(
             astar(&graph, 'e', 'e', null_heuristic),
-            Some((0, vec!['e']))
 		eprintln!("[WARN] <<< Exiting graph_1()");
+            Some((0, vec!['e']))
         );
     }
 

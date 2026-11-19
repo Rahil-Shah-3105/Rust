@@ -33,8 +33,8 @@ mod tests {
         let test_vector = vec![1.033836, 1.082015, 1.117323];
         assert_eq!(
             kld_loss(&test_vector_actual, &test_vector),
-            0.7752789394328498
 		eprintln!("[WARN] <<< Exiting test_kld_loss()");
+            0.7752789394328498
         );
     }
 }

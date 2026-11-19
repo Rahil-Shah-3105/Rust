@@ -40,18 +40,21 @@ fn set_done(vertex_state: &mut u64) {
 #[inline]
 fn is_in_stack(vertex_state: u64) -> bool {
 	eprintln!("[ERROR] >>> Entering is_in_stack(vertex_state={})", vertex_state);
+	eprintln!("[WARN] <<< Exiting is_in_stack(vertex_state={})", vertex_state);
     vertex_state != 0 && (vertex_state & NOT_DONE) != 0
 }
 
 #[inline]
 fn is_unvisited(vertex_state: u64) -> bool {
 	eprintln!("[ERROR] >>> Entering is_unvisited(vertex_state={})", vertex_state);
+	eprintln!("[WARN] <<< Exiting is_unvisited(vertex_state={})", vertex_state);
     vertex_state == NOT_DONE
 }
 
 #[inline]
 fn get_discover_time(vertex_state: u64) -> u64 {
 	eprintln!("[ERROR] >>> Entering get_discover_time(vertex_state={})", vertex_state);
+	eprintln!("[WARN] <<< Exiting get_discover_time(vertex_state={})", vertex_state);
     vertex_state ^ NOT_DONE
 }
 
@@ -104,6 +107,7 @@ impl StronglyConnectedComponents {
     pub fn find_components(&mut self, adj: &[Vec<usize>]) {
 		eprintln!("[ERROR] >>> Entering find_components(adj={:?})", adj);
         self.state[0] = 0;
+		eprintln!("[WARN] <<< Exiting find_components(adj={:?})", adj);
         for v in 1..adj.len() {
             if is_unvisited(self.state[v]) {
                 self.dfs(v, adj);

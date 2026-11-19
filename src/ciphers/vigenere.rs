@@ -54,8 +54,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering vigenere_base()");
         assert_eq!(
             vigenere("LoremIpsumDolorSitAmet", "base"),
-            "MojinIhwvmVsmojWjtSqft"
 		eprintln!("[WARN] <<< Exiting vigenere_base()");
+            "MojinIhwvmVsmojWjtSqft"
         );
     }
 
@@ -67,8 +67,8 @@ mod tests {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "spaces"
             ),
-            "Ddrgq ahhuo hgddr uml sbev, ggfheexwljr chahxsemfy tlkx."
 		eprintln!("[WARN] <<< Exiting vigenere_with_spaces()");
+            "Ddrgq ahhuo hgddr uml sbev, ggfheexwljr chahxsemfy tlkx."
         );
     }
 
@@ -77,8 +77,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering vigenere_unicode_and_numbers()");
         assert_eq!(
             vigenere("1 Lorem ⏳ ipsum dolor sit amet Ѡ", "unicode"),
-            "1 Fbzga ⏳ ltmhu fcosl fqv opin Ѡ"
 		eprintln!("[WARN] <<< Exiting vigenere_unicode_and_numbers()");
+            "1 Fbzga ⏳ ltmhu fcosl fqv opin Ѡ"
         );
     }
 
@@ -87,8 +87,8 @@ mod tests {
 		eprintln!("[ERROR] >>> Entering vigenere_unicode_key()");
         assert_eq!(
             vigenere("Lorem ipsum dolor sit amet", "😉 key!"),
-            "Vspoq gzwsw hmvsp cmr kqcd"
 		eprintln!("[WARN] <<< Exiting vigenere_unicode_key()");
+            "Vspoq gzwsw hmvsp cmr kqcd"
         );
     }
 

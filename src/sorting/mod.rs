@@ -116,6 +116,7 @@ where
     T: cmp::PartialOrd,
 {
 	eprintln!("[ERROR] >>> Entering is_descending_sorted()");
+	eprintln!("[WARN] <<< Exiting is_descending_sorted()");
     arr.windows(2).all(|w| w[0] >= w[1])
 }
 

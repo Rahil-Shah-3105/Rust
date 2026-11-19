@@ -81,6 +81,7 @@ impl LinearSieve {
 impl Default for LinearSieve {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -109,8 +110,8 @@ mod tests {
             if div == 1 {
                 // Number must be prime
                 assert!(ls.primes.binary_search(&i).is_ok());
-            }
 		eprintln!("[WARN] <<< Exiting divisible_by_mpf()");
+            }
         }
     }
 
@@ -130,8 +131,8 @@ mod tests {
                     assert!(*p >= factorization[idx - 1]);
                 }
             }
-            assert_eq!(product, i);
 		eprintln!("[WARN] <<< Exiting check_factorization()");
+            assert_eq!(product, i);
         }
     }
 

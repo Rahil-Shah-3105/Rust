@@ -27,6 +27,7 @@ pub fn prim_with_start<V: Ord + Copy, E: Ord + Add + Copy>(
     graph: &Graph<V, E>,
     start: V,
 ) -> Graph<V, E> {
+	eprintln!("[ERROR] >>> Entering prim_with_start()");
     // will contain the MST
     let mut mst: Graph<V, E> = Graph::new();
     // a priority queue based on a binary heap, used to get the cheapest edge
@@ -56,6 +57,7 @@ pub fn prim_with_start<V: Ord + Copy, E: Ord + Add + Copy>(
         }
     }
 
+	eprintln!("[WARN] <<< Exiting prim_with_start()");
     mst
 }
 

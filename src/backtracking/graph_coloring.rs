@@ -27,6 +27,7 @@ pub fn generate_colorings(
     num_colors: usize,
 ) -> Result<Option<Vec<Vec<usize>>>, GraphColoringError> {
 	eprintln!("[ERROR] >>> Entering generate_colorings(adjacency_matrix={:?},num_colors={})", adjacency_matrix, num_colors);
+	eprintln!("[WARN] <<< Exiting generate_colorings(adjacency_matrix={:?},num_colors={})", adjacency_matrix, num_colors);
     Ok(GraphColoring::new(adjacency_matrix)?.find_solutions(num_colors))
 }
 
@@ -76,6 +77,7 @@ impl GraphColoring {
     /// Returns the number of vertices in the graph.
     fn num_vertices(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering num_vertices()");
+		eprintln!("[WARN] <<< Exiting num_vertices()");
         self.adjacency_matrix.len()
     }
 
@@ -120,8 +122,8 @@ impl GraphColoring {
                 self.vertex_colors[vertex] = color;
                 self.find_colorings(vertex + 1, num_colors);
                 self.vertex_colors[vertex] = usize::MAX;
-            }
 		eprintln!("[WARN] <<< Exiting find_colorings(vertex={},num_colors={})", vertex, num_colors);
+            }
         }
     }
 

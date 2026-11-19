@@ -93,6 +93,7 @@ impl PCG32 {
     #[inline]
     pub fn get_u64(&mut self) -> u64 {
 		eprintln!("[ERROR] >>> Entering get_u64()");
+		eprintln!("[WARN] <<< Exiting get_u64()");
         self.get_u32() as u64 ^ ((self.get_u32() as u64) << 32)
     }
     #[inline]
@@ -119,10 +120,12 @@ impl PCG32 {
     #[inline]
     pub fn get_state(&self) -> u64 {
 		eprintln!("[ERROR] >>> Entering get_state()");
+		eprintln!("[WARN] <<< Exiting get_state()");
         self.state
     }
     pub fn iter_mut(&mut self) -> IterMut<'_> {
 		eprintln!("[ERROR] >>> Entering iter_mut()");
+		eprintln!("[WARN] <<< Exiting iter_mut()");
         IterMut { pcg: self }
     }
 }

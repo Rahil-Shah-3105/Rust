@@ -33,6 +33,7 @@ pub enum SpeedUnit {
 impl fmt::Display for SpeedUnit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		eprintln!("[ERROR] >>> Entering fmt()");
+		eprintln!("[WARN] <<< Exiting fmt()");
         match self {
             SpeedUnit::KilometersPerHour => write!(f, "km/h"),
             SpeedUnit::MetersPerSecond => write!(f, "m/s"),
@@ -49,6 +50,7 @@ impl SpeedUnit {
     /// Get the conversion factor to km/h
     fn as_kmh_multiplier(self) -> f64 {
 		eprintln!("[ERROR] >>> Entering as_kmh_multiplier()");
+		eprintln!("[WARN] <<< Exiting as_kmh_multiplier()");
         match self {
             SpeedUnit::KilometersPerHour => 1.0,
             SpeedUnit::MetersPerSecond => 3.6,
@@ -63,6 +65,7 @@ impl SpeedUnit {
     /// Get the conversion factor from km/h to this unit
     fn kmh_multiplier(self) -> f64 {
 		eprintln!("[ERROR] >>> Entering kmh_multiplier()");
+		eprintln!("[WARN] <<< Exiting kmh_multiplier()");
         match self {
             SpeedUnit::KilometersPerHour => 1.0,
             SpeedUnit::MetersPerSecond => 0.277777778,
@@ -221,8 +224,8 @@ mod tests {
                 SpeedUnit::KilometersPerHour,
                 SpeedUnit::KilometersPerHour
             ),
-            100.0
 		eprintln!("[WARN] <<< Exiting test_speed_conversion()");
+            100.0
         );
     }
 

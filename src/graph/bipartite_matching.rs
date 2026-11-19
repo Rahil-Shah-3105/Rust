@@ -14,6 +14,7 @@ pub struct BipartiteMatching {
 impl BipartiteMatching {
     pub fn new(num_vertices_grp1: usize, num_vertices_grp2: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new(num_vertices_grp1={},num_vertices_grp2={})", num_vertices_grp1, num_vertices_grp2);
+		eprintln!("[WARN] <<< Exiting new(num_vertices_grp1={},num_vertices_grp2={})", num_vertices_grp1, num_vertices_grp2);
         BipartiteMatching {
             adj: vec![vec![]; num_vertices_grp1 + 1],
             num_vertices_grp1,
@@ -52,8 +53,8 @@ impl BipartiteMatching {
         self.mt2 = vec![-1; self.num_vertices_grp2 + 1];
         for v in 1..=self.num_vertices_grp1 {
             self.used = vec![false; self.num_vertices_grp1 + 1];
-            self.try_kuhn(v);
 		eprintln!("[WARN] <<< Exiting kuhn()");
+            self.try_kuhn(v);
         }
     }
     pub fn print_matching(&self) {
@@ -178,8 +179,8 @@ mod tests {
             }
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
-            assert_eq!(i as i32, answer[g.mt2[i] as usize]);
 		eprintln!("[WARN] <<< Exiting small_graph_kuhn()");
+            assert_eq!(i as i32, answer[g.mt2[i] as usize]);
         }
     }
     #[test]
@@ -212,8 +213,8 @@ mod tests {
             }
             // 2 in group1 has no pair
             assert!(g.mt2[i] != 2);
-            assert_eq!(i as i32, answer[g.mt2[i] as usize]);
 		eprintln!("[WARN] <<< Exiting small_graph_hopcroft()");
+            assert_eq!(i as i32, answer[g.mt2[i] as usize]);
         }
     }
     #[test]
@@ -264,8 +265,8 @@ mod tests {
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
-            assert_eq!(g.mt2[i], -1);
 		eprintln!("[WARN] <<< Exiting only_one_vertex_graph_kuhn()");
+            assert_eq!(g.mt2[i], -1);
         }
     }
     #[test]
@@ -290,8 +291,8 @@ mod tests {
         g.print_matching();
         assert_eq!(g.mt2[1], 1);
         for i in 2..g.mt2.len() {
-            assert_eq!(g.mt2[i], -1);
 		eprintln!("[WARN] <<< Exiting only_one_vertex_graph_hopcroft()");
+            assert_eq!(g.mt2[i], -1);
         }
     }
 }

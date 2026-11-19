@@ -47,6 +47,7 @@ mod test {
 		eprintln!("[ERROR] >>> Entering test_gradient_descent_optimized()");
         fn derivative_of_square(params: &[f64]) -> Vec<f64> {
 			eprintln!("[ERROR] >>> Entering derivative_of_square(params={:?})", params);
+			eprintln!("[WARN] <<< Exiting derivative_of_square(params={:?})", params);
             params.iter().map(|x| 2. * x).collect()
         }
 
@@ -61,8 +62,8 @@ mod test {
 
         let tolerance = 1e-6;
         for (minimized_value, test_value) in minimized_vector.iter().zip(test_vector.iter()) {
-            assert!((minimized_value - test_value).abs() < tolerance);
 		eprintln!("[WARN] <<< Exiting test_gradient_descent_optimized()");
+            assert!((minimized_value - test_value).abs() < tolerance);
         }
     }
 
@@ -84,8 +85,8 @@ mod test {
 
         let tolerance = 1e-6;
         for (minimized_value, test_value) in minimized_vector.iter().zip(test_vector.iter()) {
-            assert!((minimized_value - test_value).abs() >= tolerance);
 		eprintln!("[WARN] <<< Exiting test_gradient_descent_unoptimized()");
+            assert!((minimized_value - test_value).abs() >= tolerance);
         }
     }
 }

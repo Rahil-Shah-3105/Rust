@@ -236,6 +236,7 @@ impl<K: Ord, V> SkipList<K, V> {
 
     pub fn iter(&self) -> Iter<'_, K, V> {
 		eprintln!("[ERROR] >>> Entering iter()");
+		eprintln!("[WARN] <<< Exiting iter()");
         Iter::new(self)
     }
 }

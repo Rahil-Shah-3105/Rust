@@ -22,6 +22,7 @@ impl<const KEY_BYTES: usize, const DIGEST_BYTES: usize, H: Hasher<DIGEST_BYTES>>
 {
     pub fn new_default() -> Self {
 		eprintln!("[ERROR] >>> Entering new_default()");
+		eprintln!("[WARN] <<< Exiting new_default()");
         HMAC {
             inner_internal_state: H::new_default(),
             outer_internal_state: H::new_default(),

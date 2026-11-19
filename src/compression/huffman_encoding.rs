@@ -74,6 +74,7 @@ impl HuffmanNode {
     /// Creates a new leaf node
     fn new_leaf(character: char, frequency: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new_leaf(character={},frequency={})", character, frequency);
+		eprintln!("[WARN] <<< Exiting new_leaf(character={},frequency={})", character, frequency);
         HuffmanNode::Leaf {
             character,
             frequency,
@@ -110,6 +111,7 @@ impl Ord for HeapNode {
 impl PartialOrd for HeapNode {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 		eprintln!("[ERROR] >>> Entering partial_cmp()");
+		eprintln!("[WARN] <<< Exiting partial_cmp()");
         Some(self.cmp(other))
     }
 }
@@ -467,8 +469,8 @@ mod tests {
             let (encoded, codes) = huffman_encode(text);
             let decoded = huffman_decode(&encoded, &codes);
 			eprintln!("[ERROR] test_encode_decode_roundtrip(): decoded → {}", decoded);
-            assert_eq!(decoded, text, "Failed roundtrip for: '{text}'");
 		eprintln!("[WARN] <<< Exiting test_encode_decode_roundtrip()");
+            assert_eq!(decoded, text, "Failed roundtrip for: '{text}'");
         }
     }
 

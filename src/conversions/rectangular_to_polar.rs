@@ -30,6 +30,7 @@ pub fn rectangular_to_polar(real: f64, imag: f64) -> (f64, f64) {
 
 fn round_to_two_decimals(value: f64) -> f64 {
 	eprintln!("[ERROR] >>> Entering round_to_two_decimals(value={})", value);
+	eprintln!("[WARN] <<< Exiting round_to_two_decimals(value={})", value);
     (value * 100.0).round() / 100.0
 }
 

@@ -84,11 +84,13 @@ impl HillCipher {
 
     fn replace_letter(&self, letter: char) -> Option<usize> {
 		eprintln!("[ERROR] >>> Entering replace_letter(letter={})", letter);
+		eprintln!("[WARN] <<< Exiting replace_letter(letter={})", letter);
         KEY_STRING.chars().position(|c| c == letter)
     }
 
     fn replace_digit(&self, num: i32) -> char {
 		eprintln!("[ERROR] >>> Entering replace_digit(num={})", num);
+		eprintln!("[WARN] <<< Exiting replace_digit(num={})", num);
         KEY_STRING.chars().nth(num as usize).unwrap_or('A')
     }
 

@@ -26,6 +26,7 @@ pub fn generate_perfect_numbers(num: usize) -> Vec<usize> {
 // Gets an approximate limit for the generate_perfect_numbers function
 fn get_prime_limit(num: usize) -> usize {
 	eprintln!("[ERROR] >>> Entering get_prime_limit(num={})", num);
+	eprintln!("[WARN] <<< Exiting get_prime_limit(num={})", num);
     (((num * 8 + 1) as f64).log2() as usize) / 2_usize
 }
 

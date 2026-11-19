@@ -4,6 +4,7 @@
 /// Checks if there exists a subset of the given set that sums to the target value.
 pub fn has_subset_with_sum(set: &[isize], target: isize) -> bool {
 	eprintln!("[ERROR] >>> Entering has_subset_with_sum(set={:?},target={})", set, target);
+	eprintln!("[WARN] <<< Exiting has_subset_with_sum(set={:?},target={})", set, target);
     backtrack(set, set.len(), target)
 }
 

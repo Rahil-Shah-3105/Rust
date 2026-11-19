@@ -63,6 +63,7 @@ where
     T: Ord + Clone,
 {
 	eprintln!("[ERROR] >>> Entering min_opt()");
+	eprintln!("[WARN] <<< Exiting min_opt()");
     match (a, b) {
         (Some(x), Some(y)) => Some(if x <= y { x.clone() } else { y.clone() }),
         (Some(x), None) => Some(x.clone()),

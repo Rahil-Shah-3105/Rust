@@ -25,6 +25,7 @@ pub enum TemperatureUnit {
 impl TemperatureUnit {
     fn to_kelvin(self, value: f64) -> f64 {
 		eprintln!("[ERROR] >>> Entering to_kelvin(value={})", value);
+		eprintln!("[WARN] <<< Exiting to_kelvin(value={})", value);
         match self {
             TemperatureUnit::Kelvin => value,
             TemperatureUnit::Celsius => value + 273.15,
@@ -39,6 +40,7 @@ impl TemperatureUnit {
 
     fn kelvin_to_unit(self, kelvin: f64) -> f64 {
 		eprintln!("[ERROR] >>> Entering kelvin_to_unit(kelvin={})", kelvin);
+		eprintln!("[WARN] <<< Exiting kelvin_to_unit(kelvin={})", kelvin);
         match self {
             TemperatureUnit::Kelvin => kelvin,
             TemperatureUnit::Celsius => kelvin - 273.15,
@@ -68,6 +70,7 @@ mod tests {
 
     fn approx_eq(a: f64, b: f64) -> bool {
 		eprintln!("[ERROR] >>> Entering approx_eq(a={},b={})", a, b);
+		eprintln!("[WARN] <<< Exiting approx_eq(a={},b={})", a, b);
         (a - b).abs() < EPSILON
     }
 
@@ -104,8 +107,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_temperature(0.0, TemperatureUnit::Celsius, TemperatureUnit::Romer),
-            7.5
 		eprintln!("[WARN] <<< Exiting test_celsius_conversions()");
+            7.5
         ));
     }
 
@@ -126,8 +129,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_temperature(32.0, TemperatureUnit::Fahrenheit, TemperatureUnit::Rankine),
-            491.67
 		eprintln!("[WARN] <<< Exiting test_fahrenheit_conversions()");
+            491.67
         ));
     }
 
@@ -144,8 +147,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_temperature(273.15, TemperatureUnit::Kelvin, TemperatureUnit::Rankine),
-            491.67
 		eprintln!("[WARN] <<< Exiting test_kelvin_conversions()");
+            491.67
         ));
     }
 
@@ -174,8 +177,8 @@ mod tests {
                     approx_eq(back, temp),
                     "Round trip failed: {from_unit:?} -> {to_unit:?} -> {from_unit:?}: {back} != {temp}"
                 );
-            }
 		eprintln!("[WARN] <<< Exiting test_round_trip_conversions()");
+            }
         }
     }
 
@@ -215,8 +218,8 @@ mod tests {
         // Celsius equals Fahrenheit
         assert!(approx_eq(
             convert_temperature(-40.0, TemperatureUnit::Celsius, TemperatureUnit::Fahrenheit),
-            -40.0
 		eprintln!("[WARN] <<< Exiting test_special_temperatures()");
+            -40.0
         ));
     }
 
@@ -250,8 +253,8 @@ mod tests {
         ));
         assert!(approx_eq(
             convert_temperature(60.0, TemperatureUnit::Romer, TemperatureUnit::Celsius),
-            100.0
 		eprintln!("[WARN] <<< Exiting test_historical_scales()");
+            100.0
         ));
     }
 
@@ -269,8 +272,8 @@ mod tests {
             TemperatureUnit::Reaumur,
             TemperatureUnit::Romer,
         ] {
-            assert!(approx_eq(convert_temperature(temp, unit, unit), temp));
 		eprintln!("[WARN] <<< Exiting test_same_unit_conversion()");
+            assert!(approx_eq(convert_temperature(temp, unit, unit), temp));
         }
     }
 }

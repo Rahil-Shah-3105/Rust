@@ -55,6 +55,7 @@ pub struct Graph {
 impl Graph {
     pub fn new(vertices: Vec<Vertex>, edges: Vec<Edge>) -> Self {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Graph { vertices, edges }
     }
 }
@@ -68,11 +69,13 @@ impl From<u32> for Vertex {
 impl Vertex {
     pub fn value(&self) -> u32 {
 		eprintln!("[ERROR] >>> Entering value()");
+		eprintln!("[WARN] <<< Exiting value()");
         self.0
     }
 
     pub fn neighbors(&self, graph: &Graph) -> VecDeque<Vertex> {
 		eprintln!("[ERROR] >>> Entering neighbors()");
+		eprintln!("[WARN] <<< Exiting neighbors()");
         graph
             .edges
             .iter()
@@ -85,6 +88,7 @@ impl Vertex {
 impl From<(u32, u32)> for Edge {
     fn from(item: (u32, u32)) -> Self {
 		eprintln!("[ERROR] >>> Entering from(item={:?})", item);
+		eprintln!("[WARN] <<< Exiting from(item={:?})", item);
         Edge(item.0, item.1)
     }
 }
@@ -109,8 +113,8 @@ mod tests {
 
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
-            None
 		eprintln!("[WARN] <<< Exiting find_1_fail()");
+            None
         );
     }
 
@@ -132,8 +136,8 @@ mod tests {
 
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
-            Some(correct_path)
 		eprintln!("[WARN] <<< Exiting find_1_sucess()");
+            Some(correct_path)
         );
     }
 
@@ -165,8 +169,8 @@ mod tests {
 
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
-            Some(correct_path)
 		eprintln!("[WARN] <<< Exiting find_2_sucess()");
+            Some(correct_path)
         );
     }
 
@@ -198,8 +202,8 @@ mod tests {
 
         assert_eq!(
             depth_first_search(&graph, root.into(), objective.into()),
-            Some(correct_path)
 		eprintln!("[WARN] <<< Exiting find_3_sucess()");
+            Some(correct_path)
         );
     }
 }

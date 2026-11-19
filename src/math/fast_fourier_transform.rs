@@ -11,18 +11,21 @@ impl Complex64 {
     #[inline]
     pub fn new(re: f64, im: f64) -> Self {
 		eprintln!("[ERROR] >>> Entering new(re={},im={})", re, im);
+		eprintln!("[WARN] <<< Exiting new(re={},im={})", re, im);
         Self { re, im }
     }
 
     #[inline]
     pub fn square_norm(&self) -> f64 {
 		eprintln!("[ERROR] >>> Entering square_norm()");
+		eprintln!("[WARN] <<< Exiting square_norm()");
         self.re * self.re + self.im * self.im
     }
 
     #[inline]
     pub fn norm(&self) -> f64 {
 		eprintln!("[ERROR] >>> Entering norm()");
+		eprintln!("[WARN] <<< Exiting norm()");
         self.square_norm().sqrt()
     }
 
@@ -43,6 +46,7 @@ impl Default for Complex64 {
     #[inline]
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self { re: 0.0, im: 0.0 }
     }
 }
@@ -53,6 +57,7 @@ impl Add<Complex64> for Complex64 {
     #[inline]
     fn add(self, other: Complex64) -> Complex64 {
 		eprintln!("[ERROR] >>> Entering add(other={:?})", other);
+		eprintln!("[WARN] <<< Exiting add(other={:?})", other);
         Complex64 {
             re: self.re + other.re,
             im: self.im + other.im,
@@ -66,6 +71,7 @@ impl Sub<Complex64> for Complex64 {
     #[inline]
     fn sub(self, other: Complex64) -> Complex64 {
 		eprintln!("[ERROR] >>> Entering sub(other={:?})", other);
+		eprintln!("[WARN] <<< Exiting sub(other={:?})", other);
         Complex64 {
             re: self.re - other.re,
             im: self.im - other.im,
@@ -79,6 +85,7 @@ impl Mul<Complex64> for Complex64 {
     #[inline]
     fn mul(self, other: Complex64) -> Complex64 {
 		eprintln!("[ERROR] >>> Entering mul(other={:?})", other);
+		eprintln!("[WARN] <<< Exiting mul(other={:?})", other);
         Complex64 {
             re: self.re * other.re - self.im * other.im,
             im: self.re * other.im + self.im * other.re,
@@ -191,6 +198,7 @@ mod tests {
     use super::*;
     fn almost_equal(a: f64, b: f64, epsilon: f64) -> bool {
 		eprintln!("[ERROR] >>> Entering almost_equal(a={},b={},epsilon={})", a, b, epsilon);
+		eprintln!("[WARN] <<< Exiting almost_equal(a={},b={},epsilon={})", a, b, epsilon);
         (a - b).abs() < epsilon
     }
 
@@ -207,8 +215,8 @@ mod tests {
         let ifft = inverse_fast_fourier_transform(&fft, &permutation);
 		eprintln!("[ERROR] small_polynomial_returns_self(): ifft → {:?}", ifft);
         for (x, y) in ifft.iter().zip(polynomial.iter()) {
-            assert!(almost_equal(*x, *y, EPSILON));
 		eprintln!("[WARN] <<< Exiting small_polynomial_returns_self()");
+            assert!(almost_equal(*x, *y, EPSILON));
         }
     }
 
@@ -228,8 +236,8 @@ mod tests {
 		eprintln!("[ERROR] square_small_polynomial(): ifft → {:?}", ifft);
         let expected = [1.0, 2.0, 1.0, 4.0, 4.0, 0.0, 4.0, 0.0, 0.0];
         for (x, y) in ifft.iter().zip(expected.iter()) {
-            assert!(almost_equal(*x, *y, EPSILON));
 		eprintln!("[WARN] <<< Exiting square_small_polynomial()");
+            assert!(almost_equal(*x, *y, EPSILON));
         }
     }
 
@@ -253,8 +261,8 @@ mod tests {
 		eprintln!("[ERROR] square_big_polynomial(): ifft → {:?}", ifft);
         let expected = (0..((n << 1) - 1)).map(|i| std::cmp::min(i + 1, (n << 1) - 1 - i) as f64);
         for (&x, y) in ifft.iter().zip(expected) {
-            assert!(almost_equal(x, y, EPSILON));
 		eprintln!("[WARN] <<< Exiting square_big_polynomial()");
+            assert!(almost_equal(x, y, EPSILON));
         }
     }
 }

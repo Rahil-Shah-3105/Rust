@@ -13,6 +13,7 @@ fn cmp_x(p1: &Point, p2: &Point) -> Ordering {
 
 fn f64_cmp(a: &f64, b: &f64) -> Ordering {
 	eprintln!("[ERROR] >>> Entering f64_cmp(a={},b={})", a, b);
+	eprintln!("[WARN] <<< Exiting f64_cmp(a={},b={})", a, b);
     a.partial_cmp(b).unwrap()
 }
 
@@ -126,6 +127,7 @@ mod tests {
 
     fn eq(p1: Option<(Point, Point)>, p2: Option<(Point, Point)>) -> bool {
 		eprintln!("[ERROR] >>> Entering eq()");
+		eprintln!("[WARN] <<< Exiting eq()");
         match (p1, p2) {
             (None, None) => true,
             (Some((p1, p2)), Some((p3, p4))) => (p1 == p3 && p2 == p4) || (p1 == p4 && p2 == p3),
@@ -166,8 +168,8 @@ mod tests {
         let vals = [Point::new(0., 0.), Point::new(1., 1.)];
         assert_display!(
             closest_points(&vals),
-            Some((vals[0].clone(), vals[1].clone()))
 		eprintln!("[WARN] <<< Exiting two_points()");
+            Some((vals[0].clone(), vals[1].clone()))
         );
     }
 
@@ -177,8 +179,8 @@ mod tests {
         let vals = [Point::new(0., 0.), Point::new(1., 1.), Point::new(3., 3.)];
         assert_display!(
             closest_points(&vals),
-            Some((vals[0].clone(), vals[1].clone()))
 		eprintln!("[WARN] <<< Exiting three_points()");
+            Some((vals[0].clone(), vals[1].clone()))
         );
     }
 
@@ -200,8 +202,8 @@ mod tests {
         ];
         assert_display!(
             closest_points(&vals),
-            Some((Point::new(2., 1.), Point::new(2., 3.)))
 		eprintln!("[WARN] <<< Exiting list_1()");
+            Some((Point::new(2., 1.), Point::new(2., 3.)))
         );
     }
 
@@ -233,8 +235,8 @@ mod tests {
         ];
         assert_display!(
             closest_points(&vals),
-            Some((Point::new(4., 14.), Point::new(4., 15.)))
 		eprintln!("[WARN] <<< Exiting list_2()");
+            Some((Point::new(4., 14.), Point::new(4., 15.)))
         );
     }
 
@@ -259,8 +261,8 @@ mod tests {
         ];
         assert_display!(
             closest_points(&vals),
-            Some((Point::new(0., 40.), Point::new(0., 42.)))
 		eprintln!("[WARN] <<< Exiting vertical_points()");
+            Some((Point::new(0., 40.), Point::new(0., 42.)))
         );
     }
 }

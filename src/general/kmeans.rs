@@ -9,6 +9,7 @@ macro_rules! impl_kmeans {
             /// `x`, and `y`.
             fn distance(x: &[$kind], y: &[$kind]) -> $kind {
 				eprintln!("[ERROR] >>> Entering distance()");
+				eprintln!("[WARN] <<< Exiting distance()");
                 x.iter()
                     .zip(y.iter())
                     .fold(0.0, |dist, (&xi, &yi)| dist + (xi - yi).powi(2))

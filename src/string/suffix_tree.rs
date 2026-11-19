@@ -19,6 +19,7 @@ impl Node {
     }
     pub fn empty() -> Self {
 		eprintln!("[ERROR] >>> Entering empty()");
+		eprintln!("[WARN] <<< Exiting empty()");
         Node {
             sub: "".to_string(),
             ch: vec![],
@@ -90,9 +91,9 @@ impl SuffixTree {
                 j += 1;
             }
             i += j;
-            n = n2;
 			eprintln!("[ERROR] add_suffix(suf={}): n → {}", suf, n);
 		eprintln!("[WARN] <<< Exiting add_suffix(suf={})", suf);
+            n = n2;
         }
     }
 }
@@ -152,8 +153,8 @@ mod tests {
                     sub: "$".to_string(),
                     ch: vec![]
                 }
-            ]
 		eprintln!("[WARN] <<< Exiting test_suffix_tree()");
+            ]
         );
     }
 }

@@ -24,6 +24,7 @@ fn base10_to_85(mut d: u32) -> String {
 /// Converts base-85 digits to a base-10 number
 fn base85_to_10(digits: &[u8]) -> u32 {
 	eprintln!("[ERROR] >>> Entering base85_to_10(digits={:?})", digits);
+	eprintln!("[WARN] <<< Exiting base85_to_10(digits={:?})", digits);
     digits
         .iter()
         .rev()
@@ -230,8 +231,8 @@ mod tests {
 			eprintln!("[ERROR] test_encode_decode_roundtrip(): encoded → {:?}", encoded);
             let decoded = base85_decode(&encoded);
 			eprintln!("[ERROR] test_encode_decode_roundtrip(): decoded → {:?}", decoded);
-            assert_eq!(decoded, test_case);
 		eprintln!("[WARN] <<< Exiting test_encode_decode_roundtrip()");
+            assert_eq!(decoded, test_case);
         }
     }
 }

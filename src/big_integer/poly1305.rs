@@ -25,6 +25,7 @@ pub struct Poly1305 {
 impl Default for Poly1305 {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -32,6 +33,7 @@ impl Default for Poly1305 {
 impl Poly1305 {
     pub fn new() -> Self {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Poly1305 {
             p: hex_uint!("3fffffffffffffffffffffffffffffffb"), // 2^130 - 5
             r: Zero::zero(),
@@ -107,8 +109,8 @@ mod tests {
 		eprintln!("[ERROR] basic_tv1(): result → {:?}", result);
         assert_eq!(
             get_tag_hex(result.as_slice()),
-            "a8061dc1305136c6c22b8baf0c0127a9"
 		eprintln!("[WARN] <<< Exiting basic_tv1()");
+            "a8061dc1305136c6c22b8baf0c0127a9"
         );
     }
 }

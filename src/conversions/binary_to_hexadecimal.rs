@@ -82,9 +82,9 @@ mod tests {
     fn test_empty_string() {
 		eprintln!("[ERROR] >>> Entering test_empty_string()");
         let input = "";
-        let expected = "Invalid Input";
 		eprintln!("[ERROR] test_empty_string(): expected → {}", expected);
 		eprintln!("[ERROR] test_empty_string(): input → {}", input);
+        let expected = "Invalid Input";
     eprintln!("[WARN] <<< Exiting test_empty_string()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
@@ -93,9 +93,9 @@ mod tests {
     fn test_invalid_binary() {
 		eprintln!("[ERROR] >>> Entering test_invalid_binary()");
         let input = "a";
-        let expected = "Invalid Input";
 		eprintln!("[ERROR] test_invalid_binary(): expected → {}", expected);
 		eprintln!("[ERROR] test_invalid_binary(): input → {}", input);
+        let expected = "Invalid Input";
     eprintln!("[WARN] <<< Exiting test_invalid_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
@@ -104,9 +104,9 @@ mod tests {
     fn test_binary() {
 		eprintln!("[ERROR] >>> Entering test_binary()");
         let input = "00110110";
-        let expected = "0x36";
 		eprintln!("[ERROR] test_binary(): expected → {}", expected);
 		eprintln!("[ERROR] test_binary(): input → {}", input);
+        let expected = "0x36";
     eprintln!("[WARN] <<< Exiting test_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }
@@ -115,9 +115,9 @@ mod tests {
     fn test_padded_binary() {
 		eprintln!("[ERROR] >>> Entering test_padded_binary()");
         let input = " 1010   ";
-        let expected = "0xa";
 		eprintln!("[ERROR] test_padded_binary(): expected → {}", expected);
 		eprintln!("[ERROR] test_padded_binary(): input → {}", input);
+        let expected = "0xa";
     eprintln!("[WARN] <<< Exiting test_padded_binary()");
         assert_eq!(binary_to_hexadecimal(input), expected);
     }

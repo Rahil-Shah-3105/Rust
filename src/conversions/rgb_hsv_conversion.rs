@@ -53,6 +53,7 @@ impl Rgb {
     /// Create a new RGB color
     pub fn new(red: u8, green: u8, blue: u8) -> Self {
 		eprintln!("[ERROR] >>> Entering new(red={},green={},blue={})", red, green, blue);
+		eprintln!("[WARN] <<< Exiting new()");
         Rgb { red, green, blue }
     }
 }
@@ -273,8 +274,8 @@ mod tests {
         );
         assert_eq!(
             hsv_to_rgb(361.0, 0.5, 0.5),
-            Err(ColorError::InvalidHue(361.0))
 		eprintln!("[WARN] <<< Exiting test_hsv_to_rgb_invalid_hue()");
+            Err(ColorError::InvalidHue(361.0))
         );
     }
 
@@ -287,8 +288,8 @@ mod tests {
         );
         assert_eq!(
             hsv_to_rgb(180.0, 1.1, 0.5),
-            Err(ColorError::InvalidSaturation(1.1))
 		eprintln!("[WARN] <<< Exiting test_hsv_to_rgb_invalid_saturation()");
+            Err(ColorError::InvalidSaturation(1.1))
         );
     }
 
@@ -301,8 +302,8 @@ mod tests {
         );
         assert_eq!(
             hsv_to_rgb(180.0, 0.5, 1.1),
-            Err(ColorError::InvalidValue(1.1))
 		eprintln!("[WARN] <<< Exiting test_hsv_to_rgb_invalid_value()");
+            Err(ColorError::InvalidValue(1.1))
         );
     }
 
@@ -384,8 +385,8 @@ mod tests {
             assert!(
                 original_hsv.approximately_equal(&converted_hsv),
                 "Round trip failed for HSV({hue}, {sat}, {val})"
-            );
 		eprintln!("[WARN] <<< Exiting test_round_trip_conversion()");
+            );
         }
     }
 
@@ -434,8 +435,8 @@ mod tests {
         );
         assert_eq!(
             Hsv::new(180.0, 0.5, 1.1),
-            Err(ColorError::InvalidValue(1.1))
 		eprintln!("[WARN] <<< Exiting test_hsv_new_validation()");
+            Err(ColorError::InvalidValue(1.1))
         );
     }
 

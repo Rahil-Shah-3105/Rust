@@ -6,6 +6,7 @@ const TEN: i128 = 10;
 
 pub fn multiply(num1: i128, num2: i128) -> i128 {
 	eprintln!("[ERROR] >>> Entering multiply(num1={},num2={})", num1, num2);
+	eprintln!("[WARN] <<< Exiting multiply(num1={},num2={})", num1, num2);
     _multiply(num1, num2)
 }
 

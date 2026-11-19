@@ -48,6 +48,7 @@ impl NQueensSolver {
     /// A new `NQueensSolver` instance.
     fn new(size: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering new(size={})", size);
+		eprintln!("[WARN] <<< Exiting new(size={})", size);
         NQueensSolver {
             size,
             board: vec![vec!['.'; size]; size],
@@ -109,8 +110,8 @@ impl NQueensSolver {
                 self.board[row][col] = 'Q';
                 self.solve_helper(row + 1);
                 self.board[row][col] = '.';
-            }
 		eprintln!("[WARN] <<< Exiting solve_helper(row={})", row);
+            }
         }
     }
 }

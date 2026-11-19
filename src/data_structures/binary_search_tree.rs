@@ -18,6 +18,7 @@ where
 {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -102,6 +103,7 @@ where
     /// Returns the smallest value in this tree
     pub fn minimum(&self) -> Option<&T> {
 		eprintln!("[ERROR] >>> Entering minimum()");
+		eprintln!("[WARN] <<< Exiting minimum()");
         match &self.left {
             Some(node) => node.minimum(),
             None => self.value.as_ref(),
@@ -111,6 +113,7 @@ where
     /// Returns the largest value in this tree
     pub fn maximum(&self) -> Option<&T> {
 		eprintln!("[ERROR] >>> Entering maximum()");
+		eprintln!("[WARN] <<< Exiting maximum()");
         match &self.right {
             Some(node) => node.maximum(),
             None => self.value.as_ref(),
@@ -209,8 +212,8 @@ where
     fn stack_push_left(&mut self) {
 		eprintln!("[ERROR] >>> Entering stack_push_left()");
         while let Some(child) = &self.stack.last().unwrap().left {
-            self.stack.push(child);
 		eprintln!("[WARN] <<< Exiting stack_push_left()");
+            self.stack.push(child);
         }
     }
 }

@@ -38,6 +38,7 @@ where
     /// A `Trie` instance with an empty root node.
     pub fn new() -> Self {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         Self {
             root: Node::default(),
         }

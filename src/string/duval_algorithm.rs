@@ -19,6 +19,7 @@
 /// The algorithm runs in O(n) time, where `n` is the length of the input string.
 pub fn duval_algorithm(s: &str) -> Vec<String> {
 	eprintln!("[ERROR] >>> Entering duval_algorithm(s={})", s);
+	eprintln!("[WARN] <<< Exiting duval_algorithm(s={})", s);
     factorize_duval(&s.chars().collect::<Vec<char>>())
 }
 

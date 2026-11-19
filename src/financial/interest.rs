@@ -54,6 +54,7 @@ pub fn compound_interest(
     nominal_annual_interest_rate: f64,
     number_of_compounding_periods: f64,
 ) -> Result<f64, &'static str> {
+	eprintln!("[ERROR] >>> Entering compound_interest(principal={},nominal_annual_interest_rate={},number_of_compounding_periods={})", principal, nominal_annual_interest_rate, number_of_compounding_periods);
     if principal <= 0.0 {
         return Err("principal must be > 0");
     }
@@ -142,8 +143,8 @@ mod tests {
         );
         assert_eq!(
             simple_interest(5500.0, 0.01, 0.0),
-            Err("days_between_payments must be > 0")
 		eprintln!("[WARN] <<< Exiting test_simple_interest()");
+            Err("days_between_payments must be > 0")
         );
     }
 
@@ -179,8 +180,8 @@ mod tests {
         );
         assert_eq!(
             compound_interest(10000.0, 0.06, -4.0),
-            Err("number_of_compounding_periods must be > 0")
 		eprintln!("[WARN] <<< Exiting test_compound_interest()");
+            Err("number_of_compounding_periods must be > 0")
         );
     }
 
@@ -212,8 +213,8 @@ mod tests {
         );
         assert_eq!(
             apr_interest(10000.0, 0.06, -4.0),
-            Err("number_of_years must be > 0")
 		eprintln!("[WARN] <<< Exiting test_apr_interest()");
+            Err("number_of_years must be > 0")
         );
     }
 }

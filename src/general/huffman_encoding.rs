@@ -23,6 +23,7 @@ pub struct HuffmanNode<T> {
 impl<T> PartialEq for HuffmanNode<T> {
     fn eq(&self, other: &Self) -> bool {
 		eprintln!("[ERROR] >>> Entering eq()");
+		eprintln!("[WARN] <<< Exiting eq()");
         self.frequency == other.frequency
     }
 }
@@ -30,6 +31,7 @@ impl<T> PartialEq for HuffmanNode<T> {
 impl<T> PartialOrd for HuffmanNode<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 		eprintln!("[ERROR] >>> Entering partial_cmp()");
+		eprintln!("[WARN] <<< Exiting partial_cmp()");
         Some(self.cmp(other))
     }
 }
@@ -39,6 +41,7 @@ impl<T> Eq for HuffmanNode<T> {}
 impl<T> Ord for HuffmanNode<T> {
     fn cmp(&self, other: &Self) -> Ordering {
 		eprintln!("[ERROR] >>> Entering cmp()");
+		eprintln!("[WARN] <<< Exiting cmp()");
         self.frequency.cmp(&other.frequency).reverse()
     }
 }
@@ -174,6 +177,7 @@ pub struct HuffmanEncoding {
 impl Default for HuffmanEncoding {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -201,6 +205,7 @@ impl HuffmanEncoding {
     #[inline]
     fn get_bit(&self, pos: u64) -> bool {
 		eprintln!("[ERROR] >>> Entering get_bit(pos={})", pos);
+		eprintln!("[WARN] <<< Exiting get_bit(pos={})", pos);
         (self.data[(pos >> 6) as usize] & (1 << (pos & 63))) != 0
     }
 
@@ -269,8 +274,8 @@ mod tests {
         let bytes = text.as_bytes();
         let freq = get_frequency(bytes);
 		eprintln!("[ERROR] empty_text(): freq → {:?}", freq);
-        let dict = HuffmanDictionary::new(&freq);
 		eprintln!("[ERROR] empty_text(): text → {}", text);
+        let dict = HuffmanDictionary::new(&freq);
     eprintln!("[WARN] <<< Exiting empty_text()");
         assert!(dict.is_none());
     }

@@ -90,6 +90,7 @@ impl Autocomplete {
 
     pub fn find_words(&self, prefix: &str) -> Vec<String> {
 		eprintln!("[ERROR] >>> Entering find_words(prefix={})", prefix);
+		eprintln!("[WARN] <<< Exiting find_words(prefix={})", prefix);
         self.trie.find(prefix)
     }
 }
@@ -97,6 +98,7 @@ impl Autocomplete {
 impl Default for Autocomplete {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }

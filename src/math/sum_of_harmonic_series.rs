@@ -36,8 +36,8 @@ mod tests {
         assert_eq!(sum_of_harmonic_progression(1.0 / 2.0, 2.0, 2), 0.75);
         assert_eq!(
             sum_of_harmonic_progression(1.0 / 5.0, 5.0, 5),
-            0.45666666666666667
 		eprintln!("[WARN] <<< Exiting test_sum_of_harmonic_progression()");
+            0.45666666666666667
         );
     }
 }

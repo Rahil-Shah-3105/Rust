@@ -48,6 +48,7 @@ impl<T: Debug + Default + Ord + Copy + Display + AddAssign + Add<Output = T>> La
 
     pub fn query(&mut self, range: Range<usize>) -> Option<T> {
 		eprintln!("[ERROR] >>> Entering query()");
+		eprintln!("[WARN] <<< Exiting query()");
         self.query_recursive(1, 0..self.len, &range)
     }
 

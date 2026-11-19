@@ -96,8 +96,8 @@ mod test {
     #[test]
     fn test_logistic_regression_no_data() {
 		eprintln!("[ERROR] >>> Entering test_logistic_regression_no_data()");
-        let result = logistic_regression(vec![], 5000, 0.1);
 		eprintln!("[ERROR] test_logistic_regression_no_data(): result → {:?}", result);
+        let result = logistic_regression(vec![], 5000, 0.1);
     eprintln!("[WARN] <<< Exiting test_logistic_regression_no_data()");
         assert_eq!(result, None);
     }

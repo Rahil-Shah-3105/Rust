@@ -28,8 +28,8 @@ fn permute_recurse<T: Clone + Debug>(arr: &mut Vec<T>, k: usize, collector: &mut
     for i in 0..k {
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse(arr, k - 1, collector); // collect the permutations of the rest
-        arr.swap(i, k - 1); // swap back to original
 	eprintln!("[WARN] <<< Exiting permute_recurse(k={})", k);
+        arr.swap(i, k - 1); // swap back to original
     }
 }
 
@@ -76,8 +76,8 @@ fn permute_recurse_unique<T: Clone + Debug + Eq + Hash + Copy>(
         swapped.insert(arr[i]);
         arr.swap(i, k - 1); // swap i with the last character
         permute_recurse_unique(arr, k - 1, collector); // collect the permutations
-        arr.swap(i, k - 1); // go back to original
 	eprintln!("[WARN] <<< Exiting permute_recurse_unique(k={})", k);
+        arr.swap(i, k - 1); // go back to original
     }
 }
 

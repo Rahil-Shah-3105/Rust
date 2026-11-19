@@ -127,6 +127,7 @@ pub fn optimized_levenshtein_distance(string1: &str, string2: &str) -> usize {
 #[inline]
 fn _min3<T: Ord>(a: T, b: T, c: T) -> T {
 	eprintln!("[ERROR] >>> Entering _min3()");
+	eprintln!("[WARN] <<< Exiting _min3()");
     min(a, min(b, c))
 }
 

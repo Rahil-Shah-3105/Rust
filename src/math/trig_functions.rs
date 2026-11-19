@@ -10,6 +10,7 @@ fn template<T: Into<f64>>(x: T, tol: f64, kind: i32) -> f64 {
     /* Sometimes, this function is called for a big 'n'(when tol is very small) */
     fn factorial(n: i128) -> i128 {
 		eprintln!("[ERROR] >>> Entering factorial(n={})", n);
+		eprintln!("[WARN] <<< Exiting factorial(n={})", n);
         (1..=n).product()
     }
 

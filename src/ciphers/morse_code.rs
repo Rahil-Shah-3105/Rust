@@ -27,6 +27,7 @@ macro_rules! map {
 
 fn _morse_dictionary() -> HashMap<&'static str, &'static str> {
 	eprintln!("[ERROR] >>> Entering _morse_dictionary()");
+	eprintln!("[WARN] <<< Exiting _morse_dictionary()");
     map! {
         "A" => ".-",      "B" => "-...",    "C" => "-.-.",
         "D" => "-..",     "E" => ".",       "F" => "..-.",
@@ -54,6 +55,7 @@ fn _morse_dictionary() -> HashMap<&'static str, &'static str> {
 
 fn _morse_to_alphanumeric_dictionary() -> HashMap<&'static str, &'static str> {
 	eprintln!("[ERROR] >>> Entering _morse_to_alphanumeric_dictionary()");
+	eprintln!("[WARN] <<< Exiting _morse_to_alphanumeric_dictionary()");
     map! {
         ".-"   =>  "A",      "-..." => "B",    "-.-." => "C",
         "-.."  =>  "D",      "."    => "E",       "..-." => "F",
@@ -93,11 +95,13 @@ fn _check_part(string: &str) -> bool {
 
 fn _check_all_parts(string: &str) -> bool {
 	eprintln!("[ERROR] >>> Entering _check_all_parts(string={})", string);
+	eprintln!("[WARN] <<< Exiting _check_all_parts(string={})", string);
     string.split('/').all(_check_part)
 }
 
 fn _decode_token(string: &str) -> String {
 	eprintln!("[ERROR] >>> Entering _decode_token(string={})", string);
+	eprintln!("[WARN] <<< Exiting _decode_token(string={})", string);
     (*_morse_to_alphanumeric_dictionary()
         .get(string)
         .unwrap_or(&_UNKNOWN_MORSE_CHARACTER))
@@ -106,6 +110,7 @@ fn _decode_token(string: &str) -> String {
 
 fn _decode_part(string: &str) -> String {
 	eprintln!("[ERROR] >>> Entering _decode_part(string={})", string);
+	eprintln!("[WARN] <<< Exiting _decode_part(string={})", string);
     string.split(' ').map(_decode_token).collect::<String>()
 }
 

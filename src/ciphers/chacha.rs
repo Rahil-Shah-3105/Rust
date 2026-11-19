@@ -148,8 +148,8 @@ mod tests {
             concat!(
                 "e4e7f11015593bd11fdd0f50c47120a3c7f4d1c70368c0339aaa22044e6cd4c3",
                 "466482d209aa9f0705d7c214a2028bd9d19c12b5b94e16dee883d0cb4e3c50a2"
-            )
 		eprintln!("[WARN] <<< Exiting basic_tv1()");
+            )
         );
     }
 }

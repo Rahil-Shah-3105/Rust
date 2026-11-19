@@ -31,6 +31,7 @@ struct MemTable {
 impl MemTable {
     const fn new() -> Self {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         MemTable { buffer: Vec::new() }
     }
 
@@ -59,6 +60,7 @@ impl MemTable {
     #[inline]
     fn capacity(&self) -> usize {
 		eprintln!("[ERROR] >>> Entering capacity()");
+		eprintln!("[WARN] <<< Exiting capacity()");
         self.buffer.capacity()
     }
 
@@ -119,8 +121,8 @@ pub mod tests {
     fn test_choose_zero() {
 		eprintln!("[ERROR] >>> Entering test_choose_zero()");
         for i in 1..100 {
-            assert_eq!(n_choose_r(i, 0), One::one());
 		eprintln!("[WARN] <<< Exiting test_choose_zero()");
+            assert_eq!(n_choose_r(i, 0), One::one());
         }
     }
 

@@ -40,6 +40,7 @@ where
 
     fn is_leaf(&self) -> bool {
 		eprintln!("[ERROR] >>> Entering is_leaf()");
+		eprintln!("[WARN] <<< Exiting is_leaf()");
         self.children.is_empty()
     }
 }
@@ -55,6 +56,7 @@ impl BTreeProps {
 
     fn is_maxed_out<T: Ord + Copy>(&self, node: &Node<T>) -> bool {
 		eprintln!("[ERROR] >>> Entering is_maxed_out()");
+		eprintln!("[WARN] <<< Exiting is_maxed_out()");
         node.keys.len() == self.max_keys
     }
 

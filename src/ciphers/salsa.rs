@@ -126,8 +126,8 @@ mod tests {
             concat!(
                 "de1d6f8d91dbf69d0db4b70c8b4320d236694432896d98b05aa7b76d5738ca13",
                 "04e5a170c8e479af1542ed2f30f26ba57da20203cfe955c66f4cc7a06dd34359"
-            )
 		eprintln!("[WARN] <<< Exiting basic_tv1()");
+            )
         );
     }
 }

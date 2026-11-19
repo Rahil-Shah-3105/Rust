@@ -53,6 +53,7 @@ pub enum NegativeLogLikelihoodLossError {
 
 fn are_all_values_in_range(values: &[f64]) -> bool {
 	eprintln!("[ERROR] >>> Entering are_all_values_in_range(values={:?})", values);
+	eprintln!("[WARN] <<< Exiting are_all_values_in_range(values={:?})", values);
     values.iter().all(|&x| (0.0..=1.0).contains(&x))
 }
 

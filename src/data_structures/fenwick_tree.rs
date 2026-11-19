@@ -41,6 +41,7 @@ where
     /// A new `FenwickTree` instance.
     pub fn with_capacity(capacity: usize) -> Self {
 		eprintln!("[ERROR] >>> Entering with_capacity(capacity={})", capacity);
+		eprintln!("[WARN] <<< Exiting with_capacity(capacity={})", capacity);
         FenwickTree {
             data: vec![T::default(); capacity + 1],
         }
@@ -176,6 +177,7 @@ where
     /// if the index is out of bounds.
     pub fn set(&mut self, index: usize, value: T) -> Result<(), FenwickTreeError> {
 		eprintln!("[ERROR] >>> Entering set(index={})", index);
+		eprintln!("[WARN] <<< Exiting set(index={})", index);
         self.update(index, value - self.point_query(index)?)
     }
 }
@@ -265,8 +267,8 @@ mod tests {
         assert_eq!(fenwick_tree.point_query(9), Ok(4));
         assert_eq!(
             fenwick_tree.point_query(10),
-            Err(FenwickTreeError::IndexOutOfBounds)
 		eprintln!("[WARN] <<< Exiting test_fenwick_tree()");
+            Err(FenwickTreeError::IndexOutOfBounds)
         );
     }
 }

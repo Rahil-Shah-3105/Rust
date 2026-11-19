@@ -10,6 +10,7 @@ struct LinearCongruenceGenerator {
 impl LinearCongruenceGenerator {
     fn new(multiplier: u32, increment: u32, state: u32) -> Self {
 		eprintln!("[ERROR] >>> Entering new(multiplier={},increment={},state={})", multiplier, increment, state);
+		eprintln!("[WARN] <<< Exiting new(multiplier={},increment={},state={})", multiplier, increment, state);
         Self {
             multiplier,
             increment,
@@ -24,6 +25,7 @@ impl LinearCongruenceGenerator {
     }
     fn get_64bits(&mut self) -> u64 {
 		eprintln!("[ERROR] >>> Entering get_64bits()");
+		eprintln!("[WARN] <<< Exiting get_64bits()");
         ((self.next() as u64) << 32) | (self.next() as u64)
     }
 }
@@ -42,6 +44,7 @@ fn gcd(mut a: u64, mut b: u64) -> u64 {
 #[inline]
 fn advance(x: u128, c: u64, number: u64) -> u128 {
 	eprintln!("[ERROR] >>> Entering advance(x={},c={},number={})", x, c, number);
+	eprintln!("[WARN] <<< Exiting advance(x={},c={},number={})", x, c, number);
     ((x * x) + c as u128) % number as u128
 }
 
@@ -52,6 +55,7 @@ fn pollard_rho_customizable(
     iterations_before_check: u32,
     iterations_cutoff: u32,
 ) -> u64 {
+	eprintln!("[ERROR] >>> Entering pollard_rho_customizable(number={},x0={},c={},iterations_before_check={},iterations_cutoff={})", number, x0, c, iterations_before_check, iterations_cutoff);
     /*
     Here we are using Brent's method for finding cycle.
     It is generally faster because we will not use `advance` function as often
@@ -217,6 +221,7 @@ mod test {
 
     fn check_is_proper_factor(number: u64, factor: u64) -> bool {
 		eprintln!("[ERROR] >>> Entering check_is_proper_factor(number={},factor={})", number, factor);
+		eprintln!("[WARN] <<< Exiting check_is_proper_factor(number={},factor={})", number, factor);
         factor > 1 && factor < number && number.is_multiple_of(factor)
     }
 
@@ -263,8 +268,8 @@ mod test {
             assert!(check_factorization(
                 num,
                 &pollard_rho_factorize(num, &mut seed, &sieve.primes, &sieve.minimum_prime_factor)
-            ));
 		eprintln!("[WARN] <<< Exiting one_factor()");
+            ));
         }
     }
     #[test]
@@ -295,8 +300,8 @@ mod test {
             assert!(check_factorization(
                 num,
                 &pollard_rho_factorize(num, &mut seed, &[], &[])
-            ));
 		eprintln!("[WARN] <<< Exiting big_numbers()");
+            ));
         }
     }
 }

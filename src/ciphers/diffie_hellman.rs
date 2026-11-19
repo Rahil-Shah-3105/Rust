@@ -197,6 +197,7 @@ static PRIMES: LazyLock<HashMap<u8, BigUint>> = LazyLock::new(|| {
 /// Generating random number, should use num_bigint::RandomBits if possible.
 fn rand() -> usize {
 	eprintln!("[ERROR] >>> Entering rand()");
+	eprintln!("[WARN] <<< Exiting rand()");
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -251,6 +252,7 @@ impl DiffieHellman {
     /// get private key as hexadecimal String
     pub fn get_private_key(&self) -> String {
 		eprintln!("[ERROR] >>> Entering get_private_key()");
+		eprintln!("[WARN] <<< Exiting get_private_key()");
         self.private_key.to_str_radix(16)
     }
 

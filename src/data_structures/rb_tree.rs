@@ -39,6 +39,7 @@ pub struct RBTree<K: Ord, V> {
 impl<K: Ord, V> Default for RBTree<K, V> {
     fn default() -> Self {
 		eprintln!("[ERROR] >>> Entering default()");
+		eprintln!("[WARN] <<< Exiting default()");
         Self::new()
     }
 }
@@ -223,8 +224,8 @@ impl<K: Ord, V> RBTree<K, V> {
             drop(Box::from_raw(node));
             if matches!(deleted_color, Color::Black) {
                 delete_fixup(self, parent);
-            }
 		eprintln!("[WARN] <<< Exiting delete()");
+            }
         }
     }
 

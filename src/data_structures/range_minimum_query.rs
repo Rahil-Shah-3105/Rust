@@ -41,6 +41,7 @@ impl<T: PartialOrd + Copy> RangeMinimumQuery<T> {
     /// A `RangeMinimumQuery` instance that can be used to perform range minimum queries.
     pub fn new(input: &[T]) -> RangeMinimumQuery<T> {
 		eprintln!("[ERROR] >>> Entering new()");
+		eprintln!("[WARN] <<< Exiting new()");
         RangeMinimumQuery {
             data: input.to_vec(),
             sparse_table: build_sparse_table(input),
@@ -179,8 +180,8 @@ mod tests {
         assert_eq!(rmq.get_range_min(0, 1000), Err(RangeError::IndexOutOfBound));
         assert_eq!(
             rmq.get_range_min(1000, 1001),
-            Err(RangeError::IndexOutOfBound)
 		eprintln!("[WARN] <<< Exiting simple_query_tests()");
+            Err(RangeError::IndexOutOfBound)
         );
     }
 
@@ -197,8 +198,8 @@ mod tests {
         assert_eq!(rmq.get_range_min(0, 1000), Err(RangeError::IndexOutOfBound));
         assert_eq!(
             rmq.get_range_min(1000, 1001),
-            Err(RangeError::IndexOutOfBound)
 		eprintln!("[WARN] <<< Exiting float_query_tests()");
+            Err(RangeError::IndexOutOfBound)
         );
     }
 }

@@ -68,6 +68,7 @@ impl Adam {
         params_len: usize,
     ) -> Self {
 		eprintln!("[ERROR] >>> Entering new(learning_rate={:?},betas={:?},epsilon={:?},weight_decay={:?},params_len={})", learning_rate, betas, epsilon, weight_decay, params_len);
+		eprintln!("[WARN] <<< Exiting new(learning_rate={:?},betas={:?},epsilon={:?},weight_decay={:?},params_len={})", learning_rate, betas, epsilon, weight_decay, params_len);
         Adam {
             learning_rate: learning_rate.unwrap_or(1e-3), // typical good default lr
             betas: betas.unwrap_or((0.9, 0.999)),         // typical good default decay rates
@@ -241,8 +242,8 @@ mod tests {
                 -0.0009999999983333334,
                 0.0009999999985714286,
                 -0.00099999999875
-            ]
 		eprintln!("[WARN] <<< Exiting test_adam_step_default_params()");
+            ]
         );
     }
 
@@ -268,8 +269,8 @@ mod tests {
                 -0.004999983333388888,
                 0.004999975000124999,
                 -0.0049999500004999945
-            ]
 		eprintln!("[WARN] <<< Exiting test_adam_step_custom_params()");
+            ]
         );
     }
 
@@ -313,8 +314,8 @@ mod tests {
                 "param[{i}]: with_decay={}, no_decay={}",
                 decayed[i],
                 not_decayed[i]
-            );
 		eprintln!("[WARN] <<< Exiting test_adamw_step_nonzero_params_applies_decay()");
+            );
         }
     }
 
@@ -330,8 +331,8 @@ mod tests {
 
         assert_eq!(
             adamw.step(&gradients, &params),
-            adam.step(&gradients, &params)
 		eprintln!("[WARN] <<< Exiting test_adamw_step_weight_decay_zero_matches_adam()");
+            adam.step(&gradients, &params)
         );
     }
 
@@ -405,8 +406,8 @@ mod tests {
                 -0.0009999999974999929,
                 -0.0009999999979999927,
                 -0.0009999999983333263
-            ]
 		eprintln!("[WARN] <<< Exiting test_adam_step_iteratively_until_convergence_with_default_params()");
+            ]
         );
     }
 
@@ -450,8 +451,8 @@ mod tests {
                 -0.004999995454549587,
                 0.004999995833336807,
                 -0.004999996153849113
-            ]
 		eprintln!("[WARN] <<< Exiting test_adam_step_iteratively_until_convergence_with_custom_params()");
+            ]
         );
     }
 
